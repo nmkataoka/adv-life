@@ -1,11 +1,17 @@
 {
   "extends": [
-    "airbnb-typescript/base",
+    "eslint:recommended",
+    "plugin:react/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   "parserOptions": {
     "project": "./tsconfig.json"
+  },
+  "rules": {
+    "react/prop-types": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/no-use-before-define": 0
   }
 }
