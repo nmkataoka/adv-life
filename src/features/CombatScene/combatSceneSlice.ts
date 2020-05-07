@@ -4,8 +4,10 @@ import { GameManager } from "../../engine/GameManager";
 import { HealthCmpt } from "../../ncomponents/HealthCmpt";
 import { FactionCmpt } from "../../ncomponents/FactionCmpt";
 
+type Units = {[key: string]: {entityHandle: number; health: number; maxHealth: number; isEnemy?: boolean}}
+
 const initialState = {
-  units: {}
+  units: {} as Units
 }
 
 const combatSceneSlice = createSlice({
@@ -23,16 +25,16 @@ const { updatedUnits } = combatSceneSlice.actions;
 export default combatSceneSlice.reducer;
 
 export const updateUnitsFromEngine = (dispatch: Dispatch) => {
-  const eMgr = GameManager.instance.eMgr;
+  const { eMgr } = GameManager.instance;
   const healthMgr = eMgr.GetComponentManager<HealthCmpt, typeof HealthCmpt>(HealthCmpt);
   const factionMgr = eMgr.GetComponentManager<FactionCmpt, typeof FactionCmpt>(FactionCmpt);
 
-  const units: {[key: string]: {entityHandle: number; health: number; isEnemy?: boolean}} = {};
+  const units: Units = {};
   Object.entries(healthMgr.components).forEach(([entity, healthCmpt]) => {
     const entityHandle = parseInt(entity, 10);
-    const health = healthCmpt.health;
+    const { health, maxHealth } = healthCmpt;
     const factionCmpt = factionMgr.GetByNumber(entityHandle);
-    units[entityHandle] = ({ entityHandle, health, isEnemy: factionCmpt?.isEnemy });
+    units[entityHandle] = ({ entityHandle, health, maxHealth, isEnemy: factionCmpt?.isEnemy });
   });
 
   dispatch(updatedUnits({ units }));

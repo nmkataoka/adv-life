@@ -2,15 +2,21 @@
 import { jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 import HealthBar from "./HealthBar";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
 
 type UnitProps = {
-  isEnemy?: boolean;
+  handle: number;
 };
 
-export default function Unit({ isEnemy }: UnitProps) {
+export default function Unit({ handle }: UnitProps) {
+  const { health, maxHealth, isEnemy } = useSelector(
+    (state: RootState) => state.combatScene.units[handle]
+  );
+
   return (
     <Container>
-      <HealthBar health={0.8} />
+      <HealthBar health={health / maxHealth} />
       <Circle isEnemy={isEnemy}>UNIT</Circle>
     </Container>
   );

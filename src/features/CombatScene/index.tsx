@@ -2,11 +2,14 @@
 import { css, jsx } from "@emotion/core";
 import Unit from "./Unit";
 import ActionBar from "./ActionBar";
-
-const enemies = [0, 1, 2];
-const players = [0, 1, 2];
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
 
 export default function CombatScene() {
+  const units = useSelector((state: RootState) => state.combatScene.units);
+  const enemies = Object.values(units).filter((u) => u.isEnemy);
+  const friendlies = Object.values(units).filter((f) => !f.isEnemy);
+
   return (
     <div
       css={css`
@@ -21,7 +24,7 @@ export default function CombatScene() {
     >
       <div css={row}>
         {enemies.map((e) => (
-          <Unit key={e} isEnemy></Unit>
+          <Unit key={e.entityHandle} handle={e.entityHandle}></Unit>
         ))}
       </div>
       <div
@@ -31,8 +34,8 @@ export default function CombatScene() {
         `}
       />
       <div css={row}>
-        {players.map((p) => (
-          <Unit key={p}></Unit>
+        {friendlies.map((p) => (
+          <Unit key={p.entityHandle} handle={p.entityHandle}></Unit>
         ))}
       </div>
       <ActionBar />
