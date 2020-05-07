@@ -1,4 +1,4 @@
-import {Entity} from './Entity';
+import { Entity } from './Entity';
 import { ECSystem } from './ECSystem';
 import { NComponent, NComponentConstructor } from './NComponent';
 import { ComponentManager } from './ComponentManager';
@@ -31,22 +31,20 @@ export class EntityManager {
     return e;
   }
 
-  public GetComponentManager<C extends NComponent, CClass extends NComponentConstructor<C>>(c: C): ComponentManager<C, CClass> {
-    const classTemp = c.constructor as CClass;
-    const cName = classTemp.name;
-    let cMgr = this.cMgrs[cName];
+  public GetComponentManager<C extends NComponent, CClass extends NComponentConstructor<C>>(c: CClass): ComponentManager<C, CClass> {
+    let cMgr = this.cMgrs[c.name];
 
     // Create componentManager if it doesn't exist
     if(!cMgr) {
-      cMgr = new ComponentManager<C, CClass>(classTemp);
-      this.cMgrs[cName] = cMgr;
+      cMgr = new ComponentManager<C, CClass>(c);
+      this.cMgrs[c.name] = cMgr;
     }
     return cMgr as ComponentManager<C, CClass>;
   }
 
   public AddComponent<C extends NComponent, CClass extends NComponentConstructor<C>>(e: Entity, c: C): void {
-    const cMgr = this.GetComponentManager<C, CClass>(c);
-    cMgr.Add(e);
+    const cMgr = this.GetComponentManager<C, CClass>(c.constructor as CClass);
+    cMgr.Add(e, c);
   }
 
   private IncrementNextEntityId(): void {

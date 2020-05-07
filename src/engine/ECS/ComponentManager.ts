@@ -7,16 +7,18 @@ export class ComponentManager<C extends NComponent, CClass extends NComponentCon
     this.myClass = c;
   }
 
-  public Add(e: Entity): void {
-    this.components[e.handle] = new this.myClass();
+  public Add(e: Entity, c: C): void {
+    this.components[e.handle] = c;
   }
 
-  public static InitializeStatic() {
-    ComponentManager.ClassFamilies = {};
+  public Get(e: Entity): C | undefined {
+    return this.components[e.handle];
   }
 
-  private static ClassFamilies: {[key: string]: number};
+  public GetByNumber(handle: number): C | undefined {
+    return this.components[handle];
+  }
 
   private myClass: CClass;
-  private components: {[key: number]: C};
+  public components: {[key: number]: C};
 }

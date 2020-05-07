@@ -1,4 +1,4 @@
-import {EntityManager} from './ECS/EntityManager'
+import { EntityManager } from './ECS/EntityManager'
 import { HealthCmpt } from '../ncomponents/HealthCmpt';
 import { CanAttackCmpt } from '../ncomponents/CanAttackCmpt';
 import { WeaponCmpt } from '../ncomponents/WeaponCmpt';
