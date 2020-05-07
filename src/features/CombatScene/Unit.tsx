@@ -1,5 +1,7 @@
 /** @jsx jsx */
-import { css, jsx } from "@emotion/core";
+import { jsx } from "@emotion/core";
+import styled from "@emotion/styled";
+import HealthBar from "./HealthBar";
 
 type UnitProps = {
   isEnemy?: boolean;
@@ -7,22 +9,35 @@ type UnitProps = {
 
 export default function Unit({ isEnemy }: UnitProps) {
   return (
-    <div
-      css={css`
-        border-radius: 50%;
-        background-color: ${isEnemy ? "red" : "lightblue"};
-        min-width: 100px;
-        min-height: 100px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        &:hover {
-          cursor: pointer;
-        }
-      `}
-    >
-      UNIT
-    </div>
+    <Container>
+      <HealthBar health={0.8} />
+      <Circle isEnemy={isEnemy}>UNIT</Circle>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+type CircleProps = {
+  isEnemy?: boolean;
+};
+
+const Circle = styled.div`
+  border-radius: 50%;
+  background-color: ${(props: CircleProps) =>
+    props.isEnemy ? "red" : "lightblue"};
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
