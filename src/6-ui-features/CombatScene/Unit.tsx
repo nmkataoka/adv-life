@@ -3,7 +3,7 @@ import { jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 import HealthBar from "./HealthBar";
 import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
+import { RootState } from "../../7-app/store";
 
 type UnitProps = {
   handle: number;

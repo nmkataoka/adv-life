@@ -3,7 +3,7 @@ import { css, jsx } from "@emotion/core";
 import Unit from "./Unit";
 import ActionBar from "./ActionBar";
 import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
+import { RootState } from "../../7-app/store";
 
 export default function CombatScene() {
   const units = useSelector((state: RootState) => state.combatScene.units);
