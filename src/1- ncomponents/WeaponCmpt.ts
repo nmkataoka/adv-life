@@ -1,3 +1,3 @@
 export class WeaponCmpt {
-  public damage = 20;
+  public damage = 15;
 }
