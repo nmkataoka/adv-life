@@ -17,9 +17,10 @@ export class AttackSys extends ECSystem {
 
     Object.entries(canAttackMgr.components).forEach(executeAttackIfPossible);
 
-    function executeAttackIfPossible([e, canAttackCmpt]: [string, CanAttackCmpt]) {
+    function executeAttackIfPossible([, canAttackCmpt]: [string, CanAttackCmpt]) {
       if (canAttackCmpt.targetEntity) {
-        const targetHandle = parseInt(e, 10);
+        console.log("execute attack, has targetEntity");
+        const targetHandle = canAttackCmpt.targetEntity;
         const weaponCmpt = weaponMgr.GetByNumber(targetHandle);
         const targetHealthCmpt = healthMgr.GetByNumber(targetHandle);
         if (weaponCmpt && targetHealthCmpt) {

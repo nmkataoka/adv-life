@@ -2,6 +2,7 @@ import { Entity } from "./Entity";
 import { ECSystem } from "./ECSystem";
 import { NComponent, NComponentConstructor } from "./NComponent";
 import { ComponentManager } from "./ComponentManager";
+import { AttackSys } from "../../2-ecsystems/AttackSys";
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
@@ -12,7 +13,7 @@ export class EntityManager {
   private cMgrs: { [key: string]: ComponentManager<NComponent, NComponentConstructor<NComponent>> };
 
   constructor() {
-    this.systems = {};
+    this.systems = { [AttackSys.name]: new AttackSys(this) };
     this.cMgrs = {};
   }
 

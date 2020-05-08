@@ -10,9 +10,7 @@ import { updateUnitsFromEngine } from "./6-ui-features/CombatScene/combatSceneSl
 const delay = 3000;
 
 function App() {
-  const [uiLoopHandle, setUiLoopHandle] = useState(
-    null as NodeJS.Timeout | null
-  );
+  const [uiLoopHandle, setUiLoopHandle] = useState(null as NodeJS.Timeout | null);
 
   const dispatch = useDispatch();
 
@@ -20,7 +18,7 @@ function App() {
     if (uiLoopHandle) clearTimeout(uiLoopHandle);
 
     const handle = setTimeout(() => {
-      updateUnitsFromEngine(dispatch);
+      dispatch(updateUnitsFromEngine());
       startUILoop();
     }, delay);
     setUiLoopHandle(handle);
