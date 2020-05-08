@@ -11,14 +11,20 @@ export class EntityManager {
   private nextEntityId = 0;
   private systems: { [key: string]: ECSystem };
   private cMgrs: { [key: string]: ComponentManager<NComponent, NComponentConstructor<NComponent>> };
+  private entitiesToDestroy: (Entity | number)[] = [];
 
   constructor() {
     this.systems = { [AttackSys.name]: new AttackSys(this) };
     this.cMgrs = {};
   }
 
+  public Start(): void {
+    Object.values(this.systems).forEach((s) => s.Start());
+  }
+
   public OnUpdate(dt: number): void {
     Object.values(this.systems).forEach((s) => s.OnUpdate(dt));
+    this.DestroyQueuedEntities();
   }
 
   public CreateEntity(): Entity {
@@ -51,6 +57,25 @@ export class EntityManager {
   ): void {
     const cMgr = this.GetComponentManager<C, CClass>(c.constructor as CClass);
     cMgr.Add(e, c);
+  }
+
+  public QueueEntityDestruction(e: Entity | number) {
+    this.entitiesToDestroy.push(e);
+  }
+
+  private DestroyQueuedEntities() {
+    this.entitiesToDestroy.forEach((e) => {
+      this.DestroyEntity(e);
+    });
+    this.entitiesToDestroy = [];
+  }
+
+  private DestroyEntity(e: number | Entity) {
+    // Multiple destroy requests for an entity may occur in one frame
+    // TODO: implement when add tracking for deleted entities
+
+    // Destroy all related components
+    Object.values(this.cMgrs).forEach((cMgr) => cMgr.Erase(e));
   }
 
   private IncrementNextEntityId(): void {

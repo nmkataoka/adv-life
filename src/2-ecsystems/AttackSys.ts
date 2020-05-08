@@ -1,5 +1,4 @@
 import { ECSystem } from "../0-engine/ECS/ECSystem";
-import { GameManager } from "../0-engine/GameManager";
 import { CanAttackCmpt } from "../1- ncomponents/CanAttackCmpt";
 import { WeaponCmpt } from "../1- ncomponents/WeaponCmpt";
 import { HealthCmpt } from "../1- ncomponents/HealthCmpt";
@@ -8,7 +7,12 @@ export class AttackSys extends ECSystem {
   public Start(): void {}
 
   public OnUpdate(): void {
-    const { eMgr } = GameManager.instance;
+    this.doAttacks();
+    this.checkForDeaths();
+  }
+
+  public doAttacks(): void {
+    const { eMgr } = this;
     const canAttackMgr = eMgr.GetComponentManager<CanAttackCmpt, typeof CanAttackCmpt>(
       CanAttackCmpt
     );
@@ -19,13 +23,25 @@ export class AttackSys extends ECSystem {
 
     function executeAttackIfPossible([, canAttackCmpt]: [string, CanAttackCmpt]) {
       if (canAttackCmpt.targetEntity) {
-        console.log("execute attack, has targetEntity");
         const targetHandle = canAttackCmpt.targetEntity;
         const weaponCmpt = weaponMgr.GetByNumber(targetHandle);
         const targetHealthCmpt = healthMgr.GetByNumber(targetHandle);
         if (weaponCmpt && targetHealthCmpt) {
           targetHealthCmpt.TakeDamage(weaponCmpt.damage);
         }
+      }
+    }
+  }
+
+  public checkForDeaths(): void {
+    const { eMgr } = this;
+    const healthMgr = eMgr.GetComponentManager<HealthCmpt, typeof HealthCmpt>(HealthCmpt);
+
+    Object.entries(healthMgr.components).forEach(checkForDeath);
+
+    function checkForDeath([e, healthCmpt]: [string, HealthCmpt]) {
+      if (healthCmpt.health <= 0) {
+        eMgr.QueueEntityDestruction(parseInt(e, 10));
       }
     }
   }
