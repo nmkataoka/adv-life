@@ -4,6 +4,7 @@ import Unit from "./Unit";
 import ActionBar from "./ActionBar";
 import { useSelector } from "react-redux";
 import { RootState } from "../../7-app/store";
+import Arrow from "../../5-react-components/arrow";
 
 export default function CombatScene() {
   const units = useSelector((state: RootState) => state.combatScene.units);
@@ -27,6 +28,7 @@ export default function CombatScene() {
           <Unit key={e.entityHandle} handle={e.entityHandle}></Unit>
         ))}
       </div>
+      <Arrow from={{ x: 10, y: 10 }} to={{ x: 100, y: 100 }} />
       <div
         css={css`
           width: 100%;
