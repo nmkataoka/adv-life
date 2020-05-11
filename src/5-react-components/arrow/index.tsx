@@ -2,6 +2,7 @@
 
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
+import useArrowId from "./arrowId";
 
 export type Point = {
   x: number;
@@ -14,10 +15,13 @@ type ArrowProps = {
 };
 
 export default function Arrow({ from, to }: ArrowProps) {
+  const arrowId = useArrowId();
+  const markerCssId = `markerArrow-${arrowId}`;
+
   return (
     <svg css={svgCss}>
       <defs>
-        <marker id="markerArrow" markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto">
+        <marker id={markerCssId} markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto">
           <path d="M2,2 L2,11 L10,6 L2,2" style={{ fill: "#000000" }} />
         </marker>
       </defs>
@@ -26,7 +30,7 @@ export default function Arrow({ from, to }: ArrowProps) {
         y1={from.y}
         x2={to.x}
         y2={to.y}
-        markerEnd={"url(#markerArrow)"}
+        markerEnd={`url(#${markerCssId})`}
         style={{ stroke: "red", strokeWidth: 2 }}
       />
     </svg>
@@ -40,4 +44,5 @@ const svgCss = css`
   left: 0;
   height: 300px;
   width: 400px;
+  overflow: visible;
 `;

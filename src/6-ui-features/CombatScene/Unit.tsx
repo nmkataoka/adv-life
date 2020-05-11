@@ -5,6 +5,8 @@ import HealthBar from "./HealthBar";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../7-app/store";
 import { setUnitAttackTarget, clickedOnUnit } from "./combatSceneSlice";
+import { useRef } from "react";
+import ArrowFromUnit from "./ArrowFromUnit";
 
 type UnitProps = {
   handle: number;
@@ -16,6 +18,7 @@ export default function Unit({ handle }: UnitProps) {
   );
   const selectedUnit = useSelector((state: RootState) => state.combatScene.selectedUnit);
   const dispatch = useDispatch();
+  const unitRef = useRef<HTMLDivElement>(null);
 
   const handleUnitClick = () => {
     if (selectedUnit && isEnemy) {
@@ -24,10 +27,19 @@ export default function Unit({ handle }: UnitProps) {
     dispatch(clickedOnUnit(handle));
   };
 
+  const isSelectedUnit = handle === selectedUnit;
+  const showArrowFromUnit = isSelectedUnit && !isEnemy;
+
   return (
     <Container>
+      {showArrowFromUnit && <ArrowFromUnit fromRef={unitRef} />}
       <HealthBar health={health / maxHealth} />
-      <Circle isEnemy={isEnemy} onClick={handleUnitClick} isSelected={selectedUnit === handle}>
+      <Circle
+        ref={unitRef}
+        isEnemy={isEnemy}
+        onClick={handleUnitClick}
+        isSelected={selectedUnit === handle}
+      >
         UNIT
       </Circle>
     </Container>

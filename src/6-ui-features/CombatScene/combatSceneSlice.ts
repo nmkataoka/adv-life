@@ -4,6 +4,7 @@ import { GameManager } from "../../0-engine/GameManager";
 import { HealthCmpt } from "../../1- ncomponents/HealthCmpt";
 import { FactionCmpt } from "../../1- ncomponents/FactionCmpt";
 import { CanAttackCmpt } from "../../1- ncomponents/CanAttackCmpt";
+import throttle from "lodash.throttle";
 
 type Units = {
   [key: string]: {
@@ -14,10 +15,18 @@ type Units = {
   };
 };
 
+type MousePos = {
+  x: number;
+  y: number;
+};
+
 const initialState = {
   units: {} as Units,
 
   selectedUnit: null as null | number,
+
+  // Relative to the position: relative container
+  mousePosition: { x: 0, y: 0 } as MousePos,
 };
 
 const combatSceneSlice = createSlice({
@@ -44,10 +53,14 @@ const combatSceneSlice = createSlice({
         }
       }
     },
+    updateMousePosition(state, action) {
+      const { x, y } = action.payload;
+      state.mousePosition = { x, y };
+    },
   },
 });
 
-const { updatedUnits } = combatSceneSlice.actions;
+const { updatedUnits, updateMousePosition } = combatSceneSlice.actions;
 
 export const { clickedOnUnit } = combatSceneSlice.actions;
 
@@ -83,3 +96,10 @@ export const setUnitAttackTarget = (unit: number, target: number) => {
     attacker.targetEntity = target;
   }
 };
+
+const updateMousePositionInner = throttle((dispatch: Dispatch, newPos: MousePos) => {
+  dispatch(updateMousePosition(newPos));
+}, 100);
+
+export const setMousePosition = (newPos: MousePos) => (dispatch: Dispatch) =>
+  updateMousePositionInner(dispatch, newPos);

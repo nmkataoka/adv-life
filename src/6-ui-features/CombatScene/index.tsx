@@ -2,14 +2,20 @@
 import { css, jsx } from "@emotion/core";
 import Unit from "./Unit";
 import ActionBar from "./ActionBar";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../7-app/store";
-import Arrow from "../../5-react-components/arrow";
+import { setMousePosition } from "./combatSceneSlice";
 
 export default function CombatScene() {
   const units = useSelector((state: RootState) => state.combatScene.units);
   const enemies = Object.values(units).filter((u) => u.isEnemy);
   const friendlies = Object.values(units).filter((f) => !f.isEnemy);
+  const dispatch = useDispatch();
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { offsetX, offsetY } = e.nativeEvent;
+    dispatch(setMousePosition({ x: offsetX, y: offsetY }));
+  };
 
   return (
     <div
@@ -22,13 +28,13 @@ export default function CombatScene() {
         justify-content: center;
         align-content: center;
       `}
+      onMouseMove={handleMouseMove}
     >
       <div css={row}>
         {enemies.map((e) => (
           <Unit key={e.entityHandle} handle={e.entityHandle}></Unit>
         ))}
       </div>
-      <Arrow from={{ x: 10, y: 10 }} to={{ x: 100, y: 100 }} />
       <div
         css={css`
           width: 100%;
