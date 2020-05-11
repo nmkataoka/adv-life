@@ -26,8 +26,13 @@ export class AttackSys extends ECSystem {
         const targetHandle = canAttackCmpt.targetEntity;
         const weaponCmpt = weaponMgr.GetByNumber(targetHandle);
         const targetHealthCmpt = healthMgr.GetByNumber(targetHandle);
-        if (weaponCmpt && targetHealthCmpt) {
-          targetHealthCmpt.TakeDamage(weaponCmpt.damage);
+        if (targetHealthCmpt) {
+          if (weaponCmpt) {
+            targetHealthCmpt.TakeDamage(weaponCmpt.damage);
+          }
+        } else {
+          // Target is likely dead, so reset target
+          canAttackCmpt.targetEntity = undefined;
         }
       }
     }

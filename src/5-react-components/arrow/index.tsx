@@ -1,6 +1,7 @@
 // Draw an arrow from the center of an element to the cursor position
 
-import React from "react";
+/** @jsx jsx */
+import { jsx, css } from "@emotion/core";
 
 export type Point = {
   x: number;
@@ -14,7 +15,7 @@ type ArrowProps = {
 
 export default function Arrow({ from, to }: ArrowProps) {
   return (
-    <svg style={{ height: "300px", width: "400px", top: "0", left: "0", position: "absolute" }}>
+    <svg css={svgCss}>
       <defs>
         <marker id="markerArrow" markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto">
           <path d="M2,2 L2,11 L10,6 L2,2" style={{ fill: "#000000" }} />
@@ -31,3 +32,12 @@ export default function Arrow({ from, to }: ArrowProps) {
     </svg>
   );
 }
+
+const svgCss = css`
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 300px;
+  width: 400px;
+`;
