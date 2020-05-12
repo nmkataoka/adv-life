@@ -3,6 +3,7 @@ import { HealthCmpt } from "../1- ncomponents/HealthCmpt";
 import { CanAttackCmpt } from "../1- ncomponents/CanAttackCmpt";
 import { WeaponCmpt } from "../1- ncomponents/WeaponCmpt";
 import { FactionCmpt } from "../1- ncomponents/FactionCmpt";
+import { CombatPositionCmpt } from "../1- ncomponents/CombatPositionCmpt";
 
 export class GameManager {
   public static readonly FPS = 0.3;
@@ -17,21 +18,24 @@ export class GameManager {
 
   public Start(): void {
     for (let i = 0; i < 3; ++i) {
-      this.CreateUnit();
+      this.CreateUnit(i);
     }
     for (let i = 0; i < 3; ++i) {
-      this.CreateUnit(true);
+      this.CreateUnit(i, true);
     }
     this.EnterGameLoop();
   }
 
   private GameLoopHandle?: NodeJS.Timeout;
 
-  private CreateUnit(isEnemy = false): void {
+  private CreateUnit(position: number, isEnemy = false): void {
     const e = this.eMgr.CreateEntity();
     this.eMgr.AddComponent(e, new HealthCmpt());
     this.eMgr.AddComponent(e, new CanAttackCmpt());
     this.eMgr.AddComponent(e, new WeaponCmpt());
+    const combatPos = new CombatPositionCmpt();
+    combatPos.position = position;
+    this.eMgr.AddComponent(e, combatPos);
     const faction = new FactionCmpt();
     faction.isEnemy = isEnemy;
     this.eMgr.AddComponent(e, faction);

@@ -1,17 +1,35 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import styled from "@emotion/styled";
-
-const actions = ["Attack", "Defend", "Flee", "Fireball", "Potion"];
+import { ActionInfo } from "./ActionInfo";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../7-app/store";
+import { selectedAction } from "./combatSceneSlice";
 
 export default function ActionBar() {
+  const actions = useSelector((state: RootState) => state.combatScene.actions);
   return (
     <Container>
       {actions.map((a) => (
-        <ActionButton key={a}>{a}</ActionButton>
+        <ActionButton key={a.name} actionInfo={a} />
       ))}
     </Container>
   );
+}
+
+type ActionButtonProps = {
+  actionInfo: ActionInfo;
+};
+
+function ActionButton({ actionInfo }: ActionButtonProps) {
+  const dispatch = useDispatch();
+  const { displayText } = actionInfo;
+
+  const handleClick = () => {
+    dispatch(selectedAction(actionInfo));
+  };
+
+  return <ActionButtonContainer onClick={handleClick}>{displayText}</ActionButtonContainer>;
 }
 
 const Container = styled.div`
@@ -23,7 +41,7 @@ const Container = styled.div`
   bottom: 0;
 `;
 
-const ActionButton = styled.div`
+const ActionButtonContainer = styled.div`
   border-radius: 4px;
   background-color: brown;
   color: white;

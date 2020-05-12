@@ -6,6 +6,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../7-app/store";
 import { setMousePosition } from "./combatSceneSlice";
 import { useRef } from "react";
+import { UnitInfo } from "./combatSceneSlice";
+
+function sortUnitsByCombatPosition(a: UnitInfo, b: UnitInfo) {
+  return a.position - b.position;
+}
 
 export default function CombatScene() {
   const units = useSelector((state: RootState) => state.combatScene.units);
@@ -37,7 +42,7 @@ export default function CombatScene() {
       ref={sceneRef}
     >
       <div css={row}>
-        {enemies.map((e) => (
+        {enemies.sort(sortUnitsByCombatPosition).map((e) => (
           <Unit key={e.entityHandle} handle={e.entityHandle}></Unit>
         ))}
       </div>
@@ -48,7 +53,7 @@ export default function CombatScene() {
         `}
       />
       <div css={row}>
-        {friendlies.map((p) => (
+        {friendlies.sort(sortUnitsByCombatPosition).map((p) => (
           <Unit key={p.entityHandle} handle={p.entityHandle}></Unit>
         ))}
       </div>

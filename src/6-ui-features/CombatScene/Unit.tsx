@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import HealthBar from "./HealthBar";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../7-app/store";
-import { setUnitAttackTarget, clickedOnUnit } from "./combatSceneSlice";
+import { setSkillTarget, clickedOnUnit } from "./combatSceneSlice";
 import { useRef } from "react";
 import ArrowFromUnit from "./ArrowFromUnit";
 
@@ -13,18 +13,25 @@ type UnitProps = {
 };
 
 export default function Unit({ handle }: UnitProps) {
+  const dispatch = useDispatch();
   const { health, maxHealth, isEnemy } = useSelector(
     (state: RootState) => state.combatScene.units[handle]
   );
   const selectedUnit = useSelector((state: RootState) => state.combatScene.selectedUnit);
-  const dispatch = useDispatch();
+  const selectedAction = useSelector((state: RootState) => state.combatScene.selectedAction);
+
   const unitRef = useRef<HTMLDivElement>(null);
 
   const handleUnitClick = () => {
-    if (selectedUnit && isEnemy) {
-      setUnitAttackTarget(selectedUnit, handle);
+    if (selectedAction) {
+      // TODO: Check if action targets enemy here
+      if (selectedUnit && isEnemy) {
+        setSkillTarget(selectedUnit, handle, selectedAction);
+        dispatch(clickedOnUnit(handle));
+      }
+    } else {
+      dispatch(clickedOnUnit(handle));
     }
-    dispatch(clickedOnUnit(handle));
   };
 
   const isSelectedUnit = handle === selectedUnit;
