@@ -8,6 +8,8 @@ import throttle from "lodash.throttle";
 import { ActionInfo, CreateActionInfo } from "./ActionInfo";
 import { CombatPositionCmpt } from "../../1- ncomponents/CombatPositionCmpt";
 import { CombatStatsCmpt } from "../../1- ncomponents/CombatStatsCmpt";
+import { keyPressed } from "../common/actions";
+import { Keycodes } from "../common/constants";
 
 export type UnitInfo = {
   entityHandle: number;
@@ -84,6 +86,22 @@ const combatSceneSlice = createSlice({
     },
     clearSelectedAction(state) {
       state.selectedAction = undefined;
+    },
+  },
+  extraReducers: {
+    [keyPressed.toString()]: (state, action) => {
+      switch (action.payload) {
+        case Keycodes.ESC: {
+          if (state.selectedAction) {
+            state.selectedAction = undefined;
+          } else if (state.selectedUnit) {
+            state.selectedUnit = null;
+          }
+          break;
+        }
+        default:
+          return;
+      }
     },
   },
 });

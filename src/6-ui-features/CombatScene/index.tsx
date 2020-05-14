@@ -7,6 +7,7 @@ import { RootState } from "../../7-app/store";
 import { setMousePosition } from "./combatSceneSlice";
 import { useRef } from "react";
 import { UnitInfo } from "./combatSceneSlice";
+import useDetectKeypress from "../common/useDetectKeypress";
 
 function sortUnitsByCombatPosition(a: UnitInfo, b: UnitInfo) {
   return a.position - b.position;
@@ -18,6 +19,8 @@ export default function CombatScene() {
   const friendlies = Object.values(units).filter((f) => !f.isEnemy);
   const dispatch = useDispatch();
   const sceneRef = useRef<HTMLDivElement>(null);
+
+  useDetectKeypress();
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { clientX, clientY } = e;
