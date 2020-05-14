@@ -12,6 +12,8 @@ import { CombatStatsCmpt } from "../../1- ncomponents/CombatStatsCmpt";
 export type UnitInfo = {
   entityHandle: number;
   health: number;
+  mana: number;
+  maxMana: number;
   maxHealth: number;
   isEnemy?: boolean;
   position: number;
@@ -75,7 +77,10 @@ const combatSceneSlice = createSlice({
     },
 
     selectedAction(state, action) {
-      state.selectedAction = action.payload;
+      // If no unit is selected, actions can't be clicked
+      if (state.selectedUnit != null) {
+        state.selectedAction = action.payload;
+      }
     },
     clearSelectedAction(state) {
       state.selectedAction = undefined;
@@ -114,6 +119,8 @@ export const updateUnitsFromEngine = () => (dispatch: Dispatch) => {
       maxHealth,
       isEnemy: factionCmpt?.isEnemy,
       position: combatPos.position,
+      mana: combatStatsCmpt?.mana ?? 100,
+      maxMana: combatStatsCmpt?.maxMana ?? 100,
     };
   });
 

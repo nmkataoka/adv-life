@@ -7,6 +7,7 @@ import { RootState } from "../../7-app/store";
 import { setSkillTarget, clickedOnUnit } from "./combatSceneSlice";
 import { useRef } from "react";
 import ArrowFromUnit from "./ArrowFromUnit";
+import ManaBar from "./ManaBar";
 
 type UnitProps = {
   handle: number;
@@ -14,7 +15,7 @@ type UnitProps = {
 
 export default function Unit({ handle }: UnitProps) {
   const dispatch = useDispatch();
-  const { health, maxHealth, isEnemy } = useSelector(
+  const { health, mana, maxMana, maxHealth, isEnemy } = useSelector(
     (state: RootState) => state.combatScene.units[handle]
   );
   const selectedUnit = useSelector((state: RootState) => state.combatScene.selectedUnit);
@@ -41,6 +42,7 @@ export default function Unit({ handle }: UnitProps) {
     <Container>
       {showArrowFromUnit && <ArrowFromUnit fromRef={unitRef} />}
       <HealthBar health={health / maxHealth} />
+      <ManaBar mana={mana} maxMana={maxMana} />
       <Circle
         ref={unitRef}
         isEnemy={isEnemy}
