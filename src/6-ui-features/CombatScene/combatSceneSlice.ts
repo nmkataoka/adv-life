@@ -20,6 +20,7 @@ export type UnitInfo = {
   isEnemy?: boolean;
   position: number;
 };
+
 type Units = {
   [key: string]: UnitInfo;
 };

@@ -1,5 +1,6 @@
 /** @jsx jsx */
-import { css, jsx } from "@emotion/core";
+import { jsx } from "@emotion/core";
+import styled from "@emotion/styled";
 import Unit from "./Unit";
 import ActionBar from "./ActionBar";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,6 +9,7 @@ import { setMousePosition } from "./combatSceneSlice";
 import { useRef } from "react";
 import { UnitInfo } from "./combatSceneSlice";
 import useDetectKeypress from "../common/useDetectKeypress";
+import InfoSidebar from "./InfoSidebar";
 
 function sortUnitsByCombatPosition(a: UnitInfo, b: UnitInfo) {
   return a.position - b.position;
@@ -31,42 +33,49 @@ export default function CombatScene() {
   };
 
   return (
-    <div
-      css={css`
-        width: 100%;
-        min-height: 70vh;
-        display: flex;
-        position: relative;
-        flex-direction: column;
-        justify-content: center;
-        align-content: center;
-      `}
-      onMouseMove={handleMouseMove}
-      ref={sceneRef}
-    >
-      <div css={row}>
-        {enemies.sort(sortUnitsByCombatPosition).map((e) => (
-          <Unit key={e.entityHandle} handle={e.entityHandle}></Unit>
-        ))}
-      </div>
-      <div
-        css={css`
-          width: 100%;
-          border-bottom: 3px solid gray;
-        `}
-      />
-      <div css={row}>
-        {friendlies.sort(sortUnitsByCombatPosition).map((p) => (
-          <Unit key={p.entityHandle} handle={p.entityHandle}></Unit>
-        ))}
-      </div>
-      <ActionBar />
-    </div>
+    <Container onMouseMove={handleMouseMove} ref={sceneRef}>
+      <MainContent>
+        <Row>
+          {enemies.sort(sortUnitsByCombatPosition).map((e) => (
+            <Unit key={e.entityHandle} handle={e.entityHandle}></Unit>
+          ))}
+        </Row>
+        <Divider />
+        <Row>
+          {friendlies.sort(sortUnitsByCombatPosition).map((p) => (
+            <Unit key={p.entityHandle} handle={p.entityHandle}></Unit>
+          ))}
+        </Row>
+        <ActionBar />
+      </MainContent>
+      <InfoSidebar />
+    </Container>
   );
 }
 
-const row = css`
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  min-height: 70vh;
+  align-items: stretch;
+`;
+
+const MainContent = styled.div`
+  flex: 1 1 100%;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+`;
+
+const Row = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 2em 4em;
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  border-bottom: 2px solid gray;
 `;
