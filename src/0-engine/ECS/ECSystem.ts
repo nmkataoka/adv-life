@@ -9,3 +9,7 @@ export abstract class ECSystem {
   }
   protected eMgr: EntityManager;
 }
+
+export interface ECSystemConstructor {
+  new (eMgr: EntityManager): ECSystem;
+}

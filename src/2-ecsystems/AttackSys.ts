@@ -5,6 +5,7 @@ import { HealthCmpt } from "../1- ncomponents/HealthCmpt";
 import { FactionCmpt } from "../1- ncomponents/FactionCmpt";
 import { ComponentManager } from "../0-engine/ECS/ComponentManager";
 import { CombatPositionCmpt } from "../1- ncomponents/CombatPositionCmpt";
+import { CombatStatsCmpt } from "../1- ncomponents/CombatStatsCmpt";
 
 export class AttackSys extends ECSystem {
   public Start(): void {}
@@ -19,23 +20,27 @@ export class AttackSys extends ECSystem {
     const canAttackMgr = eMgr.GetComponentManager<CanAttackCmpt, typeof CanAttackCmpt>(
       CanAttackCmpt
     );
-    const weaponMgr = eMgr.GetComponentManager<WeaponCmpt, typeof WeaponCmpt>(WeaponCmpt);
-    const healthMgr = eMgr.GetComponentManager<HealthCmpt, typeof HealthCmpt>(HealthCmpt);
-    const factionMgr = eMgr.GetComponentManager<FactionCmpt, typeof FactionCmpt>(FactionCmpt);
     const combatPositionMgr = eMgr.GetComponentManager<
       CombatPositionCmpt,
       typeof CombatPositionCmpt
     >(CombatPositionCmpt);
+    const combatStatsMgr = eMgr.GetComponentManager<CombatStatsCmpt, typeof CombatStatsCmpt>(
+      CombatStatsCmpt
+    );
+    const factionMgr = eMgr.GetComponentManager<FactionCmpt, typeof FactionCmpt>(FactionCmpt);
+    const healthMgr = eMgr.GetComponentManager<HealthCmpt, typeof HealthCmpt>(HealthCmpt);
+    const weaponMgr = eMgr.GetComponentManager<WeaponCmpt, typeof WeaponCmpt>(WeaponCmpt);
 
     Object.entries(canAttackMgr.components).forEach(executeAttackIfPossible);
 
-    function executeAttackIfPossible([, canAttackCmpt]: [string, CanAttackCmpt]) {
+    function executeAttackIfPossible([entityHandleStr, canAttackCmpt]: [string, CanAttackCmpt]) {
       if (canAttackCmpt.skillName) {
-        executeSkill(canAttackCmpt);
+        const e = parseInt(entityHandleStr, 10);
+        executeSkill(e, canAttackCmpt);
       }
     }
 
-    function executeSkill(canAttackCmpt: CanAttackCmpt): void {
+    function executeSkill(entityHandle: number, canAttackCmpt: CanAttackCmpt): void {
       console.log("executing skill", canAttackCmpt);
       function resetTargetAndSkill() {
         canAttackCmpt.targetEntities = [];
@@ -59,21 +64,31 @@ export class AttackSys extends ECSystem {
         }
 
         case "fireball": {
-          const fireballDmg = 30;
-          const [centerTarget] = canAttackCmpt.targetEntities;
-          const targetEntities = getTargetsInAoeRadius(
-            centerTarget,
-            1,
-            factionMgr,
-            combatPositionMgr
-          );
-          console.log("fireball, targets in aoeRadius", targetEntities);
-          targetEntities.forEach((targetHandle) => {
-            const targetHealthCmpt = healthMgr.GetByNumber(targetHandle);
-            if (targetHealthCmpt) {
-              targetHealthCmpt.TakeDamage(fireballDmg);
-            }
-          });
+          // Check for sufficient mana
+          const manaRequirement = 20;
+          const combatStatsCmpt = combatStatsMgr.GetByNumber(entityHandle);
+          if (combatStatsCmpt && combatStatsCmpt.mana >= manaRequirement) {
+            // Consume mana
+            combatStatsCmpt.mana -= manaRequirement;
+
+            // Do the fireball
+            const fireballDmg = 30;
+            const [centerTarget] = canAttackCmpt.targetEntities;
+            const targetEntities = getTargetsInAoeRadius(
+              centerTarget,
+              1,
+              factionMgr,
+              combatPositionMgr
+            );
+            console.log("fireball, targets in aoeRadius", targetEntities);
+            targetEntities.forEach((targetHandle) => {
+              const targetHealthCmpt = healthMgr.GetByNumber(targetHandle);
+              if (targetHealthCmpt) {
+                targetHealthCmpt.TakeDamage(fireballDmg);
+              }
+            });
+          }
+
           resetTargetAndSkill();
           break;
         }

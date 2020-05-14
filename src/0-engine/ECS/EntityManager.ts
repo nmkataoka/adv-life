@@ -1,8 +1,11 @@
 import { Entity } from "./Entity";
-import { ECSystem } from "./ECSystem";
+import { ECSystem, ECSystemConstructor } from "./ECSystem";
 import { NComponent, NComponentConstructor } from "./NComponent";
 import { ComponentManager } from "./ComponentManager";
 import { AttackSys } from "../../2-ecsystems/AttackSys";
+import { ManaRegenSys } from "../../2-ecsystems/ManaRegenSys";
+
+const systems: ECSystemConstructor[] = [AttackSys, ManaRegenSys];
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
@@ -14,7 +17,11 @@ export class EntityManager {
   private entitiesToDestroy: (Entity | number)[] = [];
 
   constructor() {
-    this.systems = { [AttackSys.name]: new AttackSys(this) };
+    this.systems = {};
+    systems.forEach((S) => {
+      this.systems[S.name] = new S(this);
+    });
+
     this.cMgrs = {};
   }
 
