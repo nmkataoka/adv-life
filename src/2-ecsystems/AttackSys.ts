@@ -17,19 +17,12 @@ export class AttackSys extends ECSystem {
 
   public doAttacks(): void {
     const { eMgr } = this;
-    const canAttackMgr = eMgr.GetComponentManager<CanAttackCmpt, typeof CanAttackCmpt>(
-      CanAttackCmpt
-    );
-    const combatPositionMgr = eMgr.GetComponentManager<
-      CombatPositionCmpt,
-      typeof CombatPositionCmpt
-    >(CombatPositionCmpt);
-    const combatStatsMgr = eMgr.GetComponentManager<CombatStatsCmpt, typeof CombatStatsCmpt>(
-      CombatStatsCmpt
-    );
-    const factionMgr = eMgr.GetComponentManager<FactionCmpt, typeof FactionCmpt>(FactionCmpt);
-    const healthMgr = eMgr.GetComponentManager<HealthCmpt, typeof HealthCmpt>(HealthCmpt);
-    const weaponMgr = eMgr.GetComponentManager<WeaponCmpt, typeof WeaponCmpt>(WeaponCmpt);
+    const canAttackMgr = eMgr.GetComponentManager(CanAttackCmpt);
+    const combatPositionMgr = eMgr.GetComponentManager(CombatPositionCmpt);
+    const combatStatsMgr = eMgr.GetComponentManager(CombatStatsCmpt);
+    const factionMgr = eMgr.GetComponentManager(FactionCmpt);
+    const healthMgr = eMgr.GetComponentManager(HealthCmpt);
+    const weaponMgr = eMgr.GetComponentManager(WeaponCmpt);
 
     Object.entries(canAttackMgr.components).forEach(executeAttackIfPossible);
 
@@ -103,7 +96,7 @@ export class AttackSys extends ECSystem {
 
   public checkForDeaths(): void {
     const { eMgr } = this;
-    const healthMgr = eMgr.GetComponentManager<HealthCmpt, typeof HealthCmpt>(HealthCmpt);
+    const healthMgr = eMgr.GetComponentManager(HealthCmpt);
 
     Object.entries(healthMgr.components).forEach(checkForDeath);
 

@@ -1,6 +1,6 @@
 import { Entity } from "./Entity";
 import { ECSystem, ECSystemConstructor } from "./ECSystem";
-import { NComponent, NComponentConstructor } from "./NComponent";
+import { NComponent, NComponentConstructor, NComponentConstructorCFromCClass } from "./NComponent";
 import { ComponentManager } from "./ComponentManager";
 import { AttackSys } from "../../2-ecsystems/AttackSys";
 import { ManaRegenSys } from "../../2-ecsystems/ManaRegenSys";
@@ -45,9 +45,10 @@ export class EntityManager {
     return e;
   }
 
-  public GetComponentManager<C extends NComponent, CClass extends NComponentConstructor<C>>(
-    c: CClass
-  ): ComponentManager<C, CClass> {
+  public GetComponentManager<
+    CClass extends NComponentConstructor<C>,
+    C = NComponentConstructorCFromCClass<CClass>
+  >(c: CClass): ComponentManager<C, CClass> {
     let cMgr = this.cMgrs[c.name];
 
     // Create componentManager if it doesn't exist
@@ -62,7 +63,7 @@ export class EntityManager {
     e: Entity,
     c: C
   ): void {
-    const cMgr = this.GetComponentManager<C, CClass>(c.constructor as CClass);
+    const cMgr = this.GetComponentManager<CClass, C>(c.constructor as CClass);
     cMgr.Add(e, c);
   }
 

@@ -7,6 +7,7 @@ import { CanAttackCmpt } from "../../1- ncomponents/CanAttackCmpt";
 import throttle from "lodash.throttle";
 import { ActionInfo, CreateActionInfo } from "./ActionInfo";
 import { CombatPositionCmpt } from "../../1- ncomponents/CombatPositionCmpt";
+import { CombatStatsCmpt } from "../../1- ncomponents/CombatStatsCmpt";
 
 export type UnitInfo = {
   entityHandle: number;
@@ -90,11 +91,10 @@ export default combatSceneSlice.reducer;
 
 export const updateUnitsFromEngine = () => (dispatch: Dispatch) => {
   const { eMgr } = GameManager.instance;
-  const healthMgr = eMgr.GetComponentManager<HealthCmpt, typeof HealthCmpt>(HealthCmpt);
-  const factionMgr = eMgr.GetComponentManager<FactionCmpt, typeof FactionCmpt>(FactionCmpt);
-  const positionMgr = eMgr.GetComponentManager<CombatPositionCmpt, typeof CombatPositionCmpt>(
-    CombatPositionCmpt
-  );
+  const combatStatsMgr = eMgr.GetComponentManager(CombatStatsCmpt);
+  const healthMgr = eMgr.GetComponentManager(HealthCmpt);
+  const factionMgr = eMgr.GetComponentManager(FactionCmpt);
+  const positionMgr = eMgr.GetComponentManager(CombatPositionCmpt);
 
   const units: Units = {};
   Object.entries(healthMgr.components).forEach(([entity, healthCmpt]) => {
@@ -103,6 +103,7 @@ export const updateUnitsFromEngine = () => (dispatch: Dispatch) => {
     const { health, maxHealth } = healthCmpt;
 
     const factionCmpt = factionMgr.GetByNumber(entityHandle);
+    const combatStatsCmpt = combatStatsMgr.GetByNumber(entityHandle);
 
     const combatPos = positionMgr.GetByNumber(entityHandle);
     if (!combatPos) throw new Error("unit is missing CombatPositionCmpt");
@@ -121,7 +122,7 @@ export const updateUnitsFromEngine = () => (dispatch: Dispatch) => {
 
 export const setSkillTarget = (unit: number, target: number, action: ActionInfo) => {
   const { eMgr } = GameManager.instance;
-  const canAttackMgr = eMgr.GetComponentManager<CanAttackCmpt, typeof CanAttackCmpt>(CanAttackCmpt);
+  const canAttackMgr = eMgr.GetComponentManager(CanAttackCmpt);
   const attacker = canAttackMgr.GetByNumber(unit);
   console.log("set unit attack target", unit, target);
   if (attacker) {

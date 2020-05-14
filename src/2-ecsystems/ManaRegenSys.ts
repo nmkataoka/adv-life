@@ -10,9 +10,7 @@ export class ManaRegenSys extends ECSystem {
 
   private regenMana(dt: number) {
     const { eMgr } = this;
-    const combatStatsMgr = eMgr.GetComponentManager<CombatStatsCmpt, typeof CombatStatsCmpt>(
-      CombatStatsCmpt
-    );
+    const combatStatsMgr = eMgr.GetComponentManager(CombatStatsCmpt);
 
     Object.values(combatStatsMgr.components).forEach((combatStatsCmpt) => {
       const { maxMana, mana, manaRegen } = combatStatsCmpt;
