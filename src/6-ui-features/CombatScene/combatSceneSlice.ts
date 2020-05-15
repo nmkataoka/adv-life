@@ -1,5 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { Dispatch } from "redux";
+import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit";
 import { GameManager } from "../../0-engine/GameManager";
 import { HealthCmpt } from "../../1- ncomponents/HealthCmpt";
 import { FactionCmpt } from "../../1- ncomponents/FactionCmpt";
@@ -10,6 +9,7 @@ import { CombatPositionCmpt } from "../../1- ncomponents/CombatPositionCmpt";
 import { CombatStatsCmpt } from "../../1- ncomponents/CombatStatsCmpt";
 import { keyPressed } from "../common/actions";
 import { Keycodes } from "../common/constants";
+import { AppThunk } from "../../7-app/store";
 
 export type UnitInfo = {
   entityHandle: number;
@@ -54,10 +54,10 @@ const combatSceneSlice = createSlice({
   name: "combatScene",
   initialState,
   reducers: {
-    updatedUnits(state, action) {
+    updatedUnits(state, action: PayloadAction<{ units: Units }>) {
       state.units = action.payload.units;
     },
-    clickedOnUnit(state, action) {
+    clickedOnUnit(state, action: PayloadAction<number>) {
       const handle = action.payload;
       if (state.selectedUnit === handle) {
         // You deselect a unit by clicking on it again
@@ -76,12 +76,12 @@ const combatSceneSlice = createSlice({
         }
       }
     },
-    updateMousePosition(state, action) {
+    updateMousePosition(state, action: PayloadAction<{ x: number; y: number }>) {
       const { x, y } = action.payload;
       state.mousePosition = { x, y };
     },
 
-    selectedAction(state, action) {
+    selectedAction(state, action: PayloadAction<ActionInfo | undefined>) {
       // If no unit is selected, actions can't be clicked
       if (state.selectedUnit != null) {
         state.selectedAction = action.payload;
@@ -90,7 +90,7 @@ const combatSceneSlice = createSlice({
     clearSelectedAction(state) {
       state.selectedAction = undefined;
     },
-    isPausedChanged(state, action) {
+    isPausedChanged(state, action: PayloadAction<boolean>) {
       state.isPaused = action.payload;
     },
   },
@@ -118,7 +118,7 @@ export const { clickedOnUnit, selectedAction, clearSelectedAction } = combatScen
 
 export default combatSceneSlice.reducer;
 
-export const updateUnitsFromEngine = () => (dispatch: Dispatch) => {
+export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
   const { eMgr } = GameManager.instance;
   const combatStatsMgr = eMgr.GetComponentManager(CombatStatsCmpt);
   const healthMgr = eMgr.GetComponentManager(HealthCmpt);
@@ -166,10 +166,10 @@ const updateMousePositionInner = throttle((dispatch: Dispatch, newPos: MousePos)
   dispatch(updateMousePosition(newPos));
 }, 100);
 
-export const setMousePosition = (newPos: MousePos) => (dispatch: Dispatch) =>
+export const setMousePosition = (newPos: MousePos): AppThunk => (dispatch) =>
   updateMousePositionInner(dispatch, newPos);
 
-export const setIsPaused = (nextState: boolean) => (dispatch: Dispatch) => {
+export const setIsPaused = (nextState: boolean): AppThunk => (dispatch) => {
   GameManager.instance.SetPaused(nextState);
   dispatch(isPausedChanged(nextState));
 };

@@ -61,7 +61,7 @@ export default function Unit({ handle }: UnitProps) {
   };
 
   const isSelectedUnit = handle === selectedUnit;
-  const showArrowFromUnit = isSelectedUnit && !isEnemy;
+  const showArrowFromUnit = isSelectedUnit && !isEnemy && selectedAction;
 
   return (
     <Container>
@@ -74,6 +74,7 @@ export default function Unit({ handle }: UnitProps) {
         isEnemy={isEnemy}
         onClick={handleUnitClick}
         isSelected={selectedUnit === handle}
+        anActionIsSelected={!!selectedAction}
       >
         UNIT
       </Circle>
@@ -92,12 +93,13 @@ const Container = styled.div`
 type CircleProps = {
   isEnemy?: boolean;
   isSelected?: boolean;
+  anActionIsSelected: boolean;
 };
 
 const Circle = styled.div`
   border-radius: 50%;
   background-color: ${(props: CircleProps) => (props.isEnemy ? "red" : "lightblue")};
-  ${(props) => props.isSelected && `outline: 2px solid blue;`}
+  ${(props) => props.isSelected && `outline: 2px solid lightgreen;`}
   width: 100px;
   height: 100px;
   display: flex;
@@ -106,5 +108,6 @@ const Circle = styled.div`
 
   &:hover {
     cursor: pointer;
+    ${(props) => props.anActionIsSelected && `outline: 2px solid blue;`}
   }
 `;
