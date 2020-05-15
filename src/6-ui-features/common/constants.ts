@@ -1,9 +1,11 @@
 export const Keycodes = {
-  ESC: 27,
+  Esc: 27,
+  Space: 32,
 };
 
 export const KeycodesByNum = {
-  27: "ESC",
+  27: "Esc",
+  32: "Space",
 };
 
-export const ImportantKeycodes = [Keycodes.ESC];
+export const ImportantKeycodes = [Keycodes.Esc, Keycodes.Space];

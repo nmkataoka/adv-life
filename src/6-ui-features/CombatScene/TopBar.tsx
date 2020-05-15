@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import styled from "@emotion/styled";
+import PauseButton from "./PauseButton";
 
 const actions = ["Menu", "Map"];
 
@@ -10,6 +11,7 @@ export default function TopBar() {
       {actions.map((a) => (
         <ActionButton key={a}>{a}</ActionButton>
       ))}
+      <PauseButton />
     </Container>
   );
 }

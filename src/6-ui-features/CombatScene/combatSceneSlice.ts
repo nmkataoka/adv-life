@@ -46,6 +46,8 @@ const initialState = {
     CreateActionInfo({ name: "flee", displayText: "Flee" }),
   ],
   selectedAction: undefined as ActionInfo | undefined,
+
+  isPaused: false,
 };
 
 const combatSceneSlice = createSlice({
@@ -88,11 +90,14 @@ const combatSceneSlice = createSlice({
     clearSelectedAction(state) {
       state.selectedAction = undefined;
     },
+    isPausedChanged(state, action) {
+      state.isPaused = action.payload;
+    },
   },
   extraReducers: {
     [keyPressed.toString()]: (state, action) => {
       switch (action.payload) {
-        case Keycodes.ESC: {
+        case Keycodes.Esc: {
           if (state.selectedAction) {
             state.selectedAction = undefined;
           } else if (state.selectedUnit) {
@@ -107,7 +112,7 @@ const combatSceneSlice = createSlice({
   },
 });
 
-const { updatedUnits, updateMousePosition } = combatSceneSlice.actions;
+const { isPausedChanged, updatedUnits, updateMousePosition } = combatSceneSlice.actions;
 
 export const { clickedOnUnit, selectedAction, clearSelectedAction } = combatSceneSlice.actions;
 
@@ -163,3 +168,8 @@ const updateMousePositionInner = throttle((dispatch: Dispatch, newPos: MousePos)
 
 export const setMousePosition = (newPos: MousePos) => (dispatch: Dispatch) =>
   updateMousePositionInner(dispatch, newPos);
+
+export const setIsPaused = (nextState: boolean) => (dispatch: Dispatch) => {
+  GameManager.instance.SetPaused(nextState);
+  dispatch(isPausedChanged(nextState));
+};

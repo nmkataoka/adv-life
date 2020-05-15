@@ -12,6 +12,7 @@ export class GameManager {
   public static readonly instance = new GameManager();
 
   public eMgr: EntityManager;
+  public isPaused = false;
 
   constructor() {
     this.eMgr = new EntityManager();
@@ -25,6 +26,10 @@ export class GameManager {
       this.CreateUnit(i, true);
     }
     this.EnterGameLoop();
+  }
+
+  public SetPaused(nextState: boolean): void {
+    this.isPaused = nextState;
   }
 
   private GameLoopHandle?: NodeJS.Timeout;
@@ -49,7 +54,10 @@ export class GameManager {
     }
 
     this.GameLoopHandle = setTimeout(() => {
-      this.eMgr.OnUpdate(GameManager.dt);
+      if (!this.isPaused) {
+        this.eMgr.OnUpdate(GameManager.dt);
+      }
+
       this.EnterGameLoop();
     }, 1000 / GameManager.FPS);
   }
