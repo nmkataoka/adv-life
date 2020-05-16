@@ -7,10 +7,11 @@ import { CombatPositionCmpt } from "../1- ncomponents/CombatPositionCmpt";
 import { CombatStatsCmpt } from "../1- ncomponents/CombatStatsCmpt";
 import { AgentCmpt } from "../1- ncomponents/AgentCmpt";
 import { GoalQueueCmpt } from '../2-ecsystems/Agent/GoalQueueCmpt';
+import { StatusEffectsCmpt } from "../1- ncomponents/StatusEffectsCmpt";
 
 export class GameManager {
-  public static readonly FPS = 0.3;
-  public static readonly dt = 1;
+  public static readonly FPS = 3;
+  public static readonly dt = 1 / GameManager.FPS;
   public static readonly instance = new GameManager();
 
   public eMgr: EntityManager;
@@ -48,6 +49,7 @@ export class GameManager {
     this.eMgr.AddComponent(e, new CanAttackCmpt());
     this.eMgr.AddComponent(e, new WeaponCmpt());
     this.eMgr.AddComponent(e, new AgentCmpt());
+    this.eMgr.AddComponent(e, new StatusEffectsCmpt());
     if(!isEnemy) {
       this.eMgr.AddComponent(e, new GoalQueueCmpt());
     }

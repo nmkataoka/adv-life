@@ -5,8 +5,9 @@ import { ComponentManager } from "./ComponentManager";
 import { AttackSys } from "../../2-ecsystems/AttackSys";
 import { ManaRegenSys } from "../../2-ecsystems/ManaRegenSys";
 import { AgentSys } from "../../2-ecsystems/Agent/AgentSys";
+import { StatusEffectsSys } from "../../2-ecsystems/Agent/StatusEffectsSys";
 
-const systems: ECSystemConstructor<any>[] = [AgentSys, AttackSys, ManaRegenSys];
+const systems: ECSystemConstructor<any>[] = [AgentSys, AttackSys, ManaRegenSys, StatusEffectsSys];
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;

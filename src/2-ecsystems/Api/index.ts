@@ -1,12 +1,11 @@
-import { GetSystem, GetComponent } from "../../0-engine/GlobalFunctions";
-import { AgentSys } from "../Agent/AgentSys";
+import { GetComponent, GetComponentManager } from "../../0-engine/GlobalFunctions";
 import { BoundAction } from "../Agent/BoundAction";
 import { GoalQueueCmpt } from "../Agent/GoalQueueCmpt";
 import { CombatStatsCmpt } from "../../1- ncomponents/CombatStatsCmpt";
+import { ProcRuleDbCmpt } from "../Agent/ProcRuleDatabaseCmpt";
 
 export function SetSkillTarget(user: number, targets: number[], skillName: string) {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  const { prdb } = GetSystem(AgentSys) as AgentSys;
+  const prdb = Object.values(GetComponentManager(ProcRuleDbCmpt).components)[0]
 
   const procRule = prdb.getProcRule(skillName);
   const entityBinding = [user, ...targets];
