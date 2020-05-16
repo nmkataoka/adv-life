@@ -21,12 +21,8 @@ export class GameManager {
   }
 
   public Start(): void {
-    for (let i = 0; i < 3; ++i) {
-      this.CreateUnit(i);
-    }
-    for (let i = 0; i < 3; ++i) {
-      this.CreateUnit(i, true);
-    }
+    this.eMgr.Start();
+    this.CreateUnits();
     this.EnterGameLoop();
   }
 
@@ -35,6 +31,15 @@ export class GameManager {
   }
 
   private GameLoopHandle?: NodeJS.Timeout;
+
+  private CreateUnits(): void {
+    for (let i = 0; i < 3; ++i) {
+      this.CreateUnit(i);
+    }
+    for (let i = 0; i < 3; ++i) {
+      this.CreateUnit(i, true);
+    }
+  }
 
   private CreateUnit(position: number, isEnemy = false): void {
     const e = this.eMgr.CreateEntity();

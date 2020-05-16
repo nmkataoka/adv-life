@@ -1,7 +1,8 @@
 import { ProcRule } from "./ProcRule";
 import { ProcRuleData } from "./ProcRuleData";
+import { NComponent } from "../../0-engine/ECS/NComponent";
 
-export class ProcRuleDatabase {
+export class ProcRuleDbCmpt implements NComponent {
   public procRules: ProcRule<any>[];
   public procRuleMap: { [key: string]: number };
 

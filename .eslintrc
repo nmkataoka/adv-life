@@ -12,7 +12,7 @@
   },
   "rules": {
     "object-curly-spacing": ["error", "always"],
-    "prefer-destructuring": "error",
+    "prefer-destructuring": ["error", { "object": true, "array": false }],
     "react/prop-types": 0,
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/no-use-before-define": 0,

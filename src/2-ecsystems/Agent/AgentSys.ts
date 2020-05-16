@@ -2,16 +2,21 @@ import { ECSystem } from "../../0-engine/ECS/ECSystem";
 import { AgentCmpt } from "../../1- ncomponents/AgentCmpt";
 import { BoundActionStatus, BoundAction } from "./BoundAction";
 import { ExecutorStatus } from "./ProcRule";
-import { ProcRuleDatabase } from "./ProcRuleDatabase";
+import { ProcRuleDbCmpt } from "./ProcRuleDatabaseCmpt";
 import { GoalQueueCmpt } from "./GoalQueueCmpt";
+import { GetComponentManager } from "../../0-engine/GlobalFunctions";
 
 export class AgentSys extends ECSystem {
-  public readonly prdb = new ProcRuleDatabase();
-
-  public Start(): void {}
+  public Start(): void {
+    // Create the proc rule database
+    const prdbEntity = this.eMgr.CreateEntity();
+    const prdbCmpt = new ProcRuleDbCmpt();
+    this.eMgr.AddComponent(prdbEntity, prdbCmpt);
+  }
 
   public OnUpdate(dt: number): void {
     const { eMgr } = this;
+    this.setCachedComponents();
     const agentMgr = eMgr.GetComponentManager(AgentCmpt);
 
     Object.entries(agentMgr.components).forEach(([entityString, agentCmpt]) => {
@@ -37,8 +42,15 @@ export class AgentSys extends ECSystem {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private GetNextAction(self: number, baction?: BoundAction<any>): BoundAction<any> {
+  private prdb?: ProcRuleDbCmpt;
+
+  private setCachedComponents(): void {
+    if(!this.prdb) this.prdb = Object.values(GetComponentManager(ProcRuleDbCmpt).components)[0];
+  }
+
+  private GetNextAction(self: number, baction?: BoundAction): BoundAction {
+    if(!this.prdb) throw new Error("prdb not set");
+
     // Recovery forces a delay after a successful action
     if(baction && baction.recoveryDuration > 0) {
       const recoverPr = this.prdb.getProcRule('recover');
