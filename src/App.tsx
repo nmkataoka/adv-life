@@ -7,7 +7,7 @@ import { GameManager } from "./0-engine/GameManager";
 import { useDispatch } from "react-redux";
 import { updateUnitsFromEngine } from "./6-ui-features/CombatScene/combatSceneSlice";
 
-const delay = 3000;
+const delay = 1000;
 
 function App() {
   const [uiLoopHandle, setUiLoopHandle] = useState(null as NodeJS.Timeout | null);

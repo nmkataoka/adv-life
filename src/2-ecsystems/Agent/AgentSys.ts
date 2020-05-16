@@ -20,7 +20,7 @@ export class AgentSys extends ECSystem {
 
       // Get new action if necessary
       if (!baction || baction.status === BoundActionStatus.Finished) {
-        baction = this.GetNextAction(self);
+        baction = this.GetNextAction(self, baction);
       }
 
       // Start or continue action
@@ -38,7 +38,13 @@ export class AgentSys extends ECSystem {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private GetNextAction(self: number): BoundAction<any> {
+  private GetNextAction(self: number, baction?: BoundAction<any>): BoundAction<any> {
+    // Recovery forces a delay after a successful action
+    if(baction && baction.recoveryDuration > 0) {
+      const recoverPr = this.prdb.getProcRule('recover');
+      return new BoundAction(recoverPr, [self], baction.recoveryDuration, 0);
+    }
+
     // Player-controlled agents use GoalQueueCmpt to receive commands from the player
     const goalQueueCmpt = this.eMgr.GetComponent(GoalQueueCmpt, self);
     if(goalQueueCmpt && goalQueueCmpt.nextAction) {

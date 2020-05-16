@@ -34,8 +34,8 @@ export const ProcRuleData: ProcRule<any>[] = [
   }),
 
   new ProcRule("fireball", () => (entityBinding: number[]) => {
-    const manaRequirement = 20;
-    const damage = 20;
+    const manaRequirement = 25;
+    const damage = 30;
     const aoeRadius = 1;
     const [self, centerTarget] = entityBinding;
 
@@ -89,15 +89,13 @@ function getTargetsInAoeRadius(
 ): number[] {
   // Get enemies in combat order
   const enemies = Object.entries(factionMgr.components).filter((faction) => faction[1].isEnemy);
-  console.log("enemies", enemies);
   const enemyPositions: EntityCombatPos[] = enemies.map((e) => {
     const entityHandle = parseInt(e[0], 10);
     const combatPos = combatPositionMgr.GetByNumber(entityHandle);
     return { entityHandle, combatPos };
   });
-  console.log("enemy positions", enemyPositions);
+
   const sortedEnemyPositions = enemyPositions.sort(sortByCombatPos);
-  console.log("sorted enemy positions", sortedEnemyPositions);
 
   // Get enemies within radius
   const centerIdx = sortedEnemyPositions.findIndex((e) => e.entityHandle === centerTarget);

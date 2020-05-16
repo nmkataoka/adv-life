@@ -10,8 +10,8 @@ export function SetSkillTarget(user: number, targets: number[], skillName: strin
 
   const procRule = prdb.getProcRule(skillName);
   const entityBinding = [user, ...targets];
-  const data = getSkillData(user, targets, skillName);
-  const baction = new BoundAction(procRule, entityBinding, data);
+  const { data, recoveryDuration } = getSkillData(user, targets, skillName);
+  const baction = new BoundAction(procRule, entityBinding, data, recoveryDuration);
 
   const goalQueueCmpt = GetComponent(GoalQueueCmpt, user);
   if(goalQueueCmpt) {
@@ -21,6 +21,7 @@ export function SetSkillTarget(user: number, targets: number[], skillName: strin
 
 function getSkillData(user: number, targets: number[], skillName: string) {
   let data: any = undefined;
+  const recoveryDuration = getRecoveryDuration(user);
 
   switch(skillName) {
     case "attack": {
@@ -28,9 +29,7 @@ function getSkillData(user: number, targets: number[], skillName: string) {
       break;
     }
     case "recover": {
-      const defaultRecoveryPeriod = 2;
-      const combatStatsCmpt = GetComponent(CombatStatsCmpt, user);
-      data = combatStatsCmpt?.getAttackCooldown() ?? defaultRecoveryPeriod;
+      data = recoveryDuration;
       break;
     }
     case "fireball": {
@@ -40,5 +39,12 @@ function getSkillData(user: number, targets: number[], skillName: string) {
       break;
   }
 
-  return data;
+  return { data, recoveryDuration };
+}
+
+function getRecoveryDuration(user: number) {
+  const defaultRecoveryPeriod = 2;
+  const combatStatsCmpt = GetComponent(CombatStatsCmpt, user);
+  const recoveryDuration = combatStatsCmpt?.getAttackCooldown() ?? defaultRecoveryPeriod;
+  return recoveryDuration;
 }
