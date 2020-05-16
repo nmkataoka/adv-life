@@ -1,5 +1,5 @@
-import { NComponent } from "../0-engine/ECS/NComponent";
+import { NComponent } from '../0-engine/ECS/NComponent';
 
 export class CanAttackCmpt implements NComponent {
-  public skillName = "";
+  public skillName = '';
 }

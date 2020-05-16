@@ -1,14 +1,14 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
-import styled from "@emotion/styled";
-import HealthBar from "./HealthBar";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../7-app/store";
-import { setSkillTarget, clickedOnUnit } from "./combatSceneSlice";
-import { useRef, useState, useEffect } from "react";
-import ArrowFromUnit from "./ArrowFromUnit";
-import ManaBar from "./ManaBar";
-import { damageBlinkCss } from "../../5-react-components/arrow/damageBlink";
+import { jsx } from '@emotion/core';
+import styled from '@emotion/styled';
+import { useSelector, useDispatch } from 'react-redux';
+import { useRef, useState, useEffect } from 'react';
+import HealthBar from './HealthBar';
+import { RootState } from '../../7-app/types';
+import { setSkillTarget, clickedOnUnit } from './combatSceneSlice';
+import ArrowFromUnit from './ArrowFromUnit';
+import ManaBar from './ManaBar';
+import { damageBlinkCss } from '../../5-react-components/arrow/damageBlink';
 
 type UnitProps = {
   handle: number;
@@ -19,8 +19,10 @@ const blinkOnDamageFor = 1000;
 
 export default function Unit({ handle }: UnitProps) {
   const dispatch = useDispatch();
-  const { health, mana, maxMana, maxHealth, isEnemy } = useSelector(
-    (state: RootState) => state.combatScene.units[handle]
+  const {
+    health, mana, maxMana, maxHealth, isEnemy,
+  } = useSelector(
+    (state: RootState) => state.combatScene.units[handle],
   );
   const [prevHealth, setPrevHealth] = useState(health ?? 0);
   const [recentlyTookDamage, setRecentlyTookDamage] = useState(false);
@@ -37,7 +39,7 @@ export default function Unit({ handle }: UnitProps) {
       setTookDamageTimeout(
         setTimeout(() => {
           setRecentlyTookDamage(false);
-        }, blinkOnDamageFor)
+        }, blinkOnDamageFor),
       );
     }
     setPrevHealth(health);
@@ -98,8 +100,8 @@ type CircleProps = {
 
 const Circle = styled.div`
   border-radius: 50%;
-  background-color: ${(props: CircleProps) => (props.isEnemy ? "red" : "lightblue")};
-  ${(props) => props.isSelected && `outline: 2px solid lightgreen;`}
+  background-color: ${(props: CircleProps) => (props.isEnemy ? 'red' : 'lightblue')};
+  ${(props) => props.isSelected && 'outline: 2px solid lightgreen;'}
   width: 100px;
   height: 100px;
   display: flex;
@@ -108,6 +110,6 @@ const Circle = styled.div`
 
   &:hover {
     cursor: pointer;
-    ${(props) => props.anActionIsSelected && `outline: 2px solid blue;`}
+    ${(props) => props.anActionIsSelected && 'outline: 2px solid blue;'}
   }
 `;

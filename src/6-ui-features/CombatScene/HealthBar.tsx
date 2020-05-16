@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
-import styled from "@emotion/styled";
+import { jsx } from '@emotion/core';
+import styled from '@emotion/styled';
 
 type HealthBarProps = {
   health: number;
@@ -9,7 +9,7 @@ type HealthBarProps = {
 export default function HealthBar({ health }: HealthBarProps) {
   return (
     <Container>
-      <Health style={{ width: (health * 100).toFixed(0) + "%" }} />
+      <Health style={{ width: `${(health * 100).toFixed(0)}%` }} />
     </Container>
   );
 }

@@ -1,4 +1,4 @@
-import { css, keyframes } from "@emotion/core";
+import { css, keyframes } from '@emotion/core';
 
 const blink = keyframes`
   0% { background-color: red }

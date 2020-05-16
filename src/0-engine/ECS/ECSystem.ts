@@ -1,19 +1,22 @@
-import { EntityManager } from "./EntityManager";
+import {
+  GetComponentFuncType,
+  GetComponentManagerFuncType,
+} from './types/EntityManagerAccessorTypes';
 
 export abstract class ECSystem {
   public abstract Start(): void;
+
   public abstract OnUpdate(dt: number): void;
 
-  constructor(eMgr: EntityManager) {
-    this.eMgr = eMgr;
+  constructor(
+    getComponent: GetComponentFuncType<any, any>,
+    getComponentManager: GetComponentManagerFuncType<any, any>,
+  ) {
+    this.GetComponent = getComponent;
+    this.GetComponentManager = getComponentManager;
   }
-  protected eMgr: EntityManager;
-}
 
-export interface ECSystemConstructor<C extends ECSystem> {
-  new (eMgr: EntityManager): C;
-}
+  protected GetComponent: GetComponentFuncType<any, any>;
 
-export type ECSystemConstructorCFromCClass<CClass> = CClass extends ECSystemConstructor<infer C>
-  ? C
-  : never;
+  protected GetComponentManager: GetComponentManagerFuncType<any, any>;
+}

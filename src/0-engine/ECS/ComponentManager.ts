@@ -1,5 +1,5 @@
-import { Entity } from "./Entity";
-import { NComponent, NComponentConstructor } from "./NComponent";
+import { Entity } from './Entity';
+import { NComponent, NComponentConstructor } from './NComponent';
 
 export class ComponentManager<C extends NComponent, CClass extends NComponentConstructor<C>> {
   constructor(c: CClass) {
@@ -21,7 +21,7 @@ export class ComponentManager<C extends NComponent, CClass extends NComponentCon
 
   public Erase(e: Entity | number) {
     let handle: number;
-    if (typeof e === "number") {
+    if (typeof e === 'number') {
       handle = e;
     } else {
       ({ handle } = e);
@@ -30,5 +30,6 @@ export class ComponentManager<C extends NComponent, CClass extends NComponentCon
   }
 
   private myClass: CClass;
+
   public components: { [key: number]: C };
 }

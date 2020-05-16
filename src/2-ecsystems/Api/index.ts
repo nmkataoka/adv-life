@@ -1,11 +1,11 @@
-import { GetComponent, GetComponentManager } from "../../0-engine/GlobalFunctions";
-import { BoundAction } from "../Agent/BoundAction";
-import { GoalQueueCmpt } from "../Agent/GoalQueueCmpt";
-import { CombatStatsCmpt } from "../../1- ncomponents/CombatStatsCmpt";
-import { ProcRuleDbCmpt } from "../Agent/ProcRuleDatabaseCmpt";
+import { GetComponent, GetComponentManager } from '../../0-engine/ECS/EntityManager';
+import { BoundAction } from '../Agent/BoundAction';
+import { GoalQueueCmpt } from '../Agent/GoalQueueCmpt';
+import { CombatStatsCmpt } from '../../1- ncomponents/CombatStatsCmpt';
+import { ProcRuleDbCmpt } from '../Agent/ProcRuleDatabaseCmpt';
 
 export function SetSkillTarget(user: number, targets: number[], skillName: string) {
-  const prdb = Object.values(GetComponentManager(ProcRuleDbCmpt).components)[0]
+  const prdb = Object.values(GetComponentManager(ProcRuleDbCmpt).components)[0];
 
   const procRule = prdb.getProcRule(skillName);
   const entityBinding = [user, ...targets];
@@ -13,25 +13,25 @@ export function SetSkillTarget(user: number, targets: number[], skillName: strin
   const baction = new BoundAction(procRule, entityBinding, data, recoveryDuration);
 
   const goalQueueCmpt = GetComponent(GoalQueueCmpt, user);
-  if(goalQueueCmpt) {
+  if (goalQueueCmpt) {
     goalQueueCmpt.nextAction = baction;
   }
 }
 
 function getSkillData(user: number, targets: number[], skillName: string) {
-  let data: any = undefined;
+  let data: any;
   const recoveryDuration = getRecoveryDuration(user);
 
-  switch(skillName) {
-    case "attack": {
+  switch (skillName) {
+    case 'attack': {
       data = 15;
       break;
     }
-    case "recover": {
+    case 'recover': {
       data = recoveryDuration;
       break;
     }
-    case "fireball": {
+    case 'fireball': {
       break;
     }
     default:

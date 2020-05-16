@@ -4,8 +4,8 @@ export const Keycodes = {
 };
 
 export const KeycodesByNum = {
-  27: "Esc",
-  32: "Space",
+  27: 'Esc',
+  32: 'Space',
 };
 
 export const ImportantKeycodes = [Keycodes.Esc, Keycodes.Space];

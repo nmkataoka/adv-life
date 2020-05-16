@@ -1,5 +1,5 @@
-import { ECSystem } from "../0-engine/ECS/ECSystem";
-import { CombatStatsCmpt } from "../1- ncomponents/CombatStatsCmpt";
+import { ECSystem } from '../0-engine/ECS/ECSystem';
+import { CombatStatsCmpt } from '../1- ncomponents/CombatStatsCmpt';
 
 export class ManaRegenSys extends ECSystem {
   public Start(): void {}
@@ -9,8 +9,7 @@ export class ManaRegenSys extends ECSystem {
   }
 
   private regenMana(dt: number) {
-    const { eMgr } = this;
-    const combatStatsMgr = eMgr.GetComponentManager(CombatStatsCmpt);
+    const combatStatsMgr = this.GetComponentManager(CombatStatsCmpt);
 
     Object.values(combatStatsMgr.components).forEach((combatStatsCmpt) => {
       const { maxMana, mana, manaRegen } = combatStatsCmpt;

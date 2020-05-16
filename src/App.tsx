@@ -1,11 +1,11 @@
 /** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import CombatScene from "./6-ui-features/CombatScene";
-import TopBar from "./6-ui-features/CombatScene/TopBar";
-import { useEffect, useState, useCallback } from "react";
-import { GameManager } from "./0-engine/GameManager";
-import { useDispatch } from "react-redux";
-import { updateUnitsFromEngine } from "./6-ui-features/CombatScene/combatSceneSlice";
+import { css, jsx } from '@emotion/core';
+import { useEffect, useState, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import CombatScene from './6-ui-features/CombatScene';
+import TopBar from './6-ui-features/CombatScene/TopBar';
+import { GameManager } from './0-engine/GameManager';
+import { updateUnitsFromEngine } from './6-ui-features/CombatScene/combatSceneSlice';
 
 const delay = 1000;
 

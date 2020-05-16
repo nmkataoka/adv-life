@@ -1,33 +1,40 @@
-import { Entity } from "./Entity";
-import { ECSystem, ECSystemConstructor, ECSystemConstructorCFromCClass } from "./ECSystem";
-import { NComponent, NComponentConstructor, NComponentConstructorCFromCClass } from "./NComponent";
-import { ComponentManager } from "./ComponentManager";
-import { AttackSys } from "../../2-ecsystems/AttackSys";
-import { ManaRegenSys } from "../../2-ecsystems/ManaRegenSys";
-import { AgentSys } from "../../2-ecsystems/Agent/AgentSys";
-import { StatusEffectsSys } from "../../2-ecsystems/Agent/StatusEffectsSys";
-
-const systems: ECSystemConstructor<any>[] = [AgentSys, AttackSys, ManaRegenSys, StatusEffectsSys];
+import { Entity } from './Entity';
+import { ECSystem } from './ECSystem';
+import { NComponent, NComponentConstructor, NComponentConstructorCFromCClass } from './NComponent';
+import { ComponentManager } from './ComponentManager';
+import { ECSystemConstructor, ECSystemConstructorCFromCClass } from './types/ECSystemTypes';
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
 
+  public static instance: EntityManager;
+
+  public static SystemConstructors: ECSystemConstructor<any>[] = [];
+
   private count = 0;
+
   private nextEntityId = 0;
+
   private systems: { [key: string]: ECSystem };
+
   private cMgrs: { [key: string]: ComponentManager<NComponent, NComponentConstructor<NComponent>> };
+
   private entitiesToDestroy: (Entity | number)[] = [];
 
   constructor() {
+    EntityManager.instance = this;
+
     this.systems = {};
-    systems.forEach((S) => {
-      this.systems[S.name] = new S(this);
+    console.log('entity manager constructor', EntityManager.SystemConstructors.length);
+    EntityManager.SystemConstructors.forEach((S) => {
+      this.systems[S.name] = new S(GetComponent, GetComponentManager);
     });
 
     this.cMgrs = {};
   }
 
   public Start(): void {
+    console.log('entity manager start');
     Object.values(this.systems).forEach((s) => s.Start());
   }
 
@@ -38,7 +45,7 @@ export class EntityManager {
 
   public CreateEntity(): Entity {
     if (this.count === EntityManager.MAX_ENTITIES) {
-      throw new Error("Used all available entities");
+      throw new Error('Used all available entities');
     }
 
     this.IncrementNextEntityId();
@@ -71,7 +78,7 @@ export class EntityManager {
 
   public AddComponent<C extends NComponent, CClass extends NComponentConstructor<C>>(
     e: Entity,
-    c: C
+    c: C,
   ): void {
     const cMgr = this.GetComponentManager<CClass, C>(c.constructor as CClass);
     cMgr.Add(e, c);
@@ -106,4 +113,25 @@ export class EntityManager {
   private IncrementNextEntityId(): void {
     ++this.nextEntityId;
   }
+}
+
+export function GetComponentManager<
+  CClass extends NComponentConstructor<C>,
+  C = NComponentConstructorCFromCClass<CClass>
+>(cclass: CClass): ComponentManager<C, CClass> {
+  return EntityManager.instance.GetComponentManager<CClass, C>(cclass);
+}
+
+export function GetComponent<
+  CClass extends NComponentConstructor<C>,
+  C = NComponentConstructorCFromCClass<CClass>
+>(cclass: CClass, entity: number): C | undefined {
+  return EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumber(entity);
+}
+
+export function GetSystem<
+  CClass extends ECSystemConstructor<C>,
+  C extends ECSystem = ECSystemConstructorCFromCClass<CClass>
+>(cclass: CClass): C {
+  return EntityManager.instance.GetSystem(cclass);
 }

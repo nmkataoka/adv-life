@@ -1,8 +1,8 @@
 // Draw an arrow from the center of an element to the cursor position
 
 /** @jsx jsx */
-import { jsx, css } from "@emotion/core";
-import useArrowId from "./arrowId";
+import { jsx, css } from '@emotion/core';
+import useArrowId from './arrowId';
 
 export type Point = {
   x: number;
@@ -22,7 +22,7 @@ export default function Arrow({ from, to }: ArrowProps) {
     <svg css={svgCss}>
       <defs>
         <marker id={markerCssId} markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto">
-          <path d="M2,2 L2,11 L10,6 L2,2" style={{ fill: "#000000" }} />
+          <path d="M2,2 L2,11 L10,6 L2,2" style={{ fill: '#000000' }} />
         </marker>
       </defs>
       <line
@@ -31,7 +31,7 @@ export default function Arrow({ from, to }: ArrowProps) {
         x2={to.x}
         y2={to.y}
         markerEnd={`url(#${markerCssId})`}
-        style={{ stroke: "red", strokeWidth: 2 }}
+        style={{ stroke: 'red', strokeWidth: 2 }}
       />
     </svg>
   );

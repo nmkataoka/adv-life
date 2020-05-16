@@ -5,8 +5,8 @@ export type ActionInfo = {
 };
 
 const defaultActionInfo = {
-  name: "MISSING NAME",
-  displayText: "MISSING TEXT",
+  name: 'MISSING NAME',
+  displayText: 'MISSING TEXT',
   aoeRadius: 0,
 };
 

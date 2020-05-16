@@ -1,16 +1,17 @@
-import { ECSystem } from "../0-engine/ECS/ECSystem";
-import { HealthCmpt } from "../1- ncomponents/HealthCmpt";
+import { ECSystem } from '../0-engine/ECS/ECSystem';
+import { HealthCmpt } from '../1- ncomponents/HealthCmpt';
+import { EntityManager } from '../0-engine/ECS/EntityManager';
 
 export class AttackSys extends ECSystem {
   public Start(): void {}
 
-  public OnUpdate(dt: number): void {
+  public OnUpdate(): void {
     this.checkForDeaths();
   }
 
   public checkForDeaths(): void {
-    const { eMgr } = this;
-    const healthMgr = eMgr.GetComponentManager(HealthCmpt);
+    const eMgr = EntityManager.instance;
+    const healthMgr = this.GetComponentManager(HealthCmpt);
 
     Object.entries(healthMgr.components).forEach(checkForDeath);
 

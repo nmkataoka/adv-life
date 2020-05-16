@@ -1,23 +1,28 @@
-import { EntityManager } from "./ECS/EntityManager";
-import { HealthCmpt } from "../1- ncomponents/HealthCmpt";
-import { CanAttackCmpt } from "../1- ncomponents/CanAttackCmpt";
-import { WeaponCmpt } from "../1- ncomponents/WeaponCmpt";
-import { FactionCmpt } from "../1- ncomponents/FactionCmpt";
-import { CombatPositionCmpt } from "../1- ncomponents/CombatPositionCmpt";
-import { CombatStatsCmpt } from "../1- ncomponents/CombatStatsCmpt";
-import { AgentCmpt } from "../1- ncomponents/AgentCmpt";
+import { EntityManager } from './ECS/EntityManager';
+import { HealthCmpt } from '../1- ncomponents/HealthCmpt';
+import { CanAttackCmpt } from '../1- ncomponents/CanAttackCmpt';
+import { WeaponCmpt } from '../1- ncomponents/WeaponCmpt';
+import { FactionCmpt } from '../1- ncomponents/FactionCmpt';
+import { CombatPositionCmpt } from '../1- ncomponents/CombatPositionCmpt';
+import { CombatStatsCmpt } from '../1- ncomponents/CombatStatsCmpt';
+import { AgentCmpt } from '../1- ncomponents/AgentCmpt';
 import { GoalQueueCmpt } from '../2-ecsystems/Agent/GoalQueueCmpt';
-import { StatusEffectsCmpt } from "../1- ncomponents/StatusEffectsCmpt";
+import { StatusEffectsCmpt } from '../1- ncomponents/StatusEffectsCmpt';
+import SystemList from './SystemList';
 
 export class GameManager {
   public static readonly FPS = 3;
+
   public static readonly dt = 1 / GameManager.FPS;
+
   public static readonly instance = new GameManager();
 
   public eMgr: EntityManager;
+
   public isPaused = false;
 
   constructor() {
+    this.RegisterSystems();
     this.eMgr = new EntityManager();
   }
 
@@ -29,6 +34,10 @@ export class GameManager {
 
   public SetPaused(nextState: boolean): void {
     this.isPaused = nextState;
+  }
+
+  private RegisterSystems(): void {
+    EntityManager.SystemConstructors = SystemList;
   }
 
   private GameLoopHandle?: NodeJS.Timeout;
@@ -50,7 +59,7 @@ export class GameManager {
     this.eMgr.AddComponent(e, new WeaponCmpt());
     this.eMgr.AddComponent(e, new AgentCmpt());
     this.eMgr.AddComponent(e, new StatusEffectsCmpt());
-    if(!isEnemy) {
+    if (!isEnemy) {
       this.eMgr.AddComponent(e, new GoalQueueCmpt());
     }
     const combatPos = new CombatPositionCmpt();

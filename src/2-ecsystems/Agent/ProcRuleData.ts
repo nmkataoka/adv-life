@@ -1,17 +1,20 @@
-import { ProcRule, ExecutorStatus } from "./ProcRule";
-import { GetComponent, GetComponentManager } from "../../0-engine/GlobalFunctions";
-import { HealthCmpt } from "../../1- ncomponents/HealthCmpt";
-import { CombatStatsCmpt } from "../../1- ncomponents/CombatStatsCmpt";
-import { CombatPositionCmpt } from "../../1- ncomponents/CombatPositionCmpt";
-import { FactionCmpt } from "../../1- ncomponents/FactionCmpt";
-import { ComponentManager } from "../../0-engine/ECS/ComponentManager";
-import { createChannelTime } from "./ProcRuleDataHelpers";
+/* eslint-disable import/no-cycle */
+
+import { ProcRule, ExecutorStatus } from './ProcRule';
+import { GetComponent, GetComponentManager } from '../../0-engine/ECS/EntityManager';
+import { HealthCmpt } from '../../1- ncomponents/HealthCmpt';
+import { CombatStatsCmpt } from '../../1- ncomponents/CombatStatsCmpt';
+import { CombatPositionCmpt } from '../../1- ncomponents/CombatPositionCmpt';
+import { FactionCmpt } from '../../1- ncomponents/FactionCmpt';
+import { ComponentManager } from '../../0-engine/ECS/ComponentManager';
+import { createChannelTime } from './ProcRuleDataHelpers';
+import { StatusEffectsCmpt } from '../../1- ncomponents/StatusEffectsCmpt';
 
 export const ProcRuleData: ProcRule<any>[] = [
-  new ProcRule("attack", () => (entityBinding: number[], dt: number, data: number) => {
+  new ProcRule('attack', () => (entityBinding: number[], dt: number, data: number) => {
     const [, target] = entityBinding;
     const targetHealthCmpt = GetComponent(HealthCmpt, target);
-    console.log("attacking, dmg", data, "targethealth", targetHealthCmpt);
+    console.log('attacking, dmg', data, 'targethealth', targetHealthCmpt);
 
     // If no target, attack is finished
     if (!targetHealthCmpt) return ExecutorStatus.Finished;
@@ -21,12 +24,22 @@ export const ProcRuleData: ProcRule<any>[] = [
     return ExecutorStatus.Finished;
   }),
 
-  new ProcRule("recover", () => {
+  new ProcRule('recover', () => {
     let timePassed = 0;
 
     return (entityBinding: number[], dt: number, data: number) => {
-      timePassed += dt;
       const recoveryDuration = data;
+
+      // Update StatusEffectsCmpt at beginning
+      if (timePassed === 0) {
+        const [self] = entityBinding;
+        const statusEffectsCmpt = GetComponent(StatusEffectsCmpt, self);
+        if (statusEffectsCmpt) {
+          statusEffectsCmpt.startRecovering(recoveryDuration);
+        }
+      }
+
+      timePassed += dt;
       if (timePassed >= recoveryDuration) {
         return ExecutorStatus.Finished;
       }
@@ -34,7 +47,7 @@ export const ProcRuleData: ProcRule<any>[] = [
     };
   }),
 
-  new ProcRule("fireball", () => {
+  new ProcRule('fireball', () => {
     const channelDuration = 2;
     const channel = createChannelTime(channelDuration);
 
@@ -45,8 +58,8 @@ export const ProcRuleData: ProcRule<any>[] = [
       const [self, centerTarget] = entityBinding;
 
       // channel first
-      const channelIsFinished = channel(dt);
-      if(!channelIsFinished) {
+      const channelIsFinished = channel(self, dt);
+      if (!channelIsFinished) {
         return ExecutorStatus.Running;
       }
 
@@ -66,9 +79,9 @@ export const ProcRuleData: ProcRule<any>[] = [
         centerTarget,
         aoeRadius,
         factionMgr,
-        combatPositionMgr
+        combatPositionMgr,
       );
-      console.log("fireball, targets in aoeRadius", targetEntities);
+      console.log('fireball, targets in aoeRadius', targetEntities);
       const healthMgr = GetComponentManager(HealthCmpt);
       targetEntities.forEach((targetHandle) => {
         const targetHealthCmpt = healthMgr.GetByNumber(targetHandle);
@@ -78,7 +91,7 @@ export const ProcRuleData: ProcRule<any>[] = [
       });
 
       return ExecutorStatus.Finished;
-    }
+    };
   }),
 ];
 
@@ -97,7 +110,7 @@ function getTargetsInAoeRadius(
   centerTarget: number,
   aoeRadius: number,
   factionMgr: ComponentManager<FactionCmpt, typeof FactionCmpt>,
-  combatPositionMgr: ComponentManager<CombatPositionCmpt, typeof CombatPositionCmpt>
+  combatPositionMgr: ComponentManager<CombatPositionCmpt, typeof CombatPositionCmpt>,
 ): number[] {
   // Get enemies in combat order
   const enemies = Object.entries(factionMgr.components).filter((faction) => faction[1].isEnemy);
@@ -114,7 +127,7 @@ function getTargetsInAoeRadius(
 
   if (centerIdx < 0 || centerIdx > sortedEnemyPositions.length) {
     throw new Error(
-      "Target was not in the enemy array. There may be an issue with CombatPositions."
+      'Target was not in the enemy array. There may be an issue with CombatPositions.',
     );
   }
 

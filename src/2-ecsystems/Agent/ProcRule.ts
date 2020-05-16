@@ -23,7 +23,7 @@ export class ProcRule<ExecDataType = void> {
   public static readonly Nothing = Number.MAX_SAFE_INTEGER;
 
   public static Idle() {
-    return new ProcRule("idle", () => {
+    return new ProcRule('idle', () => {
       const idleTime = 1;
       let timePassed = 0;
       return (entityBinding: number[], dt: number) => {
@@ -37,6 +37,7 @@ export class ProcRule<ExecDataType = void> {
   }
 
   public executorFac: ProcRuleExecutorFactory<ExecDataType>;
+
   public name: string;
 
   constructor(name: string, executorFac: ProcRuleExecutorFactory<ExecDataType>) {

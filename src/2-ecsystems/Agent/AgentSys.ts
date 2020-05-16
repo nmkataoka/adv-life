@@ -1,21 +1,23 @@
-import { ECSystem } from "../../0-engine/ECS/ECSystem";
-import { AgentCmpt } from "../../1- ncomponents/AgentCmpt";
-import { BoundActionStatus, BoundAction } from "./BoundAction";
-import { ExecutorStatus } from "./ProcRule";
-import { ProcRuleDbCmpt } from "./ProcRuleDatabaseCmpt";
-import { GoalQueueCmpt } from "./GoalQueueCmpt";
-import { GetComponentManager } from "../../0-engine/GlobalFunctions";
+import { ECSystem } from '../../0-engine/ECS/ECSystem';
+import { AgentCmpt } from '../../1- ncomponents/AgentCmpt';
+import { BoundActionStatus, BoundAction } from './BoundAction';
+import { ExecutorStatus } from './ProcRule';
+import { ProcRuleDbCmpt } from './ProcRuleDatabaseCmpt';
+import { GoalQueueCmpt } from './GoalQueueCmpt';
+import { GetComponentManager, EntityManager } from '../../0-engine/ECS/EntityManager';
+
 
 export class AgentSys extends ECSystem {
   public Start(): void {
+    console.log('AgentSys start');
     // Create the proc rule database
-    const prdbEntity = this.eMgr.CreateEntity();
+    const prdbEntity = EntityManager.instance.CreateEntity();
     const prdbCmpt = new ProcRuleDbCmpt();
-    this.eMgr.AddComponent(prdbEntity, prdbCmpt);
+    EntityManager.instance.AddComponent(prdbEntity, prdbCmpt);
   }
 
   public OnUpdate(dt: number): void {
-    const { eMgr } = this;
+    const eMgr = EntityManager.instance;
     this.setCachedComponents();
     const agentMgr = eMgr.GetComponentManager(AgentCmpt);
 
@@ -45,21 +47,21 @@ export class AgentSys extends ECSystem {
   private prdb?: ProcRuleDbCmpt;
 
   private setCachedComponents(): void {
-    if(!this.prdb) this.prdb = Object.values(GetComponentManager(ProcRuleDbCmpt).components)[0];
+    if (!this.prdb) this.prdb = Object.values(GetComponentManager(ProcRuleDbCmpt).components)[0];
   }
 
   private GetNextAction(self: number, baction?: BoundAction): BoundAction {
-    if(!this.prdb) throw new Error("prdb not set");
+    if (!this.prdb) throw new Error('prdb not set');
 
     // Recovery forces a delay after a successful action
-    if(baction && baction.recoveryDuration > 0) {
+    if (baction && baction.recoveryDuration > 0) {
       const recoverPr = this.prdb.getProcRule('recover');
       return new BoundAction(recoverPr, [self], baction.recoveryDuration, 0);
     }
 
     // Player-controlled agents use GoalQueueCmpt to receive commands from the player
-    const goalQueueCmpt = this.eMgr.GetComponent(GoalQueueCmpt, self);
-    if(goalQueueCmpt && goalQueueCmpt.nextAction) {
+    const goalQueueCmpt = this.GetComponent(GoalQueueCmpt, self);
+    if (goalQueueCmpt && goalQueueCmpt.nextAction) {
       const { nextAction } = goalQueueCmpt;
       goalQueueCmpt.nextAction = undefined;
       return nextAction;

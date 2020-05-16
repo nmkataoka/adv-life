@@ -1,5 +1,5 @@
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import combatSceneReducer from "../6-ui-features/CombatScene/combatSceneSlice";
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import combatSceneReducer from '../6-ui-features/CombatScene/combatSceneSlice';
 
 export const store = configureStore({
   reducer: {

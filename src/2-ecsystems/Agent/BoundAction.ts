@@ -1,4 +1,4 @@
-import { ProcRule, ProcRuleExecutor } from "./ProcRule";
+import { ProcRule, ProcRuleExecutor } from './ProcRule';
 
 export enum BoundActionStatus {
   Prospective = 0,
@@ -10,8 +10,11 @@ export class BoundAction<Data = any> {
   public static Idle = (self: number) => new BoundAction(ProcRule.Idle(), [self], undefined);
 
   public status: BoundActionStatus;
+
   public procRule: ProcRule<Data>;
+
   public entityBinding: number[];
+
   public data: Data;
 
   // After the action is successfully executed,

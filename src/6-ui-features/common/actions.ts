@@ -1,3 +1,3 @@
-import { createAction } from "@reduxjs/toolkit";
+import { createAction } from '@reduxjs/toolkit';
 
-export const keyPressed = createAction<number>("common/keyPressed");
+export const keyPressed = createAction<number>('common/keyPressed');

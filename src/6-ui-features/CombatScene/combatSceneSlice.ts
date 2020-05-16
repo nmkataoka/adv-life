@@ -1,22 +1,33 @@
-import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit";
-import { GameManager } from "../../0-engine/GameManager";
-import { HealthCmpt } from "../../1- ncomponents/HealthCmpt";
-import { FactionCmpt } from "../../1- ncomponents/FactionCmpt";
-import throttle from "lodash.throttle";
-import { ActionInfo, CreateActionInfo } from "./ActionInfo";
-import { CombatPositionCmpt } from "../../1- ncomponents/CombatPositionCmpt";
-import { CombatStatsCmpt } from "../../1- ncomponents/CombatStatsCmpt";
-import { keyPressed } from "../common/actions";
-import { Keycodes } from "../common/constants";
-import { AppThunk } from "../../7-app/store";
-import { SetSkillTarget } from "../../2-ecsystems/Api";
+import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
+import throttle from 'lodash.throttle';
+import { GameManager } from '../../0-engine/GameManager';
+import { HealthCmpt } from '../../1- ncomponents/HealthCmpt';
+import { FactionCmpt } from '../../1- ncomponents/FactionCmpt';
+import { ActionInfo, CreateActionInfo } from './ActionInfo';
+import { CombatPositionCmpt } from '../../1- ncomponents/CombatPositionCmpt';
+import { CombatStatsCmpt } from '../../1- ncomponents/CombatStatsCmpt';
+import { keyPressed } from '../common/actions';
+import { Keycodes } from '../common/constants';
+import { AppThunk } from '../../7-app/types';
+import { SetSkillTarget } from '../../2-ecsystems/Api';
+import { StatusEffectsCmpt } from '../../1- ncomponents/StatusEffectsCmpt';
 
 export type UnitInfo = {
   entityHandle: number;
   health: number;
+  maxHealth: number;
+
   mana: number;
   maxMana: number;
-  maxHealth: number;
+
+  isChanneling: boolean;
+  channelRemaining: number;
+  channelTotalDuration: number;
+
+  isRecovering: boolean;
+  recoveryRemaining: number;
+  recoveryTotalDuration: number;
+
   isEnemy?: boolean;
   position: number;
 };
@@ -39,11 +50,11 @@ const initialState = {
   mousePosition: { x: 0, y: 0 } as MousePos,
 
   actions: [
-    CreateActionInfo({ name: "attack", displayText: "Attack" }),
-    CreateActionInfo({ name: "defend", displayText: "Defend" }),
-    CreateActionInfo({ name: "fireball", displayText: "Fireball", aoeRadius: 1 }),
-    CreateActionInfo({ name: "potion", displayText: "Potion" }),
-    CreateActionInfo({ name: "flee", displayText: "Flee" }),
+    CreateActionInfo({ name: 'attack', displayText: 'Attack' }),
+    CreateActionInfo({ name: 'defend', displayText: 'Defend' }),
+    CreateActionInfo({ name: 'fireball', displayText: 'Fireball', aoeRadius: 1 }),
+    CreateActionInfo({ name: 'potion', displayText: 'Potion' }),
+    CreateActionInfo({ name: 'flee', displayText: 'Flee' }),
   ],
   selectedAction: undefined as ActionInfo | undefined,
 
@@ -51,7 +62,7 @@ const initialState = {
 };
 
 const combatSceneSlice = createSlice({
-  name: "combatScene",
+  name: 'combatScene',
   initialState,
   reducers: {
     updatedUnits(state, action: PayloadAction<{ units: Units }>) {
@@ -106,7 +117,6 @@ const combatSceneSlice = createSlice({
           break;
         }
         default:
-          return;
       }
     },
   },
@@ -124,6 +134,7 @@ export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
   const healthMgr = eMgr.GetComponentManager(HealthCmpt);
   const factionMgr = eMgr.GetComponentManager(FactionCmpt);
   const positionMgr = eMgr.GetComponentManager(CombatPositionCmpt);
+  const statusEffectsMgr = eMgr.GetComponentManager(StatusEffectsCmpt);
 
   const units: Units = {};
   Object.entries(healthMgr.components).forEach(([entity, healthCmpt]) => {
@@ -131,20 +142,33 @@ export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
 
     const { health, maxHealth } = healthCmpt;
 
-    const factionCmpt = factionMgr.GetByNumber(entityHandle);
     const combatStatsCmpt = combatStatsMgr.GetByNumber(entityHandle);
+    const factionCmpt = factionMgr.GetByNumber(entityHandle);
+    const statusEffectsCmpt = statusEffectsMgr.GetByNumber(entityHandle);
+    if (!statusEffectsCmpt) throw new Error('unit is missing StatusEffectsCmpt');
 
     const combatPos = positionMgr.GetByNumber(entityHandle);
-    if (!combatPos) throw new Error("unit is missing CombatPositionCmpt");
+    if (!combatPos) throw new Error('unit is missing CombatPositionCmpt');
+
 
     units[entityHandle] = {
       entityHandle,
       health,
       maxHealth,
-      isEnemy: factionCmpt?.isEnemy,
-      position: combatPos.position,
+
       mana: combatStatsCmpt?.mana ?? 100,
       maxMana: combatStatsCmpt?.maxMana ?? 100,
+
+      isChanneling: statusEffectsCmpt.isChanneling(),
+      channelRemaining: statusEffectsCmpt.channelRemaining,
+      channelTotalDuration: statusEffectsCmpt.channelTotalDuration,
+      isRecovering: statusEffectsCmpt.isRecovering(),
+      recoveryRemaining: statusEffectsCmpt.recoveryRemaining,
+      recoveryTotalDuration: statusEffectsCmpt.recoveryTotalDuration,
+
+      isEnemy: factionCmpt?.isEnemy,
+      position: combatPos.position,
+
     };
   });
 
@@ -159,8 +183,8 @@ const updateMousePositionInner = throttle((dispatch: Dispatch, newPos: MousePos)
   dispatch(updateMousePosition(newPos));
 }, 100);
 
-export const setMousePosition = (newPos: MousePos): AppThunk => (dispatch) =>
-  updateMousePositionInner(dispatch, newPos);
+// eslint-disable-next-line max-len
+export const setMousePosition = (newPos: MousePos): AppThunk => (dispatch) => updateMousePositionInner(dispatch, newPos);
 
 export const setIsPaused = (nextState: boolean): AppThunk => (dispatch) => {
   GameManager.instance.SetPaused(nextState);

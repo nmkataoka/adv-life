@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "@emotion/styled";
-import { useSelector } from "react-redux";
-import { RootState } from "../../7-app/store";
+import React from 'react';
+import styled from '@emotion/styled';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../7-app/types';
 
 const selectedUnitInfoSelector = (state: RootState) => {
   const { selectedUnit } = state.combatScene;
@@ -14,13 +14,33 @@ export default function InfoSidebar() {
 
   if (unit == null) return <Container />;
 
-  const { health, maxHealth, mana, maxMana } = unit;
+  const {
+    health,
+    maxHealth,
+    mana,
+    maxMana,
+    isChanneling,
+    channelRemaining,
+    channelTotalDuration,
+    recoveryRemaining,
+    recoveryTotalDuration,
+    isRecovering,
+  } = unit;
 
   return (
     <Container>
       Unit Info
-      <div>Health: {health + " / " + maxHealth}</div>
-      <div>Mana: {mana + " / " + maxMana}</div>
+      <div>
+        Health:
+        {' '}
+        {`${health} / ${maxHealth}`}
+      </div>
+      <div>
+        Mana:
+        {' '}
+        {`${mana} / ${maxMana}`}
+      </div>
+      {}
     </Container>
   );
 }

@@ -1,8 +1,8 @@
-import { useEffect, useCallback } from "react";
-import { ImportantKeycodes } from "./constants";
-import { useDispatch } from "react-redux";
-import { keyPressed } from "./actions";
-import { keypressCallbacks } from "./useOnKeypress";
+import { useEffect, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { ImportantKeycodes } from './constants';
+import { keyPressed } from './actions';
+import { keypressCallbacks } from './useOnKeypress';
 
 export default function useDetectKeypress() {
   const dispatch = useDispatch();
@@ -17,13 +17,13 @@ export default function useDetectKeypress() {
         dispatch(keyPressed(e.keyCode));
       }
     },
-    [dispatch]
+    [dispatch],
   );
 
   useEffect(() => {
-    document.addEventListener("keydown", onKeypress, false);
+    document.addEventListener('keydown', onKeypress, false);
     return () => {
-      document.removeEventListener("keydown", onKeypress, false);
+      document.removeEventListener('keydown', onKeypress, false);
     };
   }, [onKeypress]);
 }

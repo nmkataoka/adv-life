@@ -1,9 +1,9 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
-import styled from "@emotion/styled";
-import PauseButton from "./PauseButton";
+import { jsx } from '@emotion/core';
+import styled from '@emotion/styled';
+import PauseButton from './PauseButton';
 
-const actions = ["Menu", "Map"];
+const actions = ['Menu', 'Map'];
 
 export default function TopBar() {
   return (

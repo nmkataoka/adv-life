@@ -1,10 +1,10 @@
-import React, { useCallback } from "react";
-import styled from "@emotion/styled";
-import { setIsPaused } from "./combatSceneSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../7-app/store";
-import useOnKeypress from "../common/useOnKeypress";
-import { Keycodes } from "../common/constants";
+import React, { useCallback } from 'react';
+import styled from '@emotion/styled';
+import { useSelector, useDispatch } from 'react-redux';
+import { setIsPaused } from './combatSceneSlice';
+import { RootState } from '../../7-app/types';
+import useOnKeypress from '../common/useOnKeypress';
+import { Keycodes } from '../common/constants';
 
 export default function PauseButton() {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ export default function PauseButton() {
 
   useOnKeypress(onKeypress);
 
-  return <Circle onClick={handleToggle}>{isPaused ? "\u25b7" : "| |"}</Circle>;
+  return <Circle onClick={handleToggle}>{isPaused ? '\u25b7' : '| |'}</Circle>;
 }
 
 const Circle = styled.div`

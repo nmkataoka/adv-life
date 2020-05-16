@@ -1,14 +1,14 @@
-import { EntityManager } from "./EntityManager";
-import { NComponent } from "./NComponent";
+import { EntityManager } from './EntityManager';
+import { NComponent } from './NComponent';
 
 class TestCmpt1 implements NComponent {
-  public name = "TestCmpt1";
+  public name = 'TestCmpt1';
 }
 class TestCmpt2 implements NComponent {
-  public name = "TestCmpt2";
+  public name = 'TestCmpt2';
 }
 
-it("add and get multiple component managers", () => {
+it('add and get multiple component managers', () => {
   const eMgr = new EntityManager();
   const e = eMgr.CreateEntity();
   eMgr.AddComponent(e, new TestCmpt1());

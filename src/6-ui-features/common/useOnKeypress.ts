@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 // Generate a unique token for each callback
 // so they can be deregistered when the component unmounts

@@ -1,15 +1,15 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
-import styled from "@emotion/styled";
-import Unit from "./Unit";
-import ActionBar from "./ActionBar";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../7-app/store";
-import { setMousePosition } from "./combatSceneSlice";
-import { useRef } from "react";
-import { UnitInfo } from "./combatSceneSlice";
-import useDetectKeypress from "../common/useDetectKeypress";
-import InfoSidebar from "./InfoSidebar";
+import { jsx } from '@emotion/core';
+import styled from '@emotion/styled';
+import { useSelector, useDispatch } from 'react-redux';
+import { useRef } from 'react';
+import Unit from './Unit';
+import ActionBar from './ActionBar';
+import { RootState } from '../../7-app/types';
+import { setMousePosition, UnitInfo } from './combatSceneSlice';
+
+import useDetectKeypress from '../common/useDetectKeypress';
+import InfoSidebar from './InfoSidebar';
 
 function sortUnitsByCombatPosition(a: UnitInfo, b: UnitInfo) {
   return a.position - b.position;
@@ -37,13 +37,13 @@ export default function CombatScene() {
       <MainContent>
         <Row>
           {enemies.sort(sortUnitsByCombatPosition).map((e) => (
-            <Unit key={e.entityHandle} handle={e.entityHandle}></Unit>
+            <Unit key={e.entityHandle} handle={e.entityHandle} />
           ))}
         </Row>
         <Divider />
         <Row>
           {friendlies.sort(sortUnitsByCombatPosition).map((p) => (
-            <Unit key={p.entityHandle} handle={p.entityHandle}></Unit>
+            <Unit key={p.entityHandle} handle={p.entityHandle} />
           ))}
         </Row>
         <ActionBar />

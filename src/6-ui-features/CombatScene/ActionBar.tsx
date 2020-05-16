@@ -1,10 +1,10 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
-import styled from "@emotion/styled";
-import { ActionInfo } from "./ActionInfo";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../7-app/store";
-import { selectedAction } from "./combatSceneSlice";
+import { jsx } from '@emotion/core';
+import styled from '@emotion/styled';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../7-app/types';
+import { ActionInfo } from './ActionInfo';
+import { selectedAction } from './combatSceneSlice';
 
 export default function ActionBar() {
   const actions = useSelector((state: RootState) => state.combatScene.actions);
