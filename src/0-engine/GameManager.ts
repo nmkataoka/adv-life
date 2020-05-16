@@ -5,6 +5,8 @@ import { WeaponCmpt } from "../1- ncomponents/WeaponCmpt";
 import { FactionCmpt } from "../1- ncomponents/FactionCmpt";
 import { CombatPositionCmpt } from "../1- ncomponents/CombatPositionCmpt";
 import { CombatStatsCmpt } from "../1- ncomponents/CombatStatsCmpt";
+import { AgentCmpt } from "../1- ncomponents/AgentCmpt";
+import { GoalQueueCmpt } from '../2-ecsystems/Agent/GoalQueueCmpt';
 
 export class GameManager {
   public static readonly FPS = 0.3;
@@ -40,6 +42,10 @@ export class GameManager {
     this.eMgr.AddComponent(e, new CombatStatsCmpt());
     this.eMgr.AddComponent(e, new CanAttackCmpt());
     this.eMgr.AddComponent(e, new WeaponCmpt());
+    this.eMgr.AddComponent(e, new AgentCmpt());
+    if(!isEnemy) {
+      this.eMgr.AddComponent(e, new GoalQueueCmpt());
+    }
     const combatPos = new CombatPositionCmpt();
     combatPos.position = position;
     this.eMgr.AddComponent(e, combatPos);

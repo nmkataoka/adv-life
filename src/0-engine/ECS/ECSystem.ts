@@ -10,6 +10,10 @@ export abstract class ECSystem {
   protected eMgr: EntityManager;
 }
 
-export interface ECSystemConstructor {
-  new (eMgr: EntityManager): ECSystem;
+export interface ECSystemConstructor<C extends ECSystem> {
+  new (eMgr: EntityManager): C;
 }
+
+export type ECSystemConstructorCFromCClass<CClass> = CClass extends ECSystemConstructor<infer C>
+  ? C
+  : never;

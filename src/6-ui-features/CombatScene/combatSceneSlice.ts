@@ -2,7 +2,6 @@ import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit";
 import { GameManager } from "../../0-engine/GameManager";
 import { HealthCmpt } from "../../1- ncomponents/HealthCmpt";
 import { FactionCmpt } from "../../1- ncomponents/FactionCmpt";
-import { CanAttackCmpt } from "../../1- ncomponents/CanAttackCmpt";
 import throttle from "lodash.throttle";
 import { ActionInfo, CreateActionInfo } from "./ActionInfo";
 import { CombatPositionCmpt } from "../../1- ncomponents/CombatPositionCmpt";
@@ -10,6 +9,7 @@ import { CombatStatsCmpt } from "../../1- ncomponents/CombatStatsCmpt";
 import { keyPressed } from "../common/actions";
 import { Keycodes } from "../common/constants";
 import { AppThunk } from "../../7-app/store";
+import { SetSkillTarget } from "../../2-ecsystems/Api";
 
 export type UnitInfo = {
   entityHandle: number;
@@ -152,14 +152,7 @@ export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
 };
 
 export const setSkillTarget = (unit: number, target: number, action: ActionInfo) => {
-  const { eMgr } = GameManager.instance;
-  const canAttackMgr = eMgr.GetComponentManager(CanAttackCmpt);
-  const attacker = canAttackMgr.GetByNumber(unit);
-  console.log("set unit attack target", unit, target);
-  if (attacker) {
-    attacker.targetEntities = [target];
-    attacker.skillName = action.name;
-  }
+  SetSkillTarget(unit, [target], action.name);
 };
 
 const updateMousePositionInner = throttle((dispatch: Dispatch, newPos: MousePos) => {

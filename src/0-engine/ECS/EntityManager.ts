@@ -1,11 +1,12 @@
 import { Entity } from "./Entity";
-import { ECSystem, ECSystemConstructor } from "./ECSystem";
+import { ECSystem, ECSystemConstructor, ECSystemConstructorCFromCClass } from "./ECSystem";
 import { NComponent, NComponentConstructor, NComponentConstructorCFromCClass } from "./NComponent";
 import { ComponentManager } from "./ComponentManager";
 import { AttackSys } from "../../2-ecsystems/AttackSys";
 import { ManaRegenSys } from "../../2-ecsystems/ManaRegenSys";
+import { AgentSys } from "../../2-ecsystems/Agent/AgentSys";
 
-const systems: ECSystemConstructor[] = [AttackSys, ManaRegenSys];
+const systems: ECSystemConstructor<any>[] = [AgentSys, AttackSys, ManaRegenSys];
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
@@ -59,12 +60,27 @@ export class EntityManager {
     return cMgr as ComponentManager<C, CClass>;
   }
 
+  public GetComponent<
+    CClass extends NComponentConstructor<C>,
+    C = NComponentConstructorCFromCClass<CClass>
+  >(cclass: CClass, entityHandle: number): C | undefined {
+    const cMgr = this.GetComponentManager<CClass, C>(cclass);
+    return cMgr.GetByNumber(entityHandle);
+  }
+
   public AddComponent<C extends NComponent, CClass extends NComponentConstructor<C>>(
     e: Entity,
     c: C
   ): void {
     const cMgr = this.GetComponentManager<CClass, C>(c.constructor as CClass);
     cMgr.Add(e, c);
+  }
+
+  public GetSystem<
+    CClass extends ECSystemConstructor<C>,
+    C extends ECSystem = ECSystemConstructorCFromCClass<CClass>
+  >(cclass: CClass): C {
+    return this.systems[cclass.name] as C;
   }
 
   public QueueEntityDestruction(e: Entity | number) {
