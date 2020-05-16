@@ -25,7 +25,6 @@ export class EntityManager {
     EntityManager.instance = this;
 
     this.systems = {};
-    console.log('entity manager constructor', EntityManager.SystemConstructors.length);
     EntityManager.SystemConstructors.forEach((S) => {
       this.systems[S.name] = new S(GetComponent, GetComponentManager);
     });
@@ -34,7 +33,6 @@ export class EntityManager {
   }
 
   public Start(): void {
-    console.log('entity manager start');
     Object.values(this.systems).forEach((s) => s.Start());
   }
 

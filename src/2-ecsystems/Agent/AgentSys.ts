@@ -9,7 +9,6 @@ import { GetComponentManager, EntityManager } from '../../0-engine/ECS/EntityMan
 
 export class AgentSys extends ECSystem {
   public Start(): void {
-    console.log('AgentSys start');
     // Create the proc rule database
     const prdbEntity = EntityManager.instance.CreateEntity();
     const prdbCmpt = new ProcRuleDbCmpt();
