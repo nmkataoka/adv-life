@@ -26,6 +26,7 @@ export default function Unit({ handle }: UnitProps) {
     maxMana,
     maxHealth,
     isEnemy,
+    isStealthed,
   } = useSelector(
     (state: RootState) => state.combatScene.units[handle],
   );
@@ -71,7 +72,7 @@ export default function Unit({ handle }: UnitProps) {
   const showArrowFromUnit = isSelectedUnit && !isEnemy && selectedAction;
 
   return (
-    <Container>
+    <Container isStealthed={isStealthed}>
       {showArrowFromUnit && <ArrowFromUnit fromRef={unitRef} />}
       <HealthBar health={health / maxHealth} />
       <ManaBar mana={mana} maxMana={maxMana} />
@@ -90,12 +91,17 @@ export default function Unit({ handle }: UnitProps) {
   );
 }
 
+type ContainerProps = {
+  isStealthed: boolean;
+}
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 0 1em;
+  ${(props: ContainerProps) => props.isStealthed && 'opacity: 0.3;'}
 `;
 
 type CircleProps = {

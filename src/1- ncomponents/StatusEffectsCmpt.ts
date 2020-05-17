@@ -40,7 +40,7 @@ export class StatusEffectsCmpt implements NComponent {
     return this.statusAbilities[statusAbility];
   }
 
-  public StatusEffectIsActive(statusEffect: keyof typeof StatusEffect): boolean {
+  public IsStatusEffectActive(statusEffect: keyof typeof StatusEffect): boolean {
     return this.activeStatusEffects[statusEffect].length > 0;
   }
 

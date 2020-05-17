@@ -27,11 +27,15 @@ function getSkillData(user: number, targets: number[], skillName: string) {
       data = 15;
       break;
     }
+    case 'fireball': {
+      break;
+    }
     case 'recover': {
       data = recoveryDuration;
       break;
     }
-    case 'fireball': {
+    case 'stealth': {
+      data = 3; // stealth duration
       break;
     }
     default:

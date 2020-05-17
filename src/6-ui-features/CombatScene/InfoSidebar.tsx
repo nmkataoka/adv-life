@@ -38,7 +38,7 @@ export default function InfoSidebar() {
       </div>
       {isChanneling && (
         <div>
-          {`Channeling: ${(100 * channelRemaining / channelTotalDuration).toFixed(2)}%`}
+          {`Channeling: ${(100 * (1 - channelRemaining / channelTotalDuration)).toFixed(2)}%`}
         </div>
       )}
       {isRecovering && (
