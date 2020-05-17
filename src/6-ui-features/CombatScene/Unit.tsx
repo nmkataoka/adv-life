@@ -9,6 +9,7 @@ import { setSkillTarget, clickedOnUnit } from './combatSceneSlice';
 import ArrowFromUnit from './ArrowFromUnit';
 import ManaBar from './ManaBar';
 import { damageBlinkCss } from '../../5-react-components/arrow/damageBlink';
+import RecoveryBar from './RecoveryBar';
 
 type UnitProps = {
   handle: number;
@@ -20,7 +21,11 @@ const blinkOnDamageFor = 1000;
 export default function Unit({ handle }: UnitProps) {
   const dispatch = useDispatch();
   const {
-    health, mana, maxMana, maxHealth, isEnemy,
+    health,
+    mana,
+    maxMana,
+    maxHealth,
+    isEnemy,
   } = useSelector(
     (state: RootState) => state.combatScene.units[handle],
   );
@@ -70,6 +75,7 @@ export default function Unit({ handle }: UnitProps) {
       {showArrowFromUnit && <ArrowFromUnit fromRef={unitRef} />}
       <HealthBar health={health / maxHealth} />
       <ManaBar mana={mana} maxMana={maxMana} />
+      <RecoveryBar handle={handle} />
       <Circle
         css={recentlyTookDamage ? damageBlinkCss : undefined}
         ref={unitRef}

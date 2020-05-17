@@ -31,16 +31,22 @@ export default function InfoSidebar() {
     <Container>
       Unit Info
       <div>
-        Health:
-        {' '}
-        {`${health} / ${maxHealth}`}
+        {`Health: ${health} / ${maxHealth}`}
       </div>
       <div>
-        Mana:
-        {' '}
-        {`${mana} / ${maxMana}`}
+        {`Mana: ${mana} / ${maxMana}`}
       </div>
-      {}
+      {isChanneling && (
+        <div>
+          {`Channeling: ${(100 * channelRemaining / channelTotalDuration).toFixed(2)}%`}
+        </div>
+      )}
+      {isRecovering && (
+        <div>
+          {`Recovering: ${(100 * recoveryRemaining / recoveryTotalDuration).toFixed(2)}%`}
+        </div>
+      )}
+      <div />
     </Container>
   );
 }

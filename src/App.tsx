@@ -7,7 +7,7 @@ import TopBar from './6-ui-features/CombatScene/TopBar';
 import { GameManager } from './0-engine/GameManager';
 import { updateUnitsFromEngine } from './6-ui-features/CombatScene/combatSceneSlice';
 
-const delay = 1000;
+const uiInterval = 200;
 
 function App() {
   const [uiLoopHandle, setUiLoopHandle] = useState(null as NodeJS.Timeout | null);
@@ -20,7 +20,7 @@ function App() {
     const handle = setTimeout(() => {
       dispatch(updateUnitsFromEngine());
       startUILoop();
-    }, delay);
+    }, uiInterval);
     setUiLoopHandle(handle);
   }, [uiLoopHandle, dispatch]);
 
