@@ -9,14 +9,14 @@ export abstract class ECSystem {
   public abstract OnUpdate(dt: number): void;
 
   constructor(
-    getComponent: GetComponentFuncType<any, any>,
-    getComponentManager: GetComponentManagerFuncType<any, any>,
+    getComponent: GetComponentFuncType,
+    getComponentManager: GetComponentManagerFuncType,
   ) {
     this.GetComponent = getComponent;
     this.GetComponentManager = getComponentManager;
   }
 
-  protected GetComponent: GetComponentFuncType<any, any>;
+  protected GetComponent: GetComponentFuncType;
 
-  protected GetComponentManager: GetComponentManagerFuncType<any, any>;
+  protected GetComponentManager: GetComponentManagerFuncType;
 }

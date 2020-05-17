@@ -9,7 +9,7 @@ import { CombatStatsCmpt } from '../../1- ncomponents/CombatStatsCmpt';
 import { keyPressed } from '../common/actions';
 import { Keycodes } from '../common/constants';
 import { AppThunk } from '../../7-app/types';
-import { SetSkillTarget } from '../../2-ecsystems/Api';
+import { SetSkillTarget } from '../../3-api';
 import { StatusEffectsCmpt } from '../../1- ncomponents/StatusEffectsCmpt';
 
 export type UnitInfo = {

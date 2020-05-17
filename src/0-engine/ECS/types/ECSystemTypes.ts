@@ -3,8 +3,8 @@ import { GetComponentFuncType, GetComponentManagerFuncType } from './EntityManag
 
 export interface ECSystemConstructor<C extends ECSystem> {
   new (
-    getComponent: GetComponentFuncType<any, any>,
-    getComponentManager: GetComponentManagerFuncType<any, any>
+    getComponent: GetComponentFuncType,
+    getComponentManager: GetComponentManagerFuncType
   ): C;
 }
 

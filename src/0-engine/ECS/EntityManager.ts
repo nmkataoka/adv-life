@@ -3,6 +3,10 @@ import { ECSystem } from './ECSystem';
 import { NComponent, NComponentConstructor, NComponentConstructorCFromCClass } from './NComponent';
 import { ComponentManager } from './ComponentManager';
 import { ECSystemConstructor, ECSystemConstructorCFromCClass } from './types/ECSystemTypes';
+import {
+  GetComponentManagerFuncType,
+  GetComponentFuncType,
+} from './types/EntityManagerAccessorTypes';
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
@@ -113,19 +117,17 @@ export class EntityManager {
   }
 }
 
-export function GetComponentManager<
+export const GetComponentManager: GetComponentManagerFuncType = <
   CClass extends NComponentConstructor<C>,
   C = NComponentConstructorCFromCClass<CClass>
->(cclass: CClass): ComponentManager<C, CClass> {
-  return EntityManager.instance.GetComponentManager<CClass, C>(cclass);
-}
+>(cclass: CClass): ComponentManager<C, CClass> =>
+  EntityManager.instance.GetComponentManager<CClass, C>(cclass);
 
-export function GetComponent<
+export const GetComponent: GetComponentFuncType = <
   CClass extends NComponentConstructor<C>,
   C = NComponentConstructorCFromCClass<CClass>
->(cclass: CClass, entity: number): C | undefined {
-  return EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumber(entity);
-}
+>(cclass: CClass, entity: number): C | undefined =>
+  EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumber(entity);
 
 export function GetSystem<
   CClass extends ECSystemConstructor<C>,
