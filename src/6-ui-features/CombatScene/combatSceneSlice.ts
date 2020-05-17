@@ -28,6 +28,8 @@ export type UnitInfo = {
   recoveryRemaining: number;
   recoveryTotalDuration: number;
 
+  isStealthed: boolean;
+
   isEnemy?: boolean;
   position: number;
 };
@@ -169,6 +171,8 @@ export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
       isRecovering: recovering.severity > 0,
       recoveryRemaining: recovering.remainingDuration,
       recoveryTotalDuration: recovering.totalDuration,
+
+      isStealthed: statusEffectsCmpt.IsStatusEffectActive('Stealth'),
 
       isEnemy: factionCmpt?.isEnemy,
       position: combatPos.position,

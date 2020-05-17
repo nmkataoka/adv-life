@@ -1,5 +1,3 @@
-/* eslint-disable import/no-cycle */
-
 import { ProcRule, ExecutorStatus } from './ProcRule';
 import { GetComponent, GetComponentManager } from '../../0-engine/ECS/EntityManager';
 import { HealthCmpt } from '../../1- ncomponents/HealthCmpt';
@@ -91,6 +89,15 @@ export const ProcRuleData: ProcRule<any>[] = [
 
       return ExecutorStatus.Finished;
     };
+  }),
+
+  new ProcRule('stealth', () => (entityBinding: number[], dt: number, data: number) => {
+    const [self] = entityBinding;
+    const statusEffectsCmpt = GetComponent(StatusEffectsCmpt, self);
+    if (!statusEffectsCmpt) return ExecutorStatus.Error;
+
+    statusEffectsCmpt.StartEffect('Stealth', { severity: 1, duration: data });
+    return ExecutorStatus.Finished;
   }),
 ];
 
