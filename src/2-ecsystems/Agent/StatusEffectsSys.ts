@@ -9,13 +9,7 @@ export class StatusEffectsSys extends ECSystem {
     const statusEffectsMgr = GetComponentManager(StatusEffectsCmpt);
 
     Object.values(statusEffectsMgr.components).forEach((statusEffectCmpt) => {
-      if (statusEffectCmpt.isChanneling()) {
-        statusEffectCmpt.channelRemaining -= dt;
-      }
-
-      if (statusEffectCmpt.isRecovering) {
-        statusEffectCmpt.recoveryRemaining -= dt;
-      }
+      statusEffectCmpt.DecreaseRemainingTimeOfStatusEffects(dt);
     });
   }
 }

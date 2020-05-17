@@ -53,6 +53,7 @@ const initialState = {
     CreateActionInfo({ name: 'attack', displayText: 'Attack' }),
     CreateActionInfo({ name: 'defend', displayText: 'Defend' }),
     CreateActionInfo({ name: 'fireball', displayText: 'Fireball', aoeRadius: 1 }),
+    CreateActionInfo({ name: 'stealth', displayText: 'Stealth' }),
     CreateActionInfo({ name: 'potion', displayText: 'Potion' }),
     CreateActionInfo({ name: 'flee', displayText: 'Flee' }),
   ],
@@ -146,6 +147,8 @@ export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
     const factionCmpt = factionMgr.GetByNumber(entityHandle);
     const statusEffectsCmpt = statusEffectsMgr.GetByNumber(entityHandle);
     if (!statusEffectsCmpt) throw new Error('unit is missing StatusEffectsCmpt');
+    const channel = statusEffectsCmpt.GetStatusEffect('Channel');
+    const recovering = statusEffectsCmpt.GetStatusEffect('Recover');
 
     const combatPos = positionMgr.GetByNumber(entityHandle);
     if (!combatPos) throw new Error('unit is missing CombatPositionCmpt');
@@ -159,12 +162,13 @@ export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
       mana: combatStatsCmpt?.mana ?? 100,
       maxMana: combatStatsCmpt?.maxMana ?? 100,
 
-      isChanneling: statusEffectsCmpt.isChanneling(),
-      channelRemaining: statusEffectsCmpt.channelRemaining,
-      channelTotalDuration: statusEffectsCmpt.channelTotalDuration,
-      isRecovering: statusEffectsCmpt.isRecovering(),
-      recoveryRemaining: statusEffectsCmpt.recoveryRemaining,
-      recoveryTotalDuration: statusEffectsCmpt.recoveryTotalDuration,
+      isChanneling: channel.severity > 0,
+      channelRemaining: channel.remainingDuration,
+      channelTotalDuration: channel.totalDuration,
+
+      isRecovering: recovering.severity > 0,
+      recoveryRemaining: recovering.remainingDuration,
+      recoveryTotalDuration: recovering.totalDuration,
 
       isEnemy: factionCmpt?.isEnemy,
       position: combatPos.position,

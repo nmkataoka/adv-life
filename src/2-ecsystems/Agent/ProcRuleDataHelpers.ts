@@ -11,7 +11,7 @@ export const createChannelTime = (duration: number) => {
     if (timePassed === 0) {
       const statusEffectsCmpt = GetComponent(StatusEffectsCmpt, self);
       if (statusEffectsCmpt) {
-        statusEffectsCmpt.startChanneling(duration);
+        statusEffectsCmpt.StartEffect('Channel', { severity: 1, duration });
       }
     }
 

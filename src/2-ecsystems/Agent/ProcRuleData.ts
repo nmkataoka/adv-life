@@ -14,7 +14,6 @@ export const ProcRuleData: ProcRule<any>[] = [
   new ProcRule('attack', () => (entityBinding: number[], dt: number, data: number) => {
     const [, target] = entityBinding;
     const targetHealthCmpt = GetComponent(HealthCmpt, target);
-    console.log('attacking, dmg', data, 'targethealth', targetHealthCmpt);
 
     // If no target, attack is finished
     if (!targetHealthCmpt) return ExecutorStatus.Finished;
@@ -35,7 +34,7 @@ export const ProcRuleData: ProcRule<any>[] = [
         const [self] = entityBinding;
         const statusEffectsCmpt = GetComponent(StatusEffectsCmpt, self);
         if (statusEffectsCmpt) {
-          statusEffectsCmpt.startRecovering(recoveryDuration);
+          statusEffectsCmpt.StartEffect('Recover', { severity: 1, duration: recoveryDuration });
         }
       }
 
@@ -52,7 +51,7 @@ export const ProcRuleData: ProcRule<any>[] = [
     const channel = createChannelTime(channelDuration);
 
     return (entityBinding: number[], dt: number) => {
-      const manaRequirement = 25;
+      const manaRequirement = 35;
       const damage = 30;
       const aoeRadius = 1;
       const [self, centerTarget] = entityBinding;
@@ -81,7 +80,7 @@ export const ProcRuleData: ProcRule<any>[] = [
         factionMgr,
         combatPositionMgr,
       );
-      console.log('fireball, targets in aoeRadius', targetEntities);
+
       const healthMgr = GetComponentManager(HealthCmpt);
       targetEntities.forEach((targetHandle) => {
         const targetHealthCmpt = healthMgr.GetByNumber(targetHandle);
