@@ -1,0 +1,20 @@
+{
+  "version": "2",
+  "checks": {
+    "method-lines": {
+      "config": {
+        "threshold": 100
+      }
+    }
+  },
+  "plugins": {
+    "eslint": {
+      "enabled": true,
+      "config": {
+        "checks": {
+          "import/extensions": false
+        }
+      }
+    }
+  }
+}
