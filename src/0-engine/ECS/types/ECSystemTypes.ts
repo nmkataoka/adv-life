@@ -7,7 +7,3 @@ export interface ECSystemConstructor<C extends ECSystem> {
     getComponentManager: GetComponentManagerFuncType
   ): C;
 }
-
-export type ECSystemConstructorCFromCClass<CClass> = CClass extends ECSystemConstructor<infer C>
-  ? C
-  : never;

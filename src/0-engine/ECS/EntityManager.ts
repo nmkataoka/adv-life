@@ -1,8 +1,8 @@
 import { Entity } from './Entity';
 import { ECSystem } from './ECSystem';
-import { NComponent, NComponentConstructor, NComponentConstructorCFromCClass } from './NComponent';
+import { NComponent, NComponentConstructor } from './NComponent';
 import { ComponentManager } from './ComponentManager';
-import { ECSystemConstructor, ECSystemConstructorCFromCClass } from './types/ECSystemTypes';
+import { ECSystemConstructor } from './types/ECSystemTypes';
 import {
   GetComponentManagerFuncType,
   GetComponentFuncType,
@@ -58,7 +58,7 @@ export class EntityManager {
 
   public GetComponentManager<
     CClass extends NComponentConstructor<C>,
-    C = NComponentConstructorCFromCClass<CClass>
+    C = InstanceType<CClass>
   >(c: CClass): ComponentManager<C, CClass> {
     let cMgr = this.cMgrs[c.name];
 
@@ -72,7 +72,7 @@ export class EntityManager {
 
   public GetComponent<
     CClass extends NComponentConstructor<C>,
-    C = NComponentConstructorCFromCClass<CClass>
+    C = InstanceType<CClass>
   >(cclass: CClass, entityHandle: number): C | undefined {
     const cMgr = this.GetComponentManager<CClass, C>(cclass);
     return cMgr.GetByNumber(entityHandle);
@@ -88,7 +88,7 @@ export class EntityManager {
 
   public GetSystem<
     CClass extends ECSystemConstructor<C>,
-    C extends ECSystem = ECSystemConstructorCFromCClass<CClass>
+    C extends ECSystem = InstanceType<CClass>
   >(cclass: CClass): C {
     return this.systems[cclass.name] as C;
   }
@@ -119,19 +119,19 @@ export class EntityManager {
 
 export const GetComponentManager: GetComponentManagerFuncType = <
   CClass extends NComponentConstructor<C>,
-  C = NComponentConstructorCFromCClass<CClass>
+  C = InstanceType<CClass>
 >(cclass: CClass): ComponentManager<C, CClass> =>
   EntityManager.instance.GetComponentManager<CClass, C>(cclass);
 
 export const GetComponent: GetComponentFuncType = <
   CClass extends NComponentConstructor<C>,
-  C = NComponentConstructorCFromCClass<CClass>
+  C = InstanceType<CClass>
 >(cclass: CClass, entity: number): C | undefined =>
   EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumber(entity);
 
 export function GetSystem<
   CClass extends ECSystemConstructor<C>,
-  C extends ECSystem = ECSystemConstructorCFromCClass<CClass>
+  C extends ECSystem = InstanceType<CClass>
 >(cclass: CClass): C {
   return EntityManager.instance.GetSystem(cclass);
 }

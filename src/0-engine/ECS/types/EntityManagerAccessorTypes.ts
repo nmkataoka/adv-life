@@ -1,12 +1,12 @@
-import { NComponentConstructor, NComponentConstructorCFromCClass } from '../NComponent';
+import { NComponentConstructor } from '../NComponent';
 import { ComponentManager } from '../ComponentManager';
 
 export type GetComponentFuncType = <
   CClass extends NComponentConstructor<C>,
-  C = NComponentConstructorCFromCClass<CClass>
+  C = InstanceType<CClass>
 >(cclass: CClass, entityHandle: number) => C | undefined;
 
 export type GetComponentManagerFuncType = <
   CClass extends NComponentConstructor<C>,
-  C = NComponentConstructorCFromCClass<CClass>
+  C = InstanceType<CClass>
 >(cclass: CClass) => ComponentManager<C, CClass>;
