@@ -56,7 +56,7 @@ const initialState = {
     CreateActionInfo({ name: 'defend', displayText: 'Defend' }),
     CreateActionInfo({ name: 'fireball', displayText: 'Fireball', aoeRadius: 1 }),
     CreateActionInfo({ name: 'stealth', displayText: 'Stealth' }),
-    CreateActionInfo({ name: 'potion', displayText: 'Potion' }),
+    CreateActionInfo({ name: 'heal', displayText: 'Heal' }),
     CreateActionInfo({ name: 'flee', displayText: 'Flee' }),
   ],
   selectedAction: undefined as ActionInfo | undefined,
@@ -73,21 +73,18 @@ const combatSceneSlice = createSlice({
     },
     clickedOnUnit(state, action: PayloadAction<number>) {
       const handle = action.payload;
-      if (state.selectedUnit === handle) {
-        // You deselect a unit by clicking on it again
+      if (state.selectedAction) {
+        // If an action is selected, the target has been clicked.
+        // Execute the action
         state.selectedUnit = null;
         state.selectedAction = undefined;
-      } else {
-        const selectedIsOwnedUnit = !state.units[handle].isEnemy;
-        if (state.selectedUnit && !selectedIsOwnedUnit) {
-          // If you select your own unit and then an enemy,
-          // the attack target should be set outside of redux and the selected resets
-          state.selectedUnit = null;
-          state.selectedAction = undefined;
-        } else if (selectedIsOwnedUnit) {
-          // Select your own unit
-          state.selectedUnit = handle;
-        }
+      } else if (state.selectedUnit === handle) {
+        // Deselect a unit by clicking on it again
+        state.selectedUnit = null;
+        state.selectedAction = undefined;
+      } else if (!state.units[handle].isEnemy) {
+        // Select your own unit
+        state.selectedUnit = handle;
       }
     },
     updateMousePosition(state, action: PayloadAction<{ x: number; y: number }>) {
@@ -95,7 +92,7 @@ const combatSceneSlice = createSlice({
       state.mousePosition = { x, y };
     },
 
-    selectedAction(state, action: PayloadAction<ActionInfo | undefined>) {
+    setSelectedAction(state, action: PayloadAction<ActionInfo | undefined>) {
       // If no unit is selected, actions can't be clicked
       if (state.selectedUnit != null) {
         state.selectedAction = action.payload;
@@ -125,11 +122,27 @@ const combatSceneSlice = createSlice({
   },
 });
 
-const { isPausedChanged, updatedUnits, updateMousePosition } = combatSceneSlice.actions;
+const {
+  isPausedChanged, updatedUnits, updateMousePosition, setSelectedAction,
+} = combatSceneSlice.actions;
 
-export const { clickedOnUnit, selectedAction, clearSelectedAction } = combatSceneSlice.actions;
+export const { clickedOnUnit, clearSelectedAction } = combatSceneSlice.actions;
 
 export default combatSceneSlice.reducer;
+
+export const selectedAction = (action: ActionInfo): AppThunk => (dispatch, getState) => {
+  const { combatScene: { selectedUnit } } = getState();
+
+  // If no unit is selected, actions can't be clicked
+  if (selectedUnit) {
+    // If the action has no target, it fires immediately
+    if (!action.canTargetOthers) {
+      setSkillTarget(selectedUnit, [], action);
+    } else {
+      dispatch(setSelectedAction(action));
+    }
+  }
+};
 
 export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
   const { eMgr } = GameManager.instance;
@@ -183,8 +196,8 @@ export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
   dispatch(updatedUnits({ units }));
 };
 
-export const setSkillTarget = (unit: number, target: number, action: ActionInfo) => {
-  SetSkillTarget(unit, [target], action.name);
+export const setSkillTarget = (unit: number, targets: number[], action: ActionInfo) => {
+  SetSkillTarget(unit, targets, action.name);
 };
 
 const updateMousePositionInner = throttle((dispatch: Dispatch, newPos: MousePos) => {

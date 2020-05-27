@@ -21,6 +21,10 @@ export function getSkillData(user: number, targets: number[], skillName: string)
       data = 3; // stealth duration
       break;
     }
+    case 'heal': {
+      data = 40;
+      break;
+    }
     default:
       break;
   }

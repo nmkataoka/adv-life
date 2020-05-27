@@ -57,12 +57,9 @@ export default function Unit({ handle }: UnitProps) {
   const unitRef = useRef<HTMLDivElement>(null);
 
   const handleUnitClick = () => {
-    if (selectedAction) {
-      // TODO: Check if action targets enemy here
-      if (selectedUnit && isEnemy) {
-        setSkillTarget(selectedUnit, handle, selectedAction);
-        dispatch(clickedOnUnit(handle));
-      }
+    if (selectedAction && selectedUnit) {
+      setSkillTarget(selectedUnit, [handle], selectedAction);
+      dispatch(clickedOnUnit(handle));
     } else {
       dispatch(clickedOnUnit(handle));
     }

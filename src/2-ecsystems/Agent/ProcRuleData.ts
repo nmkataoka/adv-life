@@ -8,8 +8,9 @@ import { ComponentManager } from '../../0-engine/ECS/ComponentManager';
 import { createChannelTime } from './ProcRuleDataHelpers';
 import { StatusEffectsCmpt } from '../../1- ncomponents/StatusEffectsCmpt';
 
-export const ProcRuleData: ProcRule<any>[] = [
-  new ProcRule('attack', () => (entityBinding: number[], dt: number, data: number) => {
+const attack = new ProcRule(
+  'attack',
+  () => (entityBinding: number[], dt: number, data: number) => {
     const [, target] = entityBinding;
     const targetHealthCmpt = GetComponent(HealthCmpt, target);
 
@@ -19,9 +20,13 @@ export const ProcRuleData: ProcRule<any>[] = [
     const damage = data;
     targetHealthCmpt.TakeDamage(damage);
     return ExecutorStatus.Finished;
-  }),
+  },
+  { canTargetOthers: true },
+);
 
-  new ProcRule('recover', () => {
+const recover = new ProcRule(
+  'recover',
+  () => {
     let timePassed = 0;
 
     return (entityBinding: number[], dt: number, data: number) => {
@@ -42,9 +47,12 @@ export const ProcRuleData: ProcRule<any>[] = [
       }
       return ExecutorStatus.Running;
     };
-  }),
+  },
+);
 
-  new ProcRule('fireball', () => {
+const fireball = new ProcRule(
+  'fireball',
+  () => {
     const channelDuration = 2;
     const channel = createChannelTime(channelDuration);
 
@@ -89,17 +97,48 @@ export const ProcRuleData: ProcRule<any>[] = [
 
       return ExecutorStatus.Finished;
     };
-  }),
+  },
+  { canTargetOthers: true },
+);
 
-  new ProcRule('stealth', () => (entityBinding: number[], dt: number, data: number) => {
+const stealth = new ProcRule(
+  'stealth',
+  () => (entityBinding: number[], dt: number, data: number) => {
     const [self] = entityBinding;
     const statusEffectsCmpt = GetComponent(StatusEffectsCmpt, self);
     if (!statusEffectsCmpt) return ExecutorStatus.Error;
 
     statusEffectsCmpt.StartEffect('Stealth', { severity: 1, duration: data });
     return ExecutorStatus.Finished;
-  }),
+  },
+);
+
+const heal = new ProcRule(
+  'heal',
+  () => (entityBinding: number[], dt: number, data: number) => {
+    const [, target] = entityBinding;
+    const healAmt = data;
+    const healthCmpt = GetComponent(HealthCmpt, target);
+    if (!healthCmpt) return ExecutorStatus.Error;
+
+    healthCmpt.TakeDamage(-healAmt);
+    return ExecutorStatus.Finished;
+  },
+  { canTargetOthers: true },
+);
+
+const ProcRuleDataArr: ProcRule<any>[] = [
+  attack,
+  recover,
+  fireball,
+  stealth,
+  heal,
 ];
+
+export const ProcRuleData = ProcRuleDataArr.reduce((dict, pr) => {
+  dict[pr.name] = pr;
+  return dict;
+}, {} as {[key: string]: ProcRule<any>});
 
 type EntityCombatPos = {
   entityHandle: number;

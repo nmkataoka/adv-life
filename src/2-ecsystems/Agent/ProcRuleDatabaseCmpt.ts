@@ -18,7 +18,7 @@ export class ProcRuleDbCmpt implements NComponent {
   }
 
   private loadProcRules() {
-    ProcRuleData.forEach((pr) => {
+    Object.values(ProcRuleData).forEach((pr) => {
       this.procRuleMap[pr.name] = this.procRules.length;
       this.procRules.push(pr);
     });

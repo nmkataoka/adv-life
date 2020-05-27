@@ -40,7 +40,15 @@ export class ProcRule<ExecDataType = void> {
 
   public name: string;
 
-  constructor(name: string, executorFac: ProcRuleExecutorFactory<ExecDataType>) {
+  // If the action can target other entities, set to true
+  public canTargetOthers = false;
+
+  constructor(
+    name: string,
+    executorFac: ProcRuleExecutorFactory<ExecDataType>,
+    data?: Partial<ProcRule<ExecDataType>>,
+  ) {
+    Object.assign(this, data);
     this.executorFac = executorFac;
     this.name = name;
   }
