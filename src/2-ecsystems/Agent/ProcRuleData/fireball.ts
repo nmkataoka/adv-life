@@ -1,56 +1,13 @@
-import { ProcRule, ExecutorStatus } from './ProcRule';
-import { GetComponent, GetComponentManager } from '../../0-engine/ECS/EntityManager';
-import { HealthCmpt } from '../../1- ncomponents/HealthCmpt';
-import { CombatStatsCmpt } from '../../1- ncomponents/CombatStatsCmpt';
-import { CombatPositionCmpt } from '../../1- ncomponents/CombatPositionCmpt';
-import { FactionCmpt } from '../../1- ncomponents/FactionCmpt';
-import { ComponentManager } from '../../0-engine/ECS/ComponentManager';
-import { createChannelTime } from './ProcRuleDataHelpers';
-import { StatusEffectsCmpt } from '../../1- ncomponents/StatusEffectsCmpt';
+import { ProcRule, ExecutorStatus } from '../ProcRule';
+import { GetComponent, GetComponentManager } from '../../../0-engine/ECS/EntityManager';
+import { HealthCmpt } from '../../../1- ncomponents/HealthCmpt';
+import { CombatStatsCmpt } from '../../../1- ncomponents/CombatStatsCmpt';
+import { CombatPositionCmpt } from '../../../1- ncomponents/CombatPositionCmpt';
+import { FactionCmpt } from '../../../1- ncomponents/FactionCmpt';
+import { ComponentManager } from '../../../0-engine/ECS/ComponentManager';
+import { createChannelTime } from '../ProcRuleDataHelpers';
 
-const attack = new ProcRule(
-  'attack',
-  () => (entityBinding: number[], dt: number, data: number) => {
-    const [, target] = entityBinding;
-    const targetHealthCmpt = GetComponent(HealthCmpt, target);
-
-    // If no target, attack is finished
-    if (!targetHealthCmpt) return ExecutorStatus.Finished;
-
-    const damage = data;
-    targetHealthCmpt.TakeDamage(damage);
-    return ExecutorStatus.Finished;
-  },
-  { canTargetOthers: true },
-);
-
-const recover = new ProcRule(
-  'recover',
-  () => {
-    let timePassed = 0;
-
-    return (entityBinding: number[], dt: number, data: number) => {
-      const recoveryDuration = data;
-
-      // Update StatusEffectsCmpt at beginning
-      if (timePassed === 0) {
-        const [self] = entityBinding;
-        const statusEffectsCmpt = GetComponent(StatusEffectsCmpt, self);
-        if (statusEffectsCmpt) {
-          statusEffectsCmpt.StartEffect('Recover', { severity: 1, duration: recoveryDuration });
-        }
-      }
-
-      timePassed += dt;
-      if (timePassed >= recoveryDuration) {
-        return ExecutorStatus.Finished;
-      }
-      return ExecutorStatus.Running;
-    };
-  },
-);
-
-const fireball = new ProcRule(
+export const fireball = new ProcRule(
   'fireball',
   () => {
     const channelDuration = 2;
@@ -100,45 +57,6 @@ const fireball = new ProcRule(
   },
   { canTargetOthers: true },
 );
-
-const stealth = new ProcRule(
-  'stealth',
-  () => (entityBinding: number[], dt: number, data: number) => {
-    const [self] = entityBinding;
-    const statusEffectsCmpt = GetComponent(StatusEffectsCmpt, self);
-    if (!statusEffectsCmpt) return ExecutorStatus.Error;
-
-    statusEffectsCmpt.StartEffect('Stealth', { severity: 1, duration: data });
-    return ExecutorStatus.Finished;
-  },
-);
-
-const heal = new ProcRule(
-  'heal',
-  () => (entityBinding: number[], dt: number, data: number) => {
-    const [, target] = entityBinding;
-    const healAmt = data;
-    const healthCmpt = GetComponent(HealthCmpt, target);
-    if (!healthCmpt) return ExecutorStatus.Error;
-
-    healthCmpt.TakeDamage(-healAmt);
-    return ExecutorStatus.Finished;
-  },
-  { canTargetOthers: true },
-);
-
-const ProcRuleDataArr: ProcRule<any>[] = [
-  attack,
-  recover,
-  fireball,
-  stealth,
-  heal,
-];
-
-export const ProcRuleData = ProcRuleDataArr.reduce((dict, pr) => {
-  dict[pr.name] = pr;
-  return dict;
-}, {} as {[key: string]: ProcRule<any>});
 
 type EntityCombatPos = {
   entityHandle: number;
