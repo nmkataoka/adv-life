@@ -7,6 +7,7 @@ import Unit from './Unit';
 import ActionBar from './ActionBar';
 import { RootState } from '../../7-app/types';
 import { setMousePosition, UnitInfo } from './combatSceneSlice';
+import CombatLog from '../combatLog';
 
 import useDetectKeypress from '../common/useDetectKeypress';
 import InfoSidebar from './InfoSidebar';
@@ -47,6 +48,7 @@ export default function CombatScene() {
           ))}
         </Row>
         <ActionBar />
+        <CombatLogContainer><CombatLog /></CombatLogContainer>
       </MainContent>
       <InfoSidebar />
     </Container>
@@ -78,4 +80,10 @@ const Row = styled.div`
 const Divider = styled.div`
   width: 100%;
   border-bottom: 2px solid gray;
+`;
+
+const CombatLogContainer = styled.div`
+  position: absolute;
+  right: 0;
+  bottom: 0;
 `;

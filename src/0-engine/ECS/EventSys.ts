@@ -57,6 +57,10 @@ export class EventSys extends ECSystem {
 
   // Returns a token that can be used to deregister a listener
   public RegisterListener(eventName: string, callback: EventCallback): number {
+    if (!this.eventListeners[eventName]) {
+      this.eventListeners[eventName] = [];
+    }
+
     this.eventListeners[eventName].push(new EventListener(callback));
     return this.eventListeners[eventName].length - 1;
   }

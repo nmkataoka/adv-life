@@ -6,6 +6,7 @@ import CombatScene from './6-ui-features/CombatScene';
 import TopBar from './6-ui-features/CombatScene/TopBar';
 import { GameManager } from './0-engine/GameManager';
 import { updateUnitsFromEngine } from './6-ui-features/CombatScene/combatSceneSlice';
+import { updateCombatLogFromEngine } from './6-ui-features/combatLog/combatLogSlice';
 
 const uiInterval = 200;
 
@@ -19,6 +20,7 @@ function App() {
 
     const handle = setTimeout(() => {
       dispatch(updateUnitsFromEngine());
+      dispatch(updateCombatLogFromEngine());
       startUILoop();
     }, uiInterval);
     setUiLoopHandle(handle);
