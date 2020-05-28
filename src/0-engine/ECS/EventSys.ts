@@ -17,9 +17,9 @@ export class EventListener {
   }
 }
 
-export type EventAction = {
+export type EventAction<T> = {
   type: string;
-  payload: any;
+  payload: T;
 }
 
 export class EventSys extends ECSystem {
@@ -40,7 +40,7 @@ export class EventSys extends ECSystem {
 
   // Low priority actions are deferred in a queue to be executed after the current tick finishes.
   // High priority actions are dispatched immediately.
-  public Dispatch(action: EventAction, isLowPriority = false): void {
+  public Dispatch<T>(action: EventAction<T>, isLowPriority = false): void {
     if (isLowPriority) {
       this.lowPriorityEventQueue.push(action);
     } else {
@@ -71,7 +71,7 @@ export class EventSys extends ECSystem {
     }
   }
 
-  private InternalDispatch({ type, payload }: EventAction) {
+  private InternalDispatch<T>({ type, payload }: EventAction<T>) {
     const listeners = this.eventListeners[type];
     if (listeners) {
       listeners.forEach((l) => {
@@ -84,5 +84,5 @@ export class EventSys extends ECSystem {
 
   private eventListeners: {[key: string]: EventListener[]};
 
-  private lowPriorityEventQueue: EventAction[];
+  private lowPriorityEventQueue: EventAction<any>[];
 }

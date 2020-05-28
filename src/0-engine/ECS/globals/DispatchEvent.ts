@@ -1,6 +1,10 @@
 import { EntityManager } from '../EntityManager';
 import { EventSys, EventAction } from '../EventSys';
 
-export function DispatchEvent(action: EventAction, isLowPriority = false): void {
-  return EntityManager.instance.GetSystem(EventSys).Dispatch(action, isLowPriority);
+export function DispatchEvent<T>(action: EventAction<T>, isLowPriority = false): void {
+  return GetEventSys().Dispatch(action, isLowPriority);
+}
+
+export function GetEventSys(): EventSys {
+  return EntityManager.instance.GetSystem(EventSys);
 }
