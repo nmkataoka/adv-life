@@ -11,6 +11,7 @@ import { Keycodes } from '../common/constants';
 import { AppThunk } from '../../7-app/types';
 import { SetSkillTarget } from '../../3-api';
 import { StatusEffectsCmpt } from '../../1- ncomponents/StatusEffectsCmpt';
+import { GetView } from '../../0-engine/ECS/View';
 
 export type UnitInfo = {
   entityHandle: number;
@@ -153,21 +154,22 @@ export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
   const statusEffectsMgr = eMgr.GetComponentManager(StatusEffectsCmpt);
 
   const units: Units = {};
-  Object.entries(healthMgr.components).forEach(([entity, healthCmpt]) => {
-    const entityHandle = parseInt(entity, 10);
-
-    const { health, maxHealth } = healthCmpt;
-
+  const unitView = GetView(0, HealthCmpt);
+  for (let i = 0; i < unitView.Count; ++i) {
+    const e = unitView.At(i);
+    const entityHandle = parseInt(e, 10);
+    const healthCmpt = healthMgr.GetByNumber(entityHandle);
     const combatStatsCmpt = combatStatsMgr.GetByNumber(entityHandle);
     const factionCmpt = factionMgr.GetByNumber(entityHandle);
     const statusEffectsCmpt = statusEffectsMgr.GetByNumber(entityHandle);
-    if (!statusEffectsCmpt) throw new Error('unit is missing StatusEffectsCmpt');
+    if (!statusEffectsCmpt || !healthCmpt) throw new Error('unit is missing StatusEffectsCmpt');
     const channel = statusEffectsCmpt.GetStatusEffect('Channel');
     const recovering = statusEffectsCmpt.GetStatusEffect('Recover');
 
     const combatPos = positionMgr.GetByNumber(entityHandle);
     if (!combatPos) throw new Error('unit is missing CombatPositionCmpt');
 
+    const { health, maxHealth } = healthCmpt;
 
     units[entityHandle] = {
       entityHandle,
@@ -191,7 +193,7 @@ export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
       position: combatPos.position,
 
     };
-  });
+  }
 
   dispatch(updatedUnits({ units }));
 };

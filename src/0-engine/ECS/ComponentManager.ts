@@ -11,11 +11,15 @@ export class ComponentManager<C extends NComponent, CClass extends NComponentCon
     this.components[e.handle] = c;
   }
 
+  public get Count(): number {
+    return Object.values(this.components).length;
+  }
+
   public Get(e: Entity): C | undefined {
     return this.components[e.handle];
   }
 
-  public GetByNumber(handle: number): C | undefined {
+  public GetByNumber(handle: number | string): C | undefined {
     return this.components[handle];
   }
 
@@ -29,7 +33,17 @@ export class ComponentManager<C extends NComponent, CClass extends NComponentCon
     delete this.components[handle];
   }
 
+  public Has(e: Entity | number | string) {
+    let handle: number | string;
+    if (typeof e === 'number' || typeof e === 'string') {
+      handle = e;
+    } else {
+      ({ handle } = e);
+    }
+    return !!this.components[handle];
+  }
+
   private myClass: CClass;
 
-  public components: { [key: number]: C };
+  public components: { [key: string]: C };
 }
