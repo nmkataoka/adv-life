@@ -2,7 +2,7 @@ import { BoundAction } from '../2-ecsystems/Agent/BoundAction';
 import { GoalQueueCmpt } from '../2-ecsystems/Agent/GoalQueueCmpt';
 import { getSkillData } from './SkillData';
 import { EntityManager } from '../0-engine/ECS/EntityManager';
-import { GetPrdb } from '../0-engine/ECS/EntityManagerGlobals';
+import { GetPrdb } from '../0-engine/ECS/globals/EntityManagerGlobals';
 
 export function SetSkillTarget(user: number, targets: number[], skillName: string) {
   const prdb = GetPrdb();

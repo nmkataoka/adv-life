@@ -1,3 +1,9 @@
+import { ECSystem } from './ECSystem';
+import {
+  GetComponentFuncType,
+  GetComponentManagerFuncType,
+} from './types/EntityManagerAccessorTypes';
+
 export type EventCallback = (payload: any) => void;
 
 export class EventListener {
@@ -16,16 +22,26 @@ export type EventAction = {
   payload: any;
 }
 
-export class EventManager {
-  constructor() {
+export class EventSys extends ECSystem {
+  constructor(
+    getComponent: GetComponentFuncType,
+    getComponentManager: GetComponentManagerFuncType,
+  ) {
+    super(getComponent, getComponentManager);
     this.eventListeners = {};
     this.lowPriorityEventQueue = [];
   }
 
+  public Start(): void {}
+
+  public OnUpdate(): void {
+    this.ExecuteLowPriorityActions();
+  }
+
   // Low priority actions are deferred in a queue to be executed after the current tick finishes.
   // High priority actions are dispatched immediately.
-  public Dispatch(action: EventAction, lowPriority = false): void {
-    if (lowPriority) {
+  public Dispatch(action: EventAction, isLowPriority = false): void {
+    if (isLowPriority) {
       this.lowPriorityEventQueue.push(action);
     } else {
       this.InternalDispatch(action);

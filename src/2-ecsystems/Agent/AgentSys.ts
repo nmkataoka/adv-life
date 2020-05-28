@@ -6,7 +6,7 @@ import { ProcRuleDbCmpt } from './ProcRuleDatabaseCmpt';
 import { GoalQueueCmpt } from './GoalQueueCmpt';
 import { EntityManager } from '../../0-engine/ECS/EntityManager';
 import { FactionCmpt } from '../../1- ncomponents/FactionCmpt';
-import { GetPrdb } from '../../0-engine/ECS/EntityManagerGlobals';
+import { GetPrdb } from '../../0-engine/ECS/globals/EntityManagerGlobals';
 import { getSkillData } from '../../3-api/SkillData';
 
 
