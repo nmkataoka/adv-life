@@ -6,6 +6,8 @@ import { CombatPositionCmpt } from '../../../1- ncomponents/CombatPositionCmpt';
 import { FactionCmpt } from '../../../1- ncomponents/FactionCmpt';
 import { ComponentManager } from '../../../0-engine/ECS/ComponentManager';
 import { createChannelTime } from '../ProcRuleDataHelpers';
+import { UNIT_CAST_SPELL } from './Constants';
+import { DispatchEvent } from '../../../0-engine/ECS/globals/DispatchEvent';
 
 export const fireball = new ProcRule(
   'fireball',
@@ -43,6 +45,13 @@ export const fireball = new ProcRule(
         factionMgr,
         combatPositionMgr,
       );
+
+      DispatchEvent({
+        type: UNIT_CAST_SPELL,
+        payload: {
+          self, targets: targetEntities, damage, name: 'Fireball',
+        },
+      });
 
       const healthMgr = GetComponentManager(HealthCmpt);
       targetEntities.forEach((targetHandle) => {
