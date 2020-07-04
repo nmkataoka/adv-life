@@ -5,11 +5,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRef, useState, useEffect } from 'react';
 import HealthBar from './HealthBar';
 import { RootState } from '../../7-app/types';
-import { setSkillTarget, clickedOnUnit } from './combatSceneSlice';
-import ArrowFromUnit from './ArrowFromUnit';
+import { setSkillTarget, clickedOnUnit, updatedUnitCoords } from './combatSceneSlice';
+import ArrowFromUnitToMouse from './ArrowFromUnitToMouse';
 import ManaBar from './ManaBar';
 import { damageBlinkCss } from '../../5-react-components/arrow/damageBlink';
 import RecoveryBar from './RecoveryBar';
+import { getCoordsFromElement } from './RelativePosCoords';
+import Arrow from '../../5-react-components/arrow';
 
 type UnitProps = {
   handle: number;
@@ -18,7 +20,14 @@ type UnitProps = {
 // milliseconds to blink the unit after taking damage
 const blinkOnDamageFor = 1000;
 
-export default function Unit({ handle }: UnitProps) {
+const targetCoordsSelector = (entityHandle: number) => (state: RootState) => {
+  const { combatScene } = state;
+  const { units: { [entityHandle]: { targetEntity } } } = combatScene;
+  const { unitCoords: { [targetEntity]: targetCoords = undefined } } = combatScene;
+  return targetCoords;
+};
+
+export default function Unit({ handle }: UnitProps): JSX.Element {
   const dispatch = useDispatch();
   const {
     health,
@@ -51,10 +60,20 @@ export default function Unit({ handle }: UnitProps) {
     setPrevHealth(health);
   }, [health, prevHealth, tookDamageTimeout, recentlyTookDamage]);
 
+  const unitRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (unitRef && unitRef.current) {
+      const coords = getCoordsFromElement(unitRef.current);
+      dispatch(updatedUnitCoords({ entityHandle: handle, coords }));
+    }
+  }, [dispatch, handle]);
+  const targetCoords = useSelector(targetCoordsSelector(handle));
+  const showAllTargetArrows = useSelector((state: RootState) => state.combatScene.showAllTargeting);
+  const myCoords = useSelector((state: RootState) => state.combatScene.unitCoords[handle]);
+
   const selectedUnit = useSelector((state: RootState) => state.combatScene.selectedUnit);
   const selectedAction = useSelector((state: RootState) => state.combatScene.selectedAction);
-
-  const unitRef = useRef<HTMLDivElement>(null);
 
   const handleUnitClick = () => {
     if (selectedAction && selectedUnit) {
@@ -66,11 +85,13 @@ export default function Unit({ handle }: UnitProps) {
   };
 
   const isSelectedUnit = handle === selectedUnit;
-  const showArrowFromUnit = isSelectedUnit && !isEnemy && selectedAction;
+  const showArrowFromUnitToMouse = isSelectedUnit && !isEnemy && selectedAction;
+  const showCurTargetArrow = showAllTargetArrows && targetCoords;
 
   return (
     <Container isStealthed={isStealthed}>
-      {showArrowFromUnit && <ArrowFromUnit fromRef={unitRef} />}
+      {showArrowFromUnitToMouse && <ArrowFromUnitToMouse fromRef={unitRef} />}
+      {showCurTargetArrow && targetCoords && <Arrow from={myCoords} to={targetCoords} />}
       <HealthBar health={health / maxHealth} />
       <ManaBar mana={mana} maxMana={maxMana} />
       <RecoveryBar handle={handle} />

@@ -15,8 +15,16 @@ type MousePos = {
 
 export type UnitInfo = UnitInfoApi;
 
+type UnitCoord = {
+  x: number;
+  y: number;
+}
+
+type UnitCoordsDict = { [key: string]: UnitCoord };
+
 const initialState = {
   units: {} as UnitsDict,
+  unitCoords: {} as UnitCoordsDict,
 
   selectedUnit: null as null | number,
 
@@ -43,6 +51,10 @@ const combatSceneSlice = createSlice({
   reducers: {
     updatedUnits(state, action: PayloadAction<{ units: UnitsDict }>) {
       state.units = action.payload.units;
+    },
+    updatedUnitCoords(state, action: PayloadAction<{entityHandle: number, coords: UnitCoord }>) {
+      const { entityHandle, coords } = action.payload;
+      state.unitCoords[entityHandle] = { ...coords };
     },
     clickedOnUnit(state, action: PayloadAction<number>) {
       const handle = action.payload;
@@ -106,6 +118,7 @@ export const {
   clearSelectedAction,
   clickedOnUnit,
   setShowAllTargeting,
+  updatedUnitCoords,
 } = combatSceneSlice.actions;
 
 export default combatSceneSlice.reducer;
