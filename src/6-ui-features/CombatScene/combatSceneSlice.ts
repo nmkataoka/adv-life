@@ -6,12 +6,14 @@ import { keyPressed } from '../common/actions';
 import { Keycodes } from '../common/constants';
 import { AppThunk } from '../../7-app/types';
 import { SetSkillTarget } from '../../3-api';
-import { UnitsDict, getUnitInfos } from '../../3-api/UnitInfo';
+import { UnitsDict, getUnitInfos, UnitInfo as UnitInfoApi } from '../../3-api/UnitInfo';
 
 type MousePos = {
   x: number;
   y: number;
 };
+
+export type UnitInfo = UnitInfoApi;
 
 const initialState = {
   units: {} as UnitsDict,

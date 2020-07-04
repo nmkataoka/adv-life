@@ -12,7 +12,7 @@ export function SetSkillTarget(user: number, targets: number[], skillName: strin
   const { data, recoveryDuration } = getSkillData(user, targets, skillName);
   const baction = new BoundAction(procRule, entityBinding, data, recoveryDuration);
 
-  const goalQueueCmpt = EntityManager.instance.GetComponent(GoalQueueCmpt, user);
+  const goalQueueCmpt = EntityManager.instance.GetComponentUncertain(GoalQueueCmpt, user);
   if (goalQueueCmpt) {
     goalQueueCmpt.nextAction = baction;
   }

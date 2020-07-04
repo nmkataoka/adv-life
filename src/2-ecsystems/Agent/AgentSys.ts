@@ -9,7 +9,6 @@ import { FactionCmpt } from '../../1- ncomponents/FactionCmpt';
 import { GetPrdb } from '../../0-engine/ECS/globals/EntityManagerGlobals';
 import { getSkillData } from '../../3-api/SkillData';
 
-
 export class AgentSys extends ECSystem {
   public Start(): void {
     // Create the proc rule database
@@ -65,7 +64,7 @@ export class AgentSys extends ECSystem {
     }
 
     // Player-controlled agents use GoalQueueCmpt to receive commands from the player
-    const goalQueueCmpt = this.GetComponent(GoalQueueCmpt, self);
+    const goalQueueCmpt = this.GetComponentUncertain(GoalQueueCmpt, self);
     if (goalQueueCmpt && goalQueueCmpt.nextAction) {
       const { nextAction } = goalQueueCmpt;
       goalQueueCmpt.nextAction = undefined;

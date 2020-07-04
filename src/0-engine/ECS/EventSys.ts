@@ -2,6 +2,7 @@ import { ECSystem } from './ECSystem';
 import {
   GetComponentFuncType,
   GetComponentManagerFuncType,
+  GetComponentUncertainFuncType,
 } from './types/EntityManagerAccessorTypes';
 
 export type EventCallback = (payload: any) => void;
@@ -26,8 +27,9 @@ export class EventSys extends ECSystem {
   constructor(
     getComponent: GetComponentFuncType,
     getComponentManager: GetComponentManagerFuncType,
+    getComponentUncertain: GetComponentUncertainFuncType,
   ) {
-    super(getComponent, getComponentManager);
+    super(getComponent, getComponentManager, getComponentUncertain);
     this.eventListeners = {};
     this.lowPriorityEventQueue = [];
   }
