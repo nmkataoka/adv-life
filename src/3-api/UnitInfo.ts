@@ -5,7 +5,7 @@ import { FactionCmpt } from '../1- ncomponents/FactionCmpt';
 import { CombatPositionCmpt } from '../1- ncomponents/CombatPositionCmpt';
 import { StatusEffectsCmpt } from '../1- ncomponents/StatusEffectsCmpt';
 import { GetView } from '../0-engine/ECS/View';
-import { AgentCmpt } from '../1- ncomponents/AgentCmpt';
+import { GoalQueueCmpt } from '../2-ecsystems/Agent/GoalQueueCmpt';
 
 export type UnitInfo = {
   entityHandle: number;
@@ -86,13 +86,13 @@ const getCombatPosition = (entityHandle: number) => {
   return { position };
 };
 
-const getBactionInfo = (entityHandle: number) => {
+const getNextBactionInfo = (entityHandle: number) => {
   const { eMgr } = GameManager.instance;
-  const agentCmpt = eMgr.GetComponentUncertain(AgentCmpt, entityHandle);
+  const goalQueueCmpt = eMgr.GetComponentUncertain(GoalQueueCmpt, entityHandle);
 
   let targetEntity = -1;
-  if (agentCmpt && agentCmpt.baction) {
-    const { baction: { entityBinding } } = agentCmpt;
+  if (goalQueueCmpt && goalQueueCmpt.nextAction) {
+    const { nextAction: { entityBinding } } = goalQueueCmpt;
     if (entityBinding.length > 1) {
       targetEntity = entityBinding[1];
     }
@@ -112,15 +112,15 @@ export const getUnitInfos = (): UnitsDict => {
     const factionInfo = getFaction(entityHandle);
     const statusEffectsInfo = getStatusEffects(entityHandle);
     const combatPosInfo = getCombatPosition(entityHandle);
-    const bactionInfo = getBactionInfo(entityHandle);
+    const nextBactionInfo = getNextBactionInfo(entityHandle);
 
     units[entityHandle] = {
       entityHandle,
-      ...bactionInfo,
       ...combatPosInfo,
       ...combatStatsInfo,
       ...factionInfo,
       ...healthInfo,
+      ...nextBactionInfo,
       ...statusEffectsInfo,
     };
   }
