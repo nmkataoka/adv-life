@@ -198,7 +198,7 @@ export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
   dispatch(updatedUnits({ units }));
 };
 
-export const setSkillTarget = (unit: number, targets: number[], action: ActionInfo) => {
+export const setSkillTarget = (unit: number, targets: number[], action: ActionInfo): void => {
   SetSkillTarget(unit, targets, action.name);
 };
 

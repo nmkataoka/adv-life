@@ -2,26 +2,34 @@
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import Unit from './Unit';
 import ActionBar from './ActionBar';
 import { RootState } from '../../7-app/types';
-import { setMousePosition, UnitInfo } from './combatSceneSlice';
+import { setMousePosition, UnitInfo, updateUnitsFromEngine } from './combatSceneSlice';
 import CombatLog from '../combatLog';
+import useUILoop from '../useUILoop';
 
 import useDetectKeypress from '../common/useDetectKeypress';
 import InfoSidebar from './InfoSidebar';
+import { updateCombatLogFromEngine } from '../combatLog/combatLogSlice';
 
 function sortUnitsByCombatPosition(a: UnitInfo, b: UnitInfo) {
   return a.position - b.position;
 }
 
-export default function CombatScene() {
+export default function CombatScene(): JSX.Element {
   const units = useSelector((state: RootState) => state.combatScene.units);
   const enemies = Object.values(units).filter((u) => u.isEnemy);
   const friendlies = Object.values(units).filter((f) => !f.isEnemy);
   const dispatch = useDispatch();
   const sceneRef = useRef<HTMLDivElement>(null);
+
+  const engineUpdates = useMemo(() => [
+    updateCombatLogFromEngine,
+    updateUnitsFromEngine,
+  ], []);
+  useUILoop(engineUpdates);
 
   useDetectKeypress();
 

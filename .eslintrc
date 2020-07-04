@@ -24,6 +24,7 @@
     "no-mixed-operators": 0,
     "no-param-reassign": 0,
     "no-plusplus": 0,
+    "no-use-before-define": 0,
     "object-curly-spacing": ["error", "always"],
     "prefer-destructuring": ["error", { "object": true, "array": false }],
     "react/jsx-filename-extension": 0,
@@ -40,9 +41,11 @@
         "ignoredNodes": ["TSTypeParameterInstantiation"]
       }
     ],
-    "@typescript-eslint/no-use-before-define": 0,
+    
     "@typescript-eslint/no-empty-function": 0,
-    "@typescript-eslint/no-explicit-any": 0
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-unsafe-member-access": 0,
+    "@typescript-eslint/no-use-before-define": 0
   },
   "settings": {
     "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
