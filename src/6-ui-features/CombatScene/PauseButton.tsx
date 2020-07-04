@@ -6,7 +6,7 @@ import { RootState } from '../../7-app/types';
 import useOnKeypress from '../common/useOnKeypress';
 import { Keycodes } from '../common/constants';
 
-export default function PauseButton() {
+export default function PauseButton(): JSX.Element {
   const dispatch = useDispatch();
   const isPaused = useSelector((state: RootState) => state.combatScene.isPaused);
 

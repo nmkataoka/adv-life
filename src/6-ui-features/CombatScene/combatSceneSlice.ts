@@ -1,43 +1,12 @@
 import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
 import throttle from 'lodash.throttle';
 import { GameManager } from '../../0-engine/GameManager';
-import { HealthCmpt } from '../../1- ncomponents/HealthCmpt';
-import { FactionCmpt } from '../../1- ncomponents/FactionCmpt';
 import { ActionInfo, CreateActionInfo } from './ActionInfo';
-import { CombatPositionCmpt } from '../../1- ncomponents/CombatPositionCmpt';
-import { CombatStatsCmpt } from '../../1- ncomponents/CombatStatsCmpt';
 import { keyPressed } from '../common/actions';
 import { Keycodes } from '../common/constants';
 import { AppThunk } from '../../7-app/types';
 import { SetSkillTarget } from '../../3-api';
-import { StatusEffectsCmpt } from '../../1- ncomponents/StatusEffectsCmpt';
-import { GetView } from '../../0-engine/ECS/View';
-
-export type UnitInfo = {
-  entityHandle: number;
-  health: number;
-  maxHealth: number;
-
-  mana: number;
-  maxMana: number;
-
-  isChanneling: boolean;
-  channelRemaining: number;
-  channelTotalDuration: number;
-
-  isRecovering: boolean;
-  recoveryRemaining: number;
-  recoveryTotalDuration: number;
-
-  isStealthed: boolean;
-
-  isEnemy?: boolean;
-  position: number;
-};
-
-type Units = {
-  [key: string]: UnitInfo;
-};
+import { UnitsDict, getUnitInfos } from '../../3-api/UnitInfo';
 
 type MousePos = {
   x: number;
@@ -45,7 +14,7 @@ type MousePos = {
 };
 
 const initialState = {
-  units: {} as Units,
+  units: {} as UnitsDict,
 
   selectedUnit: null as null | number,
 
@@ -63,13 +32,14 @@ const initialState = {
   selectedAction: undefined as ActionInfo | undefined,
 
   isPaused: false,
+  showAllTargeting: false,
 };
 
 const combatSceneSlice = createSlice({
   name: 'combatScene',
   initialState,
   reducers: {
-    updatedUnits(state, action: PayloadAction<{ units: Units }>) {
+    updatedUnits(state, action: PayloadAction<{ units: UnitsDict }>) {
       state.units = action.payload.units;
     },
     clickedOnUnit(state, action: PayloadAction<number>) {
@@ -105,6 +75,9 @@ const combatSceneSlice = createSlice({
     isPausedChanged(state, action: PayloadAction<boolean>) {
       state.isPaused = action.payload;
     },
+    setShowAllTargeting(state, action: PayloadAction<boolean>) {
+      state.showAllTargeting = action.payload;
+    },
   },
   extraReducers: {
     [keyPressed.toString()]: (state, action) => {
@@ -127,7 +100,11 @@ const {
   isPausedChanged, updatedUnits, updateMousePosition, setSelectedAction,
 } = combatSceneSlice.actions;
 
-export const { clickedOnUnit, clearSelectedAction } = combatSceneSlice.actions;
+export const {
+  clearSelectedAction,
+  clickedOnUnit,
+  setShowAllTargeting,
+} = combatSceneSlice.actions;
 
 export default combatSceneSlice.reducer;
 
@@ -146,54 +123,7 @@ export const selectedAction = (action: ActionInfo): AppThunk => (dispatch, getSt
 };
 
 export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
-  const { eMgr } = GameManager.instance;
-  const combatStatsMgr = eMgr.GetComponentManager(CombatStatsCmpt);
-  const healthMgr = eMgr.GetComponentManager(HealthCmpt);
-  const factionMgr = eMgr.GetComponentManager(FactionCmpt);
-  const positionMgr = eMgr.GetComponentManager(CombatPositionCmpt);
-  const statusEffectsMgr = eMgr.GetComponentManager(StatusEffectsCmpt);
-
-  const units: Units = {};
-  const unitView = GetView(0, HealthCmpt);
-  for (let i = 0; i < unitView.Count; ++i) {
-    const e = unitView.At(i);
-    const entityHandle = parseInt(e, 10);
-    const healthCmpt = healthMgr.GetByNumber(entityHandle);
-    const combatStatsCmpt = combatStatsMgr.GetByNumber(entityHandle);
-    const factionCmpt = factionMgr.GetByNumber(entityHandle);
-    const statusEffectsCmpt = statusEffectsMgr.GetByNumber(entityHandle);
-    if (!statusEffectsCmpt || !healthCmpt) throw new Error('unit is missing StatusEffectsCmpt');
-    const channel = statusEffectsCmpt.GetStatusEffect('Channel');
-    const recovering = statusEffectsCmpt.GetStatusEffect('Recover');
-
-    const combatPos = positionMgr.GetByNumber(entityHandle);
-    if (!combatPos) throw new Error('unit is missing CombatPositionCmpt');
-
-    const { health, maxHealth } = healthCmpt;
-
-    units[entityHandle] = {
-      entityHandle,
-      health,
-      maxHealth,
-
-      mana: combatStatsCmpt?.mana ?? 100,
-      maxMana: combatStatsCmpt?.maxMana ?? 100,
-
-      isChanneling: channel.severity > 0,
-      channelRemaining: channel.remainingDuration,
-      channelTotalDuration: channel.totalDuration,
-
-      isRecovering: recovering.severity > 0,
-      recoveryRemaining: recovering.remainingDuration,
-      recoveryTotalDuration: recovering.totalDuration,
-
-      isStealthed: statusEffectsCmpt.IsStatusEffectActive('Stealth'),
-
-      isEnemy: factionCmpt?.isEnemy,
-      position: combatPos.position,
-
-    };
-  }
+  const units = getUnitInfos();
 
   dispatch(updatedUnits({ units }));
 };

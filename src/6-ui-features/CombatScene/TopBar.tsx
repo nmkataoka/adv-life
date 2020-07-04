@@ -2,16 +2,20 @@
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import PauseButton from './PauseButton';
+import ShowAllTargetingButton from './ShowAllTargetingButton';
 
 const actions = ['Menu', 'Map'];
 
-export default function TopBar() {
+export default function TopBar(): JSX.Element {
   return (
     <Container>
       {actions.map((a) => (
         <ActionButton key={a}>{a}</ActionButton>
       ))}
-      <PauseButton />
+      <ButtonGroup>
+        <ShowAllTargetingButton />
+        <PauseButton />
+      </ButtonGroup>
     </Container>
   );
 }
@@ -34,4 +38,8 @@ const ActionButton = styled.div`
   &:hover {
     cursor: pointer;
   }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
 `;
