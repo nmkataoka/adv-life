@@ -3,13 +3,16 @@ import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../7-app/types';
 
-const CombatLog = () => {
+const CombatLog = (): JSX.Element => {
   const combatLogEntries = useSelector((state: RootState) => state.combatLog.entries);
   return (
     <ReverserWrapper>
       <InnerWrapper>
         {combatLogEntries.map(
-          (entry) => <Entry key={entry}>{entry}</Entry>,
+          /* the idx in the key should be removed once timestamps
+          /* are associated with the entries to make them unique */
+          /* eslint-disable-next-line react/no-array-index-key */
+          (entry, idx) => <Entry key={`${entry}_${idx}`}>{entry}</Entry>,
         )}
       </InnerWrapper>
     </ReverserWrapper>
