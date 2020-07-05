@@ -6,7 +6,7 @@ import { RootState } from '../../7-app/types';
 import { ActionInfo } from './ActionInfo';
 import { selectedAction } from './combatSceneSlice';
 
-export default function ActionBar() {
+export default function ActionBar(): JSX.Element {
   const actions = useSelector((state: RootState) => state.combatScene.actions);
   return (
     <Container>

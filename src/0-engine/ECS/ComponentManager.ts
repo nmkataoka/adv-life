@@ -19,11 +19,21 @@ export class ComponentManager<C extends NComponent, CClass extends NComponentCon
     return this.components[e.handle];
   }
 
-  public GetByNumber(handle: number | string): C | undefined {
+  public GetByNumberUncertain(handle: number | string): C | undefined {
     return this.components[handle];
   }
 
-  public Erase(e: Entity | number) {
+  // Use this accessor when you are certain the component exists
+  public GetByNumber(handle: number | string): C {
+    const c = this.components[handle];
+    if (!c) {
+      throw new Error(`Unexpected missing component ${this.myClass.name} for entity ${handle}`);
+    }
+
+    return c;
+  }
+
+  public Erase(e: Entity | number): void {
     let handle: number;
     if (typeof e === 'number') {
       handle = e;
@@ -33,7 +43,7 @@ export class ComponentManager<C extends NComponent, CClass extends NComponentCon
     delete this.components[handle];
   }
 
-  public Has(e: Entity | number | string) {
+  public Has(e: Entity | number | string): boolean {
     let handle: number | string;
     if (typeof e === 'number' || typeof e === 'string') {
       handle = e;
