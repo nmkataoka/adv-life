@@ -9,7 +9,7 @@
   },
   "plugins": {
     "eslint": {
-      "enabled": true,
+      "enabled": false,
       "config": {
         "checks": {
           "import/extensions": false
