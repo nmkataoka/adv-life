@@ -1,5 +1,5 @@
 # Adventurer's Life
-![CI_CD](https://github.com/nmkataoka/adv-life/workflows/CI_CD/badge.svg) [![codecov](https://codecov.io/gh/nmkataoka/adv-life/branch/master/graph/badge.svg)](https://codecov.io/gh/nmkataoka/adv-life)
+![CI_CD](https://github.com/nmkataoka/adv-life/workflows/CI_CD/badge.svg) [![codecov](https://codecov.io/gh/nmkataoka/adv-life/branch/master/graph/badge.svg)](https://codecov.io/gh/nmkataoka/adv-life) [![GitHub license](https://img.shields.io/github/license/nmkataoka/adv-life)](https://github.com/nmkataoka/adv-life)
 
 Welcome to Adventurer's Life, a game built as a single-page web app. I'm currently working towards a 0.1 version playable experience.
 
