@@ -2,16 +2,18 @@
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
-import { useRef, useState, useEffect } from 'react';
-import HealthBar from './HealthBar';
-import { RootState } from '../../7-app/types';
-import { setSkillTarget, clickedOnUnit, updatedUnitCoords } from './combatSceneSlice';
-import ArrowFromUnitToMouse from './ArrowFromUnitToMouse';
-import ManaBar from './ManaBar';
-import { damageBlinkCss } from '../../5-react-components/arrow/damageBlink';
-import RecoveryBar from './RecoveryBar';
-import { getCoordsFromElement } from './RelativePosCoords';
-import Arrow from '../../5-react-components/arrow';
+import {
+  useRef, useState, useEffect,
+} from 'react';
+import HealthBar from '../HealthBar';
+import { RootState } from '../../../7-app/types';
+import { setSkillTarget, clickedOnUnit } from '../combatSceneSlice';
+import ArrowFromUnitToMouse from '../ArrowFromUnitToMouse';
+import ManaBar from '../ManaBar';
+import { damageBlinkCss } from '../../../5-react-components/arrow/damageBlink';
+import RecoveryBar from '../RecoveryBar';
+import Arrow from '../../../5-react-components/arrow';
+import useUpdateCoords from './useUpdateCoords';
 
 type UnitProps = {
   handle: number;
@@ -29,6 +31,7 @@ const targetCoordsSelector = (entityHandle: number) => (state: RootState) => {
 
 export default function Unit({ handle }: UnitProps): JSX.Element {
   const dispatch = useDispatch();
+
   const {
     health,
     mana,
@@ -61,13 +64,8 @@ export default function Unit({ handle }: UnitProps): JSX.Element {
   }, [health, prevHealth, tookDamageTimeout, recentlyTookDamage]);
 
   const unitRef = useRef<HTMLDivElement>(null);
+  useUpdateCoords(handle, unitRef);
 
-  useEffect(() => {
-    if (unitRef && unitRef.current) {
-      const coords = getCoordsFromElement(unitRef.current);
-      dispatch(updatedUnitCoords({ entityHandle: handle, coords }));
-    }
-  }, [dispatch, handle]);
   const targetCoords = useSelector(targetCoordsSelector(handle));
   const showAllTargetArrows = useSelector((state: RootState) => state.combatScene.showAllTargeting);
   const myCoords = useSelector((state: RootState) => state.combatScene.unitCoords[handle]);

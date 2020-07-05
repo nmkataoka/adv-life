@@ -6,7 +6,7 @@ import { CombatPositionCmpt } from '../../../1- ncomponents/CombatPositionCmpt';
 import { FactionCmpt } from '../../../1- ncomponents/FactionCmpt';
 import { ComponentManager } from '../../../0-engine/ECS/ComponentManager';
 import { createChannelTime } from '../ProcRuleDataHelpers';
-import { UNIT_CAST_SPELL } from './Constants';
+import { UNIT_CAST_SPELL, UNIT_CANCELED_ACTION } from './Constants';
 import { DispatchEvent } from '../../../0-engine/ECS/globals/DispatchEvent';
 
 export const fireball = new ProcRule(
@@ -39,12 +39,23 @@ export const fireball = new ProcRule(
       // do the fireball
       const factionMgr = GetComponentManager(FactionCmpt);
       const combatPositionMgr = GetComponentManager(CombatPositionCmpt);
-      const targetEntities = getTargetsInAoeRadius(
-        centerTarget,
-        aoeRadius,
-        factionMgr,
-        combatPositionMgr,
-      );
+      let targetEntities;
+      try {
+        targetEntities = getTargetsInAoeRadius(
+          centerTarget,
+          aoeRadius,
+          factionMgr,
+          combatPositionMgr,
+        );
+      } catch (e) {
+        DispatchEvent({
+          type: UNIT_CANCELED_ACTION,
+          payload: {
+            self, target: centerTarget, actionName: 'fireball', reason: e,
+          },
+        });
+        return ExecutorStatus.Error;
+      }
 
       DispatchEvent({
         type: UNIT_CAST_SPELL,
@@ -98,9 +109,8 @@ function getTargetsInAoeRadius(
   const centerIdx = sortedEnemyPositions.findIndex((e) => e.entityHandle === centerTarget);
 
   if (centerIdx < 0 || centerIdx > sortedEnemyPositions.length) {
-    throw new Error(
-      'Target was not in the enemy array. There may be an issue with CombatPositions.',
-    );
+    const reason = 'Target was not in the enemy array.';
+    throw new Error(reason);
   }
 
   const targets = [centerTarget];
