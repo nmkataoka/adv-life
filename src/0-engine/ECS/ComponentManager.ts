@@ -26,7 +26,7 @@ export class ComponentManager<C extends NComponent, CClass extends NComponentCon
   // Use this accessor when you are certain the component exists
   public GetByNumber(handle: number | string): C {
     const c = this.components[handle];
-    if (!c) {
+    if (c == null) {
       throw new Error(`Unexpected missing component ${this.myClass.name} for entity ${handle}`);
     }
 

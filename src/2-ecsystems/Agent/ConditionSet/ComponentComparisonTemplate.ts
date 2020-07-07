@@ -1,4 +1,3 @@
-import { IEntityRelationship } from './EntityRelationshipTemplate';
 import { NComponentConstructor, NComponent } from '../../../0-engine/ECS/NComponent';
 import { EntityManager } from '../../../0-engine/ECS/EntityManager';
 
@@ -12,10 +11,10 @@ export abstract class ComponentComparisonTemplateBase {
 
 export type ComponentComparisonTemplatePredicate<C1, C2> = (c1: C1, c2: C2) => boolean;
 
-export class ComponentComparisonTemplate<
-  C1 extends NComponent & IEntityRelationship,
+export default class ComponentComparisonTemplate<
+  C1 extends NComponent,
   CClass1 extends NComponentConstructor<C1>,
-  C2 extends NComponent & IEntityRelationship,
+  C2 extends NComponent,
   CClass2 extends NComponentConstructor<C2>,
 > extends ComponentComparisonTemplateBase {
   public predicate: ComponentComparisonTemplatePredicate<C1, C2>;
