@@ -17,6 +17,12 @@ export interface IEntityRelationship {
 export abstract class EntityRelationshipTemplateBase {
   // Returns a list of entities
   public abstract getChildren(parentEntity: number, eMgr: EntityManager): number[];
+
+  public abstract checkValid(
+    parentEntity: number,
+    childEntity: number,
+    eMgr: EntityManager
+  ): boolean;
 }
 
 export default class EntityRelationshipTemplate<
@@ -32,6 +38,11 @@ export default class EntityRelationshipTemplate<
     const cMgr = eMgr.GetComponentManager<CClass, C>(this.cclass);
     if (!cMgr.Has(parentEntity)) return [];
     return cMgr.GetByNumber(parentEntity).getChildren();
+  }
+
+  public checkValid(parentEntity: number, childEntity: number, eMgr: EntityManager): boolean {
+    const children = this.getChildren(parentEntity, eMgr);
+    return children.includes(childEntity);
   }
 
   private cclass: CClass;
