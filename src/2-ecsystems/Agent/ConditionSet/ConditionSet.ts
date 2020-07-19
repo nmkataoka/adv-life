@@ -117,7 +117,7 @@ export default class ConditionSet {
       candidateEntities.push(this.entityTemplates[i].findCandidateEntities(eMgr));
     }
 
-    checkMaxPermutations(candidateEntities, firstEntityToBind);
+    checkMaxPermutations(candidateEntities);
 
     // Remove self except for self-targeted actions
     if (!canTargetSelf) {
@@ -169,6 +169,7 @@ export default class ConditionSet {
         }
       }
     }
+
     deleteCandidateEntities(candidateEntities, candidatesToDelete);
 
     // Check entity and component relationships and begin binding list
@@ -224,6 +225,7 @@ export default class ConditionSet {
 
       return bindings;
     }
+
     // Inner for-loop
     for (let i = 0; i < candidates.length; ++i) {
       const cur = candidates[i];
@@ -252,13 +254,12 @@ export default class ConditionSet {
 // indicates a need for smaller, more specific components. Consider
 // adding additional component flags, adding component restraints to
 // condition sets, or converting relationships/predicates to components.
-function checkMaxPermutations(
+export function checkMaxPermutations(
   candidateEntities: number[][],
-  firstEntityToBind: number,
   MAX_BINDING_PERMUTATIONS = 10000,
-) {
-  let numPermutations = candidateEntities[0].length;
-  for (let i = firstEntityToBind; i < candidateEntities.length; ++i) {
+): void {
+  let numPermutations = 1;
+  for (let i = 0; i < candidateEntities.length; ++i) {
     numPermutations *= candidateEntities[i].length;
   }
   if (numPermutations > MAX_BINDING_PERMUTATIONS) {
@@ -271,7 +272,9 @@ function checkMaxPermutations(
 /// Helper function that deletes items in the candidateEntities list
 /// based on the candidatesToDelete.
 /// Delayed deletion for speed reasons.
-function deleteCandidateEntities(
+///
+/// each list candidatesToDelete[i] should be an ordered subset of candidateEntities[i]
+export function deleteCandidateEntities(
   candidateEntities: number[][],
   candidatesToDelete: number[][],
 ): void {
@@ -293,7 +296,7 @@ function deleteCandidateEntities(
   }
 }
 
-function checkEntityRelationshipsAndComponentComparisonTemplates(
+export function checkEntityRelationshipsAndComponentComparisonTemplates(
   entityBinding: number[],
   self: number,
   eMgr: EntityManager,
