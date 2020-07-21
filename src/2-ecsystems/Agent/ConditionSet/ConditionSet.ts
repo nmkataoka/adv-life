@@ -297,9 +297,13 @@ export function deleteCandidateEntities(
 }
 
 export function checkEntityRelationshipsAndComponentComparisonTemplates(
-  entityBinding: number[],
-  self: number,
+  entityBinding: number[], // A valid entityBinding subset so far
+  entityCandidate: number, // The entity tentatively being appended to the entityBinding
   eMgr: EntityManager,
+
+  // All of the following are templates between the candidate entity
+  // and an entity that has already been added to the entityBinding
+  // that must match in order for the candidate entity to be valid
   entityRels: [number, EntityRelationshipTemplateBase][],
   entityRelsByChildIdx: [number, EntityRelationshipTemplateBase][],
   componentComparisons: [number, ComponentComparisonTemplateBase][],
@@ -316,7 +320,7 @@ export function checkEntityRelationshipsAndComponentComparisonTemplates(
     }
 
     const child = entityBinding[childIdx];
-    const children = rel.getChildren(self, eMgr);
+    const children = rel.getChildren(entityCandidate, eMgr);
     if (!children.includes(child)) {
       return false;
     }
@@ -334,7 +338,7 @@ export function checkEntityRelationshipsAndComponentComparisonTemplates(
 
     const parent = entityBinding[parentIdx];
     const children = rel.getChildren(parent, eMgr);
-    if (!children.includes(self)) {
+    if (!children.includes(entityCandidate)) {
       return false;
     }
   }
@@ -344,7 +348,7 @@ export function checkEntityRelationshipsAndComponentComparisonTemplates(
     const [childIdx, rel] = componentComparisons[relIdx];
 
     const child = entityBinding[childIdx];
-    if (!rel.checkValid(self, child, eMgr)) {
+    if (!rel.checkValid(entityCandidate, child, eMgr)) {
       return false;
     }
   }
@@ -354,7 +358,7 @@ export function checkEntityRelationshipsAndComponentComparisonTemplates(
     const [parentIdx, rel] = componentComparisonsByChildIdx[relIdx];
 
     const parent = entityBinding[parentIdx];
-    if (!rel.checkValid(parent, self, eMgr)) {
+    if (!rel.checkValid(parent, entityCandidate, eMgr)) {
       return false;
     }
   }

@@ -1,6 +1,16 @@
 import { createEmptyEntityManager } from '../../../0-engine/ECS/test-helpers/CreateEntityManager';
 import { EntityManager } from '../../../0-engine/ECS/EntityManager';
-import ConditionSet, { checkMaxPermutations, deleteCandidateEntities } from './ConditionSet';
+import ConditionSet, {
+  checkMaxPermutations,
+  deleteCandidateEntities,
+  checkEntityRelationshipsAndComponentComparisonTemplates,
+} from './ConditionSet';
+import { ComponentComparisonTemplateBase } from './ComponentComparisonTemplate';
+import EntityRelationshipTemplate, {
+  EntityRelationshipTemplateBase,
+  IEntityRelationship,
+} from './EntityRelationshipTemplate';
+import { NComponent } from '../../../0-engine/ECS/NComponent';
 
 describe('ConditionSet', () => {
   let eMgr: EntityManager;
@@ -49,15 +59,106 @@ describe('ConditionSet', () => {
     });
 
     describe('checkEntityRelationshipsAndComponentComparisonTemplates', () => {
-      it('throws when entityRelationships are placed under the smaller entity var index', () => {
+      class TestComponent1 implements NComponent, IEntityRelationship {
+        public children: number[] = [];
 
+        getChildren(): number[] {
+          return this.children;
+        }
+      }
+
+      let entityBinding: number[];
+      let candidate: number;
+      let entityRels: [number, EntityRelationshipTemplateBase][];
+      let entityRelsByChildIdx: [number, EntityRelationshipTemplateBase][];
+      let componentComps: [number, ComponentComparisonTemplateBase][];
+      let componentCompsByChildIdx: [number, ComponentComparisonTemplateBase][];
+      let entityRel1: EntityRelationshipTemplate<TestComponent1, typeof TestComponent1>;
+
+      beforeEach(() => {
+        entityBinding = [];
+        candidate = 10;
+        entityRels = [];
+        entityRelsByChildIdx = [];
+        componentComps = [];
+        componentCompsByChildIdx = [];
+
+        entityRel1 = new EntityRelationshipTemplate(TestComponent1);
+      });
+
+      it('throws when entityRelationships are placed under the smaller entity var index', () => {
+        entityBinding = [0, 3, 5];
+        entityRels = [[4, entityRel1]];
+        expect(() => checkEntityRelationshipsAndComponentComparisonTemplates(
+          entityBinding,
+          candidate,
+          eMgr,
+          entityRels,
+          entityRelsByChildIdx,
+          componentComps,
+          componentCompsByChildIdx,
+        )).toThrow();
+
+        entityRels = [];
+        entityRelsByChildIdx = [[4, entityRel1]];
+        expect(() => checkEntityRelationshipsAndComponentComparisonTemplates(
+          entityBinding,
+          candidate,
+          eMgr,
+          entityRels,
+          entityRelsByChildIdx,
+          componentComps,
+          componentCompsByChildIdx,
+        )).toThrow();
       });
 
       it("returns false when an entity relationship doesn't match (by parent index)", () => {
+        entityBinding = [17, 3, 5];
+        const c1 = new TestComponent1();
+        c1.children = [2];
+        const parent = eMgr.CreateEntity();
+        eMgr.AddComponent(parent, c1);
+        entityRels = [[0, entityRel1]];
 
+        const result = checkEntityRelationshipsAndComponentComparisonTemplates(
+          entityBinding,
+          parent.handle,
+          eMgr,
+          entityRels,
+          entityRelsByChildIdx,
+          componentComps,
+          componentCompsByChildIdx,
+        );
+
+        expect(result).toEqual(false);
+      });
+
+      it('returns true when an entity relationship matches (by parent index)', () => {
+        entityBinding = [17, 3, 5];
+        const c1 = new TestComponent1();
+        c1.children = [17];
+        const parent = eMgr.CreateEntity();
+        eMgr.AddComponent(parent, c1);
+        entityRels = [[0, entityRel1]];
+
+        const result = checkEntityRelationshipsAndComponentComparisonTemplates(
+          entityBinding,
+          parent.handle,
+          eMgr,
+          entityRels,
+          entityRelsByChildIdx,
+          componentComps,
+          componentCompsByChildIdx,
+        );
+
+        expect(result).toEqual(true);
       });
 
       it("returns false when an entity relationship doesn't match (by child index)", () => {
+
+      });
+
+      it('returns true when an entity relationship matches (by child index)', () => {
 
       });
 
@@ -69,11 +170,19 @@ describe('ConditionSet', () => {
 
       });
 
+      it('returns true when a component comparison returns true (by parent index', () => {
+
+      });
+
       it("returns false when a component relationship doesn't match (by child index)", () => {
 
       });
 
-      it('returns true if entityBinding is valid', () => {
+      it('returns true when a component comparison returns true (by child index)', () => {
+
+      });
+
+      it('returns true if entityBinding is valid, complex example', () => {
 
       });
     });
