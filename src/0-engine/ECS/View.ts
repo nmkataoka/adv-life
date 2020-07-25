@@ -12,7 +12,10 @@ type CsFromConstructors<T extends NComponentConstructorArray> = {
   [K in keyof T]: T[K] extends NComponentConstructor<infer C> ? C : never;
 }
 
-export function GetView<T extends NComponentConstructorArray>(without: number, ...cons: T) {
+export function GetView<T extends NComponentConstructorArray>(
+  without: number,
+  ...cons: T
+): View<T> {
   return new View(without, ...cons);
 }
 

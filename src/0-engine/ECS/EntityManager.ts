@@ -26,13 +26,17 @@ export class EntityManager {
 
   private entitiesToDestroy: (Entity | number)[] = [];
 
-  constructor() {
+  // For testing purposes, specific systems can be passed
+  constructor(systemConstructors?: ECSystemConstructor<any>[]) {
     EntityManager.instance = this;
 
     this.systems = {};
-    EntityManager.SystemConstructors.forEach((S) => {
+
+    const systemsToCreate = systemConstructors ?? EntityManager.SystemConstructors;
+    const createSystem = (S: ECSystemConstructor<any>) => {
       this.systems[S.name] = new S(GetComponent, GetComponentManager, GetComponentUncertain);
-    });
+    };
+    systemsToCreate.forEach(createSystem);
 
     this.cMgrs = {};
   }

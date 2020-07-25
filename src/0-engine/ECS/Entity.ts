@@ -1,4 +1,3 @@
-
 export class Entity {
   public static readonly NULL = 0;
 
