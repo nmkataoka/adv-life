@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '../../4-helpers/test-utils';
 import TownLocation from './TownLocation';
 
 describe('<TownLocation />', () => {
