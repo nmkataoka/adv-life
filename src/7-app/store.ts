@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import combatLogReducer from '../6-ui-features/combatLog/combatLogSlice';
+import combatLogReducer from '../6-ui-features/CombatLog/combatLogSlice';
 import combatSceneReducer from '../6-ui-features/CombatScene/combatSceneSlice';
+import sceneMetaReducer from '../6-ui-features/sceneManager/sceneMetaSlice';
 
 export const store = configureStore({
   reducer: {
     combatLog: combatLogReducer,
     combatScene: combatSceneReducer,
+    sceneMeta: sceneMetaReducer,
   },
 });
 
