@@ -344,7 +344,7 @@ export function checkEntityRelationshipsAndComponentComparisonTemplates(
   }
 
   // Check component comparisons between parent = THIS entityVar and child = PREVIOUS entityVars
-  for (let relIdx = 0; relIdx < componentComparisons.length; +relIdx) {
+  for (let relIdx = 0; relIdx < componentComparisons.length; ++relIdx) {
     const [childIdx, rel] = componentComparisons[relIdx];
 
     const child = entityBinding[childIdx];
