@@ -1,10 +1,10 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
+import React from 'react';
 import styled from '@emotion/styled';
 import PauseButton from './PauseButton';
 import ShowAllTargetingButton from './ShowAllTargetingButton';
+import WorldMapButton from './WorldMapButton';
 
-const actions = ['Menu', 'Map'];
+const actions = ['Menu'];
 
 export default function TopBar(): JSX.Element {
   return (
@@ -13,6 +13,7 @@ export default function TopBar(): JSX.Element {
         <ActionButton key={a}>{a}</ActionButton>
       ))}
       <ButtonGroup>
+        <WorldMapButton />
         <ShowAllTargetingButton />
         <PauseButton />
       </ButtonGroup>

@@ -62,6 +62,7 @@ type ContainerProps = {
     y: number;
   }
 }
+const padding = '10px 15px';
 const Container = styled.div`
   position: absolute;
   top: 50%;
@@ -74,11 +75,14 @@ const RelativeDiv = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+  padding: ${padding};
+  border: 1px solid #c0c0c0;
+  background-color: white;
 `;
 
 const CloseButton = styled.button`
   font-size: 1.4em;
-  padding: 0.5em 0.75em;
+  padding: ${padding};
   position: absolute;
   top: 0.5em;
   right: 0.5em;

@@ -39,8 +39,6 @@ const Container = styled.button`
 
 const ModalContent = styled.div`
   background-color: white;
-  border: 1px solid #c0c0c0;
   min-width: 50vw;
   min-height: 50vh;
-  padding: 1em;
 `;

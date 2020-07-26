@@ -1,9 +1,8 @@
-/** @jsx jsx */
-import { css, jsx } from '@emotion/core';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import styled from '@emotion/styled';
 
 import { useSelector } from 'react-redux';
-import TopBar from './6-ui-features/CombatScene/TopBar';
+import TopBar from './6-ui-features/TopBar';
 import { GameManager } from './0-engine/GameManager';
 import { Scenes } from './6-ui-features/sceneManager/sceneMetaSlice';
 
@@ -28,15 +27,16 @@ function App(): JSX.Element {
   const Scene = scenes[currentScene];
 
   return (
-    <div
-      css={css`
-        width: 80vw;
-      `}
-    >
+    <Container>
       <TopBar />
       <Scene />
-    </div>
+    </Container>
   );
 }
 
 export default App;
+
+const Container = styled.div`
+  position: relative;
+  width: 80vw;
+`;
