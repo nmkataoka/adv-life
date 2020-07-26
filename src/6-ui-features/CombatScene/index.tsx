@@ -7,12 +7,12 @@ import Unit from './Unit';
 import ActionBar from './ActionBar';
 import { RootState } from '../../7-app/types';
 import { setMousePosition, UnitInfo, updateUnitsFromEngine } from './combatSceneSlice';
-import CombatLog from '../combatLog';
+import CombatLog from '../CombatLog';
 import useUILoop from '../useUILoop';
 
 import useDetectKeypress from '../common/useDetectKeypress';
 import InfoSidebar from './InfoSidebar';
-import { updateCombatLogFromEngine } from '../combatLog/combatLogSlice';
+import { updateCombatLogFromEngine } from '../CombatLog/combatLogSlice';
 
 function sortUnitsByCombatPosition(a: UnitInfo, b: UnitInfo) {
   return a.position - b.position;

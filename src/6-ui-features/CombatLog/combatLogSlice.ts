@@ -3,7 +3,6 @@ import { AppThunk } from '../../7-app/types';
 import { GameManager } from '../../0-engine/GameManager';
 import { CombatLogSys } from '../../2-ecsystems/Combat/CombatLogSys';
 
-
 const initialState = {
   entries: [] as string[],
 };

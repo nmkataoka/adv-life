@@ -58,5 +58,14 @@
         "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+        "@typescript-eslint/no-unsafe-call": 0
+      }
+    }
+  ]
 }
