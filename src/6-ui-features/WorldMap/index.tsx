@@ -1,14 +1,18 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import MapLocation from './MapLocation';
 import { changedScene, Scenes } from '../sceneManager/sceneMetaSlice';
+import { RootState } from '../../7-app/types';
 
 export default function WorldMap(): JSX.Element {
   const dispatch = useDispatch();
+  const isInCombat = useSelector((state: RootState) => state.combatScene.isInCombat);
 
   const handleTownClick = () => {
-    dispatch(changedScene(Scenes.Town));
+    if (!isInCombat) {
+      dispatch(changedScene(Scenes.Town));
+    }
   };
 
   return (
