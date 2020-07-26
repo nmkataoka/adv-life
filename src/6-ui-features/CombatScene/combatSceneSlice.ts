@@ -42,6 +42,7 @@ const initialState = {
   selectedAction: undefined as ActionInfo | undefined,
 
   isPaused: false,
+  isInCombat: false,
   showAllTargeting: false,
 };
 
@@ -51,6 +52,10 @@ const combatSceneSlice = createSlice({
   reducers: {
     updatedUnits(state, action: PayloadAction<{ units: UnitsDict }>) {
       state.units = action.payload.units;
+
+      // Detect if combat has ended by checking if enemies
+      // are alive and targeting your party members
+      state.isInCombat = checkIfInCombat(action.payload.units);
     },
     updatedUnitCoords(state, action: PayloadAction<{entityHandle: number, coords: UnitCoord }>) {
       const { entityHandle, coords } = action.payload;
@@ -141,6 +146,12 @@ export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
   const units = getUnitInfos();
 
   dispatch(updatedUnits({ units }));
+};
+
+const checkIfInCombat = (units: UnitsDict): boolean => {
+  const unitsArr = Object.values(units);
+  const enemies = unitsArr.filter((u) => u.isEnemy);
+  return enemies.length > 0;
 };
 
 export const setSkillTarget = (unit: number, targets: number[], action: ActionInfo): void => {
