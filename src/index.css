@@ -74,3 +74,7 @@ h4 {
 button:hover {
   cursor: pointer;
 }
+
+button {
+  outline: 0;
+}

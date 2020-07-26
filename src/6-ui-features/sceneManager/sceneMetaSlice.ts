@@ -6,7 +6,7 @@ export enum Scenes {
 }
 
 const initialState = {
-  currentScene: Scenes.Town,
+  currentScene: Scenes.Combat,
 };
 
 const sceneMetaSlice = createSlice({
@@ -18,5 +18,7 @@ const sceneMetaSlice = createSlice({
     },
   },
 });
+
+export const { changedScene } = sceneMetaSlice.actions;
 
 export default sceneMetaSlice.reducer;
