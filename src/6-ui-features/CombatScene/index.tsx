@@ -6,7 +6,8 @@ import { useRef, useMemo } from 'react';
 import Unit from './Unit';
 import ActionBar from './ActionBar';
 import { RootState } from '../../7-app/types';
-import { setMousePosition, UnitInfo, updateUnitsFromEngine } from './combatSceneSlice';
+import { setMousePosition, UnitInfo } from './combatSceneSlice';
+import { updateUnitsFromEngine } from './actions';
 import CombatLog from '../CombatLog';
 import useUILoop from '../useUILoop';
 
