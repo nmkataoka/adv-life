@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
-import { setIsPaused } from './combatSceneSlice';
+import { setIsPaused } from '../CombatScene/combatSceneSlice';
 import { RootState } from '../../7-app/types';
 import useOnKeypress from '../common/useOnKeypress';
 import { Keycodes } from '../common/constants';
