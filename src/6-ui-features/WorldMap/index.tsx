@@ -9,6 +9,12 @@ export default function WorldMap(): JSX.Element {
   const dispatch = useDispatch();
   const isInCombat = useSelector((state: RootState) => state.combatScene.isInCombat);
 
+  const handleCombatClick = () => {
+    if (!isInCombat) {
+      dispatch(changedScene(Scenes.Combat));
+    }
+  };
+
   const handleTownClick = () => {
     if (!isInCombat) {
       dispatch(changedScene(Scenes.Town));
@@ -20,10 +26,10 @@ export default function WorldMap(): JSX.Element {
       <h1>World Map</h1>
       <LocationContainer>
         <MapLocation name="Town" onClick={handleTownClick} />
-        <MapLocation name="Combat" />
-        <MapLocation name="Combat" />
-        <MapLocation name="Combat" />
-        <MapLocation name="Combat" />
+        <MapLocation name="Combat" onClick={handleCombatClick} />
+        <MapLocation name="Combat" onClick={handleCombatClick} />
+        <MapLocation name="Combat" onClick={handleCombatClick} />
+        <MapLocation name="Combat" onClick={handleCombatClick} />
       </LocationContainer>
     </Container>
   );
