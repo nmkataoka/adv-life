@@ -6,7 +6,8 @@ import { keyPressed } from '../common/actions';
 import { Keycodes } from '../common/constants';
 import { AppThunk } from '../../7-app/types';
 import { SetSkillTarget } from '../../3-api';
-import { UnitsDict, getUnitInfos, UnitInfo as UnitInfoApi } from '../../3-api/UnitInfo';
+import { UnitsDict, UnitInfo as UnitInfoApi } from '../../3-api/UnitInfo';
+import { updatedUnits } from './actions';
 
 type MousePos = {
   x: number;
@@ -50,13 +51,6 @@ const combatSceneSlice = createSlice({
   name: 'combatScene',
   initialState,
   reducers: {
-    updatedUnits(state, action: PayloadAction<{ units: UnitsDict }>) {
-      state.units = action.payload.units;
-
-      // Detect if combat has ended by checking if enemies
-      // are alive and targeting your party members
-      state.isInCombat = checkIfInCombat(action.payload.units);
-    },
     updatedUnitCoords(state, action: PayloadAction<{entityHandle: number, coords: UnitCoord }>) {
       const { entityHandle, coords } = action.payload;
       state.unitCoords[entityHandle] = { ...coords };
@@ -112,11 +106,18 @@ const combatSceneSlice = createSlice({
         default:
       }
     },
+    [updatedUnits.type]: (state, action: PayloadAction<{ units: UnitsDict }>) => {
+      state.units = action.payload.units;
+
+      // Detect if combat has ended by checking if enemies
+      // are alive and targeting your party members
+      state.isInCombat = checkIfInCombat(action.payload.units);
+    },
   },
 });
 
 const {
-  isPausedChanged, updatedUnits, updateMousePosition, setSelectedAction,
+  isPausedChanged, updateMousePosition, setSelectedAction,
 } = combatSceneSlice.actions;
 
 export const {
@@ -140,12 +141,6 @@ export const selectedAction = (action: ActionInfo): AppThunk => (dispatch, getSt
       dispatch(setSelectedAction(action));
     }
   }
-};
-
-export const updateUnitsFromEngine = (): AppThunk => (dispatch) => {
-  const units = getUnitInfos();
-
-  dispatch(updatedUnits({ units }));
 };
 
 const checkIfInCombat = (units: UnitsDict): boolean => {
