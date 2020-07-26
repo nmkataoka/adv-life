@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AppThunk } from '../../7-app/types';
 
 export enum Scenes {
   Combat = 'combat',
