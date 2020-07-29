@@ -9,8 +9,10 @@ import { Scenes } from './6-ui-features/sceneManager/sceneMetaSlice';
 import CombatScene from './6-ui-features/CombatScene';
 import TownScene from './6-ui-features/TownScene';
 import { RootState } from './7-app/types';
+import CharacterCreationScene from './6-ui-features/CharacterCreationScene';
 
 const scenes = {
+  [Scenes.CharacterCreation]: CharacterCreationScene,
   [Scenes.Combat]: CombatScene,
   [Scenes.Town]: TownScene,
 };
