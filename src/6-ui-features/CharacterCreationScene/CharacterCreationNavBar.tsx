@@ -1,17 +1,31 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { useDispatch } from 'react-redux';
+import { CharacterCreationScreens, changedScreen } from './characterCreationSlice';
 
-const navItems = [
-  'Race',
-  'Class',
-  'Attributes',
-  'Culture',
-  'Appearance',
-  'Voice',
-];
+const navItems = CharacterCreationScreens;
 
 export default function CharacterCreationNavBar(): JSX.Element {
-  return <Container>{navItems.map((item) => <NavItem key={item}>{item}</NavItem>)}</Container>;
+  const dispatch = useDispatch();
+
+  const handleClick = (screen: string) => () => {
+    dispatch(changedScreen(screen));
+  };
+
+  return (
+    <Container>
+      {navItems.map(
+        (screen) => (
+          <NavItem
+            key={screen}
+            onClick={handleClick(screen)}
+          >
+            {screen}
+          </NavItem>
+        ),
+      )}
+    </Container>
+  );
 }
 
 const Container = styled.div`
