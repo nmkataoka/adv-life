@@ -4,7 +4,7 @@ export class CombatStatsCmpt implements NComponent {
   public attackSpeed = 0.2;
 
   // Returns the recovery period after attacks in seconds
-  public getAttackCooldown = () => 1 / this.attackSpeed;
+  public getAttackCooldown = (): number => 1 / this.attackSpeed;
 
   public mana = 100;
 

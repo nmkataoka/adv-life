@@ -7,10 +7,12 @@ import { RootState } from '../../7-app/types';
 import RaceSelection from './screens/RaceSelection';
 import ClassSelection from './screens/ClassSelection';
 import AttributeDistribution from './screens/AttributeDistribution';
+import PersonalityCreation from './screens/PersonalityCreation';
 
 const screens: {[key: string]: () => JSX.Element} = {
   Attributes: AttributeDistribution,
   Class: ClassSelection,
+  Personality: PersonalityCreation,
   Race: RaceSelection,
 };
 

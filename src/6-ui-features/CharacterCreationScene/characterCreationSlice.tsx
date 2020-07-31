@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export const CharacterCreationScreens = ['Race', 'Class', 'Attributes'];
+export const CharacterCreationScreens = ['Race', 'Class', 'Attributes', 'Personality'];
 
 const initialState = {
   screen: 'Race',

@@ -10,7 +10,7 @@ const attributes: AttributeRowProps[] = [
     label: 'Dexterity', value: 10, min: 0, max: 20, onIncrease: () => undefined, onDecrease: () => undefined,
   },
   {
-    label: 'Intellect', value: 10, min: 0, max: 20, onIncrease: () => undefined, onDecrease: () => undefined,
+    label: 'Intelligence', value: 10, min: 0, max: 20, onIncrease: () => undefined, onDecrease: () => undefined,
   },
 ];
 
