@@ -15,6 +15,7 @@ export default function SliderWindow({ header, sliders }: SliderWindowProps): JS
       <Header>{header}</Header>
       <SliderContainer>
         {sliders.map(({
+          info,
           max,
           maxLabel,
           min,
@@ -24,6 +25,7 @@ export default function SliderWindow({ header, sliders }: SliderWindowProps): JS
           value,
         }) => (
           <SliderRow
+            info={info}
             key={maxLabel}
             max={max}
             maxLabel={maxLabel}

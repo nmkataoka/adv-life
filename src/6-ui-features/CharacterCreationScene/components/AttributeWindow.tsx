@@ -15,6 +15,7 @@ export default function AttributeWindow({ attributes, header }: AttributewindowP
       <Header>{header}</Header>
       <AttributeContainer>
         {attributes.map(({
+          info,
           label,
           min,
           max,
@@ -23,6 +24,7 @@ export default function AttributeWindow({ attributes, header }: AttributewindowP
           value,
         }) => (
           <AttributeRow
+            info={info}
             key={label}
             label={label}
             min={min}
