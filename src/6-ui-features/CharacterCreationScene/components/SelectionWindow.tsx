@@ -5,20 +5,20 @@ import Window from './Window';
 import { updateInfoWindow } from '../characterCreationSlice';
 import Header from './Header';
 
-type OptionType = {
+export type OptionRowProps = {
   label: string,
   info: string,
 }
 
 type SelectionWindowProps = {
   header: string;
-  options: OptionType[];
+  options: OptionRowProps[];
 }
 
 export default function SelectionWindow({ header, options }: SelectionWindowProps): JSX.Element {
   const dispatch = useDispatch();
 
-  const handleClick = ({ label, info }: OptionType) => () => {
+  const handleClick = ({ label, info }: OptionRowProps) => () => {
     dispatch(updateInfoWindow({ infoWindowTitle: label, infoWindowText: info }));
   };
 
