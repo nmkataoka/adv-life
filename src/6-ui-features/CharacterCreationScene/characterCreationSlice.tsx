@@ -31,21 +31,22 @@ type CharacterAttributeGroupOneOf = {
   options: OneOfData[];
 }
 
-type CharacterAttributeGroupPlusMinus = {
+type CharacterAttributeGroupPointAllocation = {
   name: string;
-  selectType: 'plusMinus';
+  selectType: 'pointAllocation';
   options: PlusMinusData[];
+  totalPoints: number;
 }
 
-type CharacterAttributeGroupSlider = {
+type CharacterAttributeGroupRanges = {
   name: string;
-  selectType: 'slider';
+  selectType: 'ranges';
   options: SliderData[];
 }
 
 export type CharacterAttributeGroup = CharacterAttributeGroupOneOf
-| CharacterAttributeGroupPlusMinus
-| CharacterAttributeGroupSlider;
+| CharacterAttributeGroupPointAllocation
+| CharacterAttributeGroupRanges;
 
 const initialCharacterAttributeGroups: CharacterAttributeGroup[] = [
   {
@@ -69,7 +70,7 @@ const initialCharacterAttributeGroups: CharacterAttributeGroup[] = [
   },
   {
     name: 'Attributes',
-    selectType: 'plusMinus',
+    selectType: 'pointAllocation',
     options: [
       {
         label: 'Strength',
@@ -107,11 +108,12 @@ const initialCharacterAttributeGroups: CharacterAttributeGroup[] = [
         max: 20,
       },
     ],
+    totalPoints: 50,
   },
   /* eslint-disable max-len */
   {
     name: 'Personality',
-    selectType: 'slider',
+    selectType: 'ranges',
     options: [
       {
         minLabel: 'Dishonest-Greedy',
