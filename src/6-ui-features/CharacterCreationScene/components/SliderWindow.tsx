@@ -20,7 +20,6 @@ export default function SliderWindow({ header, sliders }: SliderWindowProps): JS
           maxLabel,
           min,
           minLabel,
-          onChange,
           step,
           value,
         }) => (
@@ -31,7 +30,6 @@ export default function SliderWindow({ header, sliders }: SliderWindowProps): JS
             maxLabel={maxLabel}
             min={min}
             minLabel={minLabel}
-            onChange={onChange}
             step={step}
             value={value}
           />

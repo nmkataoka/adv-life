@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
-import { CharacterCreationScreens, changedScreen } from './characterCreationSlice';
+import { changedScreen } from './characterCreationSlice';
+import { CharacterCreationScreens } from './characterCreationData';
 
 const navItems = CharacterCreationScreens;
 

@@ -7,9 +7,7 @@ import {
   CharacterAttributeGroupOneOf,
   CharacterAttributeGroupPointAllocation,
   CharacterAttributeGroupRanges,
-} from '../characterCreationSlice';
-import { AttributeRowProps } from './AttributeRow';
-import { SliderRowProps } from './SliderRow';
+} from '../characterCreationTypes';
 
 type ScreenInfoToScreenProps = {
   screenInfo: CharacterAttributeGroup;
@@ -24,20 +22,11 @@ const ScreenInfoToScreen = ({ screenInfo }: ScreenInfoToScreenProps): JSX.Elemen
     }
     case 'pointAllocation': {
       const { options } = screenInfo as CharacterAttributeGroupPointAllocation;
-      const optionProps: AttributeRowProps[] = options.map((o) => ({
-        ...o,
-        onDecrease: () => undefined,
-        onIncrease: () => undefined,
-      }));
-      return <AttributeWindow header={header} attributes={optionProps} />;
+      return <AttributeWindow header={header} attributes={options} />;
     }
     case 'ranges': {
       const { options } = screenInfo as CharacterAttributeGroupRanges;
-      const sliders: SliderRowProps[] = options.map((o) => ({
-        ...o,
-        onChange: () => undefined,
-      }));
-      return <SliderWindow header={header} sliders={sliders} />;
+      return <SliderWindow header={header} sliders={options} />;
     }
     default:
       return null;

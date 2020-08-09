@@ -19,8 +19,6 @@ export default function AttributeWindow({ attributes, header }: AttributeWindowP
           label,
           min,
           max,
-          onDecrease,
-          onIncrease,
           value,
         }) => (
           <AttributeRow
@@ -30,8 +28,6 @@ export default function AttributeWindow({ attributes, header }: AttributeWindowP
             min={min}
             max={max}
             value={value}
-            onDecrease={onDecrease}
-            onIncrease={onIncrease}
           />
         ))}
       </AttributeContainer>

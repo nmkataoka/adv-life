@@ -20,7 +20,7 @@
     "import/extensions": ["off"],
     "indent": 0, // using @typescript-eslint/indent
     "max-classes-per-file": 0,
-    "max-len": ["error", { "code": 120 }],
+    "max-len": ["warn", { "code": 120 }],
     "no-mixed-operators": 0,
     "no-param-reassign": 0,
     "no-plusplus": 0,

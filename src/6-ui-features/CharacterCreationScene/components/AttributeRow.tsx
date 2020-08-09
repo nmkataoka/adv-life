@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
-import { updateInfoWindow } from '../characterCreationSlice';
+import {
+  updateInfoWindow,
+  increasedPointAllocationForAttribute,
+  decreasedPointAllocationForAttribute,
+} from '../characterCreationSlice';
 
 export type AttributeRowProps = {
   info: string;
@@ -9,8 +13,6 @@ export type AttributeRowProps = {
   value: number;
   min?: number;
   max: number;
-  onIncrease: () => void;
-  onDecrease: () => void;
 }
 
 export default function AttributeRow({ info, label, value }: AttributeRowProps): JSX.Element {
@@ -20,12 +22,20 @@ export default function AttributeRow({ info, label, value }: AttributeRowProps):
     dispatch(updateInfoWindow({ infoWindowTitle: label, infoWindowText: info }));
   };
 
+  const handleDecrease = () => {
+    dispatch(decreasedPointAllocationForAttribute({ label }));
+  };
+
+  const handleIncrease = () => {
+    dispatch(increasedPointAllocationForAttribute({ label }));
+  };
+
   return (
     <Row>
       <Label onClick={handleClick}>{label}</Label>
       <Value>{value}</Value>
-      <IncrementButton>-</IncrementButton>
-      <IncrementButton>+</IncrementButton>
+      <IncrementButton onClick={handleDecrease}>-</IncrementButton>
+      <IncrementButton onClick={handleIncrease}>+</IncrementButton>
     </Row>
   );
 }
