@@ -25,20 +25,20 @@ export type SliderData = {
   step: number;
 }
 
-type CharacterAttributeGroupOneOf = {
+export type CharacterAttributeGroupOneOf = {
   name: string;
   selectType: 'oneOf';
   options: OneOfData[];
 }
 
-type CharacterAttributeGroupPointAllocation = {
+export type CharacterAttributeGroupPointAllocation = {
   name: string;
   selectType: 'pointAllocation';
   options: PlusMinusData[];
   totalPoints: number;
 }
 
-type CharacterAttributeGroupRanges = {
+export type CharacterAttributeGroupRanges = {
   name: string;
   selectType: 'ranges';
   options: SliderData[];
@@ -175,7 +175,7 @@ const initialCharacterAttributeGroups: CharacterAttributeGroup[] = [
 ];
 
 const initialState = {
-  screen: 'Race',
+  screenIdx: 0,
   infoWindowTitle: '',
   infoWindowText: '',
 
@@ -187,8 +187,12 @@ const characterCreationSlice = createSlice({
   initialState,
   reducers: {
     changedScreen(state, action: PayloadAction<string>) {
-      state.screen = action.payload;
-      clearInfoWindow(state);
+      const screenName = action.payload;
+      const newScreenIdx = state.characterAttributeGroups.findIndex((cag) => cag.name === screenName);
+      if (newScreenIdx >= 0) {
+        state.screenIdx = newScreenIdx;
+        clearInfoWindow(state);
+      }
     },
     updateInfoWindow(
       state,
@@ -199,16 +203,14 @@ const characterCreationSlice = createSlice({
       state.infoWindowText = infoWindowText;
     },
     clickedNext(state) {
-      const curScreenIdx = CharacterCreationScreens.findIndex((screen) => screen === state.screen);
-      if (curScreenIdx < CharacterCreationScreens.length - 1) {
-        state.screen = CharacterCreationScreens[curScreenIdx + 1];
+      if (state.screenIdx < state.characterAttributeGroups.length - 1) {
+        state.screenIdx += 1;
         clearInfoWindow(state);
       }
     },
     clickedPrevious(state) {
-      const curScreenIdx = CharacterCreationScreens.findIndex((screen) => screen === state.screen);
-      if (curScreenIdx > 0) {
-        state.screen = CharacterCreationScreens[curScreenIdx - 1];
+      if (state.screenIdx > 0) {
+        state.screenIdx -= 1;
         clearInfoWindow(state);
       }
     },

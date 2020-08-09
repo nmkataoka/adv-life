@@ -4,29 +4,23 @@ import { useSelector } from 'react-redux';
 import CharacterCreationNavBar from './CharacterCreationNavBar';
 import InfoWindow from './components/InfoWindow';
 import { RootState } from '../../7-app/types';
-import RaceSelection from './screens/RaceSelection';
-import ClassSelection from './screens/ClassSelection';
-import AttributeDistribution from './screens/AttributeDistribution';
-import PersonalityCreation from './screens/PersonalityCreation';
+import ScreenInfoToScreen from './components/ScreenInfoToScreen';
 
-const screens: {[key: string]: () => JSX.Element} = {
-  Attributes: AttributeDistribution,
-  Class: ClassSelection,
-  Personality: PersonalityCreation,
-  Race: RaceSelection,
+const screenSelector = (state: RootState) => {
+  const { screenIdx } = state.characterCreation;
+  const { characterAttributeGroups: { [screenIdx]: screenInfo } } = state.characterCreation;
+  return screenInfo;
 };
 
 export default function CharacterCreationScene(): JSX.Element {
-  const screen = useSelector((state: RootState) => state.characterCreation.screen);
-
-  const Screen = screens[screen];
+  const screenInfo = useSelector(screenSelector);
 
   return (
     <Container>
       <CharacterCreationNavBar />
       Character Creation
       <Content>
-        <Screen />
+        <ScreenInfoToScreen screenInfo={screenInfo} />
         <InfoWindow />
       </Content>
     </Container>

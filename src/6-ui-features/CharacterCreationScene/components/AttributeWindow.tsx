@@ -4,12 +4,12 @@ import Window from './Window';
 import Header from './Header';
 import AttributeRow, { AttributeRowProps } from './AttributeRow';
 
-type AttributewindowProps = {
+type AttributeWindowProps = {
   attributes: AttributeRowProps[],
   header: string;
 }
 
-export default function AttributeWindow({ attributes, header }: AttributewindowProps): JSX.Element {
+export default function AttributeWindow({ attributes, header }: AttributeWindowProps): JSX.Element {
   return (
     <Window showNavigation>
       <Header>{header}</Header>
