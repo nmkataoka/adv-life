@@ -12,8 +12,8 @@ const ScreenInfoToScreen = ({ screenInfo }: ScreenInfoToScreenProps): JSX.Elemen
   const { name: header, selectType } = screenInfo;
   switch (selectType) {
     case 'oneOf': {
-      const { options } = screenInfo as OneOf;
-      return <SelectionWindow header={header} options={options} />;
+      const { options, selectedIdx } = screenInfo as OneOf;
+      return <SelectionWindow header={header} options={options} selectedIdx={selectedIdx} />;
     }
     case 'pointAllocation': {
       const { options } = screenInfo as PointAllocation;

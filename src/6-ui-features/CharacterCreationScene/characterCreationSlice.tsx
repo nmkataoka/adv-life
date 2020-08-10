@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialCharacterAttributeGroups } from './characterCreationData';
-import { PointAllocation, Ranges, randomize } from './CharacterAttributeGroup';
+import {
+  PointAllocation, Ranges, randomize, OneOf,
+} from './CharacterAttributeGroup';
 
 const initialState = {
   screenIdx: 0,
@@ -46,6 +48,17 @@ const characterCreationSlice = createSlice({
         state.screenIdx -= 1;
         clearInfoWindow(state);
       }
+    },
+    selectedOption(state, action: PayloadAction<{label: string}>) {
+      const { label } = action.payload;
+      const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as OneOf;
+      const { options } = characterAttributeGroup;
+      const selectedIdx = options.findIndex((o) => o.label === label);
+      if (options == null) {
+        console.error(`Could not find option ${label} to select.`);
+        return;
+      }
+      characterAttributeGroup.selectedIdx = selectedIdx;
     },
     increasedPointAllocationForAttribute(state, action: PayloadAction<{label: string}>) {
       const { label } = action.payload;
@@ -107,6 +120,7 @@ export const {
   decreasedPointAllocationForAttribute,
   increasedPointAllocationForAttribute,
   randomizeAll,
+  selectedOption,
   updateInfoWindow,
 } = characterCreationSlice.actions;
 
