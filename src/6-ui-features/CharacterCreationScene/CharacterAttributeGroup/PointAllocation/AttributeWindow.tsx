@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import Window from '../../components/Window';
-import Header from '../../components/Header';
 import AttributeRow, { AttributeRowProps } from './AttributeRow';
 
 type AttributeWindowProps = {
@@ -11,8 +10,7 @@ type AttributeWindowProps = {
 
 export default function AttributeWindow({ attributes, header }: AttributeWindowProps): JSX.Element {
   return (
-    <Window showNavigation>
-      <Header>{header}</Header>
+    <Window header={header} randomize showNavigation>
       <AttributeContainer>
         {attributes.map(({
           info,

@@ -111,6 +111,10 @@ const characterCreationSlice = createSlice({
     randomizeAll(state) {
       randomizeCharacterAttributeGroups(state.characterAttributeGroups);
     },
+    randomizeCurrentWindow(state) {
+      const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx];
+      randomize(characterAttributeGroup);
+    },
   },
 });
 
@@ -127,6 +131,7 @@ export const {
   decreasedPointAllocationForAttribute,
   increasedPointAllocationForAttribute,
   randomizeAll,
+  randomizeCurrentWindow,
   selectedOption,
   updateInfoWindow,
 } = characterCreationSlice.actions;

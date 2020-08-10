@@ -1,15 +1,30 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { useDispatch } from 'react-redux';
 import NavigationButtons from './NavigationButtons';
+import Header from './Header';
+import { randomizeCurrentWindow } from '../characterCreationSlice';
 
 type WindowProps = {
   children?: React.ReactNode,
+  header: string,
+  randomize?: boolean,
   showNavigation?: boolean,
 }
 
-export default function Window({ children, showNavigation }: WindowProps): JSX.Element {
+export default function Window({
+  children, header, randomize, showNavigation,
+}: WindowProps): JSX.Element {
+  const dispatch = useDispatch();
+
+  const handleRandomize = () => {
+    dispatch(randomizeCurrentWindow());
+  };
+
   return (
     <WindowDiv>
+      <Header>{header}</Header>
+      {randomize && <RandomizeButton onClick={handleRandomize}>Randomize</RandomizeButton>}
       {children}
       {showNavigation && <NavigationButtons />}
     </WindowDiv>
@@ -27,4 +42,10 @@ const WindowDiv = styled.div`
   overflow-y: auto;
   padding: 1em;
   padding-bottom: 3em;
+`;
+
+const RandomizeButton = styled.button`
+  position: absolute;
+  top: 1em;
+  right: 1em;
 `;

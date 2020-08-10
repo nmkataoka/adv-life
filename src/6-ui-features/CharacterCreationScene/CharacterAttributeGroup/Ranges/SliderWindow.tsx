@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import Window from '../../components/Window';
-import Header from '../../components/Header';
 import SliderRow, { SliderRowProps } from './SliderRow';
 
 type SliderWindowProps = {
@@ -11,8 +10,7 @@ type SliderWindowProps = {
 
 export default function SliderWindow({ header, sliders }: SliderWindowProps): JSX.Element {
   return (
-    <Window showNavigation>
-      <Header>{header}</Header>
+    <Window header={header} randomize showNavigation>
       <SliderContainer>
         {sliders.map(({
           info,

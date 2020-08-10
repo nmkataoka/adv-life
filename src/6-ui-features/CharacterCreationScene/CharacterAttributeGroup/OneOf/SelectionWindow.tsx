@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
 import Window from '../../components/Window';
 import { updateInfoWindow, selectedOption } from '../../characterCreationSlice';
-import Header from '../../components/Header';
 
 export type OptionRowProps = {
   label: string,
@@ -25,8 +24,7 @@ export default function SelectionWindow({ header, options, selectedIdx }: Select
   };
 
   return (
-    <Window showNavigation>
-      <Header>{header}</Header>
+    <Window header={header} randomize showNavigation>
       <OptionsContainer>
         {options.map((o, idx) => (
           <Option
