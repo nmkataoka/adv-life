@@ -1,15 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialCharacterAttributeGroups } from './characterCreationData';
-import {
+import CharacterAttributeGroup, {
   PointAllocation, Ranges, randomize, OneOf,
 } from './CharacterAttributeGroup';
+
+const randomizeCharacterAttributeGroups = (cags: CharacterAttributeGroup[]) => {
+  cags.forEach((cag) => {
+    randomize(cag);
+  });
+};
+
+const characterAttributeGroups = initialCharacterAttributeGroups;
+randomizeCharacterAttributeGroups(characterAttributeGroups);
 
 const initialState = {
   screenIdx: 0,
   infoWindowTitle: '',
   infoWindowText: '',
 
-  characterAttributeGroups: initialCharacterAttributeGroups,
+  characterAttributeGroups,
 };
 
 const clamp = (num: number, min: number, max: number) => Math.min(max, Math.max(min, num));
@@ -100,9 +109,7 @@ const characterCreationSlice = createSlice({
       option.value = clamp(value, min, max);
     },
     randomizeAll(state) {
-      state.characterAttributeGroups.forEach((cag) => {
-        randomize(cag);
-      });
+      randomizeCharacterAttributeGroups(state.characterAttributeGroups);
     },
   },
 });
