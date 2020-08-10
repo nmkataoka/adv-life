@@ -5,7 +5,7 @@ import {
   updateInfoWindow,
   increasedPointAllocationForAttribute,
   decreasedPointAllocationForAttribute,
-} from '../characterCreationSlice';
+} from '../../characterCreationSlice';
 
 export type AttributeRowProps = {
   info: string;

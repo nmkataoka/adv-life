@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialCharacterAttributeGroups } from './characterCreationData';
-import { CharacterAttributeGroupPointAllocation, CharacterAttributeGroupRanges } from './characterCreationTypes';
+import { PointAllocation, Ranges, randomize } from './CharacterAttributeGroup';
 
 const initialState = {
   screenIdx: 0,
@@ -12,7 +12,7 @@ const initialState = {
 
 const clamp = (num: number, min: number, max: number) => Math.min(max, Math.max(min, num));
 
-const countUsedPoints = (characterAttributeGroup: CharacterAttributeGroupPointAllocation) =>
+const countUsedPoints = (characterAttributeGroup: PointAllocation) =>
   characterAttributeGroup.options.reduce((sum, option) => sum + option.value, 0);
 
 const characterCreationSlice = createSlice({
@@ -49,7 +49,7 @@ const characterCreationSlice = createSlice({
     },
     increasedPointAllocationForAttribute(state, action: PayloadAction<{label: string}>) {
       const { label } = action.payload;
-      const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as CharacterAttributeGroupPointAllocation;
+      const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as PointAllocation;
       const { options, totalPoints } = characterAttributeGroup;
       const option = options.find((o) => o.label === label);
       if (option == null) {
@@ -64,7 +64,7 @@ const characterCreationSlice = createSlice({
     },
     decreasedPointAllocationForAttribute(state, action: PayloadAction<{label: string}>) {
       const { label } = action.payload;
-      const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as CharacterAttributeGroupPointAllocation;
+      const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as PointAllocation;
       const { options } = characterAttributeGroup;
       const option = options.find((o) => o.label === label);
       if (option == null) {
@@ -76,7 +76,7 @@ const characterCreationSlice = createSlice({
     },
     changedSlider(state, action: PayloadAction<{label: string; value: number;}>) {
       const { label, value } = action.payload;
-      const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as CharacterAttributeGroupRanges;
+      const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as Ranges;
       const { options } = characterAttributeGroup;
       const option = options.find((o) => o.maxLabel === label);
       if (option == null) {
@@ -85,6 +85,11 @@ const characterCreationSlice = createSlice({
       }
       const { max, min } = option;
       option.value = clamp(value, min, max);
+    },
+    randomizeAll(state) {
+      state.characterAttributeGroups.forEach((cag) => {
+        randomize(cag);
+      });
     },
   },
 });
@@ -101,6 +106,7 @@ export const {
   clickedPrevious,
   decreasedPointAllocationForAttribute,
   increasedPointAllocationForAttribute,
+  randomizeAll,
   updateInfoWindow,
 } = characterCreationSlice.actions;
 

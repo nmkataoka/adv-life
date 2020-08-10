@@ -1,4 +1,4 @@
-import { CharacterAttributeGroup } from './characterCreationTypes';
+import CharacterAttributeGroup from './CharacterAttributeGroup';
 
 export const initialCharacterAttributeGroups: CharacterAttributeGroup[] = [
   {
@@ -10,6 +10,7 @@ export const initialCharacterAttributeGroups: CharacterAttributeGroup[] = [
       { label: 'Dwarf', info: 'Short and stocky miners who consume an abundance of alcohol.' },
       { label: 'Goblin', info: 'Even shorter.' },
     ],
+    selectedIdx: 0,
   },
   {
     name: 'Class',
@@ -19,6 +20,7 @@ export const initialCharacterAttributeGroups: CharacterAttributeGroup[] = [
       { label: 'Mage', info: 'A scholar of the arcane.' },
       { label: 'Thief', info: 'A quick and crafty scoundrel.' },
     ],
+    selectedIdx: 0,
   },
   {
     name: 'Attributes',

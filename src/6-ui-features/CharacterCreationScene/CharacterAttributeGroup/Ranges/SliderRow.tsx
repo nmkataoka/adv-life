@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
-import { updateInfoWindow, changedSlider } from '../characterCreationSlice';
+import { updateInfoWindow, changedSlider } from '../../characterCreationSlice';
 
 export type SliderRowProps = {
   info: string;

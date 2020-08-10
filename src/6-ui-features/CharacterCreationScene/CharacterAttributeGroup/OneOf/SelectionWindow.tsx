@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
-import Window from './Window';
-import { updateInfoWindow } from '../characterCreationSlice';
-import Header from './Header';
+import Window from '../../components/Window';
+import { updateInfoWindow } from '../../characterCreationSlice';
+import Header from '../../components/Header';
 
 export type OptionRowProps = {
   label: string,

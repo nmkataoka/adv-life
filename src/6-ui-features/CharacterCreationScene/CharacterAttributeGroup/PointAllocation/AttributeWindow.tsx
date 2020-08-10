@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import Window from './Window';
-import Header from './Header';
+import Window from '../../components/Window';
+import Header from '../../components/Header';
 import AttributeRow, { AttributeRowProps } from './AttributeRow';
 
 type AttributeWindowProps = {

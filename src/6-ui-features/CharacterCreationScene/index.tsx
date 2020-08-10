@@ -5,6 +5,7 @@ import CharacterCreationNavBar from './CharacterCreationNavBar';
 import InfoWindow from './components/InfoWindow';
 import { RootState } from '../../7-app/types';
 import ScreenInfoToScreen from './components/ScreenInfoToScreen';
+import CharacterSummaryColumn from './CharacterSummaryColumn';
 
 const screenSelector = (state: RootState) => {
   const { screenIdx } = state.characterCreation;
@@ -21,6 +22,7 @@ export default function CharacterCreationScene(): JSX.Element {
       Character Creation
       <Content>
         <ScreenInfoToScreen screenInfo={screenInfo} />
+        <CharacterSummaryColumn />
         <InfoWindow />
       </Content>
     </Container>
@@ -34,4 +36,5 @@ const Container = styled.div`
 const Content = styled.div`
   display: flex;
   justify-content: space-around;
+  align-items: stretch;
 `;
