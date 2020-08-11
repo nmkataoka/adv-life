@@ -3,6 +3,9 @@ import { initialCharacterAttributeGroups } from './characterCreationData';
 import CharacterAttributeGroup, {
   PointAllocation, Ranges, randomize, OneOf,
 } from './CharacterAttributeGroup';
+import { createPlayerCharacter } from '../../3-api/characterCreation';
+import { AppThunk } from '../../7-app/types';
+import { PersonalityArray } from '../../1- ncomponents/PersonalityCmpt';
 
 const randomizeCharacterAttributeGroups = (cags: CharacterAttributeGroup[]) => {
   cags.forEach((cag) => {
@@ -137,3 +140,52 @@ export const {
 } = characterCreationSlice.actions;
 
 export default characterCreationSlice.reducer;
+
+export const finishCharacterCreation = (): AppThunk => (dispatch, getState) => {
+  const {
+    characterCreation: {
+      characterAttributeGroups: cags,
+    },
+  } = getState();
+
+  const raceCAG = cags.find((cag) => cag.name === 'Race') as OneOf;
+  let race;
+  if (raceCAG) {
+    race = raceCAG.options[raceCAG.selectedIdx].label;
+  }
+
+  const classCAG = cags.find((cag) => cag.name === 'Class') as OneOf;
+  let className;
+  if (classCAG) {
+    className = classCAG.options[classCAG.selectedIdx].label;
+  }
+
+  const statsCAG = cags.find((cag) => cag.name === 'Attributes') as PointAllocation;
+  let stats;
+  if (statsCAG) {
+    const [
+      { value: strength },
+      { value: dexterity },
+      { value: stamina },
+      { value: magicalAffinity },
+      { value: intelligence },
+    ] = statsCAG.options;
+    stats = {
+      strength,
+      dexterity,
+      stamina,
+      magicalAffinity,
+      intelligence,
+    };
+  }
+
+  const personalityCAG = cags.find((cag) => cag.name === 'Personality') as Ranges;
+  let personality;
+  if (personalityCAG) {
+    personality = personalityCAG.options.map((option) => option.value) as PersonalityArray;
+  }
+
+  createPlayerCharacter({
+    className, personality, race, stats,
+  });
+};
