@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
 import CharacterSummary from './components/CharacterSummary';
 import { randomizeAll, finishCharacterCreation } from './characterCreationSlice';
+import { changedScene, Scenes } from '../sceneManager/sceneMetaSlice';
 
 const CharacterSummaryColumn = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const CharacterSummaryColumn = (): JSX.Element => {
 
   const handleFinish = () => {
     dispatch(finishCharacterCreation());
+    dispatch(changedScene(Scenes.Town));
   };
 
   return (
