@@ -2,6 +2,13 @@ import CharacterAttributeGroup from './CharacterAttributeGroup';
 
 export const initialCharacterAttributeGroups: CharacterAttributeGroup[] = [
   {
+    name: 'Name',
+    selectType: 'freeform',
+    options: [
+      { label: 'Name', type: 'text', value: '' },
+    ],
+  },
+  {
     name: 'Race',
     selectType: 'oneOf',
     options: [

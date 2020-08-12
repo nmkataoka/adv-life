@@ -6,6 +6,7 @@ import { PersonalityArray, PersonalityCmpt } from '../1- ncomponents/Personality
 import { CombatStatsCmpt } from '../1- ncomponents/CombatStatsCmpt';
 import { RaceCmpt } from '../1- ncomponents/Race';
 import { ClassCmpt } from '../1- ncomponents/ClassCmpt';
+import { NameCmpt } from '../1- ncomponents/NameCmpt';
 
 export type Stats = {
   dexterity: number;
@@ -17,11 +18,13 @@ export type Stats = {
 
 export const createPlayerCharacter = ({
   className,
+  name,
   personality,
   race,
   stats,
 }: {
   className?: string,
+  name?: string,
   personality?: PersonalityArray,
   race?: string,
   stats?: Stats,
@@ -34,6 +37,12 @@ export const createPlayerCharacter = ({
 
   const eMgr = EntityManager.instance;
   const player = eMgr.CreateEntity();
+
+  const nameCmpt = new NameCmpt();
+  if (name) {
+    nameCmpt.name = name;
+  }
+  eMgr.AddComponent(player, nameCmpt);
 
   const personalityCmpt = new PersonalityCmpt();
   if (personality) {

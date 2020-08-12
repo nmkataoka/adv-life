@@ -6,6 +6,7 @@ import CharacterAttributeGroup, {
 import { createPlayerCharacter } from '../../3-api/characterCreation';
 import { AppThunk } from '../../7-app/types';
 import { PersonalityArray } from '../../1- ncomponents/PersonalityCmpt';
+import { Freeform } from './CharacterAttributeGroup/Freeform';
 
 const randomizeCharacterAttributeGroups = (cags: CharacterAttributeGroup[]) => {
   cags.forEach((cag) => {
@@ -111,6 +112,17 @@ const characterCreationSlice = createSlice({
       const { max, min } = option;
       option.value = clamp(value, min, max);
     },
+    changedFreeformInputValue(state, action: PayloadAction<{label: string; value: string;}>) {
+      const { label, value } = action.payload;
+      const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as Freeform;
+      const { options } = characterAttributeGroup;
+      const option = options.find((o) => o.label === label);
+      if (option == null) {
+        console.error(`Could not find input ${label} to change freeform input.`);
+        return;
+      }
+      option.value = value;
+    },
     randomizeAll(state) {
       randomizeCharacterAttributeGroups(state.characterAttributeGroups);
     },
@@ -127,6 +139,7 @@ function clearInfoWindow(state: typeof initialState) {
 }
 
 export const {
+  changedFreeformInputValue,
   changedScreen,
   changedSlider,
   clickedNext,
@@ -147,6 +160,12 @@ export const finishCharacterCreation = (): AppThunk => (dispatch, getState) => {
       characterAttributeGroups: cags,
     },
   } = getState();
+
+  const nameCAG = cags.find((cag) => cag.name === 'Name') as Freeform;
+  let name;
+  if (nameCAG) {
+    name = nameCAG.options[0].value;
+  }
 
   const raceCAG = cags.find((cag) => cag.name === 'Race') as OneOf;
   let race;
@@ -186,6 +205,6 @@ export const finishCharacterCreation = (): AppThunk => (dispatch, getState) => {
   }
 
   createPlayerCharacter({
-    className, personality, race, stats,
+    className, name, personality, race, stats,
   });
 };
