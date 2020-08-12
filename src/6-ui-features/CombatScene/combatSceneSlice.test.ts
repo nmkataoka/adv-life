@@ -3,7 +3,7 @@ import { configureStore, EnhancedStore } from '@reduxjs/toolkit';
 import { updateUnitsFromEngine } from './actions';
 import * as UnitInfoApi from '../../3-api/UnitInfo';
 import { givenUnitInfo } from '../../3-api/givenUnitInfo';
-import rootReducer from '../../7-app/reducers';
+import rootReducer from '../../7-app/rootReducer';
 
 describe('combatSceneSlice', () => {
   let store: EnhancedStore;

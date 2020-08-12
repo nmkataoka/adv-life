@@ -4,7 +4,7 @@ import { getSkillData } from './SkillData';
 import { EntityManager } from '../0-engine/ECS/EntityManager';
 import { GetPrdb } from '../0-engine/ECS/globals/EntityManagerGlobals';
 
-export function SetSkillTarget(user: number, targets: number[], skillName: string) {
+export function SetSkillTarget(user: number, targets: number[], skillName: string): void {
   const prdb = GetPrdb();
 
   const procRule = prdb.getProcRule(skillName);

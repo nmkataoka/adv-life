@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { updatedUnits } from '../CombatScene/actions';
 
 const initialState = {
@@ -10,7 +10,7 @@ const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
-    setPlayerEntity(state, action) {
+    setPlayerEntity(state, action: PayloadAction<number>) {
       state.entityHandle = action.payload;
     },
   },

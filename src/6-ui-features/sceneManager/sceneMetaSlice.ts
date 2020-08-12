@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export enum Scenes {
+  CharacterCreation = 'characterCreation',
   Combat = 'combat',
   Town = 'town',
 }
 
 const initialState = {
-  currentScene: Scenes.Combat,
+  currentScene: Scenes.CharacterCreation,
 };
 
 const sceneMetaSlice = createSlice({

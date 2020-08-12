@@ -2,7 +2,7 @@ import React from 'react';
 import { render as rtlRender, RenderResult } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from '../7-app/reducers';
+import rootReducer from '../7-app/rootReducer';
 
 type WrapperProps = {
   children?: React.ReactNode;

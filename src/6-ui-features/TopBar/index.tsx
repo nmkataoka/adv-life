@@ -1,22 +1,30 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { useSelector } from 'react-redux';
 import PauseButton from './PauseButton';
 import ShowAllTargetingButton from './ShowAllTargetingButton';
 import WorldMapButton from './WorldMapButton';
+import { RootState } from '../../7-app/types';
 
 const actions = ['Menu'];
 
 export default function TopBar(): JSX.Element {
+  const title = useSelector((state: RootState) => state.topBar.title);
   return (
     <Container>
-      {actions.map((a) => (
-        <ActionButton key={a}>{a}</ActionButton>
-      ))}
-      <ButtonGroup>
+      <LeftGroup>
+        {actions.map((a) => (
+          <ActionButton key={a}>{a}</ActionButton>
+        ))}
+      </LeftGroup>
+      <CenterGroup>
+        {title && <h2>{title}</h2>}
+      </CenterGroup>
+      <RightGroup>
         <WorldMapButton />
         <ShowAllTargetingButton />
         <PauseButton />
-      </ButtonGroup>
+      </RightGroup>
     </Container>
   );
 }
@@ -41,6 +49,20 @@ const ActionButton = styled.div`
   }
 `;
 
-const ButtonGroup = styled.div`
+const LeftGroup = styled.div`
   display: flex;
+  justify-content: flex-start;
+  flex: 1 1 0;
+`;
+
+const CenterGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  flex: 1 1 0;
+`;
+
+const RightGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  flex: 1 1 0;
 `;
