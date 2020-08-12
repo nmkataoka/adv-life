@@ -7,6 +7,7 @@ import { createPlayerCharacter } from '../../3-api/characterCreation';
 import { AppThunk } from '../../7-app/types';
 import { PersonalityArray } from '../../1- ncomponents/PersonalityCmpt';
 import { Freeform } from './CharacterAttributeGroup/Freeform';
+import { setPlayerEntity } from '../Player/playerSlice';
 
 const randomizeCharacterAttributeGroups = (cags: CharacterAttributeGroup[]) => {
   cags.forEach((cag) => {
@@ -204,7 +205,9 @@ export const finishCharacterCreation = (): AppThunk => (dispatch, getState) => {
     personality = personalityCAG.options.map((option) => option.value) as PersonalityArray;
   }
 
-  createPlayerCharacter({
+  const player = createPlayerCharacter({
     className, name, personality, race, stats,
   });
+
+  dispatch(setPlayerEntity(player.handle));
 };
