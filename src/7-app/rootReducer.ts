@@ -4,6 +4,7 @@ import combatSceneReducer from '../6-ui-features/CombatScene/combatSceneSlice';
 import modalMetaReducer from '../5-react-components/Modal/modalMetaSlice';
 import playerReducer from '../6-ui-features/Player/playerSlice';
 import sceneMetaReducer from '../6-ui-features/sceneManager/sceneMetaSlice';
+import topBarReducer from '../6-ui-features/TopBar/topBarSlice';
 
 const rootReducer = {
   characterCreation: characterCreationReducer,
@@ -12,6 +13,7 @@ const rootReducer = {
   modalMeta: modalMetaReducer,
   player: playerReducer,
   sceneMeta: sceneMetaReducer,
+  topBar: topBarReducer,
 };
 
 export default rootReducer;

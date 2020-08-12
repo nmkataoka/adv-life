@@ -39,5 +39,5 @@ const Container = styled.div`
 `;
 
 const NavItem = styled.button`
-  background-color: green;
+  background-color: #c0c0c0;
 `;
