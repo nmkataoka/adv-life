@@ -1,7 +1,6 @@
 import { EntityManager } from './ECS/EntityManager';
 import { HealthCmpt } from '../1- ncomponents/HealthCmpt';
 import { CanAttackCmpt } from '../1- ncomponents/CanAttackCmpt';
-import { WeaponCmpt } from '../1- ncomponents/WeaponCmpt';
 import { FactionCmpt } from '../1- ncomponents/FactionCmpt';
 import { CombatPositionCmpt } from '../1- ncomponents/CombatPositionCmpt';
 import { CombatStatsCmpt } from '../1- ncomponents/CombatStatsCmpt';
@@ -9,6 +8,7 @@ import { AgentCmpt } from '../1- ncomponents/AgentCmpt';
 import { GoalQueueCmpt } from '../2-ecsystems/Agent/GoalQueueCmpt';
 import { StatusEffectsCmpt } from '../1- ncomponents/StatusEffectsCmpt';
 import SystemList from './SystemList';
+import { InventoryCmpt } from '../1- ncomponents/InventoryCmpt';
 
 export class GameManager {
   public static readonly FPS = 3;
@@ -56,7 +56,7 @@ export class GameManager {
     this.eMgr.AddComponent(e, new HealthCmpt());
     this.eMgr.AddComponent(e, new CombatStatsCmpt());
     this.eMgr.AddComponent(e, new CanAttackCmpt());
-    this.eMgr.AddComponent(e, new WeaponCmpt());
+    this.eMgr.AddComponent(e, new InventoryCmpt());
     this.eMgr.AddComponent(e, new AgentCmpt());
     this.eMgr.AddComponent(e, new StatusEffectsCmpt());
     if (!isEnemy) {
