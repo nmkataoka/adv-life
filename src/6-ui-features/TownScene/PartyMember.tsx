@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import Modal from '../../5-react-components/Modal';
-import InventoryScreen from '../CharacterInfo/InventoryScren';
+import InventoryScreen from '../CharacterInfo/InventoryScreen';
 
 const PartyMember = (): JSX.Element => {
   const [showInventory, setShowInventory] = useState(false);
