@@ -1,12 +1,15 @@
 import { EntityManager } from '../0-engine/ECS/EntityManager';
-import { PlayerCmpt } from '../1- ncomponents/PlayerCmpt';
+import {
+  ClassCmpt,
+  CombatStatsCmpt,
+  NameCmpt,
+  PersonalityArray,
+  PersonalityCmpt,
+  PlayerCmpt,
+  RaceCmpt,
+} from '../1-ncomponents';
 import { GetView } from '../0-engine/ECS/View';
 import { Entity } from '../0-engine/ECS/Entity';
-import { PersonalityArray, PersonalityCmpt } from '../1- ncomponents/PersonalityCmpt';
-import { CombatStatsCmpt } from '../1- ncomponents/CombatStatsCmpt';
-import { RaceCmpt } from '../1- ncomponents/Race';
-import { ClassCmpt } from '../1- ncomponents/ClassCmpt';
-import { NameCmpt } from '../1- ncomponents/NameCmpt';
 
 export type Stats = {
   dexterity: number;

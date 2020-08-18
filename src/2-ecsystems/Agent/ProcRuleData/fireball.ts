@@ -1,9 +1,9 @@
 import { ProcRule, ExecutorStatus } from '../ProcRule';
 import { GetComponent, GetComponentManager } from '../../../0-engine/ECS/EntityManager';
-import { HealthCmpt } from '../../../1- ncomponents/HealthCmpt';
-import { CombatStatsCmpt } from '../../../1- ncomponents/CombatStatsCmpt';
-import { CombatPositionCmpt } from '../../../1- ncomponents/CombatPositionCmpt';
-import { FactionCmpt } from '../../../1- ncomponents/FactionCmpt';
+import { HealthCmpt } from '../../../1-ncomponents/HealthCmpt';
+import { CombatStatsCmpt } from '../../../1-ncomponents/CombatStatsCmpt';
+import { CombatPositionCmpt } from '../../../1-ncomponents/CombatPositionCmpt';
+import { FactionCmpt } from '../../../1-ncomponents/FactionCmpt';
 import { ComponentManager } from '../../../0-engine/ECS/ComponentManager';
 import { createChannelTime } from '../ProcRuleDataHelpers';
 import { UNIT_CAST_SPELL, UNIT_CANCELED_ACTION } from './Constants';

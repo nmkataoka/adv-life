@@ -5,7 +5,7 @@ import CharacterAttributeGroup, {
 } from './CharacterAttributeGroup';
 import { createPlayerCharacter } from '../../3-api/characterCreation';
 import { AppThunk } from '../../7-app/types';
-import { PersonalityArray } from '../../1- ncomponents/PersonalityCmpt';
+import { PersonalityArray } from '../../1-ncomponents/PersonalityCmpt';
 import { Freeform } from './CharacterAttributeGroup/Freeform';
 import { setPlayerEntity } from '../Player/playerSlice';
 

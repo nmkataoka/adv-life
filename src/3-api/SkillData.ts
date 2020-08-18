@@ -1,5 +1,5 @@
 import { EntityManager } from '../0-engine/ECS/EntityManager';
-import { CombatStatsCmpt } from '../1- ncomponents/CombatStatsCmpt';
+import { CombatStatsCmpt } from '../1-ncomponents/CombatStatsCmpt';
 
 export function getSkillData(user: number, targets: number[], skillName: string) {
   let data: any;

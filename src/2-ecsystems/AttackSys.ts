@@ -1,5 +1,5 @@
 import { ECSystem } from '../0-engine/ECS/ECSystem';
-import { HealthCmpt } from '../1- ncomponents/HealthCmpt';
+import { HealthCmpt } from '../1-ncomponents/HealthCmpt';
 import { EntityManager } from '../0-engine/ECS/EntityManager';
 import { GetView } from '../0-engine/ECS/View';
 

@@ -1,6 +1,6 @@
 import { ProcRule, ExecutorStatus } from '../ProcRule';
 import { GetComponent } from '../../../0-engine/ECS/EntityManager';
-import { HealthCmpt } from '../../../1- ncomponents/HealthCmpt';
+import { HealthCmpt } from '../../../1-ncomponents/HealthCmpt';
 import { DispatchEvent } from '../../../0-engine/ECS/globals/DispatchEvent';
 import { UNIT_ATTACKED } from './Constants';
 

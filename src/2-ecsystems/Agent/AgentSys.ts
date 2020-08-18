@@ -1,11 +1,11 @@
 import { ECSystem } from '../../0-engine/ECS/ECSystem';
-import { AgentCmpt } from '../../1- ncomponents/AgentCmpt';
+import { AgentCmpt } from '../../1-ncomponents/AgentCmpt';
 import { BoundActionStatus, BoundAction } from './BoundAction';
 import { ExecutorStatus } from './ProcRule';
 import { ProcRuleDbCmpt } from './ProcRuleDatabaseCmpt';
 import { GoalQueueCmpt } from './GoalQueueCmpt';
 import { EntityManager } from '../../0-engine/ECS/EntityManager';
-import { FactionCmpt } from '../../1- ncomponents/FactionCmpt';
+import { FactionCmpt } from '../../1-ncomponents/FactionCmpt';
 import { GetPrdb } from '../../0-engine/ECS/globals/EntityManagerGlobals';
 import { getSkillData } from '../../3-api/SkillData';
 

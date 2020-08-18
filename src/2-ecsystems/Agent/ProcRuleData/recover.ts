@@ -1,6 +1,6 @@
 import { ProcRule, ExecutorStatus } from '../ProcRule';
 import { GetComponent } from '../../../0-engine/ECS/EntityManager';
-import { StatusEffectsCmpt } from '../../../1- ncomponents/StatusEffectsCmpt';
+import { StatusEffectsCmpt } from '../../../1-ncomponents/StatusEffectsCmpt';
 
 export const recover = new ProcRule(
   'recover',

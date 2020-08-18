@@ -1,4 +1,4 @@
-import { StatusEffectsCmpt } from '../../1- ncomponents/StatusEffectsCmpt';
+import { StatusEffectsCmpt } from '../../1-ncomponents/StatusEffectsCmpt';
 import { GetComponent } from '../../0-engine/ECS/EntityManager';
 
 // eslint-disable-next-line import/prefer-default-export

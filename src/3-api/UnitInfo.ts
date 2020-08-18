@@ -1,9 +1,9 @@
 import { GameManager } from '../0-engine/GameManager';
-import { CombatStatsCmpt } from '../1- ncomponents/CombatStatsCmpt';
-import { HealthCmpt } from '../1- ncomponents/HealthCmpt';
-import { FactionCmpt } from '../1- ncomponents/FactionCmpt';
-import { CombatPositionCmpt } from '../1- ncomponents/CombatPositionCmpt';
-import { StatusEffectsCmpt } from '../1- ncomponents/StatusEffectsCmpt';
+import { CombatStatsCmpt } from '../1-ncomponents/CombatStatsCmpt';
+import { HealthCmpt } from '../1-ncomponents/HealthCmpt';
+import { FactionCmpt } from '../1-ncomponents/FactionCmpt';
+import { CombatPositionCmpt } from '../1-ncomponents/CombatPositionCmpt';
+import { StatusEffectsCmpt } from '../1-ncomponents/StatusEffectsCmpt';
 import { GetView } from '../0-engine/ECS/View';
 import { GoalQueueCmpt } from '../2-ecsystems/Agent/GoalQueueCmpt';
 
