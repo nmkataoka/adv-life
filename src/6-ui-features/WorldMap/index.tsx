@@ -1,14 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
 import MapLocation from './MapLocation';
 import { changedScene, Scenes } from '../sceneManager/sceneMetaSlice';
 import { RootState } from '../../7-app/types';
 import { updateTownsFromEngine } from '../Town/townSlice';
+import { travelToLocation } from './actions';
 
 export default function WorldMap(): JSX.Element {
   const dispatch = useDispatch();
   const isInCombat = useSelector((state: RootState) => state.combatScene.isInCombat);
+  const townsDict = useSelector((state: RootState) => state.town.byId);
+
+  const towns = useMemo(() => Object.values(townsDict), [townsDict]);
 
   useEffect(() => {
     dispatch(updateTownsFromEngine());
@@ -16,12 +20,14 @@ export default function WorldMap(): JSX.Element {
 
   const handleCombatClick = () => {
     if (!isInCombat) {
+      dispatch(travelToLocation({ id: -1, locationType: 'Combat' }));
       dispatch(changedScene(Scenes.Combat));
     }
   };
 
-  const handleTownClick = () => {
+  const handleTownClick = (townId: number) => () => {
     if (!isInCombat) {
+      dispatch(travelToLocation({ id: townId, locationType: 'Town' }));
       dispatch(changedScene(Scenes.Town));
     }
   };
@@ -30,7 +36,7 @@ export default function WorldMap(): JSX.Element {
     <Container>
       <h1>World Map</h1>
       <LocationContainer>
-        <MapLocation name="Town" onClick={handleTownClick} />
+        {towns.map(({ id, name }) => <MapLocation key={name} name={name} onClick={handleTownClick(id)} />)}
         <MapLocation name="Combat" onClick={handleCombatClick} />
         <MapLocation name="Combat" onClick={handleCombatClick} />
         <MapLocation name="Combat" onClick={handleCombatClick} />
