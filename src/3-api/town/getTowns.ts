@@ -21,7 +21,7 @@ export const getTowns = (): TownsDict => {
     const { name } = getNameCmpt(entityHandle);
 
     towns[entityHandle] = {
-      locations: getLocations(entityHandle),
+      locationIds: getLocations(entityHandle),
       name,
     };
   }

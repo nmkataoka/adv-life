@@ -48,7 +48,7 @@ const createWeapon = (
 };
 
 const addItemToInventory = (inventory: InventoryCmpt, item: Entity, publicSalePrice: number) => {
-  inventory.itemStacks.push({ items: [item], publicSalePrice });
+  inventory.itemStacks.push({ itemIds: [item], publicSalePrice });
 };
 
 const armors = [
