@@ -46,7 +46,7 @@ export class GameManager {
   }
 
   private CreateMap(): void {
-    createTown();
+    createTown('Quietwater');
   }
 
   private EnterGameLoop(): void {

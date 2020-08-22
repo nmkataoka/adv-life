@@ -1,25 +1,31 @@
 import { Entity } from '../../0-engine/ECS/Entity';
 import { EntityManager } from '../../0-engine/ECS/EntityManager';
-import { TownLocationsCmpt } from '../../1-ncomponents';
+import { TownLocationsCmpt, NameCmpt } from '../../1-ncomponents';
 import { createMerchant } from '../Merchant/createMerchant';
 
-export const createTown = (): Entity => {
+export const createTown = (name = 'unnamed'): Entity => {
   const eMgr = EntityManager.instance;
   const town = eMgr.CreateEntity();
+
+  const nameCmpt = new NameCmpt();
+  nameCmpt.name = name;
+  eMgr.AddComponent(town, nameCmpt);
 
   const townLocationsCmpt = new TownLocationsCmpt();
 
   const merchantShop = createMerchant("Blacksmith's");
-  townLocationsCmpt.locations.push(merchantShop);
+  townLocationsCmpt.locationIds.push(merchantShop);
 
   const alchemistShop = createMerchant("Alchemist's");
-  townLocationsCmpt.locations.push(alchemistShop);
+  townLocationsCmpt.locationIds.push(alchemistShop);
 
   const guild = createMerchant('Guild');
-  townLocationsCmpt.locations.push(guild);
+  townLocationsCmpt.locationIds.push(guild);
 
   const marketplace = createMerchant('Marketplace');
-  townLocationsCmpt.locations.push(marketplace);
+  townLocationsCmpt.locationIds.push(marketplace);
+
+  eMgr.AddComponent(town, townLocationsCmpt);
 
   return town;
 };

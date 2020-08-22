@@ -3,7 +3,7 @@ import { IEntityRelationship } from '../../2-ecsystems/Agent/ConditionSet/Entity
 import { Entity } from '../../0-engine/ECS/Entity';
 
 export class TownLocationsCmpt implements NComponent, IEntityRelationship {
-  public locations: Entity[] = [];
+  public locationIds: Entity[] = [];
 
-  public getChildren = (): number[] => this.locations.map((e) => e.handle);
+  public getChildren = (): number[] => this.locationIds.map((e) => e.handle);
 }

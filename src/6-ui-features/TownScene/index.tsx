@@ -1,11 +1,17 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import TownLocation from './TownLocation';
+import TownLocation from '../TownLocation';
 import PartySummary from './PartySummary';
+import useUILoop from '../useUILoop';
+import { updateTownsFromEngine } from '../Town/townSlice';
 
 const locations = ["Blacksmith's", 'Guild', 'Marketplace', "Alchemist's"];
 
+const engineUpdates = [updateTownsFromEngine];
+
 export default function TownScene(): JSX.Element {
+  useUILoop(engineUpdates);
+
   return (
     <Container>
       <MainContent>

@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
-import { useRef, useMemo } from 'react';
+import { useRef } from 'react';
 import Unit from './Unit';
 import ActionBar from './ActionBar';
 import { RootState } from '../../7-app/types';
@@ -19,6 +19,11 @@ function sortUnitsByCombatPosition(a: UnitInfo, b: UnitInfo) {
   return a.position - b.position;
 }
 
+const engineUpdates = [
+  updateCombatLogFromEngine,
+  updateUnitsFromEngine,
+];
+
 export default function CombatScene(): JSX.Element {
   const units = useSelector((state: RootState) => state.combatScene.units);
   const enemies = Object.values(units).filter((u) => u.isEnemy);
@@ -26,10 +31,6 @@ export default function CombatScene(): JSX.Element {
   const dispatch = useDispatch();
   const sceneRef = useRef<HTMLDivElement>(null);
 
-  const engineUpdates = useMemo(() => [
-    updateCombatLogFromEngine,
-    updateUnitsFromEngine,
-  ], []);
   useUILoop(engineUpdates);
 
   useDetectKeypress();

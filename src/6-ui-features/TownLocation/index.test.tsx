@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '../../4-helpers/test-utils';
-import TownLocation from './TownLocation';
+import TownLocation from '.';
 
 describe('<TownLocation />', () => {
   it('renders location name', () => {
