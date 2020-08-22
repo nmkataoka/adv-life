@@ -9,5 +9,6 @@ export const getTownLocationInfo = (entityHandle: number): TownLocationInfo => {
   return {
     inventory: inventoryInfo,
     name,
+    townLocationId: entityHandle,
   };
 };

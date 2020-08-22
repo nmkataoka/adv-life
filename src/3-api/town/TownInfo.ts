@@ -1,5 +1,5 @@
 export type TownInfo = {
-  id: number;
+  townId: number;
   locationIds: number[];
   name: string;
 }
