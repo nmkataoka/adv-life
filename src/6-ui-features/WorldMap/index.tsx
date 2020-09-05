@@ -4,13 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import MapLocation from './MapLocation';
 import { changedScene, Scenes } from '../sceneManager/sceneMetaSlice';
 import { RootState } from '../../7-app/types';
-import { updateTownsFromEngine } from '../Town/townSlice';
+import { updateTownsFromEngine } from '../Towns/townSlice';
 import { travelToLocation } from './actions';
 
 export default function WorldMap(): JSX.Element {
   const dispatch = useDispatch();
   const isInCombat = useSelector((state: RootState) => state.combatScene.isInCombat);
-  const townsDict = useSelector((state: RootState) => state.town.byId);
+  const townsDict = useSelector((state: RootState) => state.towns.byId);
 
   const towns = useMemo(() => Object.values(townsDict), [townsDict]);
 

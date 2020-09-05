@@ -7,8 +7,8 @@ const initialState = {
   byId: {} as TownsDict,
 };
 
-const townSlice = createSlice({
-  name: 'town',
+const townsSlice = createSlice({
+  name: 'towns',
   initialState,
   reducers: {
     updatedTowns(state, action: PayloadAction<TownsDict>) {
@@ -19,9 +19,9 @@ const townSlice = createSlice({
 
 export const {
   updatedTowns,
-} = townSlice.actions;
+} = townsSlice.actions;
 
-export default townSlice.reducer;
+export default townsSlice.reducer;
 
 export const updateTownsFromEngine = (): AppThunk => (dispatch) => {
   const towns = getTowns();

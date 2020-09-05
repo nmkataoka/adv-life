@@ -4,14 +4,14 @@ import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import TownLocation from '../TownLocation';
 import PartySummary from './PartySummary';
 import useUILoop from '../useUILoop';
-import { updateTownsFromEngine } from '../Town/townSlice';
+import { updateTownsFromEngine } from '../Towns/townSlice';
 import { RootState } from '../../7-app/types';
-import { updateTownLocationsFromEngine } from '../TownLocation/townLocationSlice';
+import { updateTownLocationsFromEngine } from '../TownLocation/townLocationsSlice';
 import { changedTitle } from '../TopBar/topBarSlice';
 
 const selectTownLocations = (state: RootState) => {
   const curTownId = state.townScene.currentTownId;
-  const { byId: { [curTownId]: town } } = state.town;
+  const { byId: { [curTownId]: town } } = state.towns;
 
   let locationIds: number[] = [];
   let name = 'Unnamed';

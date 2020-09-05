@@ -14,7 +14,7 @@ const defaultTownInfo = {
 
 export default function TownLocation({ townLocationId }: TownLocationProps): JSX.Element {
   const [isShowing, setIsShowing] = useState(false);
-  const { name } = useSelector((state: RootState) => state.townLocation.byId[townLocationId] || defaultTownInfo);
+  const { name } = useSelector((state: RootState) => state.townLocations.byId[townLocationId] || defaultTownInfo);
 
   return (
     <div>
