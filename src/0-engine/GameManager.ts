@@ -1,7 +1,7 @@
 import { EntityManager } from './ECS/EntityManager';
-import { createUnit } from '../2-ecsystems/Unit/createUnit';
+import { createUnit } from '../1-game-code/ecsystems/Unit/createUnit';
 import SystemList from './SystemList';
-import { createTown } from '../2-ecsystems/Town/createTown';
+import { createTown } from '../1-game-code/ecsystems/Town/createTown';
 
 export class GameManager {
   public static readonly FPS = 3;

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk } from '../../7-app/types';
-import { TownsDict } from '../../3-api/town';
-import { getTowns } from '../../3-api/town/getTowns';
+import { TownsDict } from '../../3-frontend-api/town';
+import { getTowns } from '../../3-frontend-api/town/getTowns';
 
 const initialState = {
   byId: {} as TownsDict,

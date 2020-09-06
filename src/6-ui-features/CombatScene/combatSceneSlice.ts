@@ -5,8 +5,8 @@ import { ActionInfo, CreateActionInfo } from './ActionInfo';
 import { keyPressed } from '../common/actions';
 import { Keycodes } from '../common/constants';
 import { AppThunk } from '../../7-app/types';
-import { SetSkillTarget } from '../../3-api';
-import { UnitsDict, UnitInfo as UnitInfoApi } from '../../3-api/UnitInfo';
+import { SetSkillTarget } from '../../3-frontend-api';
+import { UnitsDict, UnitInfo as UnitInfoApi } from '../../3-frontend-api/UnitInfo';
 import { updatedUnits } from './actions';
 
 type MousePos = {

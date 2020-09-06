@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AppThunk } from '../../7-app/types';
 import { GameManager } from '../../0-engine/GameManager';
-import { CombatLogSys } from '../../2-ecsystems/Combat/CombatLogSys';
+import { CombatLogSys } from '../../1-game-code/ecsystems/Combat/CombatLogSys';
 
 const initialState = {
   entries: [] as string[],

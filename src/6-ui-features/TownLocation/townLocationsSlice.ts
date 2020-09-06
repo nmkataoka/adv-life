@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TownLocationsDict, getTownLocationInfo } from '../../3-api/town';
+import { TownLocationsDict, getTownLocationInfo } from '../../3-frontend-api/town';
 import { AppThunk } from '../../7-app/types';
 
 const initialState = {
