@@ -1,6 +1,8 @@
 export type InventoryStackInfo = {
   itemIds: number[];
+  name: string;
   publicSalePrice: number;
+  itemType: string;
 }
 
 export type InventoryInfo = {

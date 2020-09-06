@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-const items = ['Item', 'Item', 'Item', 'Item', 'Item', 'Item', 'Item', 'Item', 'Item', 'Item'];
+const items = ['Sword', 'Shield', 'Potion', 'Steak', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
 
 const InventoryScreen = (): JSX.Element => (
   <Container>
@@ -22,14 +22,12 @@ const InventoryScreen = (): JSX.Element => (
         <ItemRow>
           <ItemBox>Boots</ItemBox>
         </ItemRow>
+        <BottomRow>Gold: 1012</BottomRow>
       </LeftHalf>
       <RightHalf>
         <h3>Inventory</h3>
         <ItemRow>
           {items.map((item, idx) => <ItemBox key={idx}>{item}</ItemBox>)}
-          {items.map((item, idx) => <ItemBox key={idx + 10}>{item}</ItemBox>)}
-          {items.map((item, idx) => <ItemBox key={idx + 20}>{item}</ItemBox>)}
-          {items.map((item, idx) => <ItemBox key={idx + 30}>{item}</ItemBox>)}
         </ItemRow>
       </RightHalf>
     </TwoHalves>
@@ -75,4 +73,10 @@ const ItemBox = styled.div`
   justify-content: center;
   margin: 0.1em;
   width: 5em;
+`;
+
+const BottomRow = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 1em 0;
 `;
