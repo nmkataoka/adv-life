@@ -205,9 +205,9 @@ export const finishCharacterCreation = (): AppThunk => (dispatch, getState) => {
     personality = personalityCAG.options.map((option) => option.value) as PersonalityArray;
   }
 
-  const player = createPlayerCharacter({
+  createPlayerCharacter({
     className, name, personality, race, stats,
+  }, (playerEntityHandle: number) => {
+    dispatch(setPlayerEntity(playerEntityHandle));
   });
-
-  dispatch(setPlayerEntity(player.handle));
 };

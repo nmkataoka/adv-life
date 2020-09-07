@@ -5,7 +5,8 @@ import {
   GetComponentUncertainFuncType,
 } from './types/EntityManagerAccessorTypes';
 
-export type EventCallback = (payload: any) => void;
+export type AckCallback = (data: any) => void;
+export type EventCallback = (payload: any, ackCallback?: AckCallback) => void;
 
 export class EventListener {
   public callback: EventCallback;
@@ -21,6 +22,7 @@ export class EventListener {
 export type EventAction<T> = {
   type: string;
   payload: T;
+  callback?: AckCallback;
 }
 
 export class EventSys extends ECSystem {
@@ -42,6 +44,7 @@ export class EventSys extends ECSystem {
 
   // Low priority actions are deferred in a queue to be executed after the current tick finishes.
   // High priority actions are dispatched immediately.
+  // All actions coming from the frontend should be low priority.
   public Dispatch<T>(action: EventAction<T>, isLowPriority = false): void {
     if (isLowPriority) {
       this.lowPriorityEventQueue.push(action);
@@ -77,12 +80,12 @@ export class EventSys extends ECSystem {
     }
   }
 
-  private InternalDispatch<T>({ type, payload }: EventAction<T>) {
+  private InternalDispatch<T>({ type, payload, callback }: EventAction<T>) {
     const listeners = this.eventListeners[type];
     if (listeners) {
       listeners.forEach((l) => {
         if (l.active) {
-          l.callback(payload);
+          l.callback(payload, callback);
         }
       });
     }

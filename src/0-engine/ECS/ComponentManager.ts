@@ -53,7 +53,7 @@ export class ComponentManager<C extends NComponent, CClass extends NComponentCon
     return !!this.components[handle];
   }
 
-  private myClass: CClass;
+  public myClass: CClass;
 
   public components: { [key: string]: C };
 }

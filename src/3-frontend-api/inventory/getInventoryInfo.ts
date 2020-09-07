@@ -9,8 +9,10 @@ export const getInventoryInfo = (entityHandle: number): InventoryInfo => {
 
   return {
     itemStacks: itemStacks.map(({ itemIds, publicSalePrice }) => ({
+      name: 'unknown',
       itemIds: itemIds.map((itemEntity) => itemEntity.handle),
       publicSalePrice,
+      itemType: '',
     })),
     gold,
   };

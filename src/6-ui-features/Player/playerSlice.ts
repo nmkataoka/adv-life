@@ -1,5 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { updatedUnits } from '../CombatScene/actions';
+import { AppThunk } from '../../7-app/types';
+import { GetView } from '../../0-engine';
+import { PlayerCmpt } from '../../1-game-code/ncomponents';
 
 const initialState = {
   entityHandle: -1,
@@ -27,3 +30,12 @@ const playerSlice = createSlice({
 export const { setPlayerEntity } = playerSlice.actions;
 
 export default playerSlice.reducer;
+
+export const updatePlayerEntityFromEngine = (): AppThunk => (dispatch) => {
+  const players = GetView(0, PlayerCmpt);
+  let playerEntityHandle = -1;
+  if (players.Count > 0) {
+    playerEntityHandle = parseInt(players.At(0), 10);
+  }
+  dispatch(setPlayerEntity(playerEntityHandle));
+};
