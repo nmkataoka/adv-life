@@ -41,8 +41,6 @@ export class CharacterCreationController extends Controller {
     race?: string,
     stats?: Stats,
   }, ackCallback?: AckCallback): void => {
-    console.log('CREATE player character');
-
     const playerAlreadyExists = GetView(0, PlayerCmpt).Count > 0;
     if (playerAlreadyExists) {
       throw new Error('Tried to create player character, but player already exists.');
