@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 import Modal from '../../5-react-components/Modal';
 import { RootState } from '../../7-app/types';
+import ShopInventory from './ShopInventory';
 
 type TownLocationProps = {
   townLocationId: number;
@@ -21,7 +22,7 @@ export default function TownLocation({ townLocationId }: TownLocationProps): JSX
       <Modal isShowing={isShowing} onClose={() => setIsShowing(false)}>
         <ModalContent>
           <h1>{name}</h1>
-          Buy stuff!
+          <ShopInventory townLocationId={townLocationId} />
         </ModalContent>
       </Modal>
       <Container onClick={() => setIsShowing(true)}>

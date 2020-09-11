@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import deepEqual from 'fast-deep-equal';
 import { TownLocationsDict, getTownLocationInfo } from '../../3-frontend-api/town';
 import { AppThunk } from '../../7-app/types';
 
@@ -13,7 +14,9 @@ const townLocationsSlice = createSlice({
     updatedTownLocations(state, action: PayloadAction<{byId: TownLocationsDict, allIds: number[]}>) {
       const { byId, allIds } = action.payload;
       allIds.forEach((townLocationId) => {
-        state.byId[townLocationId] = byId[townLocationId];
+        if (!deepEqual(state.byId[townLocationId], byId[townLocationId])) {
+          state.byId[townLocationId] = byId[townLocationId];
+        }
       });
     },
   },
