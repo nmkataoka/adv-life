@@ -8,7 +8,7 @@ describe('<TownLocation />', () => {
     const name = 'Marketplace';
     const townLocationInfo = {
       inventory: {
-        itemStacks: [],
+        inventorySlots: [],
         gold: 0,
       },
       name: 'Marketplace',

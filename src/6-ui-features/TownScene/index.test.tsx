@@ -3,7 +3,7 @@ import TownScene from '.';
 
 const defaultTownInfo = {
   inventory: {
-    itemStacks: [],
+    inventorySlots: [],
     gold: 0,
   },
   name: 'Marketplace',

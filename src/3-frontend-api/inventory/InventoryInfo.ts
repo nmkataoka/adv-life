@@ -1,12 +1,12 @@
-export type InventoryStackInfo = {
-  itemIds: number[];
+export type InventorySlotInfo = {
+  itemId: number;
   name: string;
   publicSalePrice: number;
   itemType: string;
 }
 
 export type InventoryInfo = {
-  itemStacks: InventoryStackInfo[];
+  inventorySlots: InventorySlotInfo[];
   gold: number;
 }
 
