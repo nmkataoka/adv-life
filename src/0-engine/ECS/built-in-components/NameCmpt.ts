@@ -1,4 +1,4 @@
-import { NComponent } from '../../0-engine/ECS/NComponent';
+import { NComponent } from '../NComponent';
 
 export class NameCmpt implements NComponent {
   public name = '';

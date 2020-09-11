@@ -1,3 +1,4 @@
+export * from './ECS/built-in-components';
 export { Controller } from './ECS/Controller';
 export {
   ECSystem,

@@ -8,6 +8,7 @@ import {
   GetComponentManagerFuncType,
   GetComponentUncertainFuncType,
 } from './types/EntityManagerAccessorTypes';
+import { NameCmpt } from './built-in-components';
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
@@ -50,7 +51,7 @@ export class EntityManager {
     this.DestroyQueuedEntities();
   }
 
-  public CreateEntity(): Entity {
+  public CreateEntity(name?: string): Entity {
     if (this.count === EntityManager.MAX_ENTITIES) {
       throw new Error('Used all available entities');
     }
@@ -58,6 +59,13 @@ export class EntityManager {
     this.IncrementNextEntityId();
     const e = new Entity(this.nextEntityId);
     ++this.count;
+
+    if (name) {
+      const nameCmpt = new NameCmpt();
+      nameCmpt.name = name;
+      this.AddComponent(e, nameCmpt);
+    }
+
     return e;
   }
 

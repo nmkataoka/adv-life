@@ -16,7 +16,7 @@ const createArmor = (
   armorType: ArmorType,
   armorValue: number,
 ) => {
-  const e = eMgr.CreateEntity();
+  const e = eMgr.CreateEntity('Armor');
 
   const wearable = new WearableCmpt();
   wearable.armorValue = armorValue;
@@ -34,7 +34,7 @@ const createWeapon = (
   weaponType: WeaponType,
   damage: number,
 ) => {
-  const e = eMgr.CreateEntity();
+  const e = eMgr.CreateEntity('Sword');
 
   const wieldable = new WieldableCmpt();
   wieldable.damage = damage;

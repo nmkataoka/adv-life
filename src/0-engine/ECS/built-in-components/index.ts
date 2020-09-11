@@ -1,0 +1,1 @@
+export { NameCmpt } from './NameCmpt';
