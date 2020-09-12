@@ -1,19 +1,17 @@
 import { ECSystem } from './ECSystem';
-import {
-  GetComponentFuncType,
-  GetComponentManagerFuncType,
-  GetComponentUncertainFuncType,
-} from './types/EntityManagerAccessorTypes';
+import { EntityManager } from './EntityManager';
 
 export type AckCallback = (data: any) => void;
-export type EventCallback = (payload: any, ackCallback?: AckCallback) => void;
 
-export class EventListener {
-  public callback: EventCallback;
+export type EventCallbackArgs<T> = { payload: T; ack?: AckCallback };
+export type EventCallback<T> = (args: EventCallbackArgs<T>) => void;
+
+export class EventListener<T> {
+  public callback: EventCallback<T>;
 
   public active: boolean;
 
-  constructor(callback: EventCallback) {
+  constructor(callback: EventCallback<T>) {
     this.active = true;
     this.callback = callback;
   }
@@ -22,17 +20,12 @@ export class EventListener {
 export type EventAction<T> = {
   type: string;
   payload: T;
-  callback?: AckCallback;
-  headers: { userId: number };
+  ack?: AckCallback;
 };
 
 export class EventSys extends ECSystem {
-  constructor(
-    getComponent: GetComponentFuncType,
-    getComponentManager: GetComponentManagerFuncType,
-    getComponentUncertain: GetComponentUncertainFuncType
-  ) {
-    super(getComponent, getComponentManager, getComponentUncertain);
+  constructor(eMgr: EntityManager) {
+    super(eMgr);
     this.eventListeners = {};
     this.lowPriorityEventQueue = [];
   }
@@ -46,13 +39,13 @@ export class EventSys extends ECSystem {
   // Low priority actions are deferred in a queue to be executed after the current tick finishes.
   // High priority actions are dispatched immediately.
   // All actions coming from the frontend should be low priority.
-  public Dispatch<T>(action: EventAction<T>, isLowPriority = false): void {
+  public Dispatch = <T>(action: EventAction<T>, isLowPriority = false): void => {
     if (isLowPriority) {
       this.lowPriorityEventQueue.push(action);
     } else {
       this.InternalDispatch(action);
     }
-  }
+  };
 
   public ExecuteLowPriorityActions(): void {
     this.lowPriorityEventQueue.forEach((action) => {
@@ -62,7 +55,7 @@ export class EventSys extends ECSystem {
   }
 
   // Returns a token that can be used to deregister a listener
-  public RegisterListener(eventName: string, callback: EventCallback): number {
+  public RegisterListener<T>(eventName: string, callback: EventCallback<T>): number {
     if (!this.eventListeners[eventName]) {
       this.eventListeners[eventName] = [];
     }
@@ -81,18 +74,18 @@ export class EventSys extends ECSystem {
     }
   }
 
-  private InternalDispatch<T>({ type, payload, callback }: EventAction<T>) {
+  private InternalDispatch<T>({ ack, payload, type }: EventAction<T>) {
     const listeners = this.eventListeners[type];
     if (listeners) {
       listeners.forEach((l) => {
         if (l.active) {
-          l.callback(payload, callback);
+          l.callback({ ack, payload });
         }
       });
     }
   }
 
-  private eventListeners: { [key: string]: EventListener[] };
+  private eventListeners: { [key: string]: EventListener<any>[] };
 
   private lowPriorityEventQueue: EventAction<any>[];
 }

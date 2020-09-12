@@ -1,8 +1,7 @@
 import { ECSystem } from '../../../0-engine/ECS/ECSystem';
+import { EventCallbackArgs } from '../../../0-engine/ECS/EventSys';
 import { GetEventSys } from '../../../0-engine/ECS/globals/DispatchEvent';
-import {
-  UNIT_ATTACKED, UNIT_CAST_SPELL, UNIT_CAST_HEAL, UNIT_CANCELED_ACTION,
-} from '../Agent/ProcRuleData/Constants';
+import { UNIT_ATTACKED, UNIT_CAST_SPELL, UNIT_CAST_HEAL, UNIT_CANCELED_ACTION } from '../Agent/ProcRuleData/Constants';
 
 export class CombatLogSys extends ECSystem {
   public entries: string[] = [];
@@ -17,56 +16,35 @@ export class CombatLogSys extends ECSystem {
 
   public OnUpdate(): void {}
 
-  public OnUnitAttacked = (payload: {
-    self: number,
-    target: number,
-    damage: number
-  }): void => {
-    const { self, target, damage } = payload;
+  public OnUnitAttacked = ({
+    payload: { self, target, damage },
+  }: EventCallbackArgs<{ self: number; target: number; damage: number }>): void => {
     this.entries.push(`Unit ${self} attacked Unit ${target} for ${damage} damage.`);
-  }
+  };
 
-  public OnUnitCastSpell = (payload: {
-    self: number,
-    targets: number[],
-    name: string,
-    damage: number
-  }): void => {
-    const {
-      self,
-      targets,
-      name,
-      damage,
-    } = payload;
-    this.entries.push(
-      `Unit ${self} cast ${name} and hit ${getUnitText(targets)} for ${damage} damage.`,
-    );
-  }
+  public OnUnitCastSpell = ({
+    payload: { self, targets, name, damage },
+  }: EventCallbackArgs<{ self: number; targets: number[]; name: string; damage: number }>): void => {
+    this.entries.push(`Unit ${self} cast ${name} and hit ${getUnitText(targets)} for ${damage} damage.`);
+  };
 
-  public OnUnitCastHeal = (payload: {
-    self: number,
-    targets: number[],
-    name: string,
-    amount: number,
-  }): void => {
-    const {
-      self, targets, name, amount,
-    } = payload;
+  public OnUnitCastHeal = ({
+    payload: { self, targets, name, amount },
+  }: EventCallbackArgs<{ self: number; targets: number[]; name: string; amount: number }>): void => {
     this.entries.push(`Unit ${self} healed ${getUnitText(targets)} with ${name} for ${amount}.`);
-  }
+  };
 
-  public OnUnitCanceledAction = (payload: {
-    self: number,
-    target: number,
-    actionName: string,
-    reason: string,
-  }): void => {
-    const {
-      self, target, actionName, reason,
-    } = payload;
+  public OnUnitCanceledAction = ({
+    payload: { self, target, actionName, reason },
+  }: EventCallbackArgs<{
+    self: number;
+    target: number;
+    actionName: string;
+    reason: string;
+  }>): void => {
     const msg = `Unit ${self} canceled ${actionName} on ${getUnitText(target)} because: ${reason}`;
     this.entries.push(msg);
-  }
+  };
 }
 
 function getUnitText(units: number | string | number[] | string[]): string {

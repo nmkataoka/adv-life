@@ -1,8 +1,8 @@
 export * from './ECS/built-in-components';
-export { Controller } from './ECS/Controller';
-export {
-  ECSystem,
-} from './ECS/ECSystem';
+export * from './API/Router';
+export { Controller } from './API/Controller';
+export type { EventCallback, EventCallbackArgs } from './ECS/EventSys';
+export { ECSystem } from './ECS/ECSystem';
 export type {
   GetComponentFuncType,
   GetComponentUncertainFuncType,
@@ -16,11 +16,5 @@ export {
   GetSystem,
   EntityManager,
 } from './ECS/EntityManager';
-export type {
-  NComponent,
-  NComponentConstructor,
-} from './ECS/NComponent';
-export {
-  GetView,
-  View,
-} from './ECS/View';
+export type { NComponent, NComponentConstructor } from './ECS/NComponent';
+export { GetView, View } from './ECS/View';

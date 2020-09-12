@@ -1,6 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "import", "react-hooks"],
+  "plugins": ["@typescript-eslint", "import", "react-hooks", "deprecation"],
   "extends": [
     "airbnb",
     "eslint:recommended",
@@ -8,7 +8,7 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:import/typescript",
-    "prettier/@typescript-eslint", 
+    "prettier/@typescript-eslint",
     "plugin:prettier/recommended" 
   ],
   "parserOptions": {
@@ -16,7 +16,8 @@
   },
   "rules": {
     "class-methods-use-this": 0,
-    // "import/no-cycle": 0,
+    "deprecation/deprecation": "warn",
+    "import/no-cycle": 0,
     "implicit-arrow-linebreak": 0,
     "import/prefer-default-export": 0,
     "import/extensions": ["off"],
@@ -34,6 +35,7 @@
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "semi": 2,
+    "sort-keys": 2,
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/no-unsafe-assignment": 0,
     "@typescript-eslint/indent": [

@@ -1,6 +1,4 @@
-import { Controller, EntityManager, GetView } from '../../0-engine';
-import { GetEventSys } from '../../0-engine/ECS/globals/DispatchEvent';
-import { CREATE_CHARACTER } from './Constants';
+import { Controller, EntityManager, EventCallbackArgs, GetView } from '../../0-engine';
 import {
   ClassCmpt,
   CombatStatsCmpt,
@@ -10,7 +8,8 @@ import {
   PlayerCmpt,
   RaceCmpt,
 } from '../../1-game-code/ncomponents';
-import { AckCallback } from '../../0-engine/ECS/EventSys';
+import { CREATE_CHARACTER } from './character-creation.constants';
+import { GetEventSys } from '../../0-engine/ECS/globals/DispatchEvent';
 
 export type Stats = {
   dexterity: number;
@@ -18,7 +17,7 @@ export type Stats = {
   magicalAffinity: number;
   stamina: number;
   strength: number;
-}
+};
 
 export class CharacterCreationController extends Controller {
   public Start(): void {
@@ -29,18 +28,15 @@ export class CharacterCreationController extends Controller {
   public OnUpdate(): void {}
 
   private OnCreateCharacter = ({
-    className,
-    name,
-    personality,
-    race,
-    stats,
-  }: {
-    className?: string,
-    name?: string,
-    personality?: PersonalityArray,
-    race?: string,
-    stats?: Stats,
-  }, ackCallback?: AckCallback): void => {
+    payload: { className, name, personality, race, stats },
+    ack,
+  }: EventCallbackArgs<{
+    className: string;
+    name: string;
+    personality: PersonalityArray;
+    race: string;
+    stats: Stats;
+  }>): void => {
     const playerAlreadyExists = GetView(0, PlayerCmpt).Count > 0;
     if (playerAlreadyExists) {
       throw new Error('Tried to create player character, but player already exists.');
@@ -82,8 +78,8 @@ export class CharacterCreationController extends Controller {
     }
     eMgr.AddComponent(player, classCmpt);
 
-    if (ackCallback) {
-      ackCallback(player.handle);
+    if (ack) {
+      ack(player.handle);
     }
-  }
+  };
 }
