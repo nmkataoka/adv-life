@@ -1,6 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "import", "react-hooks", "deprecation"],
+  "plugins": ["@typescript-eslint", "import", "react-hooks"],
   "extends": [
     "airbnb",
     "eslint:recommended",
@@ -16,7 +16,6 @@
   },
   "rules": {
     "class-methods-use-this": 0,
-    "deprecation/deprecation": "warn",
     "import/no-cycle": 0,
     "implicit-arrow-linebreak": 0,
     "import/prefer-default-export": 0,

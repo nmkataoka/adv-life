@@ -1,17 +1,14 @@
-import { ECSystem } from './ECSystem';
-import { EntityManager } from './EntityManager';
+import { AckCallback } from '../../../3-frontend-api/ApiClient';
+import { ECSystem } from '../ECSystem';
+import { EntityManager } from '../EntityManager';
+import { EventCallback } from './event-callback';
 
-export type AckCallback = (data: any) => void;
-
-export type EventCallbackArgs<T> = { payload: T; ack?: AckCallback };
-export type EventCallback<T> = (args: EventCallbackArgs<T>) => void;
-
-export class EventListener<T> {
-  public callback: EventCallback<T>;
+export class EventListener<Payload> {
+  public callback: EventCallback<Payload>;
 
   public active: boolean;
 
-  constructor(callback: EventCallback<T>) {
+  constructor(callback: EventCallback<Payload>) {
     this.active = true;
     this.callback = callback;
   }
@@ -55,7 +52,7 @@ export class EventSys extends ECSystem {
   }
 
   // Returns a token that can be used to deregister a listener
-  public RegisterListener<T>(eventName: string, callback: EventCallback<T>): number {
+  public RegisterListener<Payload>(eventName: string, callback: EventCallback<Payload>): number {
     if (!this.eventListeners[eventName]) {
       this.eventListeners[eventName] = [];
     }
@@ -79,7 +76,7 @@ export class EventSys extends ECSystem {
     if (listeners) {
       listeners.forEach((l) => {
         if (l.active) {
-          l.callback({ ack, payload });
+          l.callback({ ack, eMgr: this.eMgr, payload });
         }
       });
     }

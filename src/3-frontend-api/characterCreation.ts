@@ -18,7 +18,7 @@ export const createPlayerCharacter = (
     race?: string;
     stats?: Stats;
   },
-  ack: AckCallback
+  ack: AckCallback,
 ): void => {
   apiClient.emit(CREATE_CHARACTER, data, ack);
 };

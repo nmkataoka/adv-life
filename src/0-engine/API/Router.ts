@@ -1,5 +1,5 @@
 import { Controller, ControllerConstructor } from './Controller';
-import { EventSys } from '../ECS/EventSys';
+import { EventSys } from '../ECS/event-system/EventSys';
 
 export type AckCallback = (data: any) => void;
 export type RequestHeaders = { userId: number };

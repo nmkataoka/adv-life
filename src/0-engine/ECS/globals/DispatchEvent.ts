@@ -1,5 +1,5 @@
 import { EntityManager } from '../EntityManager';
-import { EventSys, EventAction } from '../EventSys';
+import { EventSys, EventAction } from '../event-system/EventSys';
 
 /** @deprecated Global accessor functions should not be used. */
 export function DispatchEvent<T>(action: EventAction<T>, isLowPriority = false): void {

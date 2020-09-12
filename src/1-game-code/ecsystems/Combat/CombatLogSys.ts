@@ -1,5 +1,5 @@
 import { ECSystem } from '../../../0-engine/ECS/ECSystem';
-import { EventCallbackArgs } from '../../../0-engine/ECS/EventSys';
+import { EventCallbackArgs } from '../../../0-engine';
 import { GetEventSys } from '../../../0-engine/ECS/globals/DispatchEvent';
 import { UNIT_ATTACKED, UNIT_CAST_SPELL, UNIT_CAST_HEAL, UNIT_CANCELED_ACTION } from '../Agent/ProcRuleData/Constants';
 

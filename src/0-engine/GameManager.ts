@@ -4,7 +4,7 @@ import ControllerList from './ControllerList';
 import SystemList from './SystemList';
 import { createTown } from '../1-game-code/ecsystems/Town/createTown';
 import { Router } from './API/Router';
-import { EventSys } from './ECS/EventSys';
+import { EventSys } from './ECS/event-system/EventSys';
 
 export class GameManager {
   public static readonly FPS = 3;
