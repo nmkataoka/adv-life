@@ -8,13 +8,22 @@ export type AckCallback = (data: any) => void;
 */
 class ApiClient {
   public emit<T>(eventName: string, payload?: T, ack?: AckCallback): ApiClient {
-    DispatchEvent({ type: eventName, payload, callback: ack }, true);
+    DispatchEvent(
+      {
+        type: eventName,
+        payload,
+        headers: this.headers,
+        callback: ack,
+      },
+      true
+    );
     return this;
   }
 
   /*
-    Frontend may register listeners to events that the backend sends
-     Only one function may be registered per event
+    Frontend may register listeners to events that the backend sends.
+    Only one function may be registered per event. Mimicks listening
+    to a WebSocket conneciton.
   */
   public on = (eventName: string, callback: AckCallback): ApiClient => {
     if (this.callbacks[eventName]) {
@@ -22,9 +31,13 @@ class ApiClient {
     }
     this.callbacks[eventName] = callback;
     return this;
-  }
+  };
 
-  private callbacks: {[key: string]: AckCallback} = {}
+  // Listeners to message sent from the server
+  private callbacks: { [key: string]: AckCallback } = {};
+
+  // Info sent on every event emission, e.g. user info
+  private headers: { userId: number } = { userId: -1 };
 }
 
 const apiClient = new ApiClient();

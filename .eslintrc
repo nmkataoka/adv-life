@@ -7,7 +7,9 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:import/typescript"
+    "plugin:import/typescript",
+    "prettier/@typescript-eslint", 
+    "plugin:prettier/recommended" 
   ],
   "parserOptions": {
     "project": "./tsconfig.json"

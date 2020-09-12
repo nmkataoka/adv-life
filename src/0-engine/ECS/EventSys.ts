@@ -23,13 +23,14 @@ export type EventAction<T> = {
   type: string;
   payload: T;
   callback?: AckCallback;
-}
+  headers: { userId: number };
+};
 
 export class EventSys extends ECSystem {
   constructor(
     getComponent: GetComponentFuncType,
     getComponentManager: GetComponentManagerFuncType,
-    getComponentUncertain: GetComponentUncertainFuncType,
+    getComponentUncertain: GetComponentUncertainFuncType
   ) {
     super(getComponent, getComponentManager, getComponentUncertain);
     this.eventListeners = {};
@@ -91,7 +92,7 @@ export class EventSys extends ECSystem {
     }
   }
 
-  private eventListeners: {[key: string]: EventListener[]};
+  private eventListeners: { [key: string]: EventListener[] };
 
   private lowPriorityEventQueue: EventAction<any>[];
 }
