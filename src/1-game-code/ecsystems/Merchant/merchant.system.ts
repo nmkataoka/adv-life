@@ -5,12 +5,12 @@ import { BUY_ITEM_FROM_MERCHANT } from './constants';
 
 const entityBuysItemFromMerchant = ({
   eMgr,
-  payload: { buyerInventoryId, itemId, sellerInventoryId },
+  payload: { buyerId, itemId, sellerId },
   ack,
-}: EventCallbackArgs<{ itemId: number; buyerInventoryId: number; sellerInventoryId: number }>) => {
+}: EventCallbackArgs<{ itemId: number; buyerId: number; sellerId: number }>) => {
   const inventoryCMgr = eMgr.GetComponentManager(InventoryCmpt);
-  const buyerInventoryCmpt = inventoryCMgr.GetByNumber(buyerInventoryId);
-  const sellerInventoryCmpt = inventoryCMgr.GetByNumber(sellerInventoryId);
+  const buyerInventoryCmpt = inventoryCMgr.GetByNumber(buyerId);
+  const sellerInventoryCmpt = inventoryCMgr.GetByNumber(sellerId);
   const itemData = sellerInventoryCmpt.findItemById(itemId);
 
   if (itemData != null) {

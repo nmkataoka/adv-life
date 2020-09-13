@@ -1,18 +1,19 @@
-import { Controller, EventCallbackArgs } from '../../0-engine';
-import { GetEventSys } from '../../0-engine/ECS/globals/DispatchEvent';
+import { Controller, RequestData, Router } from '../../0-engine';
 import { BUY_ITEM } from './shop.constants';
+import { BUY_ITEM_FROM_MERCHANT } from '../../1-game-code/ecsystems/Merchant/constants';
+import { EventSys } from '../../0-engine/ECS/event-system';
 
 export class ShopController extends Controller {
-  public Start(): void {
-    const eventSys = GetEventSys();
-    eventSys.RegisterListener(BUY_ITEM, this.OnBuyItem);
+  public Start(router: Router): void {
+    router.addRoute(BUY_ITEM, this.OnBuyItem);
   }
 
   public OnUpdate(): void {}
 
-  private OnBuyItem = ({ payload: { itemId }, ack }: EventCallbackArgs<{ itemId: number }>): void => {
-    if (ack) {
-      ack(undefined);
-    }
+  private OnBuyItem = (
+    { headers: { userId }, payload, ack }: RequestData<{ itemId: number; sellerId: number }>,
+    dispatch: typeof EventSys.prototype.Dispatch,
+  ): void => {
+    dispatch({ type: BUY_ITEM_FROM_MERCHANT, payload: { ...payload, buyerId: userId }, ack });
   };
 }
