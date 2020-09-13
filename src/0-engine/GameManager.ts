@@ -3,7 +3,7 @@ import { createUnit } from '../1-game-code/ecsystems/Unit/createUnit';
 import ControllerList from './ControllerList';
 import SystemList from './SystemList';
 import { createTown } from '../1-game-code/ecsystems/Town/createTown';
-import { Router } from './API/Router';
+import { RequestData, Router } from './API/Router';
 import { EventSys } from './ECS/event-system/EventSys';
 
 export class GameManager {
@@ -31,6 +31,10 @@ export class GameManager {
     this.CreateUnits();
     this.EnterGameLoop();
   }
+
+  public HandleRequest = <Data>(routeName: string, data: RequestData<Data>): void => {
+    this.router.handleRequest(routeName, data);
+  };
 
   public SetPaused(nextState: boolean): void {
     this.isPaused = nextState;

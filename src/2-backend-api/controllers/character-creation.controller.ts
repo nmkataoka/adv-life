@@ -1,4 +1,4 @@
-import { Controller, EntityManager, EventCallbackArgs, GetView } from '../../0-engine';
+import { Controller, EventCallbackArgs, GetView } from '../../0-engine';
 import {
   ClassCmpt,
   CombatStatsCmpt,
@@ -28,6 +28,7 @@ export class CharacterCreationController extends Controller {
   public OnUpdate(): void {}
 
   private OnCreateCharacter = ({
+    eMgr,
     payload: { className, name, personality, race, stats },
     ack,
   }: EventCallbackArgs<{
@@ -37,12 +38,11 @@ export class CharacterCreationController extends Controller {
     race: string;
     stats: Stats;
   }>): void => {
-    const playerAlreadyExists = GetView(0, PlayerCmpt).Count > 0;
+    const playerAlreadyExists = GetView(eMgr, 0, PlayerCmpt).Count > 0;
     if (playerAlreadyExists) {
       throw new Error('Tried to create player character, but player already exists.');
     }
 
-    const eMgr = EntityManager.instance;
     const player = eMgr.CreateEntity();
 
     const nameCmpt = new NameCmpt();

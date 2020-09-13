@@ -12,7 +12,7 @@ export class AttackSys extends ECSystem {
 
   public checkForDeaths(): void {
     const eMgr = EntityManager.instance;
-    const view = GetView(0, HealthCmpt);
+    const view = GetView(eMgr, 0, HealthCmpt);
     const [healthMgr] = view.cMgrs;
     for (let i = 0; i < view.Count; ++i) {
       const e = view.At(i);

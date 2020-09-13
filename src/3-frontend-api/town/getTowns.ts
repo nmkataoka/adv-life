@@ -11,8 +11,9 @@ const getLocations = (entityHandle: number) => {
 };
 
 export const getTowns = (): TownsDict => {
+  const { eMgr } = GameManager.instance;
   const towns: TownsDict = {};
-  const townView = GetView(0, TownLocationsCmpt);
+  const townView = GetView(eMgr, 0, TownLocationsCmpt);
 
   for (let i = 0; i < townView.Count; ++i) {
     const e = townView.At(i);

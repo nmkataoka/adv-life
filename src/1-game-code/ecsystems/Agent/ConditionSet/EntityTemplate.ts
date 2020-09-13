@@ -15,16 +15,14 @@ export abstract class EntityTemplateBase {
 type NComponentConstructorArray = NComponentConstructor<any>[];
 
 // Entity templates with variadic templating for entities with variable numbers of components
-export default class EntityTemplate<
-  T extends NComponentConstructorArray
-> extends EntityTemplateBase {
+export default class EntityTemplate<T extends NComponentConstructorArray> extends EntityTemplateBase {
   constructor(...cclasses: T) {
     super();
     this.cclasses = cclasses;
   }
 
-  public findCandidateEntities(): number[] {
-    const view = GetView<T>(0, ...this.cclasses);
+  public findCandidateEntities(eMgr: EntityManager): number[] {
+    const view = GetView<T>(eMgr, 0, ...this.cclasses);
     return view.entities.map((e) => parseInt(e, 10));
   }
 

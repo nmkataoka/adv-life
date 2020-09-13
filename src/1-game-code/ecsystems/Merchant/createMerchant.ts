@@ -11,11 +11,7 @@ import {
   NameCmpt,
 } from '../../ncomponents';
 
-const createArmor = (
-  eMgr: EntityManager,
-  armorType: ArmorType,
-  armorValue: number,
-) => {
+const createArmor = (eMgr: EntityManager, armorType: ArmorType, armorValue: number) => {
   const e = eMgr.CreateEntity('Armor');
 
   const wearable = new WearableCmpt();
@@ -29,11 +25,7 @@ const createArmor = (
   return e;
 };
 
-const createWeapon = (
-  eMgr: EntityManager,
-  weaponType: WeaponType,
-  damage: number,
-) => {
+const createWeapon = (eMgr: EntityManager, weaponType: WeaponType, damage: number) => {
   const e = eMgr.CreateEntity('Sword');
 
   const wieldable = new WieldableCmpt();

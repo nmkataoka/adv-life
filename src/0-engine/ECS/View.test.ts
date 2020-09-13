@@ -7,7 +7,7 @@ class TestCmpt implements NComponent {}
 describe('View', () => {
   let eMgr: EntityManager;
   beforeEach(() => {
-    eMgr = new EntityManager();
+    eMgr = new EntityManager([]);
   });
 
   it('GetView gets a view with one component', () => {
@@ -15,7 +15,7 @@ describe('View', () => {
     const testCmpt = new TestCmpt();
     eMgr.AddComponent(e, testCmpt);
 
-    const view = GetView(0, TestCmpt);
+    const view = GetView(eMgr, 0, TestCmpt);
     expect(view.Count).toBe(1);
   });
 });

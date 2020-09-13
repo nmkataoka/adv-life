@@ -92,7 +92,9 @@ const getNextBactionInfo = (entityHandle: number) => {
 
   let targetEntity = -1;
   if (goalQueueCmpt && goalQueueCmpt.nextAction) {
-    const { nextAction: { entityBinding } } = goalQueueCmpt;
+    const {
+      nextAction: { entityBinding },
+    } = goalQueueCmpt;
     if (entityBinding.length > 1) {
       targetEntity = entityBinding[1];
     }
@@ -101,8 +103,9 @@ const getNextBactionInfo = (entityHandle: number) => {
 };
 
 export const getUnitInfos = (): UnitsDict => {
+  const { eMgr } = GameManager.instance;
   const units: UnitsDict = {};
-  const unitView = GetView(0, HealthCmpt);
+  const unitView = GetView(eMgr, 0, HealthCmpt);
   for (let i = 0; i < unitView.Count; ++i) {
     const e = unitView.At(i);
     const entityHandle = parseInt(e, 10);

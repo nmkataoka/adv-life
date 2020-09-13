@@ -28,7 +28,7 @@ describe('EntityTemplate', () => {
     }
 
     const entityTemplate = new EntityTemplate(Component1);
-    const candidates1 = entityTemplate.findCandidateEntities();
+    const candidates1 = entityTemplate.findCandidateEntities(eMgr);
     expect(candidates1.length).toBe(5);
 
     // The first entity index is 1, not 0

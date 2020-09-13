@@ -1,2 +1,3 @@
 export type { AckCallback, EventCallback, EventCallbackArgs } from './event-callback';
-export type { EventAction, EventListener, EventSys } from './EventSys';
+export type { EventAction } from './EventSys';
+export { EventListener, EventSys } from './EventSys';

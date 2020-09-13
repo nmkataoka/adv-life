@@ -71,7 +71,7 @@ export class EventSys extends ECSystem {
     }
   }
 
-  private InternalDispatch<T>({ ack, payload, type }: EventAction<T>) {
+  private InternalDispatch<T>({ ack = () => {}, payload, type }: EventAction<T>) {
     const listeners = this.eventListeners[type];
     if (listeners) {
       listeners.forEach((l) => {

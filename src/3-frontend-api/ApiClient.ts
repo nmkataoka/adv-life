@@ -1,4 +1,4 @@
-import { DispatchEvent } from '../0-engine/ECS/globals/DispatchEvent';
+import { GameManager } from '../0-engine/GameManager';
 
 export type AckCallback = (data: any) => void;
 
@@ -8,15 +8,7 @@ export type AckCallback = (data: any) => void;
 */
 class ApiClient {
   public emit<T>(eventName: string, payload?: T, ack?: AckCallback): ApiClient {
-    DispatchEvent(
-      {
-        type: eventName,
-        payload,
-        headers: this.headers,
-        callback: ack,
-      },
-      true
-    );
+    GameManager.instance.HandleRequest(eventName, { headers: this.headers, payload, ack });
     return this;
   }
 
