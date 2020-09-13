@@ -1,6 +1,6 @@
 export * from './ECS/built-in-components';
-export * from './API/Router';
-export { Controller } from './API/Controller';
+export type { RequestData, RequestHandler } from './API';
+export { Controller, Router } from './API';
 export type { EventCallback, EventCallbackArgs } from './ECS/event-system';
 export { ECSystem } from './ECS/ECSystem';
 export type {

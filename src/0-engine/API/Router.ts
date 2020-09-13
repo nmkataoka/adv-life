@@ -16,7 +16,7 @@ export class Router {
   public Start(eventSys: EventSys): void {
     this.eventSys = eventSys;
     this.controllers.forEach((controller) => {
-      controller.Start();
+      controller.Start(this);
     });
   }
 
