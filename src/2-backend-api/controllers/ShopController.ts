@@ -1,5 +1,5 @@
 import { Controller, RequestData, Router } from '../../0-engine';
-import { BUY_ITEM } from './shop.constants';
+import { BUY_ITEM } from './ShopConstants';
 import { BUY_ITEM_FROM_MERCHANT } from '../../1-game-code/ecsystems/Merchant/constants';
 import { EventSys } from '../../0-engine/ECS/event-system';
 

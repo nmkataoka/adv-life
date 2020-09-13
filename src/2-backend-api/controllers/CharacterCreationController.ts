@@ -1,7 +1,7 @@
 import { Controller, RequestData, Router } from '../../0-engine';
 import { EventSys } from '../../0-engine/ECS/event-system';
 import { PersonalityArray } from '../../1-game-code/ncomponents';
-import { CREATE_CHARACTER } from './character-creation.constants';
+import { CREATE_CHARACTER } from './CharacterCreationConstants';
 import { CREATE_CHARACTER as ENGINE_CREATE_CHARACTER } from '../../1-game-code/ecsystems/CharacterCreation/CharacterCreationSys';
 
 export type Stats = {

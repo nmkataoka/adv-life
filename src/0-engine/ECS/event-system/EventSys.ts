@@ -1,7 +1,7 @@
 import { AckCallback } from '../../../3-frontend-api/ApiClient';
 import { ECSystem } from '../ECSystem';
 import { EntityManager } from '../EntityManager';
-import { EventCallback } from './event-callback';
+import { EventCallback } from './EventCallback';
 
 export class EventListener<Payload> {
   public callback: EventCallback<Payload>;
