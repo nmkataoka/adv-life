@@ -4,6 +4,7 @@ import { EventCallbackArgs, EventSys } from '../../../0-engine/ECS/event-system'
 import {
   ClassCmpt,
   CombatStatsCmpt,
+  InventoryCmpt,
   NameCmpt,
   PersonalityArray,
   PersonalityCmpt,
@@ -45,6 +46,9 @@ const createCharacter = ({
 
   const playerCmpt = new PlayerCmpt();
   eMgr.AddComponent(player, playerCmpt);
+
+  const inventoryCmpt = new InventoryCmpt(20, true);
+  eMgr.AddComponent(player, inventoryCmpt);
 
   const combatStatsCmpt = new CombatStatsCmpt();
   if (stats) {

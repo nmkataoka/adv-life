@@ -9,7 +9,14 @@ export type InventorySlot = {
 export class InventoryCmpt implements NComponent {
   public gold = 0;
 
-  public inventorySlots: (InventorySlot | undefined)[] = [];
+  public inventorySlots: (InventorySlot | undefined)[];
+
+  public isPlayerInventory: boolean;
+
+  constructor(inventorySize: number, isPlayerInventory = false) {
+    this.isPlayerInventory = isPlayerInventory;
+    this.inventorySlots = Array(inventorySize).fill(undefined);
+  }
 
   /** @returns The index of the slot in which the item was placed */
   public addItemToNextEmptySlot = (data: InventorySlot): number => {
@@ -19,6 +26,13 @@ export class InventoryCmpt implements NComponent {
         return i;
       }
     }
+
+    if (!this.isPlayerInventory) {
+      // Merchants have unlimited inventory sizes
+      this.inventorySlots.push(data);
+      return this.inventorySlots.length - 1;
+    }
+
     return -1;
   };
 
@@ -27,6 +41,9 @@ export class InventoryCmpt implements NComponent {
     return itemData;
   };
 
+  /** For player inventories, players expect empty slots to be remembered.
+   * For merchants, leaving the deleted element saved on performance.
+   */
   public removeItemById = (itemId: number): void => {
     const idx = this.inventorySlots.findIndex((slot) => slot?.itemId.handle === itemId);
     if (idx > -1) {

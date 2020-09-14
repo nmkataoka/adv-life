@@ -64,7 +64,7 @@ export const createMerchant = (name: string): Entity => {
   nameCmpt.name = name;
   eMgr.AddComponent(e, nameCmpt);
 
-  const inventory = new InventoryCmpt();
+  const inventory = new InventoryCmpt(5);
   eMgr.AddComponent(e, inventory);
 
   armors.forEach(({ type, armorValue, publicSalePrice }) => {

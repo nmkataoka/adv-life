@@ -18,7 +18,7 @@ export const createUnit = (position: number, isEnemy = false): Entity => {
   eMgr.AddComponent(e, new HealthCmpt());
   eMgr.AddComponent(e, new CombatStatsCmpt());
   eMgr.AddComponent(e, new CanAttackCmpt());
-  eMgr.AddComponent(e, new InventoryCmpt());
+  eMgr.AddComponent(e, new InventoryCmpt(1));
   eMgr.AddComponent(e, new AgentCmpt());
   eMgr.AddComponent(e, new StatusEffectsCmpt());
   if (!isEnemy) {
