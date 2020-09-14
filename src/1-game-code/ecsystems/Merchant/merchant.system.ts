@@ -33,9 +33,9 @@ const entityBuysItemFromMerchant = ({
 };
 
 export class MerchantSys extends ECSystem {
-  public Start(): void {
+  public Start = (): void => {
     this.eMgr.GetSystem(EventSys).RegisterListener(BUY_ITEM_FROM_MERCHANT, entityBuysItemFromMerchant);
-  }
+  };
 
-  public OnUpdate(): void {}
+  public OnUpdate = (): void => {};
 }
