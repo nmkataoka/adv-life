@@ -14,10 +14,18 @@ const entityBuysItemFromMerchant = ({
   const itemData = sellerInventoryCmpt.findItemById(itemId);
 
   if (itemData != null) {
+    const { publicSalePrice } = itemData;
+    if (buyerInventoryCmpt.gold < publicSalePrice) {
+      ack({ error: 'Not enough gold' });
+      return;
+    }
+
     const itemIdxInBuyerInventory = buyerInventoryCmpt.addItemToNextEmptySlot(itemData);
 
     if (itemIdxInBuyerInventory > -1) {
       sellerInventoryCmpt.removeItemById(itemData.itemId.handle);
+      buyerInventoryCmpt.gold -= publicSalePrice;
+      sellerInventoryCmpt.gold += publicSalePrice;
     } else if (ack) {
       ack({ error: 'Inventory is full!' });
     }
