@@ -13,9 +13,9 @@ export type Stats = {
 };
 
 export class CharacterCreationController extends Controller {
-  public Start(router: Router): void {
+  public Start = (router: Router): void => {
     router.addRoute(CREATE_CHARACTER, this.OnCreateCharacter);
-  }
+  };
 
   public OnUpdate(): void {}
 

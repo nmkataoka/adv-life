@@ -13,12 +13,12 @@ export class Router {
     });
   }
 
-  public Start(eventSys: EventSys): void {
+  public Start = (eventSys: EventSys): void => {
     this.eventSys = eventSys;
     this.controllers.forEach((controller) => {
       controller.Start(this);
     });
-  }
+  };
 
   public addRoute = <T>(routeName: string, requestHandler: RequestHandler<T>): void => {
     if (this.routes[routeName]) {
