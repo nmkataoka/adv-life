@@ -30,6 +30,8 @@
     "object-curly-spacing": ["error", "always"],
     "prefer-destructuring": ["error", { "object": true, "array": false }],
     "react/jsx-filename-extension": 0,
+    "react/jsx-indent": 0, // disabled because we have prettier
+    "react/jsx-one-expression-per-line": 0, // disabled because we have prettier
     "react/prop-types": 0,
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",

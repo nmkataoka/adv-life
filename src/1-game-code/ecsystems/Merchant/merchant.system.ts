@@ -16,7 +16,7 @@ const entityBuysItemFromMerchant = ({
   if (itemData != null) {
     const { publicSalePrice } = itemData;
     if (buyerInventoryCmpt.gold < publicSalePrice) {
-      ack({ error: 'Not enough gold' });
+      ack({ status: 400, error: 'Not enough gold' });
       return;
     }
 
@@ -26,8 +26,9 @@ const entityBuysItemFromMerchant = ({
       sellerInventoryCmpt.removeItemById(itemData.itemId.handle);
       buyerInventoryCmpt.gold -= publicSalePrice;
       sellerInventoryCmpt.gold += publicSalePrice;
+      ack({ status: 200 });
     } else if (ack) {
-      ack({ error: 'Inventory is full!' });
+      ack({ status: 400, error: 'Inventory is full!' });
     }
   }
 };

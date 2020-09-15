@@ -1,13 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialCharacterAttributeGroups } from './characterCreationData';
-import CharacterAttributeGroup, {
-  PointAllocation, Ranges, randomize, OneOf,
-} from './CharacterAttributeGroup';
+import CharacterAttributeGroup, { PointAllocation, Ranges, randomize, OneOf } from './CharacterAttributeGroup';
 import { createPlayerCharacter } from '../../3-frontend-api/characterCreation';
 import { AppThunk } from '../../7-app/types';
 import { PersonalityArray } from '../../1-game-code/ncomponents/PersonalityCmpt';
 import { Freeform } from './CharacterAttributeGroup/Freeform';
 import { setPlayerEntity } from '../Player/playerSlice';
+import apiClient from '../../3-frontend-api/ApiClient';
 
 const randomizeCharacterAttributeGroups = (cags: CharacterAttributeGroup[]) => {
   cags.forEach((cag) => {
@@ -43,10 +42,7 @@ const characterCreationSlice = createSlice({
         clearInfoWindow(state);
       }
     },
-    updateInfoWindow(
-      state,
-      action: PayloadAction<{infoWindowTitle: string, infoWindowText: string}>,
-    ) {
+    updateInfoWindow(state, action: PayloadAction<{ infoWindowTitle: string; infoWindowText: string }>) {
       const { infoWindowTitle, infoWindowText } = action.payload;
       state.infoWindowTitle = infoWindowTitle;
       state.infoWindowText = infoWindowText;
@@ -63,7 +59,7 @@ const characterCreationSlice = createSlice({
         clearInfoWindow(state);
       }
     },
-    selectedOption(state, action: PayloadAction<{label: string}>) {
+    selectedOption(state, action: PayloadAction<{ label: string }>) {
       const { label } = action.payload;
       const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as OneOf;
       const { options } = characterAttributeGroup;
@@ -74,7 +70,7 @@ const characterCreationSlice = createSlice({
       }
       characterAttributeGroup.selectedIdx = selectedIdx;
     },
-    increasedPointAllocationForAttribute(state, action: PayloadAction<{label: string}>) {
+    increasedPointAllocationForAttribute(state, action: PayloadAction<{ label: string }>) {
       const { label } = action.payload;
       const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as PointAllocation;
       const { options, totalPoints } = characterAttributeGroup;
@@ -89,7 +85,7 @@ const characterCreationSlice = createSlice({
         option.value = clamp(value + 1, min, max);
       }
     },
-    decreasedPointAllocationForAttribute(state, action: PayloadAction<{label: string}>) {
+    decreasedPointAllocationForAttribute(state, action: PayloadAction<{ label: string }>) {
       const { label } = action.payload;
       const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as PointAllocation;
       const { options } = characterAttributeGroup;
@@ -101,7 +97,7 @@ const characterCreationSlice = createSlice({
       const { max, min, value } = option;
       option.value = clamp(value - 1, min, max);
     },
-    changedSlider(state, action: PayloadAction<{label: string; value: number;}>) {
+    changedSlider(state, action: PayloadAction<{ label: string; value: number }>) {
       const { label, value } = action.payload;
       const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as Ranges;
       const { options } = characterAttributeGroup;
@@ -113,7 +109,7 @@ const characterCreationSlice = createSlice({
       const { max, min } = option;
       option.value = clamp(value, min, max);
     },
-    changedFreeformInputValue(state, action: PayloadAction<{label: string; value: string;}>) {
+    changedFreeformInputValue(state, action: PayloadAction<{ label: string; value: string }>) {
       const { label, value } = action.payload;
       const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as Freeform;
       const { options } = characterAttributeGroup;
@@ -157,9 +153,7 @@ export default characterCreationSlice.reducer;
 
 export const finishCharacterCreation = (): AppThunk => (dispatch, getState) => {
   const {
-    characterCreation: {
-      characterAttributeGroups: cags,
-    },
+    characterCreation: { characterAttributeGroups: cags },
   } = getState();
 
   const nameCAG = cags.find((cag) => cag.name === 'Name') as Freeform;
@@ -205,9 +199,17 @@ export const finishCharacterCreation = (): AppThunk => (dispatch, getState) => {
     personality = personalityCAG.options.map((option) => option.value) as PersonalityArray;
   }
 
-  createPlayerCharacter({
-    className, name, personality, race, stats,
-  }, (playerEntityHandle: number) => {
-    dispatch(setPlayerEntity(playerEntityHandle));
-  });
+  createPlayerCharacter(
+    {
+      className,
+      name,
+      personality,
+      race,
+      stats,
+    },
+    ({ data }: { data: number }) => {
+      apiClient.setHeader('userId', data);
+      dispatch(setPlayerEntity(data));
+    },
+  );
 };

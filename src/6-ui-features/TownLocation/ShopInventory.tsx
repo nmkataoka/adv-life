@@ -1,21 +1,39 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { RootState } from '../../7-app/types';
 import CharacterInventory from '../CharacterInfo/CharacterInventory';
+import { buyItemFromShop } from './townLocationsSlice';
+import useUILoop from '../useUILoop';
+import { updatePlayerInventoryFromEngine } from '../Player/playerSlice';
 
 type ShopInventoryProps = {
   townLocationId: number;
-}
+};
+
+const engineActions = [updatePlayerInventoryFromEngine];
 
 const ShopInventory = ({ townLocationId }: ShopInventoryProps): JSX.Element => {
+  const dispatch = useDispatch();
+  useUILoop(engineActions);
   const inventory = useSelector((state: RootState) => state.townLocations.byId[townLocationId]?.inventory);
+  const playerGold = useSelector((state: RootState) => state.player.inventory.gold);
+
+  const handleBuyItem = (itemId: number) => () => {
+    const item = inventory.inventorySlots.find(({ itemId: iid }) => itemId === iid);
+    if (item) {
+      const { publicSalePrice } = item;
+      if (publicSalePrice < playerGold) {
+        dispatch(buyItemFromShop({ itemId, sellerId: townLocationId, price: publicSalePrice }));
+      }
+    }
+  };
 
   return (
     <TwoHalves>
       <VertFlexBox>
         {inventory.inventorySlots.map(({ itemId, name, publicSalePrice }) => (
-          <ItemContainer key={itemId}>
+          <ItemContainer key={itemId} onDoubleClick={handleBuyItem(itemId)}>
             <h4>{name}</h4>
             <h4>{`${publicSalePrice}g`}</h4>
           </ItemContainer>

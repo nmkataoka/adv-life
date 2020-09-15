@@ -4,10 +4,13 @@ import { AppThunk } from '../../7-app/types';
 import { GetView } from '../../0-engine';
 import { PlayerCmpt } from '../../1-game-code/ncomponents';
 import { GameManager } from '../../0-engine/GameManager';
+import { InventoryInfo } from '../../3-frontend-api/inventory/InventoryInfo';
+import { getInventoryInfo } from '../../3-frontend-api/inventory/getInventoryInfo';
 
 const initialState = {
-  entityHandle: -1,
+  playerId: -1,
   gameIsOver: false,
+  inventory: { inventorySlots: [], gold: 0 } as InventoryInfo,
 };
 
 const playerSlice = createSlice({
@@ -15,20 +18,23 @@ const playerSlice = createSlice({
   initialState,
   reducers: {
     setPlayerEntity(state, action: PayloadAction<number>) {
-      state.entityHandle = action.payload;
+      state.playerId = action.payload;
+    },
+    updatedPlayerInventory(state, action: PayloadAction<InventoryInfo>) {
+      state.inventory = action.payload;
     },
   },
   extraReducers: {
     [updatedUnits.type]: (state, action) => {
       const { units } = action.payload;
-      if (units[state.entityHandle] == null) {
+      if (units[state.playerId] == null) {
         state.gameIsOver = true;
       }
     },
   },
 });
 
-export const { setPlayerEntity } = playerSlice.actions;
+export const { setPlayerEntity, updatedPlayerInventory } = playerSlice.actions;
 
 export default playerSlice.reducer;
 
@@ -40,4 +46,10 @@ export const updatePlayerEntityFromEngine = (): AppThunk => (dispatch) => {
     playerEntityHandle = parseInt(players.At(0), 10);
   }
   dispatch(setPlayerEntity(playerEntityHandle));
+};
+
+export const updatePlayerInventoryFromEngine = (): AppThunk => (dispatch, getState) => {
+  const { playerId } = getState().player;
+  const inventoryInfo = getInventoryInfo(playerId);
+  dispatch(updatedPlayerInventory(inventoryInfo));
 };

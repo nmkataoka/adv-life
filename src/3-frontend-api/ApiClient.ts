@@ -2,6 +2,10 @@ import { GameManager } from '../0-engine/GameManager';
 
 export type AckCallback = (data: any) => void;
 
+type Headers = {
+  userId: number;
+};
+
 /*
     Intended to be easily upgradable to WebSockets if we want to use server-client architecture.
     API inspired by Socket.io
@@ -23,6 +27,10 @@ class ApiClient {
     }
     this.callbacks[eventName] = callback;
     return this;
+  };
+
+  public setHeader = <Key extends keyof Headers>(header: Key, value: Headers[Key]) => {
+    this.headers[header] = value;
   };
 
   // Listeners to message sent from the server

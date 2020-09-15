@@ -48,6 +48,7 @@ const createCharacter = ({
   eMgr.AddComponent(player, playerCmpt);
 
   const inventoryCmpt = new InventoryCmpt(20, true);
+  inventoryCmpt.gold = 3000;
   eMgr.AddComponent(player, inventoryCmpt);
 
   const combatStatsCmpt = new CombatStatsCmpt();

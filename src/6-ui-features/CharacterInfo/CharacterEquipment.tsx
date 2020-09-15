@@ -1,26 +1,36 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../7-app/types';
+import useUILoop from '../useUILoop';
+import { updatePlayerInventoryFromEngine } from '../Player/playerSlice';
 
-const CharacterEquipment = (): JSX.Element => (
-  <LeftHalf>
-    <h3>Player Name</h3>
-    <ItemRow>
-      <ItemBox>Helmet</ItemBox>
-    </ItemRow>
-    <ItemRow>
-      <ItemBox>Sword</ItemBox>
-      <ItemBox>Plate Mail</ItemBox>
-      <ItemBox>Shield</ItemBox>
-    </ItemRow>
-    <ItemRow>
-      <ItemBox>Greaves</ItemBox>
-    </ItemRow>
-    <ItemRow>
-      <ItemBox>Boots</ItemBox>
-    </ItemRow>
-    <BottomRow>Gold: 1012</BottomRow>
-  </LeftHalf>
-);
+const engineActions = [updatePlayerInventoryFromEngine];
+
+const CharacterEquipment = (): JSX.Element => {
+  useUILoop(engineActions);
+  const playerGold = useSelector((state: RootState) => state.player.inventory.gold);
+  return (
+    <LeftHalf>
+      <h3>Player Name</h3>
+      <ItemRow>
+        <ItemBox>Helmet</ItemBox>
+      </ItemRow>
+      <ItemRow>
+        <ItemBox>Sword</ItemBox>
+        <ItemBox>Plate Mail</ItemBox>
+        <ItemBox>Shield</ItemBox>
+      </ItemRow>
+      <ItemRow>
+        <ItemBox>Greaves</ItemBox>
+      </ItemRow>
+      <ItemRow>
+        <ItemBox>Boots</ItemBox>
+      </ItemRow>
+      <BottomRow>Gold: {playerGold}g</BottomRow>
+    </LeftHalf>
+  );
+};
 
 export default CharacterEquipment;
 
