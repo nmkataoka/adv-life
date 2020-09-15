@@ -1,6 +1,5 @@
 import { EntityManager } from '../EntityManager';
-
-export type AckCallback<Data> = (data: Data) => void;
+import { AckCallback } from './AckCallback';
 
 export type EventCallbackArgs<Payload> = {
   eMgr: EntityManager;

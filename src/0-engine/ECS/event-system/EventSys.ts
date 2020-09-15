@@ -1,24 +1,8 @@
-import { AckCallback } from '../../../3-frontend-api/ApiClient';
 import { ECSystem } from '../ECSystem';
 import { EntityManager } from '../EntityManager';
+import { EventAction } from './EventAction';
 import { EventCallback } from './EventCallback';
-
-export class EventListener<Payload> {
-  public callback: EventCallback<Payload>;
-
-  public active: boolean;
-
-  constructor(callback: EventCallback<Payload>) {
-    this.active = true;
-    this.callback = callback;
-  }
-}
-
-export type EventAction<T> = {
-  type: string;
-  payload: T;
-  ack?: AckCallback;
-};
+import { EventListener } from './EventListener';
 
 export class EventSys extends ECSystem {
   constructor(eMgr: EntityManager) {
@@ -44,7 +28,7 @@ export class EventSys extends ECSystem {
     }
   };
 
-  public ExecuteLowPriorityActions(): void {
+  private ExecuteLowPriorityActions(): void {
     this.lowPriorityEventQueue.forEach((action) => {
       this.InternalDispatch(action);
     });
