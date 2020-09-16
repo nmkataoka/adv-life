@@ -17,7 +17,7 @@ const ShopInventory = ({ townLocationId }: ShopInventoryProps): JSX.Element => {
   const dispatch = useDispatch();
   useUILoop(engineActions);
   const inventory = useSelector((state: RootState) => state.townLocations.byId[townLocationId]?.inventory);
-  const playerGold = useSelector((state: RootState) => state.player.inventory.gold);
+  const { inventorySlots, gold: playerGold } = useSelector((state: RootState) => state.player.inventory);
 
   const handleBuyItem = (itemId: number) => () => {
     const item = inventory.inventorySlots.find(({ itemId: iid }) => itemId === iid);
@@ -32,15 +32,17 @@ const ShopInventory = ({ townLocationId }: ShopInventoryProps): JSX.Element => {
   return (
     <TwoHalves>
       <VertFlexBox>
-        {inventory.inventorySlots.map(({ itemId, name, publicSalePrice }) => (
-          <ItemContainer key={itemId} onDoubleClick={handleBuyItem(itemId)}>
-            <h4>{name}</h4>
-            <h4>{`${publicSalePrice}g`}</h4>
-          </ItemContainer>
-        ))}
+        {inventory.inventorySlots
+          .filter(({ itemId }) => itemId > 0)
+          .map(({ itemId, name, publicSalePrice }) => (
+            <ItemContainer key={itemId} onDoubleClick={handleBuyItem(itemId)}>
+              <h4>{name}</h4>
+              <h4>{`${publicSalePrice}g`}</h4>
+            </ItemContainer>
+          ))}
         <Gold>Gold: 1400g</Gold>
       </VertFlexBox>
-      <CharacterInventory />
+      <CharacterInventory inventorySlots={inventorySlots} />
     </TwoHalves>
   );
 };

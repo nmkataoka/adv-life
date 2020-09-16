@@ -1,16 +1,25 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { InventorySlotInfo } from '../../3-frontend-api/inventory/InventoryInfo';
 
-const items = ['Sword', 'Shield', 'Potion', 'Steak', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+type CharacterInventoryProps = {
+  inventorySlots: InventorySlotInfo[];
+};
 
-const CharacterInventory = (): JSX.Element => (
-  <RightHalf>
-    <h3>Character Inventory</h3>
-    <ItemRow>
-      {items.map((item, idx) => <ItemBox key={idx}>{item}</ItemBox>)}
-    </ItemRow>
-  </RightHalf>
-);
+const CharacterInventory = ({ inventorySlots }: CharacterInventoryProps): JSX.Element => {
+  return (
+    <RightHalf>
+      <h3>Character Inventory</h3>
+      <ItemRow>
+        {inventorySlots.map(({ itemId, name }, idx) => {
+          // eslint-disable-next-line react/no-array-index-key
+          if (itemId < 0) return <ItemBox key={`empty${idx}`} />;
+          return <ItemBox key={itemId}>{name}</ItemBox>;
+        })}
+      </ItemRow>
+    </RightHalf>
+  );
+};
 
 export default CharacterInventory;
 
