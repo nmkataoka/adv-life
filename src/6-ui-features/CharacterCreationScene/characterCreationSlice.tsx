@@ -7,6 +7,9 @@ import { PersonalityArray } from '../../1-game-code/ncomponents/PersonalityCmpt'
 import { Freeform } from './CharacterAttributeGroup/Freeform';
 import { setPlayerEntity } from '../Player/playerSlice';
 import apiClient from '../../3-frontend-api/ApiClient';
+import { changedScene, Scenes } from '../sceneManager/sceneMetaSlice';
+import { travelToLocation } from '../WorldMap/actions';
+import { getTowns } from '../../3-frontend-api/town';
 
 const randomizeCharacterAttributeGroups = (cags: CharacterAttributeGroup[]) => {
   cags.forEach((cag) => {
@@ -210,6 +213,10 @@ export const finishCharacterCreation = (): AppThunk => (dispatch, getState) => {
     ({ data }: { data: number }) => {
       apiClient.setHeader('userId', data);
       dispatch(setPlayerEntity(data));
+
+      const firstTown = Object.values(getTowns())[0];
+      dispatch(travelToLocation({ id: firstTown.townId, locationType: 'Town' }));
+      dispatch(changedScene(Scenes.Town));
     },
   );
 };

@@ -36,7 +36,9 @@ export default function WorldMap(): JSX.Element {
     <Container>
       <h1>World Map</h1>
       <LocationContainer>
-        {towns.map(({ townId, name }) => <MapLocation key={name} name={name} onClick={handleTownClick(townId)} />)}
+        {towns.map(({ townId, name }) => (
+          <MapLocation key={name} name={name} onClick={handleTownClick(townId)} />
+        ))}
         <MapLocation name="Combat" onClick={handleCombatClick} />
         <MapLocation name="Combat" onClick={handleCombatClick} />
         <MapLocation name="Combat" onClick={handleCombatClick} />
