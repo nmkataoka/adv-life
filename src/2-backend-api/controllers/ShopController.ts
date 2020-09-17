@@ -4,11 +4,11 @@ import { BUY_ITEM_FROM_MERCHANT } from '../../1-game-code/ecsystems/Merchant/con
 import { EventSys } from '../../0-engine/ECS/event-system';
 
 export class ShopController extends Controller {
-  public Start(router: Router): void {
+  public Start = (router: Router): void => {
     router.addRoute(BUY_ITEM, this.OnBuyItem);
-  }
+  };
 
-  public OnUpdate(): void {}
+  public OnUpdate = (): void => {};
 
   private OnBuyItem = (
     { headers: { userId }, payload, ack }: RequestData<{ itemId: number; sellerId: number }>,
