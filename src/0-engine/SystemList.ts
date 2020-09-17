@@ -6,7 +6,7 @@ import { StatusEffectsSys } from '../1-game-code/ecsystems/Agent/StatusEffectsSy
 import { EventSys } from './ECS/event-system/EventSys';
 import { CombatLogSys } from '../1-game-code/ecsystems/Combat/CombatLogSys';
 import { CharacterCreationSys } from '../1-game-code/ecsystems/CharacterCreation/CharacterCreationSys';
-import { MerchantSys } from '../1-game-code/ecsystems/Merchant/merchant.system';
+import { MerchantSys } from '../1-game-code/ecsystems/Merchant/MerchantSys';
 
 const SystemList: ECSystemConstructor<any>[] = [
   // Core systems
