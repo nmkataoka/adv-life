@@ -7,6 +7,7 @@ import { EventSys } from './ECS/event-system/EventSys';
 import { CombatLogSys } from '../1-game-code/Combat/CombatLogSys';
 import { CharacterCreationSys } from '../1-game-code/CharacterCreation/CharacterCreationSys';
 import { MerchantSys } from '../1-game-code/Merchant/MerchantSys';
+import { ItemClassDbSys } from '../1-game-code/Items/ItemClassDbSys';
 
 const SystemList: ECSystemConstructor<any>[] = [
   // Core systems
@@ -17,6 +18,7 @@ const SystemList: ECSystemConstructor<any>[] = [
   AttackSys,
   CharacterCreationSys,
   CombatLogSys,
+  ItemClassDbSys,
   ManaRegenSys,
   MerchantSys,
   StatusEffectsSys,
