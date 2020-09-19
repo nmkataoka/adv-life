@@ -1,5 +1,3 @@
-import { NComponent } from '../../0-engine/ECS/NComponent';
+import { NComponent } from '../../0-engine';
 
-export class PlayerCmpt implements NComponent {
-
-}
+export class PlayerCmpt implements NComponent {}

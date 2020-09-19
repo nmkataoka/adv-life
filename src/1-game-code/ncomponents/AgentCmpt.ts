@@ -1,5 +1,5 @@
-import { NComponent } from '../../0-engine/ECS/NComponent';
-import { BoundAction } from '../ecsystems/Agent/BoundAction';
+import { NComponent } from '../../0-engine';
+import { BoundAction } from '../Agent/BoundAction';
 
 export class AgentCmpt implements NComponent {
   public baction?: BoundAction;
