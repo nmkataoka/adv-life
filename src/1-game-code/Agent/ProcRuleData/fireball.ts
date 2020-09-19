@@ -1,8 +1,8 @@
 import { ProcRule, ExecutorStatus } from '../ProcRule';
 import { GetComponent, GetComponentManager } from '../../../0-engine';
 import { HealthCmpt } from '../../ncomponents/HealthCmpt';
-import { CombatStatsCmpt } from '../../ncomponents/CombatStatsCmpt';
-import { CombatPositionCmpt } from '../../ncomponents/CombatPositionCmpt';
+import { CombatStatsCmpt } from '../../Combat/CombatStatsCmpt';
+import { CombatPositionCmpt } from '../../Combat/CombatPositionCmpt';
 import { FactionCmpt } from '../../ncomponents/FactionCmpt';
 import { ComponentManager } from '../../../0-engine/ECS/ComponentManager';
 import { createChannelTime } from '../ProcRuleDataHelpers';

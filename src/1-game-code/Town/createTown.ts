@@ -1,6 +1,6 @@
-import { Entity } from '../../0-engine';
-import { EntityManager } from '../../0-engine';
-import { TownLocationsCmpt, NameCmpt } from '../ncomponents';
+import { Entity, EntityManager } from '../../0-engine';
+import { TownLocationsCmpt } from './TownLocationsCmpt';
+import { NameCmpt } from '../ncomponents';
 import { createMerchant } from '../Merchant/createMerchant';
 
 export const createTown = (name = 'unnamed'): Entity => {

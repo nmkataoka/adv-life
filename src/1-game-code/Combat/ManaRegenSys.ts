@@ -1,5 +1,5 @@
 import { ECSystem } from '../../0-engine/ECS/ECSystem';
-import { CombatStatsCmpt } from '../ncomponents/CombatStatsCmpt';
+import { CombatStatsCmpt } from './CombatStatsCmpt';
 
 export class ManaRegenSys extends ECSystem {
   public Start(): void {}

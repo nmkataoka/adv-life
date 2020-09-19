@@ -1,6 +1,6 @@
 import { ProcRule, ExecutorStatus } from '../ProcRule';
 import { GetComponent } from '../../../0-engine';
-import { StatusEffectsCmpt } from '../../ncomponents/StatusEffectsCmpt';
+import { StatusEffectsCmpt } from '../../Combat/StatusEffectsCmpt';
 
 export const recover = new ProcRule('recover', () => {
   let timePassed = 0;

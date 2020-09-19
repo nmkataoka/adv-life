@@ -2,7 +2,7 @@ import { ECSystemConstructor } from './ECS/types/ECSystemTypes';
 import { AgentSys } from '../1-game-code/Agent/AgentSys';
 import { AttackSys } from '../1-game-code/Combat/AttackSys';
 import { ManaRegenSys } from '../1-game-code/Combat/ManaRegenSys';
-import { StatusEffectsSys } from '../1-game-code/Agent/StatusEffectsSys';
+import { StatusEffectsSys } from '../1-game-code/Combat/StatusEffectsSys';
 import { EventSys } from './ECS/event-system/EventSys';
 import { CombatLogSys } from '../1-game-code/Combat/CombatLogSys';
 import { CharacterCreationSys } from '../1-game-code/CharacterCreation/CharacterCreationSys';

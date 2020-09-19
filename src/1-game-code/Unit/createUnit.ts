@@ -1,4 +1,4 @@
-import { EntityManager } from '../../0-engine';
+import { EntityManager, Entity } from '../../0-engine';
 import { HealthCmpt } from '../ncomponents/HealthCmpt';
 import {
   AgentCmpt,
@@ -7,9 +7,9 @@ import {
   CombatStatsCmpt,
   FactionCmpt,
   InventoryCmpt,
-  StatusEffectsCmpt,
 } from '../ncomponents';
-import { Entity } from '../../0-engine';
+import { StatusEffectsCmpt } from '../Combat/StatusEffectsCmpt';
+
 import { GoalQueueCmpt } from '../Agent/GoalQueueCmpt';
 
 export const createUnit = (position: number, isEnemy = false): Entity => {

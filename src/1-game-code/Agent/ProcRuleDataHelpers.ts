@@ -1,4 +1,4 @@
-import { StatusEffectsCmpt } from '../ncomponents/StatusEffectsCmpt';
+import { StatusEffectsCmpt } from '../Combat/StatusEffectsCmpt';
 import { GetComponent } from '../../0-engine';
 
 // eslint-disable-next-line import/prefer-default-export
