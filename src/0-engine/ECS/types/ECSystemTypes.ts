@@ -1,14 +1,6 @@
 import { ECSystem } from '../ECSystem';
-import {
-  GetComponentFuncType,
-  GetComponentManagerFuncType,
-  GetComponentUncertainFuncType,
-} from './EntityManagerAccessorTypes';
+import { EntityManager } from '../EntityManager';
 
 export interface ECSystemConstructor<C extends ECSystem> {
-  new (
-    getComponent: GetComponentFuncType,
-    getComponentManager: GetComponentManagerFuncType,
-    getComponentUncertain: GetComponentUncertainFuncType,
-  ): C;
+  new (eMgr: EntityManager): C;
 }

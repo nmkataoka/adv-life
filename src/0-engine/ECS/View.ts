@@ -10,20 +10,19 @@ type CMgrs<T extends NComponentConstructorArray> = {
 
 type CsFromConstructors<T extends NComponentConstructorArray> = {
   [K in keyof T]: T[K] extends NComponentConstructor<infer C> ? C : never;
-}
+};
 
 export function GetView<T extends NComponentConstructorArray>(
+  eMgr: EntityManager,
   without: number,
   ...cons: T
 ): View<T> {
-  return new View(without, ...cons);
+  return new View(eMgr, without, ...cons);
 }
 
 export class View<T extends NComponentConstructorArray> {
-  constructor(without: number, ...cons: T) {
-    this.cMgrs = cons.map(
-      (CClass) => EntityManager.instance.GetComponentManager(CClass),
-    ) as CMgrs<T>;
+  constructor(eMgr: EntityManager, without: number, ...cons: T) {
+    this.cMgrs = cons.map((CClass) => eMgr.GetComponentManager(CClass)) as CMgrs<T>;
 
     this.entities = FindEntitiesWithComponents(this.cMgrs, without);
   }
@@ -43,16 +42,14 @@ export class View<T extends NComponentConstructorArray> {
   public ForEach(func: (e: string, components: CsFromConstructors<T>) => void): void {
     for (let i = 0; i < this.Count; ++i) {
       const e = this.At(i);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       const components = this.cMgrs.map((cMgr) => cMgr.GetByNumber(e)) as CsFromConstructors<T>;
       func(e, components);
     }
   }
 }
 
-function FindEntitiesWithComponents(
-  cMgrs: ComponentManager<any, any>[],
-  without: number,
-): string[] {
+function FindEntitiesWithComponents(cMgrs: ComponentManager<any, any>[], without: number): string[] {
   const requiredCMgrs = cMgrs.slice(0, cMgrs.length - without);
   const withoutCMgrs = cMgrs.slice(cMgrs.length - without);
 

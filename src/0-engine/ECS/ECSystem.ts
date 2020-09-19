@@ -1,3 +1,4 @@
+import { EntityManager } from './EntityManager';
 import {
   GetComponentFuncType,
   GetComponentManagerFuncType,
@@ -9,14 +10,11 @@ export abstract class ECSystem {
 
   public abstract OnUpdate(dt: number): void;
 
-  constructor(
-    getComponent: GetComponentFuncType,
-    getComponentManager: GetComponentManagerFuncType,
-    getComponentUncertain: GetComponentUncertainFuncType,
-  ) {
-    this.GetComponent = getComponent;
-    this.GetComponentManager = getComponentManager;
-    this.GetComponentUncertain = getComponentUncertain;
+  constructor(eMgr: EntityManager) {
+    this.eMgr = eMgr;
+    this.GetComponent = eMgr.GetComponent;
+    this.GetComponentManager = eMgr.GetComponentManager;
+    this.GetComponentUncertain = eMgr.GetComponentUncertain;
   }
 
   protected GetComponent: GetComponentFuncType;
@@ -24,4 +22,6 @@ export abstract class ECSystem {
   protected GetComponentManager: GetComponentManagerFuncType;
 
   protected GetComponentUncertain: GetComponentUncertainFuncType;
+
+  protected eMgr: EntityManager;
 }

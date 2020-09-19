@@ -1,0 +1,57 @@
+import { createEmptyEntityManager } from '../../../../0-engine/ECS/test-helpers/CreateEntityManager';
+import { EntityManager } from '../../../../0-engine/ECS/EntityManager';
+import EntityRelationshipTemplate, { IEntityRelationship } from './EntityRelationshipTemplate';
+import { NComponent } from '../../../../0-engine/ECS/NComponent';
+
+class HasA implements NComponent, IEntityRelationship {
+  public ownedObjectEntity = -1;
+
+  public getChildren(): number[] {
+    return [this.ownedObjectEntity];
+  }
+}
+
+describe('EntityRelationshipTemplate', () => {
+  let eMgr: EntityManager;
+
+  beforeEach(() => {
+    eMgr = createEmptyEntityManager();
+  });
+
+  it('checkValid should succeed for a simple HasA relationship', () => {
+    const parent = eMgr.CreateEntity();
+    const child = eMgr.CreateEntity();
+
+    const hasA = new HasA();
+    hasA.ownedObjectEntity = child.handle;
+
+    eMgr.AddComponent(parent, hasA);
+
+    const entityRelationshipTemplate = new EntityRelationshipTemplate(HasA);
+    expect(entityRelationshipTemplate.checkValid(parent.handle, child.handle, eMgr)).toBe(true);
+  });
+
+  it('checkValid should fail if parent lacks EntityRelationship component', () => {
+    const parent = eMgr.CreateEntity();
+    const child = eMgr.CreateEntity();
+
+    const hasA = new HasA();
+    hasA.ownedObjectEntity = child.handle;
+
+    eMgr.AddComponent(parent, hasA);
+
+    const entityRelationshipTemplate = new EntityRelationshipTemplate(HasA);
+    expect(entityRelationshipTemplate.checkValid(child.handle, parent.handle, eMgr)).toBe(false);
+  });
+
+  it('checkValid should fail if relationship does not exist', () => {
+    const parent = eMgr.CreateEntity();
+    const child = eMgr.CreateEntity();
+
+    const hasA = new HasA();
+    eMgr.AddComponent(parent, hasA);
+
+    const entityRelationshipTemplate = new EntityRelationshipTemplate(HasA);
+    expect(entityRelationshipTemplate.checkValid(child.handle, parent.handle, eMgr)).toBe(false);
+  });
+});

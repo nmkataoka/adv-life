@@ -1,1 +1,6 @@
 comment: false
+ignore:
+  - "src/3-frontend-api"
+  - "src/5-react-components"
+  - "src/6-ui-features"
+  - "src/7-app"

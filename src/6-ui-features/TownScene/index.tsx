@@ -1,15 +1,51 @@
-import React from 'react';
+import React, { useMemo, useEffect } from 'react';
 import styled from '@emotion/styled';
-import TownLocation from './TownLocation';
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import TownLocation from '../TownLocation';
+import PartySummary from './PartySummary';
+import useUILoop from '../useUILoop';
+import { updateTownsFromEngine } from '../Towns/townSlice';
+import { RootState } from '../../7-app/types';
+import { updateTownLocationsFromEngine } from '../TownLocation/townLocationsSlice';
+import { changedTitle } from '../TopBar/topBarSlice';
 
-const locations = ["Blacksmith's", 'Guild', 'Marketplace', "Alchemist's"];
+const selectTownLocations = (state: RootState) => {
+  const curTownId = state.townScene.currentTownId;
+  const { byId: { [curTownId]: town } } = state.towns;
+
+  let locationIds: number[] = [];
+  let name = 'Unnamed';
+  if (town) {
+    ({ locationIds, name } = town);
+  }
+  return { townId: curTownId, townLocationIds: locationIds, townName: name };
+};
 
 export default function TownScene(): JSX.Element {
+  const dispatch = useDispatch();
+  const { townId, townLocationIds, townName } = useSelector(selectTownLocations, shallowEqual);
+  const engineUpdates = useMemo(() => [
+    updateTownsFromEngine,
+    () => updateTownLocationsFromEngine(townLocationIds),
+  ], [townLocationIds]);
+  useUILoop(engineUpdates);
+
+  useEffect(() => {
+    dispatch(changedTitle(townName));
+  }, [dispatch, townName]);
+
+  if (townId < 0) {
+    return <Container><MainContent>ERROR: townId is less than 0</MainContent></Container>;
+  }
+
   return (
     <Container>
       <MainContent>
+        <PartySummary />
         <LocationContainer>
-          {locations.map((name) => <TownLocation key={name} name={name} />)}
+          {townLocationIds.map(
+            (townLocationId) => <TownLocation key={townLocationId} townLocationId={townLocationId} />,
+          )}
         </LocationContainer>
       </MainContent>
     </Container>
@@ -27,12 +63,13 @@ const MainContent = styled.div`
   flex: 1 1 100%;
   display: flex;
   position: relative;
-  flex-direction: column;
   justify-content: center;
   align-content: center;
 `;
 
 const LocationContainer = styled.div`
+  align-items: center;
   display: flex;
+  flex: 1 0 auto;
   justify-content: space-around;
 `;

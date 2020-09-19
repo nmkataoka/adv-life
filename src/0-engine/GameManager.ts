@@ -1,14 +1,10 @@
 import { EntityManager } from './ECS/EntityManager';
-import { HealthCmpt } from '../1- ncomponents/HealthCmpt';
-import { CanAttackCmpt } from '../1- ncomponents/CanAttackCmpt';
-import { WeaponCmpt } from '../1- ncomponents/WeaponCmpt';
-import { FactionCmpt } from '../1- ncomponents/FactionCmpt';
-import { CombatPositionCmpt } from '../1- ncomponents/CombatPositionCmpt';
-import { CombatStatsCmpt } from '../1- ncomponents/CombatStatsCmpt';
-import { AgentCmpt } from '../1- ncomponents/AgentCmpt';
-import { GoalQueueCmpt } from '../2-ecsystems/Agent/GoalQueueCmpt';
-import { StatusEffectsCmpt } from '../1- ncomponents/StatusEffectsCmpt';
+import { createUnit } from '../1-game-code/ecsystems/Unit/createUnit';
+import ControllerList from './ControllerList';
 import SystemList from './SystemList';
+import { createTown } from '../1-game-code/ecsystems/Town/createTown';
+import { RequestData, Router } from './API/Router';
+import { EventSys } from './ECS/event-system/EventSys';
 
 export class GameManager {
   public static readonly FPS = 3;
@@ -19,55 +15,45 @@ export class GameManager {
 
   public eMgr: EntityManager;
 
+  public router: Router;
+
   public isPaused = false;
 
   constructor() {
-    this.RegisterSystems();
-    this.eMgr = new EntityManager();
+    this.eMgr = new EntityManager(SystemList);
+    this.router = new Router(ControllerList);
   }
 
   public Start(): void {
     this.eMgr.Start();
+    this.router.Start(this.eMgr.GetSystem(EventSys));
+    this.CreateMap();
     this.CreateUnits();
     this.EnterGameLoop();
   }
 
+  public HandleRequest = <Data>(routeName: string, data: RequestData<Data>): void => {
+    this.router.handleRequest(routeName, data);
+  };
+
   public SetPaused(nextState: boolean): void {
     this.isPaused = nextState;
-  }
-
-  private RegisterSystems(): void {
-    EntityManager.SystemConstructors = SystemList;
   }
 
   private GameLoopHandle?: NodeJS.Timeout;
 
   private CreateUnits(): void {
     for (let i = 0; i < 3; ++i) {
-      this.CreateUnit(i);
+      createUnit(i);
     }
     for (let i = 0; i < 3; ++i) {
-      this.CreateUnit(i, true);
+      createUnit(i, true);
     }
   }
 
-  private CreateUnit(position: number, isEnemy = false): void {
-    const e = this.eMgr.CreateEntity();
-    this.eMgr.AddComponent(e, new HealthCmpt());
-    this.eMgr.AddComponent(e, new CombatStatsCmpt());
-    this.eMgr.AddComponent(e, new CanAttackCmpt());
-    this.eMgr.AddComponent(e, new WeaponCmpt());
-    this.eMgr.AddComponent(e, new AgentCmpt());
-    this.eMgr.AddComponent(e, new StatusEffectsCmpt());
-    if (!isEnemy) {
-      this.eMgr.AddComponent(e, new GoalQueueCmpt());
-    }
-    const combatPos = new CombatPositionCmpt();
-    combatPos.position = position;
-    this.eMgr.AddComponent(e, combatPos);
-    const faction = new FactionCmpt();
-    faction.isEnemy = isEnemy;
-    this.eMgr.AddComponent(e, faction);
+  private CreateMap(): void {
+    createTown('Quietwater');
+    createTown('Wandermere');
   }
 
   private EnterGameLoop(): void {

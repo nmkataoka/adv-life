@@ -8,13 +8,12 @@ import {
   GetComponentManagerFuncType,
   GetComponentUncertainFuncType,
 } from './types/EntityManagerAccessorTypes';
+import { NameCmpt } from './built-in-components';
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
 
   public static instance: EntityManager;
-
-  public static SystemConstructors: ECSystemConstructor<any>[] = [];
 
   private count = 0;
 
@@ -27,14 +26,14 @@ export class EntityManager {
   private entitiesToDestroy: (Entity | number)[] = [];
 
   // For testing purposes, specific systems can be passed
-  constructor(systemConstructors?: ECSystemConstructor<any>[]) {
+  constructor(systemConstructors: ECSystemConstructor<any>[]) {
     EntityManager.instance = this;
 
     this.systems = {};
 
-    const systemsToCreate = systemConstructors ?? EntityManager.SystemConstructors;
+    const systemsToCreate = systemConstructors;
     const createSystem = (S: ECSystemConstructor<any>) => {
-      this.systems[S.name] = new S(GetComponent, GetComponentManager, GetComponentUncertain);
+      this.systems[S.name] = new S(this);
     };
     systemsToCreate.forEach(createSystem);
 
@@ -50,7 +49,7 @@ export class EntityManager {
     this.DestroyQueuedEntities();
   }
 
-  public CreateEntity(): Entity {
+  public CreateEntity(name?: string): Entity {
     if (this.count === EntityManager.MAX_ENTITIES) {
       throw new Error('Used all available entities');
     }
@@ -58,13 +57,19 @@ export class EntityManager {
     this.IncrementNextEntityId();
     const e = new Entity(this.nextEntityId);
     ++this.count;
+
+    if (name) {
+      const nameCmpt = new NameCmpt();
+      nameCmpt.name = name;
+      this.AddComponent(e, nameCmpt);
+    }
+
     return e;
   }
 
-  public GetComponentManager<
-    CClass extends NComponentConstructor<C>,
-    C = InstanceType<CClass>
-  >(c: CClass): ComponentManager<C, CClass> {
+  public GetComponentManager = <CClass extends NComponentConstructor<C>, C = InstanceType<CClass>>(
+    c: CClass,
+  ): ComponentManager<C, CClass> => {
     let cMgr = this.cMgrs[c.name];
 
     // Create componentManager if it doesn't exist
@@ -73,36 +78,32 @@ export class EntityManager {
       this.cMgrs[c.name] = cMgr;
     }
     return cMgr as ComponentManager<C, CClass>;
-  }
+  };
 
-  public GetComponent<
-    CClass extends NComponentConstructor<C>,
-    C = InstanceType<CClass>
-  >(cclass: CClass, entityHandle: number): C {
+  public GetComponent = <CClass extends NComponentConstructor<C>, C = InstanceType<CClass>>(
+    cclass: CClass,
+    entityHandle: number,
+  ): C => {
     const cMgr = this.GetComponentManager<CClass, C>(cclass);
     return cMgr.GetByNumber(entityHandle);
-  }
+  };
 
-  public GetComponentUncertain<
-    CClass extends NComponentConstructor<C>,
-    C = InstanceType<CClass>
-  >(cclass: CClass, entityHandle: number): C | undefined {
+  public GetComponentUncertain = <CClass extends NComponentConstructor<C>, C = InstanceType<CClass>>(
+    cclass: CClass,
+    entityHandle: number,
+  ): C | undefined => {
     const cMgr = this.GetComponentManager<CClass, C>(cclass);
     return cMgr.GetByNumberUncertain(entityHandle);
-  }
+  };
 
-  public AddComponent<C extends NComponent, CClass extends NComponentConstructor<C>>(
-    e: Entity,
-    c: C,
-  ): void {
+  public AddComponent<C extends NComponent, CClass extends NComponentConstructor<C>>(e: Entity, c: C): void {
     const cMgr = this.GetComponentManager<CClass, C>(c.constructor as CClass);
     cMgr.Add(e, c);
   }
 
-  public GetSystem<
-    CClass extends ECSystemConstructor<C>,
-    C extends ECSystem = InstanceType<CClass>
-  >(cclass: CClass): C {
+  public GetSystem<CClass extends ECSystemConstructor<C>, C extends ECSystem = InstanceType<CClass>>(
+    cclass: CClass,
+  ): C {
     return this.systems[cclass.name] as C;
   }
 
@@ -130,27 +131,32 @@ export class EntityManager {
   }
 }
 
+/** @deprecated Avoid global accessor functions */
 export const GetComponentManager: GetComponentManagerFuncType = <
   CClass extends NComponentConstructor<C>,
   C = InstanceType<CClass>
->(cclass: CClass): ComponentManager<C, CClass> =>
-  EntityManager.instance.GetComponentManager<CClass, C>(cclass);
+>(
+  cclass: CClass,
+): ComponentManager<C, CClass> => EntityManager.instance.GetComponentManager<CClass, C>(cclass);
 
-export const GetComponent: GetComponentFuncType = <
-  CClass extends NComponentConstructor<C>,
-  C = InstanceType<CClass>
->(cclass: CClass, entity: number): C =>
-  EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumber(entity);
+/** @deprecated Avoid global accessor functions */
+export const GetComponent: GetComponentFuncType = <CClass extends NComponentConstructor<C>, C = InstanceType<CClass>>(
+  cclass: CClass,
+  entity: number,
+): C => EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumber(entity);
 
+/** @deprecated Avoid global accessor functions */
 export const GetComponentUncertain: GetComponentUncertainFuncType = <
   CClass extends NComponentConstructor<C>,
   C = InstanceType<CClass>
->(cclass: CClass, entity: number): C | undefined =>
-  EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumberUncertain(entity);
+>(
+  cclass: CClass,
+  entity: number,
+): C | undefined => EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumberUncertain(entity);
 
-export function GetSystem<
-  CClass extends ECSystemConstructor<C>,
-  C extends ECSystem = InstanceType<CClass>
->(cclass: CClass): C {
+/** @deprecated Avoid global accessor functions */
+export function GetSystem<CClass extends ECSystemConstructor<C>, C extends ECSystem = InstanceType<CClass>>(
+  cclass: CClass,
+): C {
   return EntityManager.instance.GetSystem(cclass);
 }

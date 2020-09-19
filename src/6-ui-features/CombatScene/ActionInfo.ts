@@ -1,4 +1,4 @@
-import { ProcRuleData } from '../../2-ecsystems/Agent/ProcRuleData';
+import { ProcRuleData } from '../../1-game-code/ecsystems/Agent/ProcRuleData';
 
 export type ActionInfo = {
   name: string;

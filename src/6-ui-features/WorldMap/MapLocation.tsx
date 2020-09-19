@@ -5,6 +5,7 @@ type MapLocationProps = {
   name: string;
   onClick?: () => void;
 }
+
 export default function MapLocation({ name, onClick }: MapLocationProps): JSX.Element {
   return <Button onClick={onClick}>{name}</Button>;
 }

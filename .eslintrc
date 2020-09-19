@@ -7,20 +7,22 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:import/typescript"
+    "plugin:import/typescript",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended" 
   ],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
   "rules": {
     "class-methods-use-this": 0,
-    // "import/no-cycle": 0,
+    "import/no-cycle": 0,
     "implicit-arrow-linebreak": 0,
     "import/prefer-default-export": 0,
     "import/extensions": ["off"],
     "indent": 0, // using @typescript-eslint/indent
     "max-classes-per-file": 0,
-    "max-len": ["warn", { "code": 120 }],
+    "max-len": 0, // disabled because we have prettier
     "no-mixed-operators": 0,
     "no-param-reassign": 0,
     "no-plusplus": 0,
@@ -28,6 +30,8 @@
     "object-curly-spacing": ["error", "always"],
     "prefer-destructuring": ["error", { "object": true, "array": false }],
     "react/jsx-filename-extension": 0,
+    "react/jsx-indent": 0, // disabled because we have prettier
+    "react/jsx-one-expression-per-line": 0, // disabled because we have prettier
     "react/prop-types": 0,
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
