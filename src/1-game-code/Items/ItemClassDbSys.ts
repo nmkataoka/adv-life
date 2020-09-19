@@ -9,7 +9,7 @@ export class ItemClassDbSys extends ECSystem {
     for (let i = 0; i < itemClassesData.length; ++i) {
       const itemClassData = itemClassesData[i];
       const newItemClass = new ItemClass(itemClassData);
-      itemClassDbCmpt.itemClasses.push(newItemClass);
+      itemClassDbCmpt.addItemClass(newItemClass.name, newItemClass);
     }
   };
 
