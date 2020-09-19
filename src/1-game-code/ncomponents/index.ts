@@ -5,7 +5,7 @@ export { CombatPositionCmpt } from './CombatPositionCmpt';
 export { CombatStatsCmpt } from './CombatStatsCmpt';
 export { FactionCmpt } from './FactionCmpt';
 export { HealthCmpt } from './HealthCmpt';
-export { HeldItemsCmpt, InventoryCmpt, WornItemsCmpt } from '../ecsystems/Inventory';
+export { HeldItemsCmpt, InventoryCmpt, WornItemsCmpt } from '../Inventory';
 export * from './Items';
 export { NameCmpt } from '../../0-engine/ECS/built-in-components/NameCmpt';
 export type { PersonalityArray } from './PersonalityCmpt';

@@ -1,4 +1,4 @@
-import { GetView } from '../../0-engine/ECS/View';
+import { GetView } from '../../0-engine';
 import { TownLocationsCmpt } from '../../1-game-code/ncomponents';
 import { TownsDict } from './TownInfo';
 import { GameManager } from '../../0-engine/GameManager';

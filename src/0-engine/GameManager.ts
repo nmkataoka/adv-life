@@ -1,8 +1,8 @@
 import { EntityManager } from './ECS/EntityManager';
-import { createUnit } from '../1-game-code/ecsystems/Unit/createUnit';
+import { createUnit } from '../1-game-code/Unit/createUnit';
 import ControllerList from './ControllerList';
 import SystemList from './SystemList';
-import { createTown } from '../1-game-code/ecsystems/Town/createTown';
+import { createTown } from '../1-game-code/Town/createTown';
 import { RequestData, Router } from './API/Router';
 import { EventSys } from './ECS/event-system/EventSys';
 

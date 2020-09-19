@@ -1,12 +1,12 @@
 import { ECSystemConstructor } from './ECS/types/ECSystemTypes';
-import { AgentSys } from '../1-game-code/ecsystems/Agent/AgentSys';
-import { AttackSys } from '../1-game-code/ecsystems/AttackSys';
-import { ManaRegenSys } from '../1-game-code/ecsystems/ManaRegenSys';
-import { StatusEffectsSys } from '../1-game-code/ecsystems/Agent/StatusEffectsSys';
+import { AgentSys } from '../1-game-code/Agent/AgentSys';
+import { AttackSys } from '../1-game-code/Combat/AttackSys';
+import { ManaRegenSys } from '../1-game-code/Combat/ManaRegenSys';
+import { StatusEffectsSys } from '../1-game-code/Agent/StatusEffectsSys';
 import { EventSys } from './ECS/event-system/EventSys';
-import { CombatLogSys } from '../1-game-code/ecsystems/Combat/CombatLogSys';
-import { CharacterCreationSys } from '../1-game-code/ecsystems/CharacterCreation/CharacterCreationSys';
-import { MerchantSys } from '../1-game-code/ecsystems/Merchant/MerchantSys';
+import { CombatLogSys } from '../1-game-code/Combat/CombatLogSys';
+import { CharacterCreationSys } from '../1-game-code/CharacterCreation/CharacterCreationSys';
+import { MerchantSys } from '../1-game-code/Merchant/MerchantSys';
 
 const SystemList: ECSystemConstructor<any>[] = [
   // Core systems

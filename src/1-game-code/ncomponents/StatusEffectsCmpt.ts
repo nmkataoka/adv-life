@@ -1,4 +1,4 @@
-import { NComponent } from '../../0-engine/ECS/NComponent';
+import { NComponent } from '../../0-engine';
 import { StatusEffect, StatusAbility, StatusAbilityToStatusEffects } from './StatusEffectConstants';
 
 export class StatusEffectsCmpt implements NComponent {
@@ -7,7 +7,8 @@ export class StatusEffectsCmpt implements NComponent {
       (record: Partial<ActiveStatusEffectsRecord>, key) => {
         record[key as keyof typeof StatusEffect] = [];
         return record;
-      }, {},
+      },
+      {},
     ) as ActiveStatusEffectsRecord;
 
     this.statusAbilities = [];
@@ -18,7 +19,7 @@ export class StatusEffectsCmpt implements NComponent {
 
   public StartEffect(
     statusEffect: keyof typeof StatusEffect,
-    data: {severity: number; duration: number},
+    data: { severity: number; duration: number },
   ) {
     const { severity, duration } = data;
     this.activeStatusEffects[statusEffect].push({
@@ -71,7 +72,9 @@ export class StatusEffectsCmpt implements NComponent {
       // If statusAbility is a Min/Max aggregated field and this is NOT the extreme value,
       // we are certain that the extreme value still exists
       // eslint-disable-next-line max-len
-      const statusAbilityIsUnaffected = statusAbility > StatusAbility.USE_MAX_TO_AGGREGATE && severity !== this.statusAbilities[statusAbility];
+      const statusAbilityIsUnaffected =
+        statusAbility > StatusAbility.USE_MAX_TO_AGGREGATE &&
+        severity !== this.statusAbilities[statusAbility];
       if (!statusAbilityIsUnaffected) {
         this.RecalculateStatusAbility(statusAbility);
       }
@@ -140,4 +143,4 @@ export type ActiveStatusEffectData = {
   severity: number;
   remainingDuration: number;
   totalDuration: number;
-}
+};

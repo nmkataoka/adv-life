@@ -1,9 +1,9 @@
-import { NComponent } from '../../../0-engine/ECS/NComponent';
+import { NComponent } from '../../../0-engine';
 
 export enum WeaponType {
   Spear,
   Sword,
-  Bow
+  Bow,
 }
 
 export class WeaponTypeCmpt implements NComponent {

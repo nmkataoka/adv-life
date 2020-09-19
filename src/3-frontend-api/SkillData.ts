@@ -1,4 +1,4 @@
-import { EntityManager } from '../0-engine/ECS/EntityManager';
+import { EntityManager } from '../0-engine';
 import { CombatStatsCmpt } from '../1-game-code/ncomponents/CombatStatsCmpt';
 
 export function getSkillData(user: number, targets: number[], skillName: string) {
