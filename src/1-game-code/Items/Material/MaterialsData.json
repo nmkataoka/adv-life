@@ -1,0 +1,32 @@
+[
+  {
+    "name": "chert",
+    "density": 2.6,
+    "hardness": 850,
+    "value": 2
+  },
+  {
+    "name": "granite",
+    "density": 2.75,
+    "hardness": 700,
+    "value": 1
+  },
+  {
+    "name": "bronze",
+    "density": 8.77,
+    "hardness": 500,
+    "value": 50
+  },
+  {
+    "name": "iron",
+    "density": 7.87,
+    "hardness": 400,
+    "value": 30
+  },
+  {
+    "name": "diamond",
+    "density": 3.51,
+    "hardness": 100,
+    "value": 500
+  }
+]
