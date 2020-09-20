@@ -1,7 +1,7 @@
 export class Datum {
   constructor(partial: PartialDataType<Datum>) {
     this.name = partial.name;
-    // Object.assign(this, partial);
+    Object.assign(this, partial);
   }
 
   public name: string;

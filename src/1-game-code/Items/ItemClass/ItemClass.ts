@@ -1,12 +1,7 @@
+import { Datum } from '../../Data/Datum';
 import { ItemClassTag } from './ItemClassTag';
 
-export class ItemClass {
-  constructor(data?: Partial<ItemClass>) {
-    if (data) {
-      Object.assign(this, data);
-    }
-  }
-
+export class ItemClass extends Datum {
   public name = '';
 
   public maxStackSize = 1;
