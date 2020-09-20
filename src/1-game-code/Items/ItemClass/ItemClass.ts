@@ -1,4 +1,4 @@
-import { Datum } from '../../Data/Datum';
+import { Datum, PartialDataType } from '../../Data/Datum';
 import { ItemClassTag } from './ItemClassTag';
 
 export class ItemClass extends Datum {
@@ -11,4 +11,10 @@ export class ItemClass extends Datum {
   public harvestableResources = [];
 
   public itemClassTags: ItemClassTag[] = [];
+
+  constructor(data: PartialDataType<ItemClass>) {
+    super();
+    Object.assign(this, data);
+    this.init(data);
+  }
 }

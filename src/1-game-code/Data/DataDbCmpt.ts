@@ -6,21 +6,26 @@ export class DataDbCmpt<DataType extends Datum> implements NComponent {
     this.DatumClass = datumClass;
   }
 
-  public addDatum = (datumName: string, partialDatum: PartialDataType<DataType>): number => {
+  public addDatum = (partialDatum: PartialDataType<DataType>): number => {
+    const datumName = partialDatum.name;
     if (this.datumIdFromName[datumName] != null) {
-      throw new Error(`${this.name} ${datumName} already exists`);
+      throw new Error(`${this.DatumClass.name} ${datumName} already exists`);
     }
 
     const newId = this.datumNameFromId.length;
-    this.datumNameFromId.push(datumName);
     const datum = new this.DatumClass(partialDatum);
+    this.datumNameFromId.push(datumName);
     this.data.push(datum);
     this.datumIdFromName[datumName] = newId;
     return newId;
   };
 
   public get = (datumId: number): DataType => {
-    return this.data[datumId];
+    const datum = this.data[datumId];
+    if (datum == null) {
+      throw new Error(`${this.DatumClass.name} datum not found with id: ${datumId}`);
+    }
+    return datum;
   };
 
   public getByName = (datumName: string): DataType => {
@@ -29,21 +34,24 @@ export class DataDbCmpt<DataType extends Datum> implements NComponent {
   };
 
   public getIdFromName = (datumName: string): number => {
-    return this.datumIdFromName[datumName];
+    const id = this.datumIdFromName[datumName];
+    if (id == null) {
+      throw new Error(`${this.DatumClass.name} name not found: ${datumName}`);
+    }
+    return id;
   };
 
   public getNameFromId = (datumId: number): string => {
-    return this.datumNameFromId[datumId];
+    const datumName = this.datumNameFromId[datumId];
+    if (datumName == null) {
+      throw new Error(`${this.DatumClass.name} id not found: ${datumId}`);
+    }
+    return datumName;
   };
 
   /** Adds data from an data array */
   public readFromArray = (dataArr: PartialDataType<DataType>[]): void => {
-    dataArr.forEach((datum) => this.addDatum(datum.name, datum));
-  };
-
-  /** Set the component name, which is used in debugging messages */
-  public setName = (name: string): void => {
-    this.name = name;
+    dataArr.forEach((datum) => this.addDatum(datum));
   };
 
   private DatumClass: DatumConstructor<DataType>;
@@ -53,6 +61,4 @@ export class DataDbCmpt<DataType extends Datum> implements NComponent {
   private datumNameFromId: string[] = [];
 
   private datumIdFromName: { [key: string]: number } = {};
-
-  private name = 'Datum';
 }

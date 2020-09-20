@@ -1,0 +1,10 @@
+[
+  {
+    "name": "testDatum1",
+    "value": "hello"
+  },
+  {
+    "name": "testDatum2",
+    "value": "bye"
+  }
+]
