@@ -6,6 +6,10 @@ export class DataDbCmpt<DataType extends Datum> implements NComponent {
     this.DatumClass = datumClass;
   }
 
+  /** Add a datum to the db
+   * @returns {number} A number assigned to the datum, guaranteed not to change while the game is running.
+   * Use this to access the datum whenever possible.
+   */
   public addDatum = (partialDatum: PartialDataType<DataType>): number => {
     const datumName = partialDatum.name;
     if (this.datumIdFromName[datumName] != null) {
@@ -20,6 +24,7 @@ export class DataDbCmpt<DataType extends Datum> implements NComponent {
     return newId;
   };
 
+  /** Performant way to get a datum */
   public get = (datumId: number): DataType => {
     const datum = this.data[datumId];
     if (datum == null) {
@@ -28,11 +33,13 @@ export class DataDbCmpt<DataType extends Datum> implements NComponent {
     return datum;
   };
 
+  /** Get a datum by its permanent name */
   public getByName = (datumName: string): DataType => {
     const datumId = this.getIdFromName(datumName);
     return this.get(datumId);
   };
 
+  /** Get the internal id from the permanent datum name */
   public getIdFromName = (datumName: string): number => {
     const id = this.datumIdFromName[datumName];
     if (id == null) {
@@ -41,6 +48,7 @@ export class DataDbCmpt<DataType extends Datum> implements NComponent {
     return id;
   };
 
+  /** Get the permanent datum name from the internal id */
   public getNameFromId = (datumId: number): string => {
     const datumName = this.datumNameFromId[datumId];
     if (datumName == null) {
@@ -49,7 +57,7 @@ export class DataDbCmpt<DataType extends Datum> implements NComponent {
     return datumName;
   };
 
-  /** Adds data from an data array */
+  /** Adds data from an array of DataType */
   public readFromArray = (dataArr: PartialDataType<DataType>[]): void => {
     dataArr.forEach((datum) => this.addDatum(datum));
   };
@@ -58,7 +66,12 @@ export class DataDbCmpt<DataType extends Datum> implements NComponent {
 
   private data: DataType[] = [];
 
+  /** For performance, data is an array, so numeric indices are used
+   * as ids for data instead of their name strings. This allows for conversion
+   * from the data index back to the name string.
+   */
   private datumNameFromId: string[] = [];
 
+  /** Allows lookup of the data index from the datum name */
   private datumIdFromName: { [key: string]: number } = {};
 }
