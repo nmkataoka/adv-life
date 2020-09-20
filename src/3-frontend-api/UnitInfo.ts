@@ -6,6 +6,7 @@ import { CombatPositionCmpt } from '../1-game-code/Combat/CombatPositionCmpt';
 import { StatusEffectsCmpt } from '../1-game-code/Combat/StatusEffectsCmpt';
 import { GetView } from '../0-engine';
 import { GoalQueueCmpt } from '../1-game-code/Agent/GoalQueueCmpt';
+import { DictOf } from '../4-helpers/DictOf';
 
 export type UnitInfo = {
   entityHandle: number;
@@ -30,10 +31,6 @@ export type UnitInfo = {
 
   isEnemy?: boolean;
   position: number;
-};
-
-export type UnitsDict = {
-  [key: string]: UnitInfo;
 };
 
 const getHealth = (entityHandle: number) => {
@@ -102,9 +99,9 @@ const getNextBactionInfo = (entityHandle: number) => {
   return { targetEntity };
 };
 
-export const getUnitInfos = (): UnitsDict => {
+export const getUnitInfos = (): DictOf<UnitInfo> => {
   const { eMgr } = GameManager.instance;
-  const units: UnitsDict = {};
+  const units: DictOf<UnitInfo> = {};
   const unitView = GetView(eMgr, 0, HealthCmpt);
   for (let i = 0; i < unitView.Count; ++i) {
     const e = unitView.At(i);

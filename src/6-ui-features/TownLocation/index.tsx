@@ -7,7 +7,7 @@ import ShopInventory from './ShopInventory';
 
 type TownLocationProps = {
   townLocationId: number;
-}
+};
 
 const defaultTownInfo = {
   name: 'Unnamed',
@@ -15,7 +15,9 @@ const defaultTownInfo = {
 
 export default function TownLocation({ townLocationId }: TownLocationProps): JSX.Element {
   const [isShowing, setIsShowing] = useState(false);
-  const { name } = useSelector((state: RootState) => state.townLocations.byId[townLocationId] || defaultTownInfo);
+  const { name } = useSelector(
+    (state: RootState) => state.townLocations.byId[townLocationId] || defaultTownInfo,
+  );
 
   return (
     <div>
@@ -25,9 +27,7 @@ export default function TownLocation({ townLocationId }: TownLocationProps): JSX
           <ShopInventory townLocationId={townLocationId} />
         </ModalContent>
       </Modal>
-      <Container onClick={() => setIsShowing(true)}>
-        {name}
-      </Container>
+      <Container onClick={() => setIsShowing(true)}>{name}</Container>
     </div>
   );
 }

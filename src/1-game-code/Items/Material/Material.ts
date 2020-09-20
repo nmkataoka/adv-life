@@ -7,8 +7,6 @@ export class Material extends Datum {
 
   public value = 1;
 
-  public hooter = 2;
-
   constructor(data: PartialDataType<Material>) {
     super();
     Object.assign(this, data);

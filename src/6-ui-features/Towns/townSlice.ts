@@ -1,25 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk } from '../../7-app/types';
-import { TownsDict } from '../../3-frontend-api/town';
+import { TownInfo } from '../../3-frontend-api/town';
 import { getTowns } from '../../3-frontend-api/town/getTowns';
+import { DictOf } from '../../4-helpers/DictOf';
 
 const initialState = {
-  byId: {} as TownsDict,
+  byId: {} as DictOf<TownInfo>,
 };
 
 const townsSlice = createSlice({
   name: 'towns',
   initialState,
   reducers: {
-    updatedTowns(state, action: PayloadAction<TownsDict>) {
+    updatedTowns(state, action: PayloadAction<DictOf<TownInfo>>) {
       state.byId = action.payload;
     },
   },
 });
 
-export const {
-  updatedTowns,
-} = townsSlice.actions;
+export const { updatedTowns } = townsSlice.actions;
 
 export default townsSlice.reducer;
 

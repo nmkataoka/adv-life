@@ -11,7 +11,7 @@ export class ShopController extends Controller {
   public OnUpdate = (): void => {};
 
   private OnBuyItem = (
-    { headers: { userId }, payload, ack }: RequestData<{ itemId: number; sellerId: number }>,
+    { headers: { userId }, payload, ack }: RequestData<{ itemIndex: number; sellerId: number }>,
     dispatch: typeof EventSys.prototype.Dispatch,
   ): void => {
     dispatch({ type: BUY_ITEM_FROM_MERCHANT, payload: { ...payload, buyerId: userId }, ack });

@@ -1,5 +1,6 @@
-import { Entity, NComponent } from '../../0-engine';
+import { NComponent } from '../../0-engine';
+import { ItemStackCmpt } from '../Items';
 
 export class WornItemsCmpt implements NComponent {
-  public items: { itemId: Entity }[] = [];
+  public items: ItemStackCmpt[] = [];
 }

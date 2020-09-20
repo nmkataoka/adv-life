@@ -1,13 +1,8 @@
 import { GameManager } from '../../0-engine/GameManager';
-import { InventoryCmpt, NameCmpt } from '../../1-game-code/ncomponents';
-import { InventoryInfo, InventorySlotInfo } from './InventoryInfo';
+import { InventoryCmpt } from '../../1-game-code/ncomponents';
+import { defaultInventorySlotInfo, InventoryInfo, InventorySlotInfo } from './InventoryInfo';
 
-const emptyInventorySlot: InventorySlotInfo = {
-  itemId: -1,
-  name: '',
-  publicSalePrice: 0,
-  itemType: '',
-};
+const emptyInventorySlot = { ...defaultInventorySlotInfo };
 
 export const getInventoryInfo = (entityHandle: number): InventoryInfo => {
   if (entityHandle < 0) {
@@ -15,19 +10,19 @@ export const getInventoryInfo = (entityHandle: number): InventoryInfo => {
   }
 
   const { eMgr } = GameManager.instance;
-  const nameManager = eMgr.GetComponentManager(NameCmpt);
   const inventoryCmpt = eMgr.GetComponent(InventoryCmpt, entityHandle);
   const { inventorySlots, gold } = inventoryCmpt;
   const items: InventorySlotInfo[] = inventorySlots.map((slot) => {
     if (slot == null) {
       return { ...emptyInventorySlot };
     }
-    const { itemId, publicSalePrice } = slot;
+    const { health, itemClassId, materialId, publicSalePrice, stackCount } = slot;
     return {
+      health,
+      itemClassId,
+      materialId,
       publicSalePrice,
-      itemId: itemId.handle,
-      itemType: '',
-      name: nameManager.Get(itemId)?.name || '',
+      stackCount,
     };
   });
 

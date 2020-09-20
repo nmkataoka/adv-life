@@ -5,25 +5,25 @@ import { BUY_ITEM_FROM_MERCHANT } from './constants';
 
 const entityBuysItemFromMerchant = ({
   eMgr,
-  payload: { buyerId, itemId, sellerId },
+  payload: { buyerId, itemIndex, sellerId },
   ack,
-}: EventCallbackArgs<{ itemId: number; buyerId: number; sellerId: number }>) => {
+}: EventCallbackArgs<{ itemIndex: number; buyerId: number; sellerId: number }>) => {
   const inventoryCMgr = eMgr.GetComponentManager(InventoryCmpt);
   const buyerInventoryCmpt = inventoryCMgr.GetByNumber(buyerId);
   const sellerInventoryCmpt = inventoryCMgr.GetByNumber(sellerId);
-  const itemData = sellerInventoryCmpt.findItemById(itemId);
+  const item = sellerInventoryCmpt.getAt(itemIndex);
 
-  if (itemData != null) {
-    const { publicSalePrice } = itemData;
+  if (item != null) {
+    const { publicSalePrice } = item;
     if (buyerInventoryCmpt.gold < publicSalePrice) {
       ack({ status: 400, error: 'Not enough gold' });
       return;
     }
 
-    const itemIdxInBuyerInventory = buyerInventoryCmpt.addItemToNextEmptySlot(itemData);
+    const itemIdxInBuyerInventory = buyerInventoryCmpt.addItemToNextEmptySlot(item);
 
     if (itemIdxInBuyerInventory > -1) {
-      sellerInventoryCmpt.removeItemById(itemData.itemId.handle);
+      sellerInventoryCmpt.removeAt(itemIndex);
       buyerInventoryCmpt.gold -= publicSalePrice;
       sellerInventoryCmpt.gold += publicSalePrice;
       ack({ status: 200 });

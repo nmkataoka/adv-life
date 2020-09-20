@@ -7,7 +7,7 @@ import {
 import { HOLD_ITEM_FROM_INVENTORY } from './Constants';
 
 const holdItem = (
-  { headers: { userId }, payload, ack }: RequestData<{ itemId: number }>,
+  { headers: { userId }, payload, ack }: RequestData<{ itemIndex: number }>,
   dispatch: typeof EventSys.prototype.Dispatch,
 ): void => {
   dispatch({
@@ -18,7 +18,7 @@ const holdItem = (
 };
 
 const wearItem = (
-  { headers: { userId }, payload, ack }: RequestData<{ itemId: number }>,
+  { headers: { userId }, payload, ack }: RequestData<{ itemIndex: number }>,
   dispatch: typeof EventSys.prototype.Dispatch,
 ): void => {
   dispatch({

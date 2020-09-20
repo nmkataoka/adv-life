@@ -1,15 +1,10 @@
 import { NComponent } from '../../0-engine';
-import { Entity } from '../../0-engine';
-
-export type InventorySlot = {
-  itemId: Entity;
-  publicSalePrice: number;
-};
+import { ItemStackCmpt } from '../Items';
 
 export class InventoryCmpt implements NComponent {
   public gold = 0;
 
-  public inventorySlots: (InventorySlot | undefined)[];
+  public inventorySlots: (ItemStackCmpt | undefined)[];
 
   public isPlayerInventory: boolean;
 
@@ -18,36 +13,39 @@ export class InventoryCmpt implements NComponent {
     this.inventorySlots = Array(inventorySize).fill(undefined);
   }
 
-  /** @returns The index of the slot in which the item was placed */
-  public addItemToNextEmptySlot = (data: InventorySlot): number => {
+  /** Add an ItemStackCmpt to the inventory.
+   * @param {ItemStackCmpt} item An ItemStackCmpt. Should not be attached to an entity.
+   * @returns The index of the slot in which the item was placed */
+  public addItemToNextEmptySlot = (item: ItemStackCmpt): number => {
     for (let i = 0; i < this.inventorySlots.length; ++i) {
       if (this.inventorySlots[i] == null) {
-        this.inventorySlots[i] = data;
+        this.inventorySlots[i] = item;
         return i;
       }
     }
 
     if (!this.isPlayerInventory) {
       // Merchants have unlimited inventory sizes
-      this.inventorySlots.push(data);
+      this.inventorySlots.push(item);
       return this.inventorySlots.length - 1;
     }
 
     return -1;
   };
 
-  public findItemById = (itemId: number): InventorySlot | undefined => {
-    const itemData = this.inventorySlots.find((slot) => slot?.itemId.handle === itemId);
+  public getAt = (index: number): ItemStackCmpt | undefined => {
+    const itemData = this.inventorySlots[index];
     return itemData;
   };
 
-  /** For player inventories, players expect empty slots to be remembered.
-   * For merchants, leaving the deleted element saved on performance.
+  /** Leaves empty slot for performance and because for player
+   * inventories, empty slots are expected to be remembered.
    */
-  public removeItemById = (itemId: number): void => {
-    const idx = this.inventorySlots.findIndex((slot) => slot?.itemId.handle === itemId);
-    if (idx > -1) {
-      this.inventorySlots[idx] = undefined;
+  public removeAt = (index: number): void => {
+    if (index >= 0 && index < this.inventorySlots.length) {
+      this.inventorySlots[index] = undefined;
+    } else {
+      throw new Error('Index out of range');
     }
   };
 }

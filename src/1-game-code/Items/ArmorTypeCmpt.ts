@@ -1,10 +1,10 @@
 import { NComponent } from '../../0-engine';
 
 export enum ArmorType {
-  Boots,
-  Chainmail,
-  Helm,
-  Greaves,
+  Boots = 'boots',
+  Chainmail = 'chainmail',
+  Helm = 'helm',
+  Greaves = 'greaves',
 }
 
 export class ArmorTypeCmpt implements NComponent {

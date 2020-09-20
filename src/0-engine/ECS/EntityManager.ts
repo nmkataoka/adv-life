@@ -88,7 +88,10 @@ export class EntityManager {
     return cMgr.GetByNumber(entityHandle);
   };
 
-  public GetComponentUncertain = <CClass extends NComponentConstructor<C>, C = InstanceType<CClass>>(
+  public GetComponentUncertain = <
+    CClass extends NComponentConstructor<C>,
+    C = InstanceType<CClass>
+  >(
     cclass: CClass,
     entityHandle: number,
   ): C | undefined => {
@@ -96,14 +99,26 @@ export class EntityManager {
     return cMgr.GetByNumberUncertain(entityHandle);
   };
 
-  public AddComponent<C extends NComponent, CClass extends NComponentConstructor<C>>(e: Entity, c: C): void {
+  public GetUniqueComponent = <CClass extends NComponentConstructor<C>, C = InstanceType<CClass>>(
+    cclass: CClass,
+  ): C => {
+    const cMgr = this.GetComponentManager<CClass, C>(cclass);
+    const components = Object.values(cMgr.components);
+    return components[0];
+  };
+
+  public AddComponent<C extends NComponent, CClass extends NComponentConstructor<C>>(
+    e: Entity,
+    c: C,
+  ): void {
     const cMgr = this.GetComponentManager<CClass, C>(c.constructor as CClass);
     cMgr.Add(e, c);
   }
 
-  public GetSystem<CClass extends ECSystemConstructor<C>, C extends ECSystem = InstanceType<CClass>>(
-    cclass: CClass,
-  ): C {
+  public GetSystem<
+    CClass extends ECSystemConstructor<C>,
+    C extends ECSystem = InstanceType<CClass>
+  >(cclass: CClass): C {
     return this.systems[cclass.name] as C;
   }
 
@@ -140,7 +155,10 @@ export const GetComponentManager: GetComponentManagerFuncType = <
 ): ComponentManager<C, CClass> => EntityManager.instance.GetComponentManager<CClass, C>(cclass);
 
 /** @deprecated Avoid global accessor functions */
-export const GetComponent: GetComponentFuncType = <CClass extends NComponentConstructor<C>, C = InstanceType<CClass>>(
+export const GetComponent: GetComponentFuncType = <
+  CClass extends NComponentConstructor<C>,
+  C = InstanceType<CClass>
+>(
   cclass: CClass,
   entity: number,
 ): C => EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumber(entity);
@@ -152,11 +170,13 @@ export const GetComponentUncertain: GetComponentUncertainFuncType = <
 >(
   cclass: CClass,
   entity: number,
-): C | undefined => EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumberUncertain(entity);
+): C | undefined =>
+  EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumberUncertain(entity);
 
 /** @deprecated Avoid global accessor functions */
-export function GetSystem<CClass extends ECSystemConstructor<C>, C extends ECSystem = InstanceType<CClass>>(
-  cclass: CClass,
-): C {
+export function GetSystem<
+  CClass extends ECSystemConstructor<C>,
+  C extends ECSystem = InstanceType<CClass>
+>(cclass: CClass): C {
   return EntityManager.instance.GetSystem(cclass);
 }
