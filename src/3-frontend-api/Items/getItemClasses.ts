@@ -6,5 +6,10 @@ export const getItemClasses = (): ItemClassInfo[] => {
   const { eMgr } = GameManager.instance;
   const itemClassDbCmpt = eMgr.GetUniqueComponent(ItemClassDbCmpt);
   const itemClasses = itemClassDbCmpt?.getAll() ?? [];
-  return itemClasses;
+  const itemClassInfos = itemClasses.map(({ name, maxStackSize, value }) => ({
+    name,
+    maxStackSize,
+    value,
+  }));
+  return itemClassInfos;
 };

@@ -5,7 +5,7 @@ import { EntityManager } from './EntityManager';
 type NComponentConstructorArray = NComponentConstructor<any>[];
 
 type CMgrs<T extends NComponentConstructorArray> = {
-  [K in keyof T]: T[K] extends NComponentConstructor<infer C> ? ComponentManager<C, T[K]> : never;
+  [K in keyof T]: T[K] extends NComponentConstructor<infer C> ? ComponentManager<C> : never;
 };
 
 type CsFromConstructors<T extends NComponentConstructorArray> = {
@@ -49,7 +49,7 @@ export class View<T extends NComponentConstructorArray> {
   }
 }
 
-function FindEntitiesWithComponents(cMgrs: ComponentManager<any, any>[], without: number): string[] {
+function FindEntitiesWithComponents(cMgrs: ComponentManager<any>[], without: number): string[] {
   const requiredCMgrs = cMgrs.slice(0, cMgrs.length - without);
   const withoutCMgrs = cMgrs.slice(cMgrs.length - without);
 
