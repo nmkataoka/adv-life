@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getItemClasses } from '../../3-frontend-api/Items/getItemClasses';
-import { ItemClassInfo } from '../../3-frontend-api/Items/ItemClassInfo';
+import { getItemClasses } from '3-frontend-api/Items/getItemClasses';
+import { ItemClassInfo } from '3-frontend-api/Items/ItemClassInfo';
 import { DictOf } from '../../4-helpers/DictOf';
 import { AppThunk } from '../../7-app/types';
 

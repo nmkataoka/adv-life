@@ -7,7 +7,7 @@ import { ExecutorStatus } from './ProcRule';
 import { ProcRuleDbCmpt } from './ProcRuleDatabaseCmpt';
 import { GoalQueueCmpt } from './GoalQueueCmpt';
 import { FactionCmpt } from '../ncomponents/FactionCmpt';
-import { getSkillData } from '../../3-frontend-api/SkillData';
+import { getSkillData } from '3-frontend-api/SkillData';
 
 export class AgentSys extends ECSystem {
   public Start(): void {

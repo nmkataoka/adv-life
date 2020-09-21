@@ -4,8 +4,8 @@ import { GameManager } from '0-engine/GameManager';
 import { updatedUnits } from '../CombatScene/actions';
 import { AppThunk } from '../../7-app/types';
 import { PlayerCmpt } from '1-game-code/ncomponents';
-import { InventoryInfo } from '../../3-frontend-api/inventory/InventoryInfo';
-import { getInventoryInfo } from '../../3-frontend-api/inventory/getInventoryInfo';
+import { InventoryInfo } from '3-frontend-api/inventory/InventoryInfo';
+import { getInventoryInfo } from '3-frontend-api/inventory/getInventoryInfo';
 
 const initialState = {
   playerId: -1,
