@@ -20,7 +20,7 @@ export class EntityManager {
 
   private systems: { [key: string]: ECSystem };
 
-  private cMgrs: { [key: string]: ComponentManager<NComponent, NComponentConstructor<NComponent>> };
+  private cMgrs: { [key: string]: ComponentManager<NComponent> };
 
   private entitiesToDestroy: number[] = [];
 
@@ -66,51 +66,43 @@ export class EntityManager {
     return e;
   }
 
-  public GetComponentManager = <CClass extends NComponentConstructor<C>, C = InstanceType<CClass>>(
-    c: CClass,
-  ): ComponentManager<C, CClass> => {
+  public GetComponentManager = <C extends NComponent>(
+    c: NComponentConstructor<C>,
+  ): ComponentManager<C> => {
     let cMgr = this.cMgrs[c.name];
 
     // Create componentManager if it doesn't exist
     if (!cMgr) {
-      cMgr = new ComponentManager<C, CClass>(c);
+      cMgr = new ComponentManager<C>(c);
       this.cMgrs[c.name] = cMgr;
     }
-    return cMgr as ComponentManager<C, CClass>;
+    return cMgr as ComponentManager<C>;
   };
 
-  public GetComponent = <CClass extends NComponentConstructor<C>, C = InstanceType<CClass>>(
-    cclass: CClass,
+  public GetComponent = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
     entityHandle: number,
   ): C => {
-    const cMgr = this.GetComponentManager<CClass, C>(cclass);
+    const cMgr = this.GetComponentManager<C>(cclass);
     return cMgr.GetByNumber(entityHandle);
   };
 
-  public GetComponentUncertain = <
-    CClass extends NComponentConstructor<C>,
-    C = InstanceType<CClass>
-  >(
-    cclass: CClass,
+  public GetComponentUncertain = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
     entityHandle: number,
   ): C | undefined => {
-    const cMgr = this.GetComponentManager<CClass, C>(cclass);
+    const cMgr = this.GetComponentManager<C>(cclass);
     return cMgr.GetByNumberUncertain(entityHandle);
   };
 
-  public GetUniqueComponent = <CClass extends NComponentConstructor<C>, C = InstanceType<CClass>>(
-    cclass: CClass,
-  ): C => {
-    const cMgr = this.GetComponentManager<CClass, C>(cclass);
+  public GetUniqueComponent = <C extends NComponent>(cclass: NComponentConstructor<C>): C => {
+    const cMgr = this.GetComponentManager<C>(cclass);
     const components = Object.values(cMgr.components);
     return components[0];
   };
 
-  public AddComponent<C extends NComponent, CClass extends NComponentConstructor<C>>(
-    e: number,
-    c: C,
-  ): void {
-    const cMgr = this.GetComponentManager<CClass, C>(c.constructor as CClass);
+  public AddComponent<C extends NComponent>(e: number, c: C): void {
+    const cMgr = this.GetComponentManager<C>(c.constructor as NComponentConstructor<C>);
     cMgr.Add(e, c);
   }
 
@@ -146,31 +138,22 @@ export class EntityManager {
 }
 
 /** @deprecated Avoid global accessor functions */
-export const GetComponentManager: GetComponentManagerFuncType = <
-  CClass extends NComponentConstructor<C>,
-  C = InstanceType<CClass>
->(
-  cclass: CClass,
-): ComponentManager<C, CClass> => EntityManager.instance.GetComponentManager<CClass, C>(cclass);
+export const GetComponentManager: GetComponentManagerFuncType = <C extends NComponent>(
+  cclass: NComponentConstructor<C>,
+): ComponentManager<C> => EntityManager.instance.GetComponentManager<C>(cclass);
 
 /** @deprecated Avoid global accessor functions */
-export const GetComponent: GetComponentFuncType = <
-  CClass extends NComponentConstructor<C>,
-  C = InstanceType<CClass>
->(
-  cclass: CClass,
+export const GetComponent: GetComponentFuncType = <C extends NComponent>(
+  cclass: NComponentConstructor<C>,
   entity: number,
-): C => EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumber(entity);
+): C => EntityManager.instance.GetComponentManager<C>(cclass).GetByNumber(entity);
 
 /** @deprecated Avoid global accessor functions */
-export const GetComponentUncertain: GetComponentUncertainFuncType = <
-  CClass extends NComponentConstructor<C>,
-  C = InstanceType<CClass>
->(
-  cclass: CClass,
+export const GetComponentUncertain: GetComponentUncertainFuncType = <C extends NComponent>(
+  cclass: NComponentConstructor<C>,
   entity: number,
 ): C | undefined =>
-  EntityManager.instance.GetComponentManager<CClass, C>(cclass).GetByNumberUncertain(entity);
+  EntityManager.instance.GetComponentManager<C>(cclass).GetByNumberUncertain(entity);
 
 /** @deprecated Avoid global accessor functions */
 export function GetSystem<
