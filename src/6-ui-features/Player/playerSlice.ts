@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { GetView } from '0-engine';
+import { GameManager } from '0-engine/GameManager';
+import { AppThunk } from '7-app/types';
+import { PlayerCmpt } from '1-game-code/ncomponents';
+import { InventoryInfo } from '3-frontend-api/inventory/InventoryInfo';
+import { getInventoryInfo } from '3-frontend-api/inventory/getInventoryInfo';
 import { updatedUnits } from '../CombatScene/actions';
-import { AppThunk } from '../../7-app/types';
-import { GetView } from '../../0-engine';
-import { PlayerCmpt } from '../../1-game-code/ncomponents';
-import { GameManager } from '../../0-engine/GameManager';
-import { InventoryInfo } from '../../3-frontend-api/inventory/InventoryInfo';
-import { getInventoryInfo } from '../../3-frontend-api/inventory/getInventoryInfo';
 
 const initialState = {
   playerId: -1,

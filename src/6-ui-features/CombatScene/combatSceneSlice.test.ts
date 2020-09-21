@@ -1,9 +1,9 @@
 import sinon from 'sinon';
 import { configureStore, EnhancedStore } from '@reduxjs/toolkit';
+import * as UnitInfoApi from '3-frontend-api/UnitInfo';
+import { givenUnitInfo } from '3-frontend-api/givenUnitInfo';
+import rootReducer from '7-app/rootReducer';
 import { updateUnitsFromEngine } from './actions';
-import * as UnitInfoApi from '../../3-frontend-api/UnitInfo';
-import { givenUnitInfo } from '../../3-frontend-api/givenUnitInfo';
-import rootReducer from '../../7-app/rootReducer';
 
 describe('combatSceneSlice', () => {
   let store: EnhancedStore;

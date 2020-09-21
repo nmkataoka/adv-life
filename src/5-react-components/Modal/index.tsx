@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../7-app/types';
+import { RootState } from '7-app/types';
 import { usedModalZIndex } from './modalMetaSlice';
 
 type ModalProps = {

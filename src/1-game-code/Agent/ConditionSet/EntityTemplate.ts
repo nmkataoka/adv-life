@@ -1,4 +1,4 @@
-import { EntityManager, NComponentConstructor, GetView } from '../../../0-engine';
+import { EntityManager, NComponentConstructor, GetView } from '0-engine';
 
 /// Entity template base class. If a component is a subset, i.e. C1 implies C2,
 /// C2 doesn't need to be in the template.

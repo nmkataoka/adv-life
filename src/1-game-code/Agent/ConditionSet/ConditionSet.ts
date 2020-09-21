@@ -1,5 +1,5 @@
-import { EntityManager } from '../../../0-engine';
-import { swapRemoveAt } from '../../../4-helpers/ArrayExtensions';
+import { EntityManager } from '0-engine';
+import { swapRemoveAt } from '4-helpers/ArrayExtensions';
 import { ComponentTemplateBase } from './ComponentTemplate';
 import { EntityTemplateBase } from './EntityTemplate';
 import { EntityRelationshipTemplateBase } from './EntityRelationshipTemplate';

@@ -1,4 +1,4 @@
-import { ECSystem } from '../../0-engine/ECS/ECSystem';
+import { ECSystem } from '0-engine/ECS/ECSystem';
 import { CombatStatsCmpt } from './CombatStatsCmpt';
 
 export class ManaRegenSys extends ECSystem {

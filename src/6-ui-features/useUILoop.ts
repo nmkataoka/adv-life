@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { AppThunk } from '../7-app/types';
-import useTimeoutLoop from '../5-react-components/useTimeoutLoop';
+import { AppThunk } from '7-app/types';
+import useTimeoutLoop from '5-react-components/useTimeoutLoop';
 
 export type ActionCreator = () => AppThunk;
 

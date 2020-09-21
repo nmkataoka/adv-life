@@ -1,4 +1,4 @@
-import { ECSystem } from '../../../0-engine';
+import { ECSystem } from '0-engine';
 import { Material } from './Material';
 import { MaterialDbCmpt } from './MaterialDbCmpt';
 import materialsData from './MaterialsData.json';

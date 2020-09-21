@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
 import CharacterCreationNavBar from './CharacterCreationNavBar';
 import InfoWindow from './components/InfoWindow';
-import { RootState } from '../../7-app/types';
+import { RootState } from '7-app/types';
 import ScreenInfoToScreen from './components/ScreenInfoToScreen';
 import CharacterSummaryColumn from './CharacterSummaryColumn';
 import { changedTitle } from '../TopBar/topBarSlice';

@@ -1,4 +1,4 @@
-import { GameManager } from '../0-engine/GameManager';
+import { GameManager } from '0-engine/GameManager';
 
 export type AckCallback = (data: any) => void;
 

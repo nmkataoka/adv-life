@@ -1,4 +1,4 @@
-import { EntityManager } from '../../0-engine';
+import { EntityManager } from '0-engine';
 
 import {
   InventoryCmpt,

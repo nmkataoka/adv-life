@@ -1,7 +1,7 @@
 import React, { RefObject } from 'react';
 import { useSelector } from 'react-redux';
-import Arrow from '../../5-react-components/arrow';
-import { RootState } from '../../7-app/types';
+import Arrow from '5-react-components/arrow';
+import { RootState } from '7-app/types';
 import { getCoordsFromElement } from './RelativePosCoords';
 
 type ArrowFromUnitProps = {

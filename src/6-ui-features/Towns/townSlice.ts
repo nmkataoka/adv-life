@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppThunk } from '../../7-app/types';
-import { TownInfo } from '../../3-frontend-api/town';
-import { getTowns } from '../../3-frontend-api/town/getTowns';
-import { DictOf } from '../../4-helpers/DictOf';
+import { TownInfo } from '3-frontend-api/town';
+import { getTowns } from '3-frontend-api/town/getTowns';
+import { DictOf } from '4-helpers/DictOf';
+import { AppThunk } from '7-app/types';
 
 const initialState = {
   byId: {} as DictOf<TownInfo>,

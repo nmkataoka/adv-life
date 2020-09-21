@@ -1,13 +1,13 @@
-import { ECSystem } from '../../0-engine/ECS/ECSystem';
+import { ECSystem } from '0-engine/ECS/ECSystem';
+import { EntityManager } from '0-engine';
+import { GetPrdb } from '0-engine/ECS/globals/EntityManagerGlobals';
 import { AgentCmpt } from '../ncomponents/AgentCmpt';
 import { BoundActionStatus, BoundAction } from './BoundAction';
 import { ExecutorStatus } from './ProcRule';
 import { ProcRuleDbCmpt } from './ProcRuleDatabaseCmpt';
 import { GoalQueueCmpt } from './GoalQueueCmpt';
-import { EntityManager } from '../../0-engine';
 import { FactionCmpt } from '../ncomponents/FactionCmpt';
-import { GetPrdb } from '../../0-engine/ECS/globals/EntityManagerGlobals';
-import { getSkillData } from '../../3-frontend-api/SkillData';
+import { getSkillData } from '3-frontend-api/SkillData';
 
 export class AgentSys extends ECSystem {
   public Start(): void {

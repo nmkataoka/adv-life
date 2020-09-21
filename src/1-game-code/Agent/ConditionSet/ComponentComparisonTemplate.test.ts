@@ -1,5 +1,5 @@
-import { createEmptyEntityManager } from '../../../0-engine/ECS/test-helpers/CreateEntityManager';
-import { NComponent, EntityManager } from '../../../0-engine';
+import { createEmptyEntityManager } from '0-engine/ECS/test-helpers/CreateEntityManager';
+import { NComponent, EntityManager } from '0-engine';
 import ComponentComparisonTemplate from './ComponentComparisonTemplate';
 
 class TestComponent implements NComponent {

@@ -1,4 +1,4 @@
-import { EntityManager } from '../../0-engine';
+import { EntityManager } from '0-engine';
 import { TownLocationsCmpt } from './TownLocationsCmpt';
 import { NameCmpt } from '../ncomponents';
 import { createMerchant } from '../Merchant/createMerchant';

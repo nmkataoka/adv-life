@@ -1,13 +1,13 @@
+import { GetComponent, GetComponentManager } from '0-engine';
+import { ComponentManager } from '0-engine/ECS/ComponentManager';
+import { DispatchEvent } from '0-engine/ECS/globals/DispatchEvent';
 import { ProcRule, ExecutorStatus } from '../ProcRule';
-import { GetComponent, GetComponentManager } from '../../../0-engine';
 import { HealthCmpt } from '../../ncomponents/HealthCmpt';
 import { CombatStatsCmpt } from '../../Combat/CombatStatsCmpt';
 import { CombatPositionCmpt } from '../../Combat/CombatPositionCmpt';
 import { FactionCmpt } from '../../ncomponents/FactionCmpt';
-import { ComponentManager } from '../../../0-engine/ECS/ComponentManager';
 import { createChannelTime } from '../ProcRuleDataHelpers';
 import { UNIT_CAST_SPELL, UNIT_CANCELED_ACTION } from './Constants';
-import { DispatchEvent } from '../../../0-engine/ECS/globals/DispatchEvent';
 
 export const fireball = new ProcRule(
   'fireball',

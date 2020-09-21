@@ -1,6 +1,6 @@
-import { NComponent, EntityManager } from '../../../0-engine';
+import { NComponent, EntityManager } from '0-engine';
 
-import { createEmptyEntityManager } from '../../../0-engine/ECS/test-helpers/CreateEntityManager';
+import { createEmptyEntityManager } from '0-engine/ECS/test-helpers/CreateEntityManager';
 import EntityTemplate from './EntityTemplate';
 
 class Component1 implements NComponent {}

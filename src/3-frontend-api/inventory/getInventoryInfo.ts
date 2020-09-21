@@ -1,5 +1,5 @@
-import { GameManager } from '../../0-engine/GameManager';
-import { InventoryCmpt } from '../../1-game-code/ncomponents';
+import { GameManager } from '0-engine/GameManager';
+import { InventoryCmpt } from '1-game-code/ncomponents';
 import { defaultInventorySlotInfo, InventoryInfo, InventorySlotInfo } from './InventoryInfo';
 
 const emptyInventorySlot = { ...defaultInventorySlotInfo };

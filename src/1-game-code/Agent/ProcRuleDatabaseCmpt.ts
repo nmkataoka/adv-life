@@ -1,6 +1,6 @@
+import { NComponent } from '0-engine';
 import { ProcRule } from './ProcRule';
 import { ProcRuleData } from './ProcRuleData';
-import { NComponent } from '../../0-engine';
 
 export class ProcRuleDbCmpt implements NComponent {
   public procRules: ProcRule<any>[];

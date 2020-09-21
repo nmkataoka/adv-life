@@ -1,6 +1,6 @@
-import { ECSystem } from '../../0-engine/ECS/ECSystem';
-import { EventCallbackArgs } from '../../0-engine';
-import { GetEventSys } from '../../0-engine/ECS/globals/DispatchEvent';
+import { ECSystem } from '0-engine/ECS/ECSystem';
+import { EventCallbackArgs } from '0-engine';
+import { GetEventSys } from '0-engine/ECS/globals/DispatchEvent';
 import {
   UNIT_ATTACKED,
   UNIT_CAST_SPELL,

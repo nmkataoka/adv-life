@@ -1,9 +1,9 @@
-import { Controller, EventSys, RequestData, Router } from '../../../0-engine';
+import { Controller, EventSys, RequestData, Router } from '0-engine';
 import {
   HOLD_ITEM_FROM_INVENTORY as HOLD_ITEM_FROM_INVENTORY_ENGINE,
   WEAR_ITEM_FROM_INVENTORY,
   WEAR_ITEM_FROM_INVENTORY as WEAR_ITEM_FROM_INVENTORY_ENGINE,
-} from '../../../1-game-code/Inventory/Constants';
+} from '1-game-code/Inventory/Constants';
 import { HOLD_ITEM_FROM_INVENTORY } from './Constants';
 
 const holdItem = (

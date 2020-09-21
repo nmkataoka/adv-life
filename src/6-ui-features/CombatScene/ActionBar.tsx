@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../7-app/types';
+import { RootState } from '7-app/types';
 import { ActionInfo } from './ActionInfo';
 import { selectedAction } from './combatSceneSlice';
 

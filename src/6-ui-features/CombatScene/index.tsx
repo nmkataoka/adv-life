@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRef } from 'react';
 import Unit from './Unit';
 import ActionBar from './ActionBar';
-import { RootState } from '../../7-app/types';
+import { RootState } from '7-app/types';
 import { setMousePosition, UnitInfo } from './combatSceneSlice';
 import { updateUnitsFromEngine } from './actions';
 import CombatLog from '../CombatLog';

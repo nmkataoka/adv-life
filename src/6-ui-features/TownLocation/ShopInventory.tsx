@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
-import { RootState } from '../../7-app/types';
+import { RootState } from '7-app/types';
 import CharacterInventory from '../CharacterInfo/CharacterInventory';
 import { buyItemFromShop } from './townLocationsSlice';
 import useUILoop from '../useUILoop';

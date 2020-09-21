@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
 
 import { useSelector } from 'react-redux';
+import { GameManager } from '0-engine/GameManager';
 import TopBar from './6-ui-features/TopBar';
-import { GameManager } from './0-engine/GameManager';
 import { Scenes } from './6-ui-features/sceneManager/sceneMetaSlice';
 
 import CombatScene from './6-ui-features/CombatScene';
