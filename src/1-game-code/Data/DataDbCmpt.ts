@@ -1,4 +1,4 @@
-import { NComponent } from '../../0-engine';
+import { NComponent } from '0-engine';
 import { Datum, DatumConstructor, PartialDataType } from './Datum';
 
 export class DataDbCmpt<DataType extends Datum> implements NComponent {

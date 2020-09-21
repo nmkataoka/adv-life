@@ -1,7 +1,7 @@
-import { Controller, RequestData, Router } from '../../0-engine';
+import { Controller, RequestData, Router } from '0-engine';
 import { BUY_ITEM } from './ShopConstants';
 import { BUY_ITEM_FROM_MERCHANT } from '../../1-game-code/Merchant/constants';
-import { EventSys } from '../../0-engine/ECS/event-system';
+import { EventSys } from '0-engine/ECS/event-system';
 
 export class ShopController extends Controller {
   public Start = (router: Router): void => {

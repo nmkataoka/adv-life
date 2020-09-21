@@ -1,4 +1,4 @@
-import { NComponent, NComponentConstructor, EntityManager } from '../../../0-engine';
+import { NComponent, NComponentConstructor, EntityManager } from '0-engine';
 
 export abstract class ComponentTemplateBase {
   public abstract checkValid(entity: number, eMgr: EntityManager): boolean;

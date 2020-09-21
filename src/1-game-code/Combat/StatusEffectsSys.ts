@@ -1,5 +1,5 @@
-import { ECSystem } from '../../0-engine/ECS/ECSystem';
-import { GetComponentManager } from '../../0-engine';
+import { ECSystem } from '0-engine/ECS/ECSystem';
+import { GetComponentManager } from '0-engine';
 import { StatusEffectsCmpt } from './StatusEffectsCmpt';
 
 export class StatusEffectsSys extends ECSystem {

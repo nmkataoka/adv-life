@@ -1,4 +1,4 @@
-import { Controller, EventSys, RequestData, Router } from '../../../0-engine';
+import { Controller, EventSys, RequestData, Router } from '0-engine';
 import {
   HOLD_ITEM_FROM_INVENTORY as HOLD_ITEM_FROM_INVENTORY_ENGINE,
   WEAR_ITEM_FROM_INVENTORY,

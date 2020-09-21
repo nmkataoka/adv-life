@@ -1,4 +1,4 @@
-import { NComponent } from '../../0-engine';
+import { NComponent } from '0-engine';
 
 export class CombatStatsCmpt implements NComponent {
   public attackSpeed = 0.2;

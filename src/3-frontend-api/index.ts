@@ -1,8 +1,8 @@
 import { BoundAction } from '../1-game-code/Agent/BoundAction';
 import { GoalQueueCmpt } from '../1-game-code/Agent/GoalQueueCmpt';
 import { getSkillData } from './SkillData';
-import { EntityManager } from '../0-engine';
-import { GetPrdb } from '../0-engine/ECS/globals/EntityManagerGlobals';
+import { EntityManager } from '0-engine';
+import { GetPrdb } from '0-engine/ECS/globals/EntityManagerGlobals';
 
 export function SetSkillTarget(user: number, targets: number[], skillName: string): void {
   const prdb = GetPrdb();

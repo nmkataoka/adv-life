@@ -1,6 +1,6 @@
 import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
 import throttle from 'lodash.throttle';
-import { GameManager } from '../../0-engine/GameManager';
+import { GameManager } from '0-engine/GameManager';
 import { ActionInfo, CreateActionInfo } from './ActionInfo';
 import { keyPressed } from '../common/actions';
 import { Keycodes } from '../common/constants';

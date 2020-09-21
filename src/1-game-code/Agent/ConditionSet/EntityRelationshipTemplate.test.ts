@@ -1,5 +1,5 @@
-import { createEmptyEntityManager } from '../../../0-engine/ECS/test-helpers/CreateEntityManager';
-import { EntityManager, NComponent } from '../../../0-engine';
+import { createEmptyEntityManager } from '0-engine/ECS/test-helpers/CreateEntityManager';
+import { EntityManager, NComponent } from '0-engine';
 import EntityRelationshipTemplate, { IEntityRelationship } from './EntityRelationshipTemplate';
 
 class HasA implements NComponent, IEntityRelationship {

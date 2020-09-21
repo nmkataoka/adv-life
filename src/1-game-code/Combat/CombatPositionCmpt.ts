@@ -1,4 +1,4 @@
-import { NComponent } from '../../0-engine';
+import { NComponent } from '0-engine';
 
 // Controls the order in which units are displayed on the board.
 // Positions may not be continuous or whole numbers.

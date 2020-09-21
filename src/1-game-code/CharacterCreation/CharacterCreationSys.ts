@@ -1,6 +1,6 @@
 import { Stats } from 'fs';
-import { ECSystem, GetView } from '../../0-engine';
-import { EventCallbackArgs, EventSys } from '../../0-engine/ECS/event-system';
+import { ECSystem, GetView } from '0-engine';
+import { EventCallbackArgs, EventSys } from '0-engine/ECS/event-system';
 import {
   ClassCmpt,
   CombatStatsCmpt,

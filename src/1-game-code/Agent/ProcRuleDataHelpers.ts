@@ -1,5 +1,5 @@
+import { GetComponent } from '0-engine';
 import { StatusEffectsCmpt } from '../Combat/StatusEffectsCmpt';
-import { GetComponent } from '../../0-engine';
 
 // eslint-disable-next-line import/prefer-default-export
 export const createChannelTime = (duration: number) => {

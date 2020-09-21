@@ -7,7 +7,7 @@ export { FactionCmpt } from './FactionCmpt';
 export { HealthCmpt } from './HealthCmpt';
 export { HeldItemsCmpt, InventoryCmpt, WornItemsCmpt } from '../Inventory';
 export * from '../Items';
-export { NameCmpt } from '../../0-engine/ECS/built-in-components/NameCmpt';
+export { NameCmpt } from '0-engine/ECS/built-in-components/NameCmpt';
 export type { PersonalityArray } from './PersonalityCmpt';
 export { PersonalityCmpt } from './PersonalityCmpt';
 export { PlayerCmpt } from './PlayerCmpt';

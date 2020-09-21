@@ -1,4 +1,4 @@
-import { ECSystem } from '../../../0-engine';
+import { ECSystem } from '0-engine';
 import { ItemClass } from './ItemClass';
 import { ItemClassDbCmpt } from './ItemClassDbCmpt';
 import itemClassesData from './itemClassesData.json';

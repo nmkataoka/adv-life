@@ -1,4 +1,4 @@
-import { NComponent } from '../../0-engine';
+import { NComponent } from '0-engine';
 
 export class ItemStackCmpt implements NComponent {
   public health = 1;

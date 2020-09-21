@@ -1,4 +1,4 @@
-import { ECSystem, EventCallbackArgs, EventSys } from '../../0-engine';
+import { ECSystem, EventCallbackArgs, EventSys } from '0-engine';
 import { HOLD_ITEM_FROM_INVENTORY, WEAR_ITEM_FROM_INVENTORY } from './Constants';
 import { HeldItemsCmpt } from './HeldItemsCmpt';
 import { InventoryCmpt } from './InventoryCmpt';
