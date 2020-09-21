@@ -1,4 +1,4 @@
-import { NComponent } from '../../0-engine';
+import { NComponent } from '0-engine';
 import { IEntityRelationship } from '../Agent/ConditionSet/EntityRelationshipTemplate';
 
 export class TownLocationsCmpt implements NComponent, IEntityRelationship {
