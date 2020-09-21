@@ -98,8 +98,8 @@ function sortByCombatPos(a: EntityCombatPos, b: EntityCombatPos) {
 function getTargetsInAoeRadius(
   centerTarget: number,
   aoeRadius: number,
-  factionMgr: ComponentManager<FactionCmpt, typeof FactionCmpt>,
-  combatPositionMgr: ComponentManager<CombatPositionCmpt, typeof CombatPositionCmpt>,
+  factionMgr: ComponentManager<FactionCmpt>,
+  combatPositionMgr: ComponentManager<CombatPositionCmpt>,
 ): number[] {
   // Get enemies in combat order
   const enemies = Object.entries(factionMgr.components).filter((faction) => faction[1].isEnemy);

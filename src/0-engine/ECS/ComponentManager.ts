@@ -1,7 +1,7 @@
 import { NComponent, NComponentConstructor } from './NComponent';
 
-export class ComponentManager<C extends NComponent, CClass extends NComponentConstructor<C>> {
-  constructor(c: CClass) {
+export class ComponentManager<C extends NComponent> {
+  constructor(c: NComponentConstructor<C>) {
     this.components = {};
     this.myClass = c;
   }
@@ -40,7 +40,7 @@ export class ComponentManager<C extends NComponent, CClass extends NComponentCon
     return !!this.components[e];
   }
 
-  public myClass: CClass;
+  public myClass: NComponentConstructor<C>;
 
   public components: { [key: string]: C };
 }

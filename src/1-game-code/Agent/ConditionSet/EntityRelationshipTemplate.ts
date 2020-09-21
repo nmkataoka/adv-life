@@ -25,16 +25,15 @@ export abstract class EntityRelationshipTemplateBase {
 }
 
 export default class EntityRelationshipTemplate<
-  C extends NComponent & IEntityRelationship,
-  CClass extends NComponentConstructor<C>
+  C extends NComponent & IEntityRelationship
 > extends EntityRelationshipTemplateBase {
-  constructor(cclass: CClass) {
+  constructor(cclass: NComponentConstructor<C>) {
     super();
     this.cclass = cclass;
   }
 
   public getChildren(parentEntity: number, eMgr: EntityManager): number[] {
-    const cMgr = eMgr.GetComponentManager<CClass, C>(this.cclass);
+    const cMgr = eMgr.GetComponentManager<C>(this.cclass);
     if (!cMgr.Has(parentEntity)) return [];
     return cMgr.GetByNumber(parentEntity).getChildren();
   }
@@ -44,5 +43,5 @@ export default class EntityRelationshipTemplate<
     return children.includes(childEntity);
   }
 
-  private cclass: CClass;
+  private cclass: NComponentConstructor<C>;
 }

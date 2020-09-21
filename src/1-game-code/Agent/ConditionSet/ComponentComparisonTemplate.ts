@@ -12,15 +12,13 @@ export type ComponentComparisonTemplatePredicate<C1, C2> = (c1: C1, c2: C2) => b
 
 export default class ComponentComparisonTemplate<
   C1 extends NComponent,
-  CClass1 extends NComponentConstructor<C1>,
-  C2 extends NComponent,
-  CClass2 extends NComponentConstructor<C2>
+  C2 extends NComponent
 > extends ComponentComparisonTemplateBase {
   public predicate: ComponentComparisonTemplatePredicate<C1, C2>;
 
   constructor(
-    cclass1: CClass1,
-    cclass2: CClass2,
+    cclass1: NComponentConstructor<C1>,
+    cclass2: NComponentConstructor<C2>,
     pred: ComponentComparisonTemplatePredicate<C1, C2>,
   ) {
     super();
@@ -30,12 +28,12 @@ export default class ComponentComparisonTemplate<
   }
 
   public checkValid(parentEntity: number, childEntity: number, eMgr: EntityManager): boolean {
-    const c1 = eMgr.GetComponent<CClass1, C1>(this.cclass1, parentEntity);
-    const c2 = eMgr.GetComponent<CClass2, C2>(this.cclass2, childEntity);
+    const c1 = eMgr.GetComponent<C1>(this.cclass1, parentEntity);
+    const c2 = eMgr.GetComponent<C2>(this.cclass2, childEntity);
     return this.predicate(c1, c2);
   }
 
-  private cclass1: CClass1;
+  private cclass1: NComponentConstructor<C1>;
 
-  private cclass2: CClass2;
+  private cclass2: NComponentConstructor<C2>;
 }
