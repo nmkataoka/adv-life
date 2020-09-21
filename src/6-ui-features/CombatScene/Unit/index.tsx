@@ -10,9 +10,9 @@ import { RootState } from '../../../7-app/types';
 import { setSkillTarget, clickedOnUnit } from '../combatSceneSlice';
 import ArrowFromUnitToMouse from '../ArrowFromUnitToMouse';
 import ManaBar from '../ManaBar';
-import { damageBlinkCss } from '../../../5-react-components/arrow/damageBlink';
+import { damageBlinkCss } from '5-react-components/arrow/damageBlink';
 import RecoveryBar from '../RecoveryBar';
-import Arrow from '../../../5-react-components/arrow';
+import Arrow from '5-react-components/arrow';
 import useUpdateCoords from './useUpdateCoords';
 
 type UnitProps = {
