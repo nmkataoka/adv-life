@@ -1,4 +1,3 @@
-import { Entity } from './Entity';
 import { ECSystem } from './ECSystem';
 import { NComponent, NComponentConstructor } from './NComponent';
 import { ComponentManager } from './ComponentManager';
@@ -23,7 +22,7 @@ export class EntityManager {
 
   private cMgrs: { [key: string]: ComponentManager<NComponent, NComponentConstructor<NComponent>> };
 
-  private entitiesToDestroy: (Entity | number)[] = [];
+  private entitiesToDestroy: number[] = [];
 
   // For testing purposes, specific systems can be passed
   constructor(systemConstructors: ECSystemConstructor<any>[]) {
@@ -49,13 +48,13 @@ export class EntityManager {
     this.DestroyQueuedEntities();
   }
 
-  public CreateEntity(name?: string): Entity {
+  public CreateEntity(name?: string): number {
     if (this.count === EntityManager.MAX_ENTITIES) {
       throw new Error('Used all available entities');
     }
 
     this.IncrementNextEntityId();
-    const e = new Entity(this.nextEntityId);
+    const e = this.nextEntityId;
     ++this.count;
 
     if (name) {
@@ -108,7 +107,7 @@ export class EntityManager {
   };
 
   public AddComponent<C extends NComponent, CClass extends NComponentConstructor<C>>(
-    e: Entity,
+    e: number,
     c: C,
   ): void {
     const cMgr = this.GetComponentManager<CClass, C>(c.constructor as CClass);
@@ -122,7 +121,7 @@ export class EntityManager {
     return this.systems[cclass.name] as C;
   }
 
-  public QueueEntityDestruction(e: Entity | number): void {
+  public QueueEntityDestruction(e: number): void {
     this.entitiesToDestroy.push(e);
   }
 
@@ -133,7 +132,7 @@ export class EntityManager {
     this.entitiesToDestroy = [];
   }
 
-  private DestroyEntity(e: number | Entity) {
+  private DestroyEntity(e: number) {
     // Multiple destroy requests for an entity may occur in one frame
     // TODO: implement when add tracking for deleted entities
 

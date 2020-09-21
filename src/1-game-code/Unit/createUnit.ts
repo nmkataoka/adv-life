@@ -1,4 +1,4 @@
-import { EntityManager, Entity } from '../../0-engine';
+import { EntityManager } from '../../0-engine';
 import { HealthCmpt } from '../ncomponents/HealthCmpt';
 import {
   AgentCmpt,
@@ -12,7 +12,7 @@ import { StatusEffectsCmpt } from '../Combat/StatusEffectsCmpt';
 
 import { GoalQueueCmpt } from '../Agent/GoalQueueCmpt';
 
-export const createUnit = (position: number, isEnemy = false): Entity => {
+export const createUnit = (position: number, isEnemy = false): number => {
   const eMgr = EntityManager.instance;
   const e = eMgr.CreateEntity();
   eMgr.AddComponent(e, new HealthCmpt());

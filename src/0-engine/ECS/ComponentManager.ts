@@ -1,4 +1,3 @@
-import { Entity } from './Entity';
 import { NComponent, NComponentConstructor } from './NComponent';
 
 export class ComponentManager<C extends NComponent, CClass extends NComponentConstructor<C>> {
@@ -7,16 +6,16 @@ export class ComponentManager<C extends NComponent, CClass extends NComponentCon
     this.myClass = c;
   }
 
-  public Add(e: Entity, c: C): void {
-    this.components[e.handle] = c;
+  public Add(e: number, c: C): void {
+    this.components[e] = c;
   }
 
   public get Count(): number {
     return Object.values(this.components).length;
   }
 
-  public Get(e: Entity): C | undefined {
-    return this.components[e.handle];
+  public Get(e: number): C | undefined {
+    return this.components[e];
   }
 
   public GetByNumberUncertain(handle: number | string): C | undefined {
@@ -33,24 +32,12 @@ export class ComponentManager<C extends NComponent, CClass extends NComponentCon
     return c;
   }
 
-  public Erase(e: Entity | number): void {
-    let handle: number;
-    if (typeof e === 'number') {
-      handle = e;
-    } else {
-      ({ handle } = e);
-    }
-    delete this.components[handle];
+  public Erase(e: number): void {
+    delete this.components[e];
   }
 
-  public Has(e: Entity | number | string): boolean {
-    let handle: number | string;
-    if (typeof e === 'number' || typeof e === 'string') {
-      handle = e;
-    } else {
-      ({ handle } = e);
-    }
-    return !!this.components[handle];
+  public Has(e: number | string): boolean {
+    return !!this.components[e];
   }
 
   public myClass: CClass;

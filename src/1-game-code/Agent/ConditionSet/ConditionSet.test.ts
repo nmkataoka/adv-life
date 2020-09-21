@@ -1,5 +1,5 @@
 import { createEmptyEntityManager } from '../../../0-engine/ECS/test-helpers/CreateEntityManager';
-import { EntityManager, Entity, NComponent } from '../../../0-engine';
+import { EntityManager, NComponent } from '../../../0-engine';
 import ConditionSet, {
   checkMaxPermutations,
   deleteCandidateEntities,
@@ -38,21 +38,15 @@ describe('ConditionSet', () => {
         expect(() => checkMaxPermutations(candidateEntities, maxPermutations)).toThrow();
       });
 
-      it(
-        'should succeed silently if total permutations are ' + 'less than maxPermutations (simple)',
-        () => {
-          const candidateEntities: number[][] = [[0], [0]];
-          checkMaxPermutations(candidateEntities, maxPermutations);
-        },
-      );
+      it('should succeed silently if total permutations are less than maxPermutations (simple)', () => {
+        const candidateEntities: number[][] = [[0], [0]];
+        checkMaxPermutations(candidateEntities, maxPermutations);
+      });
 
-      it(
-        'should succeed silently if total permutations are ' + 'less than maxPermutations (simple)',
-        () => {
-          const candidateEntities: number[][] = [[0], [0, 1], [0, 1], [0], [0], [0, 1]];
-          checkMaxPermutations(candidateEntities, maxPermutations);
-        },
-      );
+      it('should succeed silently if total permutations are less than maxPermutations (simple)', () => {
+        const candidateEntities: number[][] = [[0], [0, 1], [0, 1], [0], [0], [0, 1]];
+        checkMaxPermutations(candidateEntities, maxPermutations);
+      });
     });
 
     it('deleteCandidateEntities', () => {
@@ -100,8 +94,8 @@ describe('ConditionSet', () => {
         TestComponent1,
         typeof TestComponent1
       >;
-      let parent: Entity;
-      let child: Entity;
+      let parent: number;
+      let child: number;
 
       const checkRelsAndComps = () =>
         checkEntityRelationshipsAndComponentComparisonTemplates(
@@ -150,7 +144,7 @@ describe('ConditionSet', () => {
         c1.children = [2];
         eMgr.AddComponent(parent, c1);
         entityRels = [[0, entityRel1]];
-        candidate = parent.handle;
+        candidate = parent;
 
         const result = checkRelsAndComps();
 
@@ -163,7 +157,7 @@ describe('ConditionSet', () => {
         c1.children = [17];
         eMgr.AddComponent(parent, c1);
         entityRels = [[0, entityRel1]];
-        candidate = parent.handle;
+        candidate = parent;
 
         const result = checkRelsAndComps();
 
@@ -171,12 +165,12 @@ describe('ConditionSet', () => {
       });
 
       it("returns false when an entity relationship doesn't match (by child index)", () => {
-        entityBinding = [parent.handle];
+        entityBinding = [parent];
         const c1 = new TestComponent1();
-        c1.children = [child.handle + 1];
+        c1.children = [child + 1];
         eMgr.AddComponent(parent, c1);
         entityRelsByChildIdx = [[0, entityRel1]];
-        candidate = child.handle;
+        candidate = child;
 
         const result = checkRelsAndComps();
 
@@ -184,12 +178,12 @@ describe('ConditionSet', () => {
       });
 
       it('returns true when an entity relationship matches (by child index)', () => {
-        entityBinding = [parent.handle];
+        entityBinding = [parent];
         const c1 = new TestComponent1();
-        c1.children = [child.handle];
+        c1.children = [child];
         eMgr.AddComponent(parent, c1);
         entityRelsByChildIdx = [[0, entityRel1]];
-        candidate = child.handle;
+        candidate = child;
 
         const result = checkRelsAndComps();
 
@@ -197,9 +191,9 @@ describe('ConditionSet', () => {
       });
 
       it('throws when componentRelationships are placed under the smaller entity var index', () => {
-        entityBinding = [child.handle];
+        entityBinding = [child];
         componentComps = [[0, componentComp1]];
-        candidate = parent.handle;
+        candidate = parent;
         eMgr.AddComponent(child, new TestComponent1());
         eMgr.AddComponent(parent, new TestComponent1());
 
@@ -209,10 +203,10 @@ describe('ConditionSet', () => {
         componentComps = [[1, componentComp1]];
         expect(checkRelsAndComps).toThrow();
 
-        entityBinding = [parent.handle];
+        entityBinding = [parent];
         componentComps = [];
         componentCompsByChildIdx = [[5, componentComp1]];
-        candidate = child.handle;
+        candidate = child;
         expect(checkRelsAndComps).toThrow();
       });
 
@@ -226,33 +220,33 @@ describe('ConditionSet', () => {
       };
 
       it("returns false when a component relationship doesn't match (by parent index)", () => {
-        entityBinding = [child.handle];
+        entityBinding = [child];
         componentComps = [[0, componentComp1]];
-        candidate = parent.handle;
+        candidate = parent;
         createTestComponents(0, 1);
         expect(checkRelsAndComps()).toEqual(false);
       });
 
       it('returns true when a component comparison returns true (by parent index', () => {
-        entityBinding = [child.handle];
+        entityBinding = [child];
         componentComps = [[0, componentComp1]];
-        candidate = parent.handle;
+        candidate = parent;
         createTestComponents(0, 0);
         expect(checkRelsAndComps()).toEqual(true);
       });
 
       it("returns false when a component relationship doesn't match (by child index)", () => {
-        entityBinding = [parent.handle];
+        entityBinding = [parent];
         componentComps = [[0, componentComp1]];
-        candidate = child.handle;
+        candidate = child;
         createTestComponents(0, 1);
         expect(checkRelsAndComps()).toEqual(false);
       });
 
       it('returns true when a component comparison returns true (by child index)', () => {
-        entityBinding = [parent.handle];
+        entityBinding = [parent];
         componentComps = [[0, componentComp1]];
-        candidate = child.handle;
+        candidate = child;
         createTestComponents(0, 0);
         expect(checkRelsAndComps()).toEqual(true);
       });

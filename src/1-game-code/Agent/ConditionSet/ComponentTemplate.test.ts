@@ -18,7 +18,7 @@ describe('ComponentTemplate', () => {
     const c = new TestComponent();
     c.info = info;
     eMgr.AddComponent(e, c);
-    return e.handle;
+    return e;
   };
 
   const predTrue = () => true;
@@ -38,7 +38,7 @@ describe('ComponentTemplate', () => {
     const e1 = eMgr.CreateEntity();
 
     const cTemplate = new ComponentTemplate(TestComponent, predTrue);
-    expect(() => cTemplate.checkValid(e1.handle, eMgr)).toThrow();
+    expect(() => cTemplate.checkValid(e1, eMgr)).toThrow();
   });
 
   it('checkValid predicate runs properly', () => {

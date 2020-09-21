@@ -1,4 +1,4 @@
-import { EntityManager, Entity } from '../../0-engine';
+import { EntityManager } from '../../0-engine';
 
 import {
   InventoryCmpt,
@@ -80,7 +80,7 @@ const weapons = [
   { type: WeaponType.Sword, damage: 15, publicSalePrice: 1400 },
 ];
 
-export const createMerchant = (name: string): Entity => {
+export const createMerchant = (name: string): number => {
   const eMgr = EntityManager.instance;
   const e = eMgr.CreateEntity();
 

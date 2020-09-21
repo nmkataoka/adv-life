@@ -1,6 +1,5 @@
 import { ComponentManager } from './ComponentManager';
 import { NComponent } from './NComponent';
-import { Entity } from './Entity';
 
 class TestCmpt implements NComponent {
   constructor(health = 100) {
@@ -16,7 +15,7 @@ describe('component manager', () => {
 
     const numComponents = 3;
     for (let i = 0; i < numComponents; ++i) {
-      cMgr.Add(new Entity(i), new TestCmpt());
+      cMgr.Add(i, new TestCmpt());
     }
     expect(Object.values(cMgr.components).length).toBe(numComponents);
   });
@@ -26,7 +25,7 @@ describe('component manager', () => {
 
     const numComponents = 3;
     for (let i = 0; i < numComponents; ++i) {
-      cMgr.Add(new Entity(i), new TestCmpt(i * 10));
+      cMgr.Add(i, new TestCmpt(i * 10));
     }
 
     for (let i = 0; i < numComponents; ++i) {

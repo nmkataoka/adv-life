@@ -18,7 +18,7 @@ describe('ComponentComparisonTemplate', () => {
     const c = new TestComponent();
     c.info = info;
     eMgr.AddComponent(e, c);
-    return e.handle;
+    return e;
   };
 
   const predTrue = () => true;
@@ -40,7 +40,7 @@ describe('ComponentComparisonTemplate', () => {
     const e2 = eMgr.CreateEntity();
 
     const cTemplate = new ComponentComparisonTemplate(TestComponent, TestComponent, predTrue);
-    expect(() => cTemplate.checkValid(e1, e2.handle, eMgr)).toThrow();
+    expect(() => cTemplate.checkValid(e1, e2, eMgr)).toThrow();
   });
 
   it('checkValid with equality predicate runs properly', () => {
