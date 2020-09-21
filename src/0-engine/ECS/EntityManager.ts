@@ -106,11 +106,8 @@ export class EntityManager {
     cMgr.Add(e, c);
   }
 
-  public GetSystem<
-    CClass extends ECSystemConstructor<C>,
-    C extends ECSystem = InstanceType<CClass>
-  >(cclass: CClass): C {
-    return this.systems[cclass.name] as C;
+  public GetSystem<Sys extends ECSystem>(sysClass: ECSystemConstructor<Sys>): Sys {
+    return this.systems[sysClass.name] as Sys;
   }
 
   public QueueEntityDestruction(e: number): void {
@@ -156,9 +153,6 @@ export const GetComponentUncertain: GetComponentUncertainFuncType = <C extends N
   EntityManager.instance.GetComponentManager<C>(cclass).GetByNumberUncertain(entity);
 
 /** @deprecated Avoid global accessor functions */
-export function GetSystem<
-  CClass extends ECSystemConstructor<C>,
-  C extends ECSystem = InstanceType<CClass>
->(cclass: CClass): C {
-  return EntityManager.instance.GetSystem(cclass);
+export function GetSystem<Sys extends ECSystem>(sysClass: ECSystemConstructor<Sys>): Sys {
+  return EntityManager.instance.GetSystem(sysClass);
 }
