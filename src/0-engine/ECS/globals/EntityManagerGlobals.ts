@@ -1,5 +1,5 @@
 import { EntityManager } from '../EntityManager';
-import { ProcRuleDbCmpt } from '../../../1-game-code/Agent/ProcRuleDatabaseCmpt';
+import { ProcRuleDbCmpt } from '1-game-code/Agent/ProcRuleDatabaseCmpt';
 
 // These functions are separate from the EntityManager file
 // in order to reduce dependencies in EntityManager.ts

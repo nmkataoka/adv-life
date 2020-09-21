@@ -1,4 +1,4 @@
-import { PersonalityArray } from '../1-game-code/ncomponents';
+import { PersonalityArray } from '1-game-code/ncomponents';
 import apiClient, { AckCallback } from './ApiClient';
 import { CREATE_CHARACTER } from '../2-backend-api/controllers/CharacterCreationConstants';
 
