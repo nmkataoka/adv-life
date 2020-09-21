@@ -2,7 +2,7 @@ import React from 'react';
 import * as sinon from 'sinon';
 import {
   render, fireEvent, screen, waitFor,
-} from '../../4-helpers/test-utils';
+} from '4-helpers/test-utils';
 
 import Modal from '.';
 
