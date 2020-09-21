@@ -7,7 +7,7 @@ import { DictOf } from '4-helpers/DictOf';
 import { ActionInfo, CreateActionInfo } from './ActionInfo';
 import { keyPressed } from '../common/actions';
 import { Keycodes } from '../common/constants';
-import { AppThunk } from '../../7-app/types';
+import { AppThunk } from '7-app/types';
 import { updatedUnits } from './actions';
 
 type MousePos = {

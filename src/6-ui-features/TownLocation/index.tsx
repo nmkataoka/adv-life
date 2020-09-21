@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 import Modal from '5-react-components/Modal';
-import { RootState } from '../../7-app/types';
+import { RootState } from '7-app/types';
 import ShopInventory from './ShopInventory';
 
 type TownLocationProps = {

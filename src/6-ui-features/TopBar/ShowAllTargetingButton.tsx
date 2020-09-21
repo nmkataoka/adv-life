@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { setShowAllTargeting } from '../CombatScene/combatSceneSlice';
-import { RootState } from '../../7-app/types';
+import { RootState } from '7-app/types';
 
 export default function ShowAllTargetingButton(): JSX.Element {
   const dispatch = useDispatch();

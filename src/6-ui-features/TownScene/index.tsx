@@ -1,17 +1,19 @@
 import React, { useMemo, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import { RootState } from '7-app/types';
 import TownLocation from '../TownLocation';
 import PartySummary from './PartySummary';
 import useUILoop from '../useUILoop';
 import { updateTownsFromEngine } from '../Towns/townSlice';
-import { RootState } from '../../7-app/types';
 import { updateTownLocationsFromEngine } from '../TownLocation/townLocationsSlice';
 import { changedTitle } from '../TopBar/topBarSlice';
 
 const selectTownLocations = (state: RootState) => {
   const curTownId = state.townScene.currentTownId;
-  const { byId: { [curTownId]: town } } = state.towns;
+  const {
+    byId: { [curTownId]: town },
+  } = state.towns;
 
   let locationIds: number[] = [];
   let name = 'Unnamed';
@@ -24,10 +26,10 @@ const selectTownLocations = (state: RootState) => {
 export default function TownScene(): JSX.Element {
   const dispatch = useDispatch();
   const { townId, townLocationIds, townName } = useSelector(selectTownLocations, shallowEqual);
-  const engineUpdates = useMemo(() => [
-    updateTownsFromEngine,
-    () => updateTownLocationsFromEngine(townLocationIds),
-  ], [townLocationIds]);
+  const engineUpdates = useMemo(
+    () => [updateTownsFromEngine, () => updateTownLocationsFromEngine(townLocationIds)],
+    [townLocationIds],
+  );
   useUILoop(engineUpdates);
 
   useEffect(() => {
@@ -35,7 +37,11 @@ export default function TownScene(): JSX.Element {
   }, [dispatch, townName]);
 
   if (townId < 0) {
-    return <Container><MainContent>ERROR: townId is less than 0</MainContent></Container>;
+    return (
+      <Container>
+        <MainContent>ERROR: townId is less than 0</MainContent>
+      </Container>
+    );
   }
 
   return (
@@ -43,9 +49,9 @@ export default function TownScene(): JSX.Element {
       <MainContent>
         <PartySummary />
         <LocationContainer>
-          {townLocationIds.map(
-            (townLocationId) => <TownLocation key={townLocationId} townLocationId={townLocationId} />,
-          )}
+          {townLocationIds.map((townLocationId) => (
+            <TownLocation key={townLocationId} townLocationId={townLocationId} />
+          ))}
         </LocationContainer>
       </MainContent>
     </Container>

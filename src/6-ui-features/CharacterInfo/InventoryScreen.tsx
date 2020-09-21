@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 import CharacterEquipment from './CharacterEquipment';
 import CharacterInventory from './CharacterInventory';
-import { RootState } from '../../7-app/types';
+import { RootState } from '7-app/types';
 
 const InventoryScreen = (): JSX.Element => {
   const inventorySlots = useSelector((state: RootState) => state.player.inventory.inventorySlots);

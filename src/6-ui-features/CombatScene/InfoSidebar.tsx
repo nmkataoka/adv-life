@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../7-app/types';
+import { RootState } from '7-app/types';
 
 const selectedUnitInfoSelector = (state: RootState) => {
   const { selectedUnit } = state.combatScene;
@@ -30,12 +30,8 @@ export default function InfoSidebar() {
   return (
     <Container>
       Unit Info
-      <div>
-        {`Health: ${health} / ${maxHealth}`}
-      </div>
-      <div>
-        {`Mana: ${mana} / ${maxMana}`}
-      </div>
+      <div>{`Health: ${health} / ${maxHealth}`}</div>
+      <div>{`Mana: ${mana} / ${maxMana}`}</div>
       {isChanneling && (
         <div>
           {`Channeling: ${(100 * (1 - channelRemaining / channelTotalDuration)).toFixed(2)}%`}
@@ -43,7 +39,7 @@ export default function InfoSidebar() {
       )}
       {isRecovering && (
         <div>
-          {`Recovering: ${(100 * recoveryRemaining / recoveryTotalDuration).toFixed(2)}%`}
+          {`Recovering: ${((100 * recoveryRemaining) / recoveryTotalDuration).toFixed(2)}%`}
         </div>
       )}
       <div />

@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
 import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '7-app/types';
 import MapLocation from './MapLocation';
 import { changedScene, Scenes } from '../sceneManager/sceneMetaSlice';
-import { RootState } from '../../7-app/types';
 import { updateTownsFromEngine } from '../Towns/townSlice';
 import { travelToLocation } from './actions';
 

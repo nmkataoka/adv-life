@@ -6,7 +6,7 @@ import {
   useRef, useState, useEffect,
 } from 'react';
 import HealthBar from '../HealthBar';
-import { RootState } from '../../../7-app/types';
+import { RootState } from '7-app/types';
 import { setSkillTarget, clickedOnUnit } from '../combatSceneSlice';
 import ArrowFromUnitToMouse from '../ArrowFromUnitToMouse';
 import ManaBar from '../ManaBar';

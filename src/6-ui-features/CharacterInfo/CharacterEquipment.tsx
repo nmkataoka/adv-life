@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../7-app/types';
+import { RootState } from '7-app/types';
 import useUILoop from '../useUILoop';
 import { updatePlayerInventoryFromEngine } from '../Player/playerSlice';
 
