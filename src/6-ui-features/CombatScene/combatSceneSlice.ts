@@ -6,8 +6,9 @@ import { keyPressed } from '../common/actions';
 import { Keycodes } from '../common/constants';
 import { AppThunk } from '../../7-app/types';
 import { SetSkillTarget } from '../../3-frontend-api';
-import { UnitsDict, UnitInfo as UnitInfoApi } from '../../3-frontend-api/UnitInfo';
+import { UnitInfo as UnitInfoApi } from '../../3-frontend-api/UnitInfo';
 import { updatedUnits } from './actions';
+import { DictOf } from '../../4-helpers/DictOf';
 
 type MousePos = {
   x: number;
@@ -19,12 +20,12 @@ export type UnitInfo = UnitInfoApi;
 type UnitCoord = {
   x: number;
   y: number;
-}
+};
 
 type UnitCoordsDict = { [key: string]: UnitCoord };
 
 const initialState = {
-  units: {} as UnitsDict,
+  units: {} as DictOf<UnitInfo>,
   unitCoords: {} as UnitCoordsDict,
 
   selectedUnit: null as null | number,
@@ -51,7 +52,7 @@ const combatSceneSlice = createSlice({
   name: 'combatScene',
   initialState,
   reducers: {
-    updatedUnitCoords(state, action: PayloadAction<{entityHandle: number, coords: UnitCoord }>) {
+    updatedUnitCoords(state, action: PayloadAction<{ entityHandle: number; coords: UnitCoord }>) {
       const { entityHandle, coords } = action.payload;
       state.unitCoords[entityHandle] = { ...coords };
     },
@@ -106,7 +107,7 @@ const combatSceneSlice = createSlice({
         default:
       }
     },
-    [updatedUnits.type]: (state, action: PayloadAction<{ units: UnitsDict }>) => {
+    [updatedUnits.type]: (state, action: PayloadAction<{ units: DictOf<UnitInfo> }>) => {
       state.units = action.payload.units;
 
       // Detect if combat has ended by checking if enemies
@@ -116,9 +117,7 @@ const combatSceneSlice = createSlice({
   },
 });
 
-const {
-  isPausedChanged, updateMousePosition, setSelectedAction,
-} = combatSceneSlice.actions;
+const { isPausedChanged, updateMousePosition, setSelectedAction } = combatSceneSlice.actions;
 
 export const {
   clearSelectedAction,
@@ -130,7 +129,9 @@ export const {
 export default combatSceneSlice.reducer;
 
 export const selectedAction = (action: ActionInfo): AppThunk => (dispatch, getState) => {
-  const { combatScene: { selectedUnit } } = getState();
+  const {
+    combatScene: { selectedUnit },
+  } = getState();
 
   // If no unit is selected, actions can't be clicked
   if (selectedUnit) {
@@ -143,7 +144,7 @@ export const selectedAction = (action: ActionInfo): AppThunk => (dispatch, getSt
   }
 };
 
-const checkIfInCombat = (units: UnitsDict): boolean => {
+const checkIfInCombat = (units: DictOf<UnitInfo>): boolean => {
   const unitsArr = Object.values(units);
   const enemies = unitsArr.filter((u) => u.isEnemy);
   return enemies.length > 0;
@@ -158,7 +159,8 @@ const updateMousePositionInner = throttle((dispatch: Dispatch, newPos: MousePos)
 }, 100);
 
 // eslint-disable-next-line max-len
-export const setMousePosition = (newPos: MousePos): AppThunk => (dispatch) => updateMousePositionInner(dispatch, newPos);
+export const setMousePosition = (newPos: MousePos): AppThunk => (dispatch) =>
+  updateMousePositionInner(dispatch, newPos);
 
 export const setIsPaused = (nextState: boolean): AppThunk => (dispatch) => {
   GameManager.instance.SetPaused(nextState);

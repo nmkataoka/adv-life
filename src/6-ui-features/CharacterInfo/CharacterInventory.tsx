@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { InventorySlotInfo } from '../../3-frontend-api/inventory/InventoryInfo';
+import ItemStack from './ItemStack';
 
 type CharacterInventoryProps = {
   inventorySlots: InventorySlotInfo[];
@@ -11,10 +12,9 @@ const CharacterInventory = ({ inventorySlots }: CharacterInventoryProps): JSX.El
     <RightHalf>
       <h3>Character Inventory</h3>
       <ItemRow>
-        {inventorySlots.map(({ itemId, name }, idx) => {
+        {inventorySlots.map(({ itemClassId }, idx) => {
           // eslint-disable-next-line react/no-array-index-key
-          if (itemId < 0) return <ItemBox key={`empty${idx}`} />;
-          return <ItemBox key={itemId}>{name}</ItemBox>;
+          return <ItemStack itemClassId={itemClassId} key={`itemClass_${itemClassId}_${idx}`} />;
         })}
       </ItemRow>
     </RightHalf>
@@ -34,14 +34,4 @@ const ItemRow = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
-`;
-
-const ItemBox = styled.div`
-  align-items: center;
-  border: 1px solid #c0c0c0;
-  display: flex;
-  height: 5em;
-  justify-content: center;
-  margin: 0.1em;
-  width: 5em;
 `;

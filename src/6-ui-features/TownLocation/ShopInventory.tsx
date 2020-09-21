@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { RootState } from '../../7-app/types';
@@ -6,6 +6,8 @@ import CharacterInventory from '../CharacterInfo/CharacterInventory';
 import { buyItemFromShop } from './townLocationsSlice';
 import useUILoop from '../useUILoop';
 import { updatePlayerInventoryFromEngine } from '../Player/playerSlice';
+import ItemStack from './ItemStack';
+import { updateItemClassesFromEngine } from '../Items/itemClassesSlice';
 
 type ShopInventoryProps = {
   townLocationId: number;
@@ -15,16 +17,23 @@ const engineActions = [updatePlayerInventoryFromEngine];
 
 const ShopInventory = ({ townLocationId }: ShopInventoryProps): JSX.Element => {
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(updateItemClassesFromEngine());
+  }, [dispatch]);
   useUILoop(engineActions);
-  const inventory = useSelector((state: RootState) => state.townLocations.byId[townLocationId]?.inventory);
-  const { inventorySlots, gold: playerGold } = useSelector((state: RootState) => state.player.inventory);
+  const inventory = useSelector(
+    (state: RootState) => state.townLocations.byId[townLocationId]?.inventory,
+  );
+  const { inventorySlots, gold: playerGold } = useSelector(
+    (state: RootState) => state.player.inventory,
+  );
 
-  const handleBuyItem = (itemId: number) => () => {
-    const item = inventory.inventorySlots.find(({ itemId: iid }) => itemId === iid);
+  const handleBuyItem = (itemIndex: number) => () => {
+    const item = inventory.inventorySlots[itemIndex];
     if (item) {
       const { publicSalePrice } = item;
       if (publicSalePrice < playerGold) {
-        dispatch(buyItemFromShop({ itemId, sellerId: townLocationId, price: publicSalePrice }));
+        dispatch(buyItemFromShop({ itemIndex, sellerId: townLocationId, price: publicSalePrice }));
       }
     }
   };
@@ -33,13 +42,21 @@ const ShopInventory = ({ townLocationId }: ShopInventoryProps): JSX.Element => {
     <TwoHalves>
       <VertFlexBox>
         {inventory.inventorySlots
-          .filter(({ itemId }) => itemId > 0)
-          .map(({ itemId, name, publicSalePrice }) => (
-            <ItemContainer key={itemId} onDoubleClick={handleBuyItem(itemId)}>
-              <h4>{name}</h4>
-              <h4>{`${publicSalePrice}g`}</h4>
-            </ItemContainer>
-          ))}
+          .filter(({ stackCount }) => stackCount > 0)
+          .map(({ itemClassId, publicSalePrice, stackCount }, itemIndex) => {
+            // Inventory items are currently identified by index and otherwise may not be unique
+            // eslint-disable-next-line react/no-array-index-key
+            const key = `itemClass_${itemClassId}_${itemIndex}`;
+            return (
+              <ItemStack
+                key={key}
+                itemClassId={itemClassId}
+                publicSalePrice={publicSalePrice}
+                onDoubleClick={handleBuyItem(itemIndex)}
+                stackCount={stackCount}
+              />
+            );
+          })}
         <Gold>Gold: 1400g</Gold>
       </VertFlexBox>
       <CharacterInventory inventorySlots={inventorySlots} />
@@ -51,14 +68,6 @@ export default ShopInventory;
 
 const TwoHalves = styled.div`
   display: flex;
-`;
-
-const ItemContainer = styled.div`
-  border: 1px solid #c0c0c0;
-  display: flex;
-  justify-content: space-between;
-  margin: 0.2em 0.4em;
-  padding: 1em 0.5em;
 `;
 
 const VertFlexBox = styled.div`

@@ -1,8 +1,17 @@
 export type InventorySlotInfo = {
-  itemId: number;
-  name: string;
+  health: number;
+  itemClassId: number;
+  materialId: number;
   publicSalePrice: number;
-  itemType: string;
+  stackCount: number;
+};
+
+export const defaultInventorySlotInfo = {
+  health: 1,
+  itemClassId: -1,
+  materialId: -1,
+  publicSalePrice: 1,
+  stackCount: 0,
 };
 
 export type InventoryInfo = {

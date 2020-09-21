@@ -6,9 +6,9 @@ import { WornItemsCmpt } from './WornItemsCmpt';
 
 const holdItemFromInventory = ({
   eMgr,
-  payload: { agentId, itemId },
+  payload: { agentId, itemIndex },
   ack,
-}: EventCallbackArgs<{ agentId: number; itemId: number }>) => {
+}: EventCallbackArgs<{ agentId: number; itemIndex: number }>) => {
   const inventoryCmpt = eMgr.GetComponentUncertain(InventoryCmpt, agentId);
   const heldItemsCmpt = eMgr.GetComponentUncertain(HeldItemsCmpt, agentId);
 
@@ -17,21 +17,21 @@ const holdItemFromInventory = ({
     return;
   }
 
-  const item = inventoryCmpt.findItemById(itemId);
+  const item = inventoryCmpt.getAt(itemIndex);
   if (!item) {
     ack({ status: 404, error: 'Missing item in inventory' });
     return;
   }
 
-  heldItemsCmpt.items.push({ itemId: item.itemId });
-  inventoryCmpt.removeItemById(itemId);
+  heldItemsCmpt.items.push(item);
+  inventoryCmpt.removeAt(itemIndex);
 };
 
 const wearItemFromInventory = ({
   eMgr,
-  payload: { agentId, itemId },
+  payload: { agentId, itemIndex },
   ack,
-}: EventCallbackArgs<{ agentId: number; itemId: number }>) => {
+}: EventCallbackArgs<{ agentId: number; itemIndex: number }>) => {
   const inventoryCmpt = eMgr.GetComponentUncertain(InventoryCmpt, agentId);
   const wornItemsCmpt = eMgr.GetComponentUncertain(WornItemsCmpt, agentId);
 
@@ -40,14 +40,14 @@ const wearItemFromInventory = ({
     return;
   }
 
-  const item = inventoryCmpt.findItemById(itemId);
+  const item = inventoryCmpt.getAt(itemIndex);
   if (!item) {
     ack({ status: 404, error: 'Missing item in inventory' });
     return;
   }
 
-  wornItemsCmpt.items.push({ itemId: item.itemId });
-  inventoryCmpt.removeItemById(itemId);
+  wornItemsCmpt.items.push(item);
+  inventoryCmpt.removeAt(itemIndex);
 };
 
 export class EquipmentSys extends ECSystem {

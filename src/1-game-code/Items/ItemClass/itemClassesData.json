@@ -1,7 +1,23 @@
 [
   {
+    "name": "boots",
+    "value": 1
+  },
+  {
+    "name": "bow",
+    "value": 1
+  },
+  {
     "name": "breastplate",
     "value": 3
+  },
+  {
+    "name": "chainmail",
+    "value": 2
+  },
+  {
+    "name": "greaves",
+    "value": 2
   },
   {
     "name": "helm",
@@ -10,6 +26,10 @@
   {
     "name": "shield",
     "value": 1
+  },
+  {
+    "name": "spear",
+    "value": 2
   },
   {
     "name": "sword",

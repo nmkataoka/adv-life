@@ -1,5 +1,5 @@
-import { EntityManager } from '../../0-engine';
-import { Entity } from '../../0-engine';
+import { EntityManager, Entity } from '../../0-engine';
+
 import {
   InventoryCmpt,
   WearableCmpt,
@@ -9,23 +9,36 @@ import {
   ArmorTypeCmpt,
   WeaponTypeCmpt,
   NameCmpt,
+  ItemStackCmpt,
+  MaterialDbCmpt,
+  ItemClassDbCmpt,
 } from '../ncomponents';
 
-const createArmor = (eMgr: EntityManager, armorType: ArmorType, armorValue: number) => {
-  const e = eMgr.CreateEntity('Armor');
-
+const createArmor = (
+  eMgr: EntityManager,
+  armorType: ArmorType,
+  armorValue: number,
+): ItemStackCmpt => {
   const wearable = new WearableCmpt();
   wearable.armorValue = armorValue;
-  eMgr.AddComponent(e, wearable);
 
   const armorTypeCmpt = new ArmorTypeCmpt();
   armorTypeCmpt.armorType = armorType;
-  eMgr.AddComponent(e, armorTypeCmpt);
 
-  return e;
+  const materialDbCmpt = eMgr.GetUniqueComponent(MaterialDbCmpt);
+  const itemClassDbCmpt = eMgr.GetUniqueComponent(ItemClassDbCmpt);
+
+  const itemStack = new ItemStackCmpt();
+  itemStack.itemClassId = itemClassDbCmpt.getIdFromName(armorType);
+  itemStack.materialId = materialDbCmpt.getIdFromName('bronze');
+  return itemStack;
 };
 
-const createWeapon = (eMgr: EntityManager, weaponType: WeaponType, damage: number) => {
+const createWeapon = (
+  eMgr: EntityManager,
+  weaponType: WeaponType,
+  damage: number,
+): ItemStackCmpt => {
   const e = eMgr.CreateEntity('Sword');
 
   const wieldable = new WieldableCmpt();
@@ -36,11 +49,22 @@ const createWeapon = (eMgr: EntityManager, weaponType: WeaponType, damage: numbe
   weaponTypeCmpt.weaponType = weaponType;
   eMgr.AddComponent(e, weaponTypeCmpt);
 
-  return e;
+  const materialDbCmpt = eMgr.GetUniqueComponent(MaterialDbCmpt);
+  const itemClassDbCmpt = eMgr.GetUniqueComponent(ItemClassDbCmpt);
+
+  const itemStack = new ItemStackCmpt();
+  itemStack.itemClassId = itemClassDbCmpt.getIdFromName('sword');
+  itemStack.materialId = materialDbCmpt.getIdFromName('bronze');
+  return itemStack;
 };
 
-const addItemToInventory = (inventory: InventoryCmpt, item: Entity, publicSalePrice: number) => {
-  inventory.inventorySlots.push({ itemId: item, publicSalePrice });
+const addItemToInventory = (
+  inventory: InventoryCmpt,
+  item: ItemStackCmpt,
+  publicSalePrice: number,
+) => {
+  item.publicSalePrice = publicSalePrice;
+  inventory.addItemToNextEmptySlot(item);
 };
 
 const armors = [

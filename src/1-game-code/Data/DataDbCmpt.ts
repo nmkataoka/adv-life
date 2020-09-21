@@ -33,6 +33,11 @@ export class DataDbCmpt<DataType extends Datum> implements NComponent {
     return datum;
   };
 
+  /** I'd like to remove this when react-ecs is created, if it makes sense */
+  public getAll = (): DataType[] => {
+    return this.data;
+  };
+
   /** Get a datum by its permanent name */
   public getByName = (datumName: string): DataType => {
     const datumId = this.getIdFromName(datumName);
