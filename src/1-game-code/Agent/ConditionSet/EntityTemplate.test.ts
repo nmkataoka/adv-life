@@ -39,14 +39,14 @@ describe('EntityTemplate', () => {
     const entityTemplate = new EntityTemplate(Component1);
     const e = eMgr.CreateEntity();
     eMgr.AddComponent(e, new Component1());
-    expect(entityTemplate.checkValid(e.handle, eMgr)).toBe(true);
+    expect(entityTemplate.checkValid(e, eMgr)).toBe(true);
   });
 
   it('checkValid should fail on entities missing required components', () => {
     const entityTemplate = new EntityTemplate(Component1);
     const e = eMgr.CreateEntity();
     eMgr.AddComponent(e, new Component2());
-    expect(entityTemplate.checkValid(e.handle, eMgr)).toBe(false);
+    expect(entityTemplate.checkValid(e, eMgr)).toBe(false);
   });
 
   it('checkValid should succeed on valid entity with multiple components', () => {
@@ -60,10 +60,10 @@ describe('EntityTemplate', () => {
     eMgr.AddComponent(e, new Component3());
     eMgr.AddComponent(e, new Component4());
 
-    expect(entityTemplate1.checkValid(e.handle, eMgr)).toBe(true);
-    expect(entityTemplate3.checkValid(e.handle, eMgr)).toBe(true);
-    expect(entityTemplate13.checkValid(e.handle, eMgr)).toBe(true);
-    expect(entityTemplate134.checkValid(e.handle, eMgr)).toBe(true);
+    expect(entityTemplate1.checkValid(e, eMgr)).toBe(true);
+    expect(entityTemplate3.checkValid(e, eMgr)).toBe(true);
+    expect(entityTemplate13.checkValid(e, eMgr)).toBe(true);
+    expect(entityTemplate134.checkValid(e, eMgr)).toBe(true);
   });
 
   it('checkValid should fail on invalid entities with multiple components', () => {
@@ -76,9 +76,9 @@ describe('EntityTemplate', () => {
     eMgr.AddComponent(e, new Component2());
     eMgr.AddComponent(e, new Component4());
 
-    expect(entityTemplate1.checkValid(e.handle, eMgr)).toBe(false);
-    expect(entityTemplate13.checkValid(e.handle, eMgr)).toBe(false);
-    expect(entityTemplate34.checkValid(e.handle, eMgr)).toBe(false);
-    expect(entityTemplate234.checkValid(e.handle, eMgr)).toBe(false);
+    expect(entityTemplate1.checkValid(e, eMgr)).toBe(false);
+    expect(entityTemplate13.checkValid(e, eMgr)).toBe(false);
+    expect(entityTemplate34.checkValid(e, eMgr)).toBe(false);
+    expect(entityTemplate234.checkValid(e, eMgr)).toBe(false);
   });
 });

@@ -70,7 +70,7 @@ const createCharacter = ({
   eMgr.AddComponent(player, classCmpt);
 
   if (ack) {
-    ack({ data: player.handle });
+    ack({ data: player });
   }
 };
 

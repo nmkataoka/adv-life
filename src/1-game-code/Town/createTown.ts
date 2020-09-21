@@ -1,9 +1,9 @@
-import { Entity, EntityManager } from '../../0-engine';
+import { EntityManager } from '../../0-engine';
 import { TownLocationsCmpt } from './TownLocationsCmpt';
 import { NameCmpt } from '../ncomponents';
 import { createMerchant } from '../Merchant/createMerchant';
 
-export const createTown = (name = 'unnamed'): Entity => {
+export const createTown = (name = 'unnamed'): number => {
   const eMgr = EntityManager.instance;
   const town = eMgr.CreateEntity();
 

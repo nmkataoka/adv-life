@@ -26,7 +26,9 @@ describe('Router', () => {
   describe('addRoute', () => {
     it('throws an error if the route is already assigned', () => {
       router.Start((eventSys as unknown) as EventSys);
-      expect(() => router.addRoute(TEST_ROUTE, () => {})).toThrowError('Route already has a request handler');
+      expect(() => router.addRoute(TEST_ROUTE, () => {})).toThrowError(
+        'Route already has a request handler',
+      );
     });
 
     it('assigns the route handler to the route', () => {});

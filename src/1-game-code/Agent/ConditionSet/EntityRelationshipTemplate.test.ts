@@ -22,12 +22,12 @@ describe('EntityRelationshipTemplate', () => {
     const child = eMgr.CreateEntity();
 
     const hasA = new HasA();
-    hasA.ownedObjectEntity = child.handle;
+    hasA.ownedObjectEntity = child;
 
     eMgr.AddComponent(parent, hasA);
 
     const entityRelationshipTemplate = new EntityRelationshipTemplate(HasA);
-    expect(entityRelationshipTemplate.checkValid(parent.handle, child.handle, eMgr)).toBe(true);
+    expect(entityRelationshipTemplate.checkValid(parent, child, eMgr)).toBe(true);
   });
 
   it('checkValid should fail if parent lacks EntityRelationship component', () => {
@@ -35,12 +35,12 @@ describe('EntityRelationshipTemplate', () => {
     const child = eMgr.CreateEntity();
 
     const hasA = new HasA();
-    hasA.ownedObjectEntity = child.handle;
+    hasA.ownedObjectEntity = child;
 
     eMgr.AddComponent(parent, hasA);
 
     const entityRelationshipTemplate = new EntityRelationshipTemplate(HasA);
-    expect(entityRelationshipTemplate.checkValid(child.handle, parent.handle, eMgr)).toBe(false);
+    expect(entityRelationshipTemplate.checkValid(child, parent, eMgr)).toBe(false);
   });
 
   it('checkValid should fail if relationship does not exist', () => {
@@ -51,6 +51,6 @@ describe('EntityRelationshipTemplate', () => {
     eMgr.AddComponent(parent, hasA);
 
     const entityRelationshipTemplate = new EntityRelationshipTemplate(HasA);
-    expect(entityRelationshipTemplate.checkValid(child.handle, parent.handle, eMgr)).toBe(false);
+    expect(entityRelationshipTemplate.checkValid(child, parent, eMgr)).toBe(false);
   });
 });

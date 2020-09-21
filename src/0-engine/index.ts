@@ -9,7 +9,6 @@ export type {
   GetComponentUncertainFuncType,
   GetComponentManagerFuncType,
 } from './ECS/types/EntityManagerAccessorTypes';
-export { Entity } from './ECS/Entity';
 export {
   GetComponent,
   GetComponentUncertain,
