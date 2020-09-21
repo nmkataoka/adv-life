@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import deepEqual from 'fast-deep-equal';
-import { BUY_ITEM } from '../../2-backend-api/controllers/ShopConstants';
+import { BUY_ITEM } from '2-backend-api/controllers/ShopConstants';
 import apiClient from '../../3-frontend-api/ApiClient';
 import { getTownLocationInfo, TownLocationInfo } from '../../3-frontend-api/town';
 import { DictOf } from '../../4-helpers/DictOf';
