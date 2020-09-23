@@ -1,9 +1,9 @@
 import { GetView } from '0-engine';
 import { TownLocationsCmpt } from '1-game-code/Town';
-import { TownInfo } from './TownInfo';
 import { GameManager } from '0-engine/GameManager';
+import { DictOf } from '8-helpers/DictOf';
+import { TownInfo } from './TownInfo';
 import { getNameCmpt } from '../getName';
-import { DictOf } from '4-helpers/DictOf';
 
 const getLocations = (entityHandle: number) => {
   const { eMgr } = GameManager.instance;
