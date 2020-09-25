@@ -76,7 +76,7 @@ export class EntityManager {
       cMgr = new ComponentManager<C>(c);
       this.cMgrs[c.name] = cMgr;
     }
-    return cMgr;
+    return cMgr as ComponentManager<C>;
   };
 
   public GetComponent = <C extends NComponent>(
