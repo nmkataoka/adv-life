@@ -67,7 +67,9 @@ export class EntityManager {
   }
 
   /** Returns a readonly reference to a component manager, which must exist. */
-  public getMgr = <C extends NComponent>(cclass: NComponentConstructor<C>): ComponentManager<C> => {
+  public getMgr = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
+  ): Readonly<ComponentManager<C>> => {
     return this.cMgrs[cclass.name] as ComponentManager<C>;
   };
 
@@ -81,7 +83,7 @@ export class EntityManager {
   /** Returns a readonly reference to a component manager, which is created if it doesn't already exist. */
   public tryGetMgr = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-  ): ComponentManager<C> => {
+  ): Readonly<ComponentManager<C>> => {
     let cMgr = this.cMgrs[cclass.name];
 
     // Create componentManager if it doesn't exist
@@ -103,7 +105,7 @@ export class EntityManager {
   public getCmpt = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
     e: number | string,
-  ): C => {
+  ): Readonly<C> => {
     const cMgr = this.tryGetMgr(cclass);
     return cMgr.get(e);
   };
@@ -121,7 +123,7 @@ export class EntityManager {
   public tryGetCmpt = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
     entityHandle: number,
-  ): C | undefined => {
+  ): Readonly<C> | undefined => {
     const cMgr = this.tryGetMgr<C>(cclass);
     return cMgr.tryGet(entityHandle);
   };
@@ -135,8 +137,15 @@ export class EntityManager {
     return cMgr.tryGetMut(entityHandle);
   };
 
-  /** Gets a unique component. Convenenience function for special components like lookup tables. */
-  public getUniqueCmpt = <C extends NComponent>(cclass: NComponentConstructor<C>): C => {
+  /** Gets a unique component, readonly. Convenenience function for special components like lookup tables. */
+  public getUniqueCmpt = <C extends NComponent>(cclass: NComponentConstructor<C>): Readonly<C> => {
+    const cMgr = this.tryGetMgr<C>(cclass);
+    const components = Object.values(cMgr.components);
+    return components[0];
+  };
+
+  /** Gets a unique component, mutable. Convenenience function for special components like lookup tables. */
+  public getUniqueCmptMut = <C extends NComponent>(cclass: NComponentConstructor<C>): C => {
     const cMgr = this.tryGetMgrMut<C>(cclass);
     const components = Object.values(cMgr.components);
     return components[0];

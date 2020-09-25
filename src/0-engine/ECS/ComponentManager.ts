@@ -21,7 +21,7 @@ export class ComponentManager<C extends NComponent> {
   }
 
   /** Returns an immutable reference to a component, which must exist. */
-  public get(e: number | string): C {
+  public get(e: number | string): Readonly<C> {
     const c = this.components[e];
     if (c == null) {
       throw new Error(`Unexpected missing component ${this.MyClass.name} for entity ${e}`);
@@ -40,7 +40,7 @@ export class ComponentManager<C extends NComponent> {
   /**
    * Returns an immutable reference to a component, or undefined if it doesn't exist.
    */
-  public tryGet(e: number | string): C | undefined {
+  public tryGet(e: number | string): Readonly<C> | undefined {
     return this.components[e];
   }
 
