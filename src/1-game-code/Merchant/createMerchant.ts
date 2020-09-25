@@ -8,7 +8,6 @@ import {
   WeaponType,
   ArmorTypeCmpt,
   WeaponTypeCmpt,
-  NameCmpt,
   ItemStackCmpt,
   MaterialDbCmpt,
   ItemClassDbCmpt,
@@ -41,13 +40,11 @@ const createWeapon = (
 ): ItemStackCmpt => {
   const e = eMgr.CreateEntity('Sword');
 
-  const wieldable = new WieldableCmpt();
-  wieldable.damage = damage;
-  eMgr.AddComponent(e, wieldable);
+  const wieldableCmpt = eMgr.AddComponent(e, WieldableCmpt);
+  wieldableCmpt.damage = damage;
 
-  const weaponTypeCmpt = new WeaponTypeCmpt();
+  const weaponTypeCmpt = eMgr.AddComponent(e, WeaponTypeCmpt);
   weaponTypeCmpt.weaponType = weaponType;
-  eMgr.AddComponent(e, weaponTypeCmpt);
 
   const materialDbCmpt = eMgr.GetUniqueComponent(MaterialDbCmpt);
   const itemClassDbCmpt = eMgr.GetUniqueComponent(ItemClassDbCmpt);
@@ -82,14 +79,9 @@ const weapons = [
 
 export const createMerchant = (name: string): number => {
   const eMgr = EntityManager.instance;
-  const e = eMgr.CreateEntity();
+  const e = eMgr.CreateEntity(name);
 
-  const nameCmpt = new NameCmpt();
-  nameCmpt.name = name;
-  eMgr.AddComponent(e, nameCmpt);
-
-  const inventory = new InventoryCmpt(5);
-  eMgr.AddComponent(e, inventory);
+  const inventory = eMgr.AddComponent(e, InventoryCmpt, 5);
 
   armors.forEach(({ type, armorValue, publicSalePrice }) => {
     const armor = createArmor(eMgr, type, armorValue);

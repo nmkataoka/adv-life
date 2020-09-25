@@ -12,8 +12,7 @@ describe('View', () => {
 
   it('GetView gets a view with one component', () => {
     const e = eMgr.CreateEntity();
-    const testCmpt = new TestCmpt();
-    eMgr.AddComponent(e, testCmpt);
+    eMgr.AddComponent(e, TestCmpt);
 
     const view = GetView(eMgr, 0, TestCmpt);
     expect(view.Count).toBe(1);

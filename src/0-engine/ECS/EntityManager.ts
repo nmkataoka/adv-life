@@ -58,9 +58,8 @@ export class EntityManager {
     ++this.count;
 
     if (name) {
-      const nameCmpt = new NameCmpt();
+      const nameCmpt = this.AddComponent(e, NameCmpt);
       nameCmpt.name = name;
-      this.AddComponent(e, nameCmpt);
     }
 
     return e;
@@ -105,9 +104,9 @@ export class EntityManager {
     e: number,
     CClass: NComponentConstructor<C>,
     ...constructorArgs: any[]
-  ): void {
+  ): C {
     const cMgr = this.GetComponentManager<C>(CClass);
-    cMgr.add(e, ...constructorArgs);
+    return cMgr.add(e, ...constructorArgs);
   }
 
   public GetSystem<Sys extends ECSystem>(sysClass: ECSystemConstructor<Sys>): Sys {

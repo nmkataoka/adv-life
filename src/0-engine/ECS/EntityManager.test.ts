@@ -11,8 +11,8 @@ class TestCmpt2 implements NComponent {
 it('add and get multiple component managers', () => {
   const eMgr = new EntityManager([]);
   const e = eMgr.CreateEntity();
-  eMgr.AddComponent(e, new TestCmpt1());
-  eMgr.AddComponent(e, new TestCmpt2());
+  eMgr.AddComponent(e, TestCmpt1);
+  eMgr.AddComponent(e, TestCmpt2);
 
   const cMgr1 = eMgr.GetComponentManager(TestCmpt1);
   const cMgr2 = eMgr.GetComponentManager(TestCmpt2);

@@ -25,7 +25,7 @@ describe('component manager', () => {
 
     const numComponents = 3;
     for (let i = 0; i < numComponents; ++i) {
-      cMgr.add(i, new TestCmpt(i * 10));
+      cMgr.add(i, i * 10);
     }
 
     for (let i = 0; i < numComponents; ++i) {

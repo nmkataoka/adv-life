@@ -5,10 +5,9 @@ import materialsData from './MaterialsData.json';
 
 export class MaterialDbSys extends ECSystem {
   public Start = (): void => {
-    const materialDbCmpt = new MaterialDbCmpt(Material);
-    materialDbCmpt.readFromArray(materialsData);
     const e = this.eMgr.CreateEntity('MaterialDb');
-    this.eMgr.AddComponent(e, materialDbCmpt);
+    const materialDbCmpt = this.eMgr.AddComponent(e, MaterialDbCmpt, Material);
+    materialDbCmpt.readFromArray(materialsData);
   };
 
   public OnUpdate = (): void => {};

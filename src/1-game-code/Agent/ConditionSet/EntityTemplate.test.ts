@@ -21,9 +21,9 @@ describe('EntityTemplate', () => {
       const e = eMgr.CreateEntity();
       entities.push(e);
       if (i % 2 === 0) {
-        eMgr.AddComponent(e, new Component1());
+        eMgr.AddComponent(e, Component1);
       } else {
-        eMgr.AddComponent(e, new Component2());
+        eMgr.AddComponent(e, Component2);
       }
     }
 
@@ -38,14 +38,14 @@ describe('EntityTemplate', () => {
   it('checkValid should succeed on valid entity with single component', () => {
     const entityTemplate = new EntityTemplate(Component1);
     const e = eMgr.CreateEntity();
-    eMgr.AddComponent(e, new Component1());
+    eMgr.AddComponent(e, Component1);
     expect(entityTemplate.checkValid(e, eMgr)).toBe(true);
   });
 
   it('checkValid should fail on entities missing required components', () => {
     const entityTemplate = new EntityTemplate(Component1);
     const e = eMgr.CreateEntity();
-    eMgr.AddComponent(e, new Component2());
+    eMgr.AddComponent(e, Component2);
     expect(entityTemplate.checkValid(e, eMgr)).toBe(false);
   });
 
@@ -56,9 +56,9 @@ describe('EntityTemplate', () => {
     const entityTemplate134 = new EntityTemplate(Component1, Component3, Component4);
 
     const e = eMgr.CreateEntity();
-    eMgr.AddComponent(e, new Component1());
-    eMgr.AddComponent(e, new Component3());
-    eMgr.AddComponent(e, new Component4());
+    eMgr.AddComponent(e, Component1);
+    eMgr.AddComponent(e, Component3);
+    eMgr.AddComponent(e, Component4);
 
     expect(entityTemplate1.checkValid(e, eMgr)).toBe(true);
     expect(entityTemplate3.checkValid(e, eMgr)).toBe(true);
@@ -73,8 +73,8 @@ describe('EntityTemplate', () => {
     const entityTemplate234 = new EntityTemplate(Component2, Component3, Component4);
 
     const e = eMgr.CreateEntity();
-    eMgr.AddComponent(e, new Component2());
-    eMgr.AddComponent(e, new Component4());
+    eMgr.AddComponent(e, Component2);
+    eMgr.AddComponent(e, Component4);
 
     expect(entityTemplate1.checkValid(e, eMgr)).toBe(false);
     expect(entityTemplate13.checkValid(e, eMgr)).toBe(false);

@@ -15,9 +15,8 @@ describe('ComponentTemplate', () => {
 
   const createEntity = (info: string) => {
     const e = eMgr.CreateEntity();
-    const c = new TestComponent();
+    const c = eMgr.AddComponent(e, TestComponent);
     c.info = info;
-    eMgr.AddComponent(e, c);
     return e;
   };
 
