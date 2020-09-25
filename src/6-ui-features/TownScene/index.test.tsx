@@ -1,4 +1,4 @@
-import { createRenderer, screen } from '4-helpers/test-utils';
+import { createRenderer, screen } from '8-helpers/test-utils';
 import TownScene from '.';
 
 const defaultTownInfo = {

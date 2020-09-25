@@ -3,11 +3,11 @@ import throttle from 'lodash.throttle';
 import { GameManager } from '0-engine/GameManager';
 import { SetSkillTarget } from '3-frontend-api';
 import { UnitInfo as UnitInfoApi } from '3-frontend-api/UnitInfo';
-import { DictOf } from '4-helpers/DictOf';
+import { DictOf } from '8-helpers/DictOf';
+import { AppThunk } from '7-app/types';
 import { ActionInfo, CreateActionInfo } from './ActionInfo';
 import { keyPressed } from '../common/actions';
 import { Keycodes } from '../common/constants';
-import { AppThunk } from '7-app/types';
 import { updatedUnits } from './actions';
 
 type MousePos = {

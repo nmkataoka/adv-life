@@ -1,4 +1,4 @@
-import { createRenderer, screen } from '4-helpers/test-utils';
+import { createRenderer, screen } from '8-helpers/test-utils';
 import TownLocation from '.';
 
 describe('<TownLocation />', () => {
@@ -14,7 +14,10 @@ describe('<TownLocation />', () => {
       name: 'Marketplace',
       townLocationId: 1,
     };
-    renderScreen({ townLocationId: 1 }, { preloadedState: { townLocations: { byId: { 1: townLocationInfo } } } });
+    renderScreen(
+      { townLocationId: 1 },
+      { preloadedState: { townLocations: { byId: { 1: townLocationInfo } } } },
+    );
 
     expect(screen.getByRole('button')).toHaveTextContent(name);
   });
