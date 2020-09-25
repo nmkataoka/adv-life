@@ -6,6 +6,8 @@ import SystemList from './SystemList';
 import { RequestData, Router } from './API/Router';
 import { EventSys } from './ECS/event-system/EventSys';
 
+export type StoreSubscriber = (eMgr: EntityManager) => void;
+
 export class GameManager {
   public static readonly FPS = 3;
 
@@ -22,6 +24,7 @@ export class GameManager {
   constructor() {
     this.eMgr = new EntityManager(SystemList);
     this.router = new Router(ControllerList);
+    this.storeSubscribers = new Set();
   }
 
   public Start(): void {
@@ -32,7 +35,10 @@ export class GameManager {
     this.EnterGameLoop();
   }
 
-  public HandleRequest = <Data>(routeName: string, data: RequestData<Data>): void => {
+  /** Dispatch an event.
+   * Don't confuse this with the lower-level DispatchEvent on EntityManager.
+   */
+  public dispatch = <Data>(routeName: string, data: RequestData<Data>): void => {
     this.router.handleRequest(routeName, data);
   };
 
@@ -40,7 +46,19 @@ export class GameManager {
     this.isPaused = nextState;
   }
 
+  /** Register a callback to be called at the end of each tick
+   * @returns A callback used to unsubscribe
+   */
+  public subscribe(callback: StoreSubscriber): () => void {
+    this.storeSubscribers.add(callback);
+    return () => {
+      this.storeSubscribers.delete(callback);
+    };
+  }
+
   private GameLoopHandle?: NodeJS.Timeout;
+
+  private storeSubscribers: Set<StoreSubscriber>;
 
   private CreateUnits(): void {
     for (let i = 0; i < 3; ++i) {

@@ -12,7 +12,7 @@ type Headers = {
 */
 class ApiClient {
   public emit<T>(eventName: string, payload?: T, ack?: AckCallback): ApiClient {
-    GameManager.instance.HandleRequest(eventName, { headers: this.headers, payload, ack });
+    GameManager.instance.dispatch(eventName, { headers: this.headers, payload, ack });
     return this;
   }
 
