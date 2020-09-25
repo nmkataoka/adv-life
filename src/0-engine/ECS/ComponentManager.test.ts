@@ -21,7 +21,7 @@ describe('component manager', () => {
   });
 
   it('add and get components', () => {
-    const cMgr = new ComponentManager<TestCmpt, typeof TestCmpt>(TestCmpt);
+    const cMgr = new ComponentManager<TestCmpt>(TestCmpt);
 
     const numComponents = 3;
     for (let i = 0; i < numComponents; ++i) {
