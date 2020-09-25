@@ -29,29 +29,29 @@ const createCharacter = ({
     ack({ error: 'Tried to create player character, but player already exists.' });
   }
 
-  const player = eMgr.CreateEntity(name || '');
+  const player = eMgr.createEntity(name || '');
 
-  const personalityCmpt = eMgr.AddComponent(player, PersonalityCmpt);
+  const personalityCmpt = eMgr.addCmpt(player, PersonalityCmpt);
   if (personality) {
     personalityCmpt.setTraits(personality);
   }
 
-  eMgr.AddComponent(player, PlayerCmpt);
+  eMgr.addCmpt(player, PlayerCmpt);
 
-  const inventoryCmpt = eMgr.AddComponent(player, InventoryCmpt, 20, true);
+  const inventoryCmpt = eMgr.addCmpt(player, InventoryCmpt, 20, true);
   inventoryCmpt.gold = 3000;
 
-  const combatStatsCmpt = eMgr.AddComponent(player, CombatStatsCmpt);
+  const combatStatsCmpt = eMgr.addCmpt(player, CombatStatsCmpt);
   if (stats) {
     Object.assign(combatStatsCmpt, stats);
   }
 
-  const raceCmpt = eMgr.AddComponent(player, RaceCmpt);
+  const raceCmpt = eMgr.addCmpt(player, RaceCmpt);
   if (race) {
     raceCmpt.race = race;
   }
 
-  const classCmpt = eMgr.AddComponent(player, ClassCmpt);
+  const classCmpt = eMgr.addCmpt(player, ClassCmpt);
   if (className) {
     classCmpt.class = className;
   }
@@ -63,7 +63,7 @@ const createCharacter = ({
 
 export class CharacterCreationSys extends ECSystem {
   public Start(): void {
-    this.eMgr.GetSystem(EventSys).RegisterListener(CREATE_CHARACTER, createCharacter);
+    this.eMgr.getSys(EventSys).RegisterListener(CREATE_CHARACTER, createCharacter);
   }
 
   public OnUpdate(): void {}

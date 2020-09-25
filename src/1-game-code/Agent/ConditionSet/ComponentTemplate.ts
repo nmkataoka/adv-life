@@ -28,7 +28,7 @@ export default class ComponentTemplate<C extends NComponent> extends ComponentTe
 
   // Check's an entity's component against the individual component condition
   public checkValid(entity: number, eMgr: EntityManager): boolean {
-    const component = eMgr.GetComponent<C>(this.cclass, entity);
+    const component = eMgr.getCmptMut<C>(this.cclass, entity);
     return this.predicate(component);
   }
 }

@@ -5,8 +5,8 @@ import itemClassesData from './itemClassesData.json';
 
 export class ItemClassDbSys extends ECSystem {
   public Start = (): void => {
-    const e = this.eMgr.CreateEntity('ItemClassDb');
-    const itemClassDbCmpt = this.eMgr.AddComponent(e, ItemClassDbCmpt, ItemClass);
+    const e = this.eMgr.createEntity('ItemClassDb');
+    const itemClassDbCmpt = this.eMgr.addCmpt(e, ItemClassDbCmpt, ItemClass);
     itemClassDbCmpt.readFromArray(itemClassesData);
   };
 

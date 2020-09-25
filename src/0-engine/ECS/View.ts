@@ -22,7 +22,7 @@ export function GetView<T extends NComponentConstructorArray>(
 
 export class View<T extends NComponentConstructorArray> {
   constructor(eMgr: EntityManager, without: number, ...cons: T) {
-    this.cMgrs = cons.map((CClass) => eMgr.GetComponentManager(CClass)) as CMgrs<T>;
+    this.cMgrs = cons.map((CClass) => eMgr.tryGetMgrMut(CClass)) as CMgrs<T>;
 
     this.entities = FindEntitiesWithComponents(this.cMgrs, without);
   }

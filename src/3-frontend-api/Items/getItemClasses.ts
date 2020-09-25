@@ -4,7 +4,7 @@ import { ItemClassInfo } from './ItemClassInfo';
 
 export const getItemClasses = (): ItemClassInfo[] => {
   const { eMgr } = GameManager.instance;
-  const itemClassDbCmpt = eMgr.GetUniqueComponent(ItemClassDbCmpt);
+  const itemClassDbCmpt = eMgr.getUniqueCmpt(ItemClassDbCmpt);
   const itemClasses = itemClassDbCmpt?.getAll() ?? [];
   const itemClassInfos = itemClasses.map(({ name, maxStackSize, value }) => ({
     name,

@@ -10,12 +10,12 @@ class TestCmpt2 implements NComponent {
 
 it('add and get multiple component managers', () => {
   const eMgr = new EntityManager([]);
-  const e = eMgr.CreateEntity();
-  eMgr.AddComponent(e, TestCmpt1);
-  eMgr.AddComponent(e, TestCmpt2);
+  const e = eMgr.createEntity();
+  eMgr.addCmpt(e, TestCmpt1);
+  eMgr.addCmpt(e, TestCmpt2);
 
-  const cMgr1 = eMgr.GetComponentManager(TestCmpt1);
-  const cMgr2 = eMgr.GetComponentManager(TestCmpt2);
+  const cMgr1 = eMgr.tryGetMgrMut(TestCmpt1);
+  const cMgr2 = eMgr.tryGetMgrMut(TestCmpt2);
   const fetchedC1 = cMgr1.get(e);
   const fetchedC2 = cMgr2.get(e);
   expect(fetchedC1?.name).not.toBe(fetchedC2?.name);

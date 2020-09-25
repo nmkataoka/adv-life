@@ -45,94 +45,135 @@ export class EntityManager {
 
   public OnUpdate(dt: number): void {
     Object.values(this.systems).forEach((s) => s.OnUpdate(dt));
-    this.DestroyQueuedEntities();
+    this.destroyQueuedEntities();
   }
 
-  public CreateEntity(name?: string): number {
+  /** Creates and returns a new entity. If a `name` string is passed, will also create an associated `NameCmpt`. */
+  public createEntity(name?: string): number {
     if (this.count === EntityManager.MAX_ENTITIES) {
       throw new Error('Used all available entities');
     }
 
-    this.IncrementNextEntityId();
+    this.incrementNextEntityId();
     const e = this.nextEntityId;
     ++this.count;
 
     if (name) {
-      const nameCmpt = this.AddComponent(e, NameCmpt);
+      const nameCmpt = this.addCmpt(e, NameCmpt);
       nameCmpt.name = name;
     }
 
     return e;
   }
 
-  public GetComponentManager = <C extends NComponent>(
-    c: NComponentConstructor<C>,
+  /** Returns a readonly reference to a component manager, which must exist. */
+  public getMgr = <C extends NComponent>(cclass: NComponentConstructor<C>): ComponentManager<C> => {
+    return this.cMgrs[cclass.name] as ComponentManager<C>;
+  };
+
+  /** Returns a mutable reference to a component manager, which must exist. */
+  public getMgrMut = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
   ): ComponentManager<C> => {
-    let cMgr = this.cMgrs[c.name];
+    return this.getMgr(cclass);
+  };
+
+  /** Returns a readonly reference to a component manager, which is created if it doesn't already exist. */
+  public tryGetMgr = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
+  ): ComponentManager<C> => {
+    let cMgr = this.cMgrs[cclass.name];
 
     // Create componentManager if it doesn't exist
     if (!cMgr) {
-      cMgr = new ComponentManager<C>(c);
-      this.cMgrs[c.name] = cMgr;
+      cMgr = new ComponentManager<C>(cclass);
+      this.cMgrs[cclass.name] = cMgr;
     }
     return cMgr as ComponentManager<C>;
   };
 
-  public GetComponent = <C extends NComponent>(
+  /** Returns a mutable reference to a component manager, which is created if it doesn't already exist. */
+  public tryGetMgrMut = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
+  ): ComponentManager<C> => {
+    return this.tryGetMgr(cclass);
+  };
+
+  /** Returns a readonly reference to a component, which must exist. */
+  public getCmpt = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
+    e: number | string,
+  ): C => {
+    const cMgr = this.tryGetMgr(cclass);
+    return cMgr.get(e);
+  };
+
+  /** Returns a mutable reference to a component, which must exist. */
+  public getCmptMut = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
     entityHandle: number,
   ): C => {
-    const cMgr = this.GetComponentManager<C>(cclass);
+    const cMgr = this.tryGetMgrMut<C>(cclass);
     return cMgr.getMut(entityHandle);
   };
 
-  public GetComponentUncertain = <C extends NComponent>(
+  /** Returns a readonly reference to a component, or undefined if it doesn't exist. */
+  public tryGetCmpt = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
     entityHandle: number,
   ): C | undefined => {
-    const cMgr = this.GetComponentManager<C>(cclass);
+    const cMgr = this.tryGetMgr<C>(cclass);
+    return cMgr.tryGet(entityHandle);
+  };
+
+  /** Returns a mutable reference to a component, or undefined if it doesn't exist. */
+  public tryGetCmptMut = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
+    entityHandle: number,
+  ): C | undefined => {
+    const cMgr = this.tryGetMgrMut<C>(cclass);
     return cMgr.tryGetMut(entityHandle);
   };
 
-  public GetUniqueComponent = <C extends NComponent>(cclass: NComponentConstructor<C>): C => {
-    const cMgr = this.GetComponentManager<C>(cclass);
+  /** Gets a unique component. Convenenience function for special components like lookup tables. */
+  public getUniqueCmpt = <C extends NComponent>(cclass: NComponentConstructor<C>): C => {
+    const cMgr = this.tryGetMgrMut<C>(cclass);
     const components = Object.values(cMgr.components);
     return components[0];
   };
 
-  public AddComponent<C extends NComponent>(
+  /** Creates a component, adds it to an entity, and returns it. */
+  public addCmpt<C extends NComponent>(
     e: number,
     CClass: NComponentConstructor<C>,
     ...constructorArgs: any[]
   ): C {
-    const cMgr = this.GetComponentManager<C>(CClass);
+    const cMgr = this.tryGetMgrMut<C>(CClass);
     return cMgr.add(e, ...constructorArgs);
   }
 
-  public GetSystem<Sys extends ECSystem>(sysClass: ECSystemConstructor<Sys>): Sys {
+  public getSys<Sys extends ECSystem>(sysClass: ECSystemConstructor<Sys>): Sys {
     return this.systems[sysClass.name] as Sys;
   }
 
-  public QueueEntityDestruction(e: number): void {
+  public queueEntityDestruction(e: number): void {
     this.entitiesToDestroy.push(e);
   }
 
-  private DestroyQueuedEntities() {
+  private destroyQueuedEntities() {
     this.entitiesToDestroy.forEach((e) => {
-      this.DestroyEntity(e);
+      this.destroyEntity(e);
     });
     this.entitiesToDestroy = [];
   }
 
-  private DestroyEntity(e: number) {
-    // Multiple destroy requests for an entity may occur in one frame
-    // TODO: implement when add tracking for deleted entities
-
-    // Destroy all related components
+  private destroyEntity(e: number) {
+    // Multiple destroy requests for an entity may occur in one frame -- is this an issue?
+    // We could at least optimizely when we add tracking for deleted entities.
     Object.values(this.cMgrs).forEach((cMgr) => cMgr.remove(e));
   }
 
-  private IncrementNextEntityId(): void {
+  private incrementNextEntityId(): void {
     ++this.nextEntityId;
   }
 }
@@ -140,21 +181,21 @@ export class EntityManager {
 /** @deprecated Avoid global accessor functions */
 export const GetComponentManager: GetComponentManagerFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
-): ComponentManager<C> => EntityManager.instance.GetComponentManager<C>(cclass);
+): ComponentManager<C> => EntityManager.instance.tryGetMgrMut<C>(cclass);
 
 /** @deprecated Avoid global accessor functions */
 export const GetComponent: GetComponentFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
   entity: number,
-): C => EntityManager.instance.GetComponentManager<C>(cclass).getMut(entity);
+): C => EntityManager.instance.tryGetMgrMut<C>(cclass).getMut(entity);
 
 /** @deprecated Avoid global accessor functions */
 export const GetComponentUncertain: GetComponentUncertainFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
   entity: number,
-): C | undefined => EntityManager.instance.GetComponentManager<C>(cclass).tryGetMut(entity);
+): C | undefined => EntityManager.instance.tryGetMgrMut<C>(cclass).tryGetMut(entity);
 
 /** @deprecated Avoid global accessor functions */
 export function GetSystem<Sys extends ECSystem>(sysClass: ECSystemConstructor<Sys>): Sys {
-  return EntityManager.instance.GetSystem(sysClass);
+  return EntityManager.instance.getSys(sysClass);
 }

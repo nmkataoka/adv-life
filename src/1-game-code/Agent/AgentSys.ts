@@ -12,8 +12,8 @@ import { FactionCmpt } from '../ncomponents/FactionCmpt';
 export class AgentSys extends ECSystem {
   public Start(): void {
     // Create the proc rule database
-    const prdbEntity = EntityManager.instance.CreateEntity();
-    EntityManager.instance.AddComponent(prdbEntity, ProcRuleDbCmpt);
+    const prdbEntity = EntityManager.instance.createEntity();
+    EntityManager.instance.addCmpt(prdbEntity, ProcRuleDbCmpt);
   }
 
   public OnUpdate(dt: number): void {

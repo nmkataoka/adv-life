@@ -19,7 +19,7 @@ export class AttackSys extends ECSystem {
       const healthCmpt = healthMgr.getMut(e);
 
       if (healthCmpt && healthCmpt.health <= 0) {
-        eMgr.QueueEntityDestruction(parseInt(e, 10));
+        eMgr.queueEntityDestruction(parseInt(e, 10));
       }
     }
   }

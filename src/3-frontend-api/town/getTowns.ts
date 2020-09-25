@@ -7,7 +7,7 @@ import { getNameCmpt } from '../getName';
 
 const getLocations = (entityHandle: number) => {
   const { eMgr } = GameManager.instance;
-  const townLocationCmpt = eMgr.GetComponent(TownLocationsCmpt, entityHandle);
+  const townLocationCmpt = eMgr.getCmptMut(TownLocationsCmpt, entityHandle);
   return townLocationCmpt.getChildren();
 };
 

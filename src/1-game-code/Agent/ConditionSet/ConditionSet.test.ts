@@ -109,8 +109,8 @@ describe('ConditionSet', () => {
         );
 
       beforeEach(() => {
-        parent = eMgr.CreateEntity();
-        child = eMgr.CreateEntity();
+        parent = eMgr.createEntity();
+        child = eMgr.createEntity();
         entityBinding = [];
         candidate = 10;
         entityRels = [];
@@ -140,7 +140,7 @@ describe('ConditionSet', () => {
 
       it("returns false when an entity relationship doesn't match (by parent index)", () => {
         entityBinding = [17, 3, 5];
-        const c1 = eMgr.AddComponent(parent, TestComponent1);
+        const c1 = eMgr.addCmpt(parent, TestComponent1);
         c1.children = [2];
         entityRels = [[0, entityRel1]];
         candidate = parent;
@@ -152,7 +152,7 @@ describe('ConditionSet', () => {
 
       it('returns true when an entity relationship matches (by parent index)', () => {
         entityBinding = [17, 3, 5];
-        const c1 = eMgr.AddComponent(parent, TestComponent1);
+        const c1 = eMgr.addCmpt(parent, TestComponent1);
         c1.children = [17];
         entityRels = [[0, entityRel1]];
         candidate = parent;
@@ -164,7 +164,7 @@ describe('ConditionSet', () => {
 
       it("returns false when an entity relationship doesn't match (by child index)", () => {
         entityBinding = [parent];
-        const c1 = eMgr.AddComponent(parent, TestComponent1);
+        const c1 = eMgr.addCmpt(parent, TestComponent1);
         c1.children = [child + 1];
         entityRelsByChildIdx = [[0, entityRel1]];
         candidate = child;
@@ -176,7 +176,7 @@ describe('ConditionSet', () => {
 
       it('returns true when an entity relationship matches (by child index)', () => {
         entityBinding = [parent];
-        const c1 = eMgr.AddComponent(parent, TestComponent1);
+        const c1 = eMgr.addCmpt(parent, TestComponent1);
         c1.children = [child];
         entityRelsByChildIdx = [[0, entityRel1]];
         candidate = child;
@@ -190,8 +190,8 @@ describe('ConditionSet', () => {
         entityBinding = [child];
         componentComps = [[0, componentComp1]];
         candidate = parent;
-        eMgr.AddComponent(child, TestComponent1);
-        eMgr.AddComponent(parent, TestComponent1);
+        eMgr.addCmpt(child, TestComponent1);
+        eMgr.addCmpt(parent, TestComponent1);
 
         // Make sure the test isn't failing for an unrelated reason
         checkRelsAndComps();
@@ -207,9 +207,9 @@ describe('ConditionSet', () => {
       });
 
       const createTestComponents = (parentNum: number, childNum: number) => {
-        const parentTestComponent = eMgr.AddComponent(parent, TestComponent1);
+        const parentTestComponent = eMgr.addCmpt(parent, TestComponent1);
         parentTestComponent.myNumber = parentNum;
-        const childTestComponent = eMgr.AddComponent(child, TestComponent1);
+        const childTestComponent = eMgr.addCmpt(child, TestComponent1);
         childTestComponent.myNumber = childNum;
       };
 

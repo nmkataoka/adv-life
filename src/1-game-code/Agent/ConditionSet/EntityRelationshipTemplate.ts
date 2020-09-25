@@ -33,7 +33,7 @@ export default class EntityRelationshipTemplate<
   }
 
   public getChildren(parentEntity: number, eMgr: EntityManager): number[] {
-    const cMgr = eMgr.GetComponentManager<C>(this.cclass);
+    const cMgr = eMgr.tryGetMgrMut<C>(this.cclass);
     if (!cMgr.has(parentEntity)) return [];
     return cMgr.getMut(parentEntity).getChildren();
   }

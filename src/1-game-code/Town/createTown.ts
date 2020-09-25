@@ -4,9 +4,9 @@ import { createMerchant } from '../Merchant/createMerchant';
 
 export const createTown = (name = 'unnamed'): number => {
   const eMgr = EntityManager.instance;
-  const town = eMgr.CreateEntity(name);
+  const town = eMgr.createEntity(name);
 
-  const townLocationsCmpt = eMgr.AddComponent(town, TownLocationsCmpt);
+  const townLocationsCmpt = eMgr.addCmpt(town, TownLocationsCmpt);
 
   const merchantShop = createMerchant("Blacksmith's");
   townLocationsCmpt.locationIds.push(merchantShop);
