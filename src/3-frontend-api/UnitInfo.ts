@@ -35,8 +35,8 @@ export type UnitInfo = {
 
 const getHealth = (entityHandle: number) => {
   const { eMgr } = GameManager.instance;
-  const healthMgr = eMgr.GetComponentManager(HealthCmpt);
-  const healthCmpt = healthMgr.GetByNumber(entityHandle);
+  const healthMgr = eMgr.tryGetMgrMut(HealthCmpt);
+  const healthCmpt = healthMgr.getMut(entityHandle);
 
   const { health, maxHealth } = healthCmpt;
   return { health, maxHealth };
@@ -44,8 +44,8 @@ const getHealth = (entityHandle: number) => {
 
 const getCombatStats = (entityHandle: number) => {
   const { eMgr } = GameManager.instance;
-  const combatStatsMgr = eMgr.GetComponentManager(CombatStatsCmpt);
-  const combatStatsCmpt = combatStatsMgr.GetByNumber(entityHandle);
+  const combatStatsMgr = eMgr.tryGetMgrMut(CombatStatsCmpt);
+  const combatStatsCmpt = combatStatsMgr.getMut(entityHandle);
 
   const { mana, maxMana } = combatStatsCmpt;
   return { mana, maxMana };
@@ -53,14 +53,14 @@ const getCombatStats = (entityHandle: number) => {
 
 const getFaction = (entityHandle: number) => {
   const { eMgr } = GameManager.instance;
-  const factionCmpt = eMgr.GetComponent(FactionCmpt, entityHandle);
+  const factionCmpt = eMgr.getCmptMut(FactionCmpt, entityHandle);
   const { isEnemy } = factionCmpt;
   return { isEnemy };
 };
 
 const getStatusEffects = (entityHandle: number) => {
   const { eMgr } = GameManager.instance;
-  const statusEffectsCmpt = eMgr.GetComponent(StatusEffectsCmpt, entityHandle);
+  const statusEffectsCmpt = eMgr.getCmptMut(StatusEffectsCmpt, entityHandle);
   const channel = statusEffectsCmpt.GetStatusEffect('Channel');
   const recovering = statusEffectsCmpt.GetStatusEffect('Recover');
 
@@ -78,14 +78,14 @@ const getStatusEffects = (entityHandle: number) => {
 
 const getCombatPosition = (entityHandle: number) => {
   const { eMgr } = GameManager.instance;
-  const combatPosCmpt = eMgr.GetComponent(CombatPositionCmpt, entityHandle);
+  const combatPosCmpt = eMgr.getCmptMut(CombatPositionCmpt, entityHandle);
   const { position } = combatPosCmpt;
   return { position };
 };
 
 const getNextBactionInfo = (entityHandle: number) => {
   const { eMgr } = GameManager.instance;
-  const goalQueueCmpt = eMgr.GetComponentUncertain(GoalQueueCmpt, entityHandle);
+  const goalQueueCmpt = eMgr.tryGetCmptMut(GoalQueueCmpt, entityHandle);
 
   let targetEntity = -1;
   if (goalQueueCmpt && goalQueueCmpt.nextAction) {

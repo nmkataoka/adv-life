@@ -15,21 +15,21 @@ describe('component manager', () => {
 
     const numComponents = 3;
     for (let i = 0; i < numComponents; ++i) {
-      cMgr.Add(i, new TestCmpt());
+      cMgr.add(i, new TestCmpt());
     }
     expect(Object.values(cMgr.components).length).toBe(numComponents);
   });
 
   it('add and get components', () => {
-    const cMgr = new ComponentManager<TestCmpt, typeof TestCmpt>(TestCmpt);
+    const cMgr = new ComponentManager<TestCmpt>(TestCmpt);
 
     const numComponents = 3;
     for (let i = 0; i < numComponents; ++i) {
-      cMgr.Add(i, new TestCmpt(i * 10));
+      cMgr.add(i, i * 10);
     }
 
     for (let i = 0; i < numComponents; ++i) {
-      const cmpt = cMgr.GetByNumber(i);
+      const cmpt = cMgr.getMut(i);
       expect(cmpt?.health).toBe(i * 10);
     }
   });

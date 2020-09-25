@@ -14,22 +14,22 @@ import { GoalQueueCmpt } from '../Agent/GoalQueueCmpt';
 
 export const createUnit = (position: number, isEnemy = false): number => {
   const eMgr = EntityManager.instance;
-  const e = eMgr.CreateEntity();
-  eMgr.AddComponent(e, new HealthCmpt());
-  eMgr.AddComponent(e, new CombatStatsCmpt());
-  eMgr.AddComponent(e, new CanAttackCmpt());
-  eMgr.AddComponent(e, new InventoryCmpt(1));
-  eMgr.AddComponent(e, new AgentCmpt());
-  eMgr.AddComponent(e, new StatusEffectsCmpt());
+  const e = eMgr.createEntity();
+  eMgr.addCmpt(e, HealthCmpt);
+  eMgr.addCmpt(e, CombatStatsCmpt);
+  eMgr.addCmpt(e, CanAttackCmpt);
+  eMgr.addCmpt(e, InventoryCmpt, 1);
+  eMgr.addCmpt(e, AgentCmpt);
+  eMgr.addCmpt(e, StatusEffectsCmpt);
   if (!isEnemy) {
-    eMgr.AddComponent(e, new GoalQueueCmpt());
+    eMgr.addCmpt(e, GoalQueueCmpt);
   }
-  const combatPos = new CombatPositionCmpt();
+
+  const combatPos = eMgr.addCmpt(e, CombatPositionCmpt);
   combatPos.position = position;
-  eMgr.AddComponent(e, combatPos);
-  const faction = new FactionCmpt();
+
+  const faction = eMgr.addCmpt(e, FactionCmpt);
   faction.isEnemy = isEnemy;
-  eMgr.AddComponent(e, faction);
 
   return e;
 };

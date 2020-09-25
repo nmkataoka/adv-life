@@ -1,20 +1,19 @@
 import { ECSystem } from '0-engine/ECS/ECSystem';
 import { EntityManager } from '0-engine';
 import { GetPrdb } from '0-engine/ECS/globals/EntityManagerGlobals';
+import { getSkillData } from '3-frontend-api/SkillData';
 import { AgentCmpt } from '../ncomponents/AgentCmpt';
 import { BoundActionStatus, BoundAction } from './BoundAction';
 import { ExecutorStatus } from './ProcRule';
 import { ProcRuleDbCmpt } from './ProcRuleDatabaseCmpt';
 import { GoalQueueCmpt } from './GoalQueueCmpt';
 import { FactionCmpt } from '../ncomponents/FactionCmpt';
-import { getSkillData } from '3-frontend-api/SkillData';
 
 export class AgentSys extends ECSystem {
   public Start(): void {
     // Create the proc rule database
-    const prdbEntity = EntityManager.instance.CreateEntity();
-    const prdbCmpt = new ProcRuleDbCmpt();
-    EntityManager.instance.AddComponent(prdbEntity, prdbCmpt);
+    const prdbEntity = EntityManager.instance.createEntity();
+    EntityManager.instance.addCmpt(prdbEntity, ProcRuleDbCmpt);
   }
 
   public OnUpdate(dt: number): void {

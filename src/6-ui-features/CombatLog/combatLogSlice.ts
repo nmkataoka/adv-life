@@ -23,7 +23,7 @@ export default combatLogSlice.reducer;
 
 export const updateCombatLogFromEngine = (): AppThunk => (dispatch) => {
   const { eMgr } = GameManager.instance;
-  const combatLogSys = eMgr.GetSystem(CombatLogSys);
+  const combatLogSys = eMgr.getSys(CombatLogSys);
   const { entries } = combatLogSys;
   dispatch(updatedCombatLog(entries));
 };

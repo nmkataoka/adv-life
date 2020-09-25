@@ -9,8 +9,8 @@ const holdItemFromInventory = ({
   payload: { agentId, itemIndex },
   ack,
 }: EventCallbackArgs<{ agentId: number; itemIndex: number }>) => {
-  const inventoryCmpt = eMgr.GetComponentUncertain(InventoryCmpt, agentId);
-  const heldItemsCmpt = eMgr.GetComponentUncertain(HeldItemsCmpt, agentId);
+  const inventoryCmpt = eMgr.tryGetCmptMut(InventoryCmpt, agentId);
+  const heldItemsCmpt = eMgr.tryGetCmptMut(HeldItemsCmpt, agentId);
 
   if (!inventoryCmpt || !heldItemsCmpt) {
     ack({ error: 'Missing inventoryCmpt or heldItemsCmpt', status: 400 });
@@ -32,8 +32,8 @@ const wearItemFromInventory = ({
   payload: { agentId, itemIndex },
   ack,
 }: EventCallbackArgs<{ agentId: number; itemIndex: number }>) => {
-  const inventoryCmpt = eMgr.GetComponentUncertain(InventoryCmpt, agentId);
-  const wornItemsCmpt = eMgr.GetComponentUncertain(WornItemsCmpt, agentId);
+  const inventoryCmpt = eMgr.tryGetCmptMut(InventoryCmpt, agentId);
+  const wornItemsCmpt = eMgr.tryGetCmptMut(WornItemsCmpt, agentId);
 
   if (!inventoryCmpt || !wornItemsCmpt) {
     ack({ error: 'Missing inventoryCmpt or wornItemsCmpt', status: 400 });
@@ -52,7 +52,7 @@ const wearItemFromInventory = ({
 
 export class EquipmentSys extends ECSystem {
   public Start = (): void => {
-    const eventSys = this.eMgr.GetSystem(EventSys);
+    const eventSys = this.eMgr.getSys(EventSys);
     eventSys.RegisterListener(HOLD_ITEM_FROM_INVENTORY, holdItemFromInventory);
     eventSys.RegisterListener(WEAR_ITEM_FROM_INVENTORY, wearItemFromInventory);
   };

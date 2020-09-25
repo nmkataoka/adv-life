@@ -8,5 +8,5 @@ export function DispatchEvent<T>(action: EventAction<T>, isLowPriority = false):
 
 /** @deprecated Global accessor functions should not be used. */
 export function GetEventSys(): EventSys {
-  return EntityManager.instance.GetSystem(EventSys);
+  return EntityManager.instance.getSys(EventSys);
 }

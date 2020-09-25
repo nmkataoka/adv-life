@@ -27,10 +27,10 @@ export default class EntityTemplate<
   }
 
   public checkValid(entity: number, eMgr: EntityManager): boolean {
-    const cMgrs = this.cclasses.map((cclass) => eMgr.GetComponentManager(cclass));
+    const cMgrs = this.cclasses.map((cclass) => eMgr.tryGetMgrMut(cclass));
     for (let i = 0; i < cMgrs.length; ++i) {
       const cMgr = cMgrs[i];
-      if (!cMgr.Has(entity)) return false;
+      if (!cMgr.has(entity)) return false;
     }
     return true;
   }

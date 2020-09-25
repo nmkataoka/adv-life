@@ -10,7 +10,7 @@ export const getInventoryInfo = (entityHandle: number): InventoryInfo => {
   }
 
   const { eMgr } = GameManager.instance;
-  const inventoryCmpt = eMgr.GetComponent(InventoryCmpt, entityHandle);
+  const inventoryCmpt = eMgr.getCmptMut(InventoryCmpt, entityHandle);
   const { inventorySlots, gold } = inventoryCmpt;
   const items: InventorySlotInfo[] = inventorySlots.map((slot) => {
     if (slot == null) {

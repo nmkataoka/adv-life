@@ -28,8 +28,8 @@ export default class ComponentComparisonTemplate<
   }
 
   public checkValid(parentEntity: number, childEntity: number, eMgr: EntityManager): boolean {
-    const c1 = eMgr.GetComponent<C1>(this.cclass1, parentEntity);
-    const c2 = eMgr.GetComponent<C2>(this.cclass2, childEntity);
+    const c1 = eMgr.getCmptMut<C1>(this.cclass1, parentEntity);
+    const c2 = eMgr.getCmptMut<C2>(this.cclass2, childEntity);
     return this.predicate(c1, c2);
   }
 

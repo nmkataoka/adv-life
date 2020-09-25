@@ -22,7 +22,7 @@ export function GetView<T extends NComponentConstructorArray>(
 
 export class View<T extends NComponentConstructorArray> {
   constructor(eMgr: EntityManager, without: number, ...cons: T) {
-    this.cMgrs = cons.map((CClass) => eMgr.GetComponentManager(CClass)) as CMgrs<T>;
+    this.cMgrs = cons.map((CClass) => eMgr.tryGetMgrMut(CClass)) as CMgrs<T>;
 
     this.entities = FindEntitiesWithComponents(this.cMgrs, without);
   }
@@ -43,7 +43,7 @@ export class View<T extends NComponentConstructorArray> {
     for (let i = 0; i < this.Count; ++i) {
       const e = this.At(i);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      const components = this.cMgrs.map((cMgr) => cMgr.GetByNumber(e)) as CsFromConstructors<T>;
+      const components = this.cMgrs.map((cMgr) => cMgr.getMut(e)) as CsFromConstructors<T>;
       func(e, components);
     }
   }
@@ -58,7 +58,7 @@ function FindEntitiesWithComponents(cMgrs: ComponentManager<any>[], without: num
   // Then iterate in ascending order of cMgr size.
   // This minimizes the number of cMgr.Has checks.
   if (requiredCMgrs.length > 0) {
-    requiredCMgrs.sort((ssa, ssb) => ssa.Count - ssb.Count);
+    requiredCMgrs.sort((ssa, ssb) => ssa.length - ssb.length);
   } else {
     throw new Error('Entity view must contain at least one required component.');
   }
@@ -68,7 +68,7 @@ function FindEntitiesWithComponents(cMgrs: ComponentManager<any>[], without: num
   for (let i = 0; i < startingEntityList.length; ++i) {
     const e = startingEntityList[i];
 
-    if (!requiredCMgrs[0].Has(e)) {
+    if (!requiredCMgrs[0].has(e)) {
       throw new Error('Internal error in view creation');
     }
 
@@ -76,14 +76,14 @@ function FindEntitiesWithComponents(cMgrs: ComponentManager<any>[], without: num
 
     // Check if entity has all components
     for (let j = 1; j < requiredCMgrs.length; ++j) {
-      if (!requiredCMgrs[j].Has(e)) hasAllComponents = false;
+      if (!requiredCMgrs[j].has(e)) hasAllComponents = false;
       break;
     }
 
     if (hasAllComponents) {
       // Check if entity is properly MISSING components
       for (let j = 0; j < withoutCMgrs.length; ++j) {
-        if (withoutCMgrs[j].Has(e)) hasAllComponents = false;
+        if (withoutCMgrs[j].has(e)) hasAllComponents = false;
         break;
       }
 

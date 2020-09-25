@@ -14,10 +14,9 @@ describe('ComponentTemplate', () => {
   });
 
   const createEntity = (info: string) => {
-    const e = eMgr.CreateEntity();
-    const c = new TestComponent();
+    const e = eMgr.createEntity();
+    const c = eMgr.addCmpt(e, TestComponent);
     c.info = info;
-    eMgr.AddComponent(e, c);
     return e;
   };
 
@@ -35,7 +34,7 @@ describe('ComponentTemplate', () => {
   });
 
   it('checkValid throws when entity is missing necessary component', () => {
-    const e1 = eMgr.CreateEntity();
+    const e1 = eMgr.createEntity();
 
     const cTemplate = new ComponentTemplate(TestComponent, predTrue);
     expect(() => cTemplate.checkValid(e1, eMgr)).toThrow();

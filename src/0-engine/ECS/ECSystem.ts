@@ -12,9 +12,9 @@ export abstract class ECSystem {
 
   constructor(eMgr: EntityManager) {
     this.eMgr = eMgr;
-    this.GetComponent = eMgr.GetComponent;
-    this.GetComponentManager = eMgr.GetComponentManager;
-    this.GetComponentUncertain = eMgr.GetComponentUncertain;
+    this.GetComponent = eMgr.getCmptMut;
+    this.GetComponentManager = eMgr.tryGetMgrMut;
+    this.GetComponentUncertain = eMgr.tryGetCmptMut;
   }
 
   protected GetComponent: GetComponentFuncType;

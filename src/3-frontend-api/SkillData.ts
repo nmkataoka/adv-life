@@ -34,7 +34,7 @@ export function getSkillData(user: number, targets: number[], skillName: string)
 
 function getRecoveryDuration(user: number) {
   const defaultRecoveryPeriod = 2;
-  const combatStatsCmpt = EntityManager.instance.GetComponentUncertain(CombatStatsCmpt, user);
+  const combatStatsCmpt = EntityManager.instance.tryGetCmptMut(CombatStatsCmpt, user);
   const recoveryDuration = combatStatsCmpt?.getAttackCooldown() ?? defaultRecoveryPeriod;
   return recoveryDuration;
 }

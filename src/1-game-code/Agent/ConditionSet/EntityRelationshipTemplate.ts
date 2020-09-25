@@ -33,9 +33,9 @@ export default class EntityRelationshipTemplate<
   }
 
   public getChildren(parentEntity: number, eMgr: EntityManager): number[] {
-    const cMgr = eMgr.GetComponentManager<C>(this.cclass);
-    if (!cMgr.Has(parentEntity)) return [];
-    return cMgr.GetByNumber(parentEntity).getChildren();
+    const cMgr = eMgr.tryGetMgrMut<C>(this.cclass);
+    if (!cMgr.has(parentEntity)) return [];
+    return cMgr.getMut(parentEntity).getChildren();
   }
 
   public checkValid(parentEntity: number, childEntity: number, eMgr: EntityManager): boolean {

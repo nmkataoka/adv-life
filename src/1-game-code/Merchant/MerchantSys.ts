@@ -8,9 +8,9 @@ const entityBuysItemFromMerchant = ({
   payload: { buyerId, itemIndex, sellerId },
   ack,
 }: EventCallbackArgs<{ itemIndex: number; buyerId: number; sellerId: number }>) => {
-  const inventoryCMgr = eMgr.GetComponentManager(InventoryCmpt);
-  const buyerInventoryCmpt = inventoryCMgr.GetByNumber(buyerId);
-  const sellerInventoryCmpt = inventoryCMgr.GetByNumber(sellerId);
+  const inventoryCMgr = eMgr.tryGetMgrMut(InventoryCmpt);
+  const buyerInventoryCmpt = inventoryCMgr.getMut(buyerId);
+  const sellerInventoryCmpt = inventoryCMgr.getMut(sellerId);
   const item = sellerInventoryCmpt.getAt(itemIndex);
 
   if (item != null) {
@@ -35,9 +35,7 @@ const entityBuysItemFromMerchant = ({
 
 export class MerchantSys extends ECSystem {
   public Start = (): void => {
-    this.eMgr
-      .GetSystem(EventSys)
-      .RegisterListener(BUY_ITEM_FROM_MERCHANT, entityBuysItemFromMerchant);
+    this.eMgr.getSys(EventSys).RegisterListener(BUY_ITEM_FROM_MERCHANT, entityBuysItemFromMerchant);
   };
 
   public OnUpdate = (): void => {};

@@ -29,7 +29,7 @@ export class GameManager {
 
   public Start(): void {
     this.eMgr.Start();
-    this.router.Start(this.eMgr.GetSystem(EventSys));
+    this.router.Start(this.eMgr.getSys(EventSys));
     this.CreateMap();
     this.CreateUnits();
     this.EnterGameLoop();
