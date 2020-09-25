@@ -36,7 +36,7 @@ export type UnitInfo = {
 const getHealth = (entityHandle: number) => {
   const { eMgr } = GameManager.instance;
   const healthMgr = eMgr.GetComponentManager(HealthCmpt);
-  const healthCmpt = healthMgr.GetByNumber(entityHandle);
+  const healthCmpt = healthMgr.getMut(entityHandle);
 
   const { health, maxHealth } = healthCmpt;
   return { health, maxHealth };
@@ -45,7 +45,7 @@ const getHealth = (entityHandle: number) => {
 const getCombatStats = (entityHandle: number) => {
   const { eMgr } = GameManager.instance;
   const combatStatsMgr = eMgr.GetComponentManager(CombatStatsCmpt);
-  const combatStatsCmpt = combatStatsMgr.GetByNumber(entityHandle);
+  const combatStatsCmpt = combatStatsMgr.getMut(entityHandle);
 
   const { mana, maxMana } = combatStatsCmpt;
   return { mana, maxMana };

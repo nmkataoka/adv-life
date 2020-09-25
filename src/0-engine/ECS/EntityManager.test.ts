@@ -16,7 +16,7 @@ it('add and get multiple component managers', () => {
 
   const cMgr1 = eMgr.GetComponentManager(TestCmpt1);
   const cMgr2 = eMgr.GetComponentManager(TestCmpt2);
-  const fetchedC1 = cMgr1.Get(e);
-  const fetchedC2 = cMgr2.Get(e);
+  const fetchedC1 = cMgr1.get(e);
+  const fetchedC2 = cMgr2.get(e);
   expect(fetchedC1?.name).not.toBe(fetchedC2?.name);
 });

@@ -84,7 +84,7 @@ export class EntityManager {
     entityHandle: number,
   ): C => {
     const cMgr = this.GetComponentManager<C>(cclass);
-    return cMgr.GetByNumber(entityHandle);
+    return cMgr.getMut(entityHandle);
   };
 
   public GetComponentUncertain = <C extends NComponent>(
@@ -92,7 +92,7 @@ export class EntityManager {
     entityHandle: number,
   ): C | undefined => {
     const cMgr = this.GetComponentManager<C>(cclass);
-    return cMgr.GetByNumberUncertain(entityHandle);
+    return cMgr.tryGetMut(entityHandle);
   };
 
   public GetUniqueComponent = <C extends NComponent>(cclass: NComponentConstructor<C>): C => {
@@ -101,9 +101,13 @@ export class EntityManager {
     return components[0];
   };
 
-  public AddComponent<C extends NComponent>(e: number, c: C): void {
-    const cMgr = this.GetComponentManager<C>(c.constructor as NComponentConstructor<C>);
-    cMgr.Add(e, c);
+  public AddComponent<C extends NComponent>(
+    e: number,
+    CClass: NComponentConstructor<C>,
+    ...constructorArgs: any[]
+  ): void {
+    const cMgr = this.GetComponentManager<C>(CClass);
+    cMgr.add(e, ...constructorArgs);
   }
 
   public GetSystem<Sys extends ECSystem>(sysClass: ECSystemConstructor<Sys>): Sys {
@@ -126,7 +130,7 @@ export class EntityManager {
     // TODO: implement when add tracking for deleted entities
 
     // Destroy all related components
-    Object.values(this.cMgrs).forEach((cMgr) => cMgr.Erase(e));
+    Object.values(this.cMgrs).forEach((cMgr) => cMgr.remove(e));
   }
 
   private IncrementNextEntityId(): void {
@@ -143,14 +147,13 @@ export const GetComponentManager: GetComponentManagerFuncType = <C extends NComp
 export const GetComponent: GetComponentFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
   entity: number,
-): C => EntityManager.instance.GetComponentManager<C>(cclass).GetByNumber(entity);
+): C => EntityManager.instance.GetComponentManager<C>(cclass).getMut(entity);
 
 /** @deprecated Avoid global accessor functions */
 export const GetComponentUncertain: GetComponentUncertainFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
   entity: number,
-): C | undefined =>
-  EntityManager.instance.GetComponentManager<C>(cclass).GetByNumberUncertain(entity);
+): C | undefined => EntityManager.instance.GetComponentManager<C>(cclass).tryGetMut(entity);
 
 /** @deprecated Avoid global accessor functions */
 export function GetSystem<Sys extends ECSystem>(sysClass: ECSystemConstructor<Sys>): Sys {

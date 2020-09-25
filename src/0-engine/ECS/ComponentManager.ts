@@ -3,44 +3,70 @@ import { NComponent, NComponentConstructor } from './NComponent';
 export class ComponentManager<C extends NComponent> {
   constructor(c: NComponentConstructor<C>) {
     this.components = {};
-    this.myClass = c;
+    this.MyClass = c;
   }
 
-  public Add(e: number, c: C): void {
-    this.components[e] = c;
+  /** Constructs a new component and attaches it to the given entity.
+   * @returns A mutable reference to the new component.
+   */
+  public add(e: number, ...constructorArgs: any[]): C {
+    const cmpt = new this.MyClass(...constructorArgs);
+    this.components[e] = cmpt;
+    return cmpt;
   }
 
-  public get Count(): number {
+  /** Returns the number of components. */
+  public get length(): number {
     return Object.values(this.components).length;
   }
 
-  public Get(e: number): C | undefined {
-    return this.components[e];
-  }
-
-  public GetByNumberUncertain(handle: number | string): C | undefined {
-    return this.components[handle];
-  }
-
-  // Use this accessor when you are certain the component exists
-  public GetByNumber(handle: number | string): C {
-    const c = this.components[handle];
+  /** Returns an immutable reference to a component, which must exist. */
+  public get(e: number | string): C {
+    const c = this.components[e];
     if (c == null) {
-      throw new Error(`Unexpected missing component ${this.myClass.name} for entity ${handle}`);
+      throw new Error(`Unexpected missing component ${this.MyClass.name} for entity ${e}`);
     }
-
     return c;
   }
 
-  public Erase(e: number): void {
+  /**
+   * Returns a mutable reference to a component, which must exist.
+   * Mutable references may have performance implications, so use the immutable version whenever possible.
+   */
+  public getMut(e: number | string): C {
+    return this.get(e);
+  }
+
+  /**
+   * Returns an immutable reference to a component, or undefined if it doesn't exist.
+   */
+  public tryGet(e: number | string): C | undefined {
+    return this.components[e];
+  }
+
+  /**
+   * Returns a mutable reference to a component, or undefined if it doesn't exist.
+   * Mutable references may have performance implications, so use the immutable version whenever possible.
+   * */
+  public tryGetMut(e: number | string): C | undefined {
+    return this.tryGet(e);
+  }
+
+  /** Destroys a component. */
+  public remove(e: number | string): void {
     delete this.components[e];
   }
 
-  public Has(e: number | string): boolean {
+  /** Returns `true` if a component exists for this entity. */
+  public has(e: number | string): boolean {
     return !!this.components[e];
   }
 
-  public myClass: NComponentConstructor<C>;
+  public MyClass: NComponentConstructor<C>;
 
+  /**
+   * The current internal component container. May change in the future.
+   * Exposed for debugging reasons.
+   * */
   public components: { [key: string]: C };
 }

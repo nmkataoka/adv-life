@@ -9,8 +9,8 @@ const entityBuysItemFromMerchant = ({
   ack,
 }: EventCallbackArgs<{ itemIndex: number; buyerId: number; sellerId: number }>) => {
   const inventoryCMgr = eMgr.GetComponentManager(InventoryCmpt);
-  const buyerInventoryCmpt = inventoryCMgr.GetByNumber(buyerId);
-  const sellerInventoryCmpt = inventoryCMgr.GetByNumber(sellerId);
+  const buyerInventoryCmpt = inventoryCMgr.getMut(buyerId);
+  const sellerInventoryCmpt = inventoryCMgr.getMut(sellerId);
   const item = sellerInventoryCmpt.getAt(itemIndex);
 
   if (item != null) {

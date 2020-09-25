@@ -72,7 +72,7 @@ export const fireball = new ProcRule(
 
       const healthMgr = GetComponentManager(HealthCmpt);
       targetEntities.forEach((targetHandle) => {
-        const targetHealthCmpt = healthMgr.GetByNumber(targetHandle);
+        const targetHealthCmpt = healthMgr.getMut(targetHandle);
         if (targetHealthCmpt) {
           targetHealthCmpt.TakeDamage(damage);
         }
@@ -105,7 +105,7 @@ function getTargetsInAoeRadius(
   const enemies = Object.entries(factionMgr.components).filter((faction) => faction[1].isEnemy);
   const enemyPositions: EntityCombatPos[] = enemies.map((e) => {
     const entityHandle = parseInt(e[0], 10);
-    const combatPos = combatPositionMgr.GetByNumber(entityHandle);
+    const combatPos = combatPositionMgr.getMut(entityHandle);
     return { entityHandle, combatPos };
   });
 

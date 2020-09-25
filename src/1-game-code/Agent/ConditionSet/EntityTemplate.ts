@@ -30,7 +30,7 @@ export default class EntityTemplate<
     const cMgrs = this.cclasses.map((cclass) => eMgr.GetComponentManager(cclass));
     for (let i = 0; i < cMgrs.length; ++i) {
       const cMgr = cMgrs[i];
-      if (!cMgr.Has(entity)) return false;
+      if (!cMgr.has(entity)) return false;
     }
     return true;
   }
