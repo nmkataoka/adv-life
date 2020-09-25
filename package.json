@@ -6,7 +6,7 @@
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
     "@reduxjs/toolkit": "^1.4.0",
-    "@testing-library/jest-dom": "^5.11.0",
+    "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.4",
     "@testing-library/user-event": "^12.0.11",
     "@types/jest": "^26.0.14",
@@ -58,7 +58,7 @@
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "prettier": "^2.1.1",
     "sinon": "^9.0.2",
-    "stylelint": "^13.6.1",
+    "stylelint": "^13.7.1",
     "stylelint-config-recommended": "^3.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "stylelint-processor-styled-components": "^1.10.0"
