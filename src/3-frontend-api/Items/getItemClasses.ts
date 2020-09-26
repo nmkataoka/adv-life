@@ -1,15 +1,9 @@
-import { GameManager } from '0-engine/GameManager';
+import { EntityManager } from '0-engine';
+import { DeepReadonly } from 'ts-essentials';
 import { ItemClassDbCmpt } from '1-game-code/Items';
-import { ItemClassInfo } from './ItemClassInfo';
+import { Selector } from '4-react-ecsal';
 
-export const getItemClasses = (): ItemClassInfo[] => {
-  const { eMgr } = GameManager.instance;
+export const getItemClasses: Selector<DeepReadonly<ItemClassDbCmpt>> = (eMgr: EntityManager) => {
   const itemClassDbCmpt = eMgr.getUniqueCmpt(ItemClassDbCmpt);
-  const itemClasses = itemClassDbCmpt?.getAll() ?? [];
-  const itemClassInfos = itemClasses.map(({ name, maxStackSize, value }) => ({
-    name,
-    maxStackSize,
-    value,
-  }));
-  return itemClassInfos;
+  return itemClassDbCmpt;
 };

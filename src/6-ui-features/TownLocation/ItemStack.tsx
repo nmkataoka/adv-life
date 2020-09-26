@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
-import { RootState } from '7-app/types';
+import { useSelector } from '4-react-ecsal';
+import { getItemClass } from '3-frontend-api/Items/getItemClass';
 
 type ItemStackProps = {
   itemClassId: number;
@@ -16,7 +16,7 @@ const ItemStack = ({
   // stackCount,
   onDoubleClick,
 }: ItemStackProps): JSX.Element => {
-  const name = useSelector((state: RootState) => state.itemClasses.byId[itemClassId]?.name);
+  const { name } = useSelector(getItemClass(itemClassId));
   return (
     <ItemContainer onDoubleClick={onDoubleClick}>
       <h4>{name || 'Unknown'}</h4>

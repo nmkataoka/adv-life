@@ -1,7 +1,5 @@
 import characterCreationReducer from '6-ui-features/CharacterCreationScene/characterCreationSlice';
 import combatSceneReducer from '6-ui-features/CombatScene/combatSceneSlice';
-import itemClassesReducer from '6-ui-features/Items/itemClassesSlice';
-import materialsReducer from '6-ui-features/Items/materialsSlice';
 import modalMetaReducer from '5-react-components/Modal/modalMetaSlice';
 import playerReducer from '6-ui-features/Player/playerSlice';
 import sceneMetaReducer from '6-ui-features/sceneManager/sceneMetaSlice';
@@ -13,8 +11,6 @@ import townSceneReducer from '6-ui-features/TownScene/townSceneSlice';
 const rootReducer = {
   characterCreation: characterCreationReducer,
   combatScene: combatSceneReducer,
-  itemClasses: itemClassesReducer,
-  materials: materialsReducer,
   modalMeta: modalMetaReducer,
   player: playerReducer,
   sceneMeta: sceneMetaReducer,

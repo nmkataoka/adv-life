@@ -1,3 +1,4 @@
+import { DeepReadonly } from 'ts-essentials';
 import { NComponent, NComponentConstructor } from './NComponent';
 
 export class ComponentManager<C extends NComponent> {
@@ -19,7 +20,15 @@ export class ComponentManager<C extends NComponent> {
   }
 
   /** Returns an immutable reference to a component, which must exist. */
-  public get(e: number | string): Readonly<C> {
+  public get(e: number | string): DeepReadonly<C> {
+    return this.getMut(e) as DeepReadonly<C>;
+  }
+
+  /**
+   * Returns a mutable reference to a component, which must exist.
+   * Mutable references may have performance implications, so use the immutable version whenever possible.
+   */
+  public getMut(e: number | string): C {
     const c = this.components[e];
     if (c == null) {
       throw new Error(`Unexpected missing component ${this.MyClass.name} for entity ${e}`);
@@ -28,18 +37,10 @@ export class ComponentManager<C extends NComponent> {
   }
 
   /**
-   * Returns a mutable reference to a component, which must exist.
-   * Mutable references may have performance implications, so use the immutable version whenever possible.
-   */
-  public getMut(e: number | string): C {
-    return this.get(e);
-  }
-
-  /**
    * Returns an immutable reference to a component, or undefined if it doesn't exist.
    */
-  public tryGet(e: number | string): Readonly<C> | undefined {
-    return this.components[e];
+  public tryGet(e: number | string): DeepReadonly<C> | undefined {
+    return this.tryGetMut(e) as DeepReadonly<C> | undefined;
   }
 
   /**
@@ -47,7 +48,7 @@ export class ComponentManager<C extends NComponent> {
    * Mutable references may have performance implications, so use the immutable version whenever possible.
    * */
   public tryGetMut(e: number | string): C | undefined {
-    return this.tryGet(e);
+    return this.components[e];
   }
 
   /** Destroys a component. */
