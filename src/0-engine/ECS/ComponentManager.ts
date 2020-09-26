@@ -9,10 +9,8 @@ export class ComponentManager<C extends NComponent> {
   /** Constructs a new component and attaches it to the given entity.
    * @returns A mutable reference to the new component.
    */
-  public add(e: number, ...constructorArgs: any[]): C {
-    const cmpt = new this.MyClass(...constructorArgs);
+  public add(e: number, cmpt: C): void {
     this.components[e] = cmpt;
-    return cmpt;
   }
 
   /** Returns the number of components. */

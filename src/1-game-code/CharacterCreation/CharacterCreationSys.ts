@@ -31,30 +31,35 @@ const createCharacter = ({
 
   const player = eMgr.createEntity(name || '');
 
-  const personalityCmpt = eMgr.addCmpt(player, PersonalityCmpt);
+  const personalityCmpt = new PersonalityCmpt();
   if (personality) {
     personalityCmpt.setTraits(personality);
   }
+  eMgr.addCmpt(player, personalityCmpt);
 
-  eMgr.addCmpt(player, PlayerCmpt);
+  eMgr.addCmpt(player, new PlayerCmpt());
 
-  const inventoryCmpt = eMgr.addCmpt(player, InventoryCmpt, 20, true);
+  const inventoryCmpt = new InventoryCmpt(20, true);
   inventoryCmpt.gold = 3000;
+  eMgr.addCmpt(player, inventoryCmpt);
 
-  const combatStatsCmpt = eMgr.addCmpt(player, CombatStatsCmpt);
+  const combatStatsCmpt = new CombatStatsCmpt();
   if (stats) {
     Object.assign(combatStatsCmpt, stats);
   }
+  eMgr.addCmpt(player, combatStatsCmpt);
 
-  const raceCmpt = eMgr.addCmpt(player, RaceCmpt);
+  const raceCmpt = new RaceCmpt();
   if (race) {
     raceCmpt.race = race;
   }
+  eMgr.addCmpt(player, raceCmpt);
 
-  const classCmpt = eMgr.addCmpt(player, ClassCmpt);
+  const classCmpt = new ClassCmpt();
   if (className) {
     classCmpt.class = className;
   }
+  eMgr.addCmpt(player, classCmpt);
 
   if (ack) {
     ack({ data: player });

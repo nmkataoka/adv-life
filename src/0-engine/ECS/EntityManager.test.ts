@@ -11,8 +11,8 @@ class TestCmpt2 implements NComponent {
 it('add and get multiple component managers', () => {
   const eMgr = new EntityManager([]);
   const e = eMgr.createEntity();
-  eMgr.addCmpt(e, TestCmpt1);
-  eMgr.addCmpt(e, TestCmpt2);
+  eMgr.addCmpt(e, new TestCmpt1());
+  eMgr.addCmpt(e, new TestCmpt2());
 
   const cMgr1 = eMgr.tryGetMgrMut(TestCmpt1);
   const cMgr2 = eMgr.tryGetMgrMut(TestCmpt2);

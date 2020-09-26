@@ -15,8 +15,9 @@ describe('ComponentTemplate', () => {
 
   const createEntity = (info: string) => {
     const e = eMgr.createEntity();
-    const c = eMgr.addCmpt(e, TestComponent);
+    const c = new TestComponent();
     c.info = info;
+    eMgr.addCmpt(e, c);
     return e;
   };
 

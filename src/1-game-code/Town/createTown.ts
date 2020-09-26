@@ -6,7 +6,7 @@ export const createTown = (name = 'unnamed'): number => {
   const eMgr = EntityManager.instance;
   const town = eMgr.createEntity(name);
 
-  const townLocationsCmpt = eMgr.addCmpt(town, TownLocationsCmpt);
+  const townLocationsCmpt = new TownLocationsCmpt();
 
   const merchantShop = createMerchant("Blacksmith's");
   townLocationsCmpt.locationIds.push(merchantShop);
@@ -19,6 +19,8 @@ export const createTown = (name = 'unnamed'): number => {
 
   const marketplace = createMerchant('Marketplace');
   townLocationsCmpt.locationIds.push(marketplace);
+
+  eMgr.addCmpt(town, townLocationsCmpt);
 
   return town;
 };

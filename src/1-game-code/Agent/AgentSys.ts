@@ -13,7 +13,7 @@ export class AgentSys extends ECSystem {
   public Start(): void {
     // Create the proc rule database
     const prdbEntity = EntityManager.instance.createEntity();
-    EntityManager.instance.addCmpt(prdbEntity, ProcRuleDbCmpt);
+    EntityManager.instance.addCmpt(prdbEntity, new ProcRuleDbCmpt());
   }
 
   public OnUpdate(dt: number): void {

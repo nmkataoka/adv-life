@@ -40,11 +40,13 @@ const createWeapon = (
 ): ItemStackCmpt => {
   const e = eMgr.createEntity('Sword');
 
-  const wieldableCmpt = eMgr.addCmpt(e, WieldableCmpt);
+  const wieldableCmpt = new WieldableCmpt();
   wieldableCmpt.damage = damage;
+  eMgr.addCmpt(e, wieldableCmpt);
 
-  const weaponTypeCmpt = eMgr.addCmpt(e, WeaponTypeCmpt);
+  const weaponTypeCmpt = new WeaponTypeCmpt();
   weaponTypeCmpt.weaponType = weaponType;
+  eMgr.addCmpt(e, weaponTypeCmpt);
 
   const materialDbCmpt = eMgr.getUniqueCmpt(MaterialDbCmpt);
   const itemClassDbCmpt = eMgr.getUniqueCmpt(ItemClassDbCmpt);
@@ -81,7 +83,7 @@ export const createMerchant = (name: string): number => {
   const eMgr = EntityManager.instance;
   const e = eMgr.createEntity(name);
 
-  const inventory = eMgr.addCmpt(e, InventoryCmpt, 5);
+  const inventory = new InventoryCmpt(5);
 
   armors.forEach(({ type, armorValue, publicSalePrice }) => {
     const armor = createArmor(eMgr, type, armorValue);
@@ -92,6 +94,7 @@ export const createMerchant = (name: string): number => {
     const weapon = createWeapon(eMgr, type, damage);
     addItemToInventory(inventory, weapon, publicSalePrice);
   });
+  eMgr.addCmpt(e, inventory);
 
   return e;
 };

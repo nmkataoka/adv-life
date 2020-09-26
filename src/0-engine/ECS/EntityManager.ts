@@ -59,8 +59,9 @@ export class EntityManager {
     ++this.count;
 
     if (name) {
-      const nameCmpt = this.addCmpt(e, NameCmpt);
+      const nameCmpt = new NameCmpt();
       nameCmpt.name = name;
+      this.addCmpt(e, nameCmpt);
     }
 
     return e;
@@ -152,13 +153,9 @@ export class EntityManager {
   };
 
   /** Creates a component, adds it to an entity, and returns it. */
-  public addCmpt<C extends NComponent>(
-    e: number,
-    CClass: NComponentConstructor<C>,
-    ...constructorArgs: any[]
-  ): C {
-    const cMgr = this.tryGetMgrMut<C>(CClass);
-    return cMgr.add(e, ...constructorArgs);
+  public addCmpt<C extends NComponent>(e: number, cmpt: C): void {
+    const cMgr = this.tryGetMgrMut<C>(cmpt.constructor as NComponentConstructor<C>);
+    cMgr.add(e, cmpt);
   }
 
   public getSys<Sys extends ECSystem>(sysClass: ECSystemConstructor<Sys>): Sys {
