@@ -12,7 +12,7 @@ describe('View', () => {
 
   it('GetView gets a view with one component', () => {
     const e = eMgr.createEntity();
-    eMgr.addCmpt(e, TestCmpt);
+    eMgr.addCmpt(e, new TestCmpt());
 
     const view = GetView(eMgr, 0, TestCmpt);
     expect(view.Count).toBe(1);

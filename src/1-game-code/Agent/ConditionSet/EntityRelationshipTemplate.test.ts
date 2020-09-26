@@ -21,8 +21,9 @@ describe('EntityRelationshipTemplate', () => {
     const parent = eMgr.createEntity();
     const child = eMgr.createEntity();
 
-    const hasA = eMgr.addCmpt(parent, HasA);
+    const hasA = new HasA();
     hasA.ownedObjectEntity = child;
+    eMgr.addCmpt(parent, hasA);
 
     const entityRelationshipTemplate = new EntityRelationshipTemplate(HasA);
     expect(entityRelationshipTemplate.checkValid(parent, child, eMgr)).toBe(true);
@@ -32,8 +33,9 @@ describe('EntityRelationshipTemplate', () => {
     const parent = eMgr.createEntity();
     const child = eMgr.createEntity();
 
-    const hasA = eMgr.addCmpt(parent, HasA);
+    const hasA = new HasA();
     hasA.ownedObjectEntity = child;
+    eMgr.addCmpt(parent, hasA);
 
     const entityRelationshipTemplate = new EntityRelationshipTemplate(HasA);
     expect(entityRelationshipTemplate.checkValid(child, parent, eMgr)).toBe(false);
@@ -43,7 +45,7 @@ describe('EntityRelationshipTemplate', () => {
     const parent = eMgr.createEntity();
     const child = eMgr.createEntity();
 
-    eMgr.addCmpt(parent, HasA);
+    eMgr.addCmpt(parent, new HasA());
 
     const entityRelationshipTemplate = new EntityRelationshipTemplate(HasA);
     expect(entityRelationshipTemplate.checkValid(child, parent, eMgr)).toBe(false);
