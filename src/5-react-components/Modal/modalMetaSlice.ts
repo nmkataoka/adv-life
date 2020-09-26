@@ -7,7 +7,7 @@ const initialState = {
 };
 
 const modalMetaSlice = createSlice({
-  name: 'combatLog',
+  name: 'modalMeta',
   initialState,
   reducers: {
     usedModalZIndex(state, action: PayloadAction<number>) {
