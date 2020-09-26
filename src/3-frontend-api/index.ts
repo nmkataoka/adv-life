@@ -20,3 +20,4 @@ export function SetSkillTarget(user: number, targets: number[], skillName: strin
 
 export * from './inventory';
 export * from './player';
+export * from './town';

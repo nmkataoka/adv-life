@@ -17,13 +17,12 @@ export const getTowns = (): DictOf<TownInfo> => {
 
   for (let i = 0; i < townView.count; ++i) {
     const e = townView.at(i);
-    const entityHandle = parseInt(e, 10);
 
-    const { name } = getNameCmpt(entityHandle);
+    const { name } = getNameCmpt(e);
 
-    towns[entityHandle] = {
-      townId: entityHandle,
-      locationIds: getLocations(entityHandle),
+    towns[e] = {
+      townId: e,
+      locationIds: getLocations(e),
       name,
     };
   }

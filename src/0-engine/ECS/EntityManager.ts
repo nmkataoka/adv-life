@@ -168,15 +168,15 @@ export class EntityManager {
 
   public getView = <
     ReadCmpts extends NComponent[],
-    WriteCmpts extends NComponent[],
-    WithoutCmpts extends NComponent[]
+    WriteCmpts extends NComponent[] = [],
+    WithoutCmpts extends NComponent[] = []
   >(
     readCmpts: ConstructorsFromComponents<ReadCmpts>,
-    writeCmpts: ConstructorsFromComponents<WriteCmpts>,
-    withoutCmpts: ConstructorsFromComponents<WithoutCmpts>,
+    writeCmpts?: ConstructorsFromComponents<WriteCmpts>,
+    withoutCmpts?: ConstructorsFromComponents<WithoutCmpts>,
   ): View<ReadCmpts, WriteCmpts, WithoutCmpts> => {
-    const view = new View(this, readCmpts, writeCmpts, withoutCmpts);
-    return view;
+    const view = new View(this, readCmpts, writeCmpts ?? [], withoutCmpts ?? []);
+    return view as View<ReadCmpts, WriteCmpts, WithoutCmpts>;
   };
 
   public queueEntityDestruction(e: number | string): void {

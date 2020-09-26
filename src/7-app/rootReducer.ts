@@ -5,7 +5,6 @@ import playerReducer from '6-ui-features/Player/playerSlice';
 import sceneMetaReducer from '6-ui-features/sceneManager/sceneMetaSlice';
 import topBarReducer from '6-ui-features/TopBar/topBarSlice';
 import townLocationsReducer from '6-ui-features/TownLocation/townLocationsSlice';
-import townsReducer from '6-ui-features/Towns/townSlice';
 import townSceneReducer from '6-ui-features/TownScene/townSceneSlice';
 
 const rootReducer = {
@@ -16,7 +15,6 @@ const rootReducer = {
   sceneMeta: sceneMetaReducer,
   topBar: topBarReducer,
   townLocations: townLocationsReducer,
-  towns: townsReducer,
   townScene: townSceneReducer,
 };
 

@@ -38,7 +38,7 @@ export const updatePlayerEntityFromEngine = (): AppThunk => (dispatch) => {
   const players = eMgr.getView([PlayerCmpt], [], []);
   let playerEntityHandle = -1;
   if (players.count > 0) {
-    playerEntityHandle = parseInt(players.at(0), 10);
+    playerEntityHandle = players.at(0);
   }
   dispatch(setPlayerEntity(playerEntityHandle));
 };

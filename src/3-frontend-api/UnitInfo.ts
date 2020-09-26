@@ -104,17 +104,16 @@ export const getUnitInfos = (): DictOf<UnitInfo> => {
   const unitView = eMgr.getView([HealthCmpt], [], []);
   for (let i = 0; i < unitView.count; ++i) {
     const e = unitView.at(i);
-    const entityHandle = parseInt(e, 10);
 
-    const healthInfo = getHealth(entityHandle);
-    const combatStatsInfo = getCombatStats(entityHandle);
-    const factionInfo = getFaction(entityHandle);
-    const statusEffectsInfo = getStatusEffects(entityHandle);
-    const combatPosInfo = getCombatPosition(entityHandle);
-    const nextBactionInfo = getNextBactionInfo(entityHandle);
+    const healthInfo = getHealth(e);
+    const combatStatsInfo = getCombatStats(e);
+    const factionInfo = getFaction(e);
+    const statusEffectsInfo = getStatusEffects(e);
+    const combatPosInfo = getCombatPosition(e);
+    const nextBactionInfo = getNextBactionInfo(e);
 
-    units[entityHandle] = {
-      entityHandle,
+    units[e] = {
+      entityHandle: e,
       ...combatPosInfo,
       ...combatStatsInfo,
       ...factionInfo,

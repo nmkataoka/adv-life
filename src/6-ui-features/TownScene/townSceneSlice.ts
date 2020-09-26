@@ -15,7 +15,9 @@ const townSceneSlice = createSlice({
   },
   extraReducers: {
     [travelToLocation.type]: (state, action: PayloadAction<TravelToLocationPayload>) => {
-      const { payload: { id, locationType } } = action;
+      const {
+        payload: { id, locationType },
+      } = action;
       switch (locationType) {
         case 'Combat':
           state.currentTownId = -1;

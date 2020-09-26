@@ -1,36 +1,19 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import { useSelector as useReduxSelector, useDispatch } from 'react-redux';
+import { useSelector } from '4-react-ecsal';
 import { RootState } from '7-app/types';
+import { getTownInfo } from '3-frontend-api';
 import TownLocation from '../TownLocation';
 import PartySummary from './PartySummary';
-import useUILoop from '../useUILoop';
-import { updateTownsFromEngine } from '../Towns/townSlice';
-import { updateTownLocationsFromEngine } from '../TownLocation/townLocationsSlice';
 import { changedTitle } from '../TopBar/topBarSlice';
 
-const selectTownLocations = (state: RootState) => {
-  const curTownId = state.townScene.currentTownId;
-  const {
-    byId: { [curTownId]: town },
-  } = state.towns;
-
-  let locationIds: number[] = [];
-  let name = 'Unnamed';
-  if (town) {
-    ({ locationIds, name } = town);
-  }
-  return { townId: curTownId, townLocationIds: locationIds, townName: name };
-};
+const selectCurTownId = (state: RootState) => state.townScene.currentTownId;
 
 export default function TownScene(): JSX.Element {
   const dispatch = useDispatch();
-  const { townId, townLocationIds, townName } = useSelector(selectTownLocations, shallowEqual);
-  const engineUpdates = useMemo(
-    () => [updateTownsFromEngine, () => updateTownLocationsFromEngine(townLocationIds)],
-    [townLocationIds],
-  );
-  useUILoop(engineUpdates);
+  const townId = useReduxSelector(selectCurTownId);
+  const { locationIds: townLocationIds, name: townName } = useSelector(getTownInfo(townId));
 
   useEffect(() => {
     dispatch(changedTitle(townName));
