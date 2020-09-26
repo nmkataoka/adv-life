@@ -13,8 +13,10 @@ const modalMetaSlice = createSlice({
     usedModalZIndex(state, action: PayloadAction<number>) {
       const usedZIndex = action.payload;
       if (usedZIndex >= 2000000000) {
-        throw new Error('Modal global counter is over 2 billion. '
-        + "This likely indicates an error elsewhere unless you've been playing for centuries.");
+        throw new Error(
+          'Modal global counter is over 2 billion. ' +
+            "This likely indicates an error elsewhere unless you've been playing for centuries.",
+        );
       }
       if (usedZIndex >= state.nextZIndex) {
         state.nextZIndex = usedZIndex + 1;

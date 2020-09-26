@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
-import { RootState } from '7-app/types';
+import { useSelector } from '4-react-ecsal';
+import { getCombatLog } from '3-frontend-api/combatLog/getCombatLog';
 
 const CombatLog = (): JSX.Element => {
-  const combatLogEntries = useSelector((state: RootState) => state.combatLog.entries);
+  const combatLogEntries = useSelector(getCombatLog);
   return (
     <ReverserWrapper>
       <InnerWrapper>
@@ -12,7 +12,9 @@ const CombatLog = (): JSX.Element => {
           /* the idx in the key should be removed once timestamps
           /* are associated with the entries to make them unique */
           /* eslint-disable-next-line react/no-array-index-key */
-          (entry, idx) => <Entry key={`${entry}_${idx}`}>{entry}</Entry>,
+          (entry, idx) => (
+            <Entry key={`${entry}_${idx}`}>{entry}</Entry>
+          ),
         )}
       </InnerWrapper>
     </ReverserWrapper>
