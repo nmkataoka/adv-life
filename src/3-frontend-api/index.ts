@@ -17,3 +17,6 @@ export function SetSkillTarget(user: number, targets: number[], skillName: strin
     goalQueueCmpt.nextAction = baction;
   }
 }
+
+export * from './inventory';
+export * from './player';

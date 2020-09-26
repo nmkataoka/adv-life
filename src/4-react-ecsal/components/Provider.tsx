@@ -5,7 +5,7 @@ import ReactEcsalContext, { ContextValue } from './Context';
 
 type ProviderProps = {
   store: GameManager;
-  context: React.Context<ContextValue>;
+  context?: React.Context<ContextValue>;
   children: React.ReactNode;
 };
 

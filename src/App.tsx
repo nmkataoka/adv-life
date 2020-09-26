@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 
 import { useSelector } from 'react-redux';
 import { GameManager } from '0-engine/GameManager';
+import { Provider as EcsalProvider } from '4-react-ecsal';
+
 import TopBar from './6-ui-features/TopBar';
 import { Scenes } from './6-ui-features/sceneManager/sceneMetaSlice';
 
@@ -29,10 +31,12 @@ function App(): JSX.Element {
   const Scene = scenes[currentScene];
 
   return (
-    <Container>
-      <TopBar />
-      <Scene />
-    </Container>
+    <EcsalProvider store={GameManager.instance}>
+      <Container>
+        <TopBar />
+        <Scene />
+      </Container>
+    </EcsalProvider>
   );
 }
 
