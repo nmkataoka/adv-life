@@ -4,7 +4,6 @@ import { HealthCmpt } from '1-game-code/ncomponents/HealthCmpt';
 import { FactionCmpt } from '1-game-code/ncomponents/FactionCmpt';
 import { CombatPositionCmpt } from '1-game-code/Combat/CombatPositionCmpt';
 import { StatusEffectsCmpt } from '1-game-code/Combat/StatusEffectsCmpt';
-import { GetView } from '0-engine';
 import { GoalQueueCmpt } from '1-game-code/Agent/GoalQueueCmpt';
 import { DictOf } from '8-helpers/DictOf';
 
@@ -102,9 +101,9 @@ const getNextBactionInfo = (entityHandle: number) => {
 export const getUnitInfos = (): DictOf<UnitInfo> => {
   const { eMgr } = GameManager.instance;
   const units: DictOf<UnitInfo> = {};
-  const unitView = GetView(eMgr, 0, HealthCmpt);
-  for (let i = 0; i < unitView.Count; ++i) {
-    const e = unitView.At(i);
+  const unitView = eMgr.getView([HealthCmpt], [], []);
+  for (let i = 0; i < unitView.count; ++i) {
+    const e = unitView.at(i);
     const entityHandle = parseInt(e, 10);
 
     const healthInfo = getHealth(entityHandle);

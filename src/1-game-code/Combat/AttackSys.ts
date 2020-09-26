@@ -1,5 +1,5 @@
 import { ECSystem } from '0-engine/ECS/ECSystem';
-import { EntityManager, GetView } from '0-engine';
+import { EntityManager } from '0-engine';
 
 import { HealthCmpt } from '../ncomponents/HealthCmpt';
 
@@ -12,15 +12,11 @@ export class AttackSys extends ECSystem {
 
   public checkForDeaths(): void {
     const eMgr = EntityManager.instance;
-    const view = GetView(eMgr, 0, HealthCmpt);
-    const [healthMgr] = view.cMgrs;
-    for (let i = 0; i < view.Count; ++i) {
-      const e = view.At(i);
-      const healthCmpt = healthMgr.getMut(e);
-
-      if (healthCmpt && healthCmpt.health <= 0) {
-        eMgr.queueEntityDestruction(parseInt(e, 10));
+    const view = eMgr.getView([HealthCmpt], [], []);
+    view.forEach((e: number | string, [healthCmpt]) => {
+      if (healthCmpt.health <= 0) {
+        eMgr.queueEntityDestruction(e);
       }
-    }
+    });
   }
 }

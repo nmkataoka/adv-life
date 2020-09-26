@@ -8,6 +8,7 @@ import {
   GetComponentUncertainFuncType,
 } from './types/EntityManagerAccessorTypes';
 import { NameCmpt } from './built-in-components';
+import { ConstructorsFromComponents, View } from './View';
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
@@ -22,7 +23,7 @@ export class EntityManager {
 
   private cMgrs: { [key: string]: ComponentManager<NComponent> };
 
-  private entitiesToDestroy: number[] = [];
+  private entitiesToDestroy: (number | string)[] = [];
 
   // For testing purposes, specific systems can be passed
   constructor(systemConstructors: ECSystemConstructor<any>[]) {
@@ -162,7 +163,20 @@ export class EntityManager {
     return this.systems[sysClass.name] as Sys;
   }
 
-  public queueEntityDestruction(e: number): void {
+  public getView = <
+    ReadCmpts extends NComponent[],
+    WriteCmpts extends NComponent[],
+    WithoutCmpts extends NComponent[]
+  >(
+    readCmpts: ConstructorsFromComponents<ReadCmpts>,
+    writeCmpts: ConstructorsFromComponents<WriteCmpts>,
+    withoutCmpts: ConstructorsFromComponents<WithoutCmpts>,
+  ): View<ReadCmpts, WriteCmpts, WithoutCmpts> => {
+    const view = new View(this, readCmpts, writeCmpts, withoutCmpts);
+    return view;
+  };
+
+  public queueEntityDestruction(e: number | string): void {
     this.entitiesToDestroy.push(e);
   }
 
@@ -173,7 +187,7 @@ export class EntityManager {
     this.entitiesToDestroy = [];
   }
 
-  private destroyEntity(e: number) {
+  private destroyEntity(e: number | string) {
     // Multiple destroy requests for an entity may occur in one frame -- is this an issue?
     // We could at least optimizely when we add tracking for deleted entities.
     Object.values(this.cMgrs).forEach((cMgr) => cMgr.remove(e));
