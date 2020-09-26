@@ -17,4 +17,4 @@ export {
   EntityManager,
 } from './ECS/EntityManager';
 export type { NComponent, NComponentConstructor } from './ECS/NComponent';
-export { GetView, View } from './ECS/View';
+export { View } from './ECS/View';

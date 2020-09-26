@@ -1,4 +1,3 @@
-import { GetView } from '0-engine';
 import { TownLocationsCmpt } from '1-game-code/Town';
 import { GameManager } from '0-engine/GameManager';
 import { DictOf } from '8-helpers/DictOf';
@@ -14,10 +13,10 @@ const getLocations = (entityHandle: number) => {
 export const getTowns = (): DictOf<TownInfo> => {
   const { eMgr } = GameManager.instance;
   const towns: DictOf<TownInfo> = {};
-  const townView = GetView(eMgr, 0, TownLocationsCmpt);
+  const townView = eMgr.getView([TownLocationsCmpt], [], []);
 
-  for (let i = 0; i < townView.Count; ++i) {
-    const e = townView.At(i);
+  for (let i = 0; i < townView.count; ++i) {
+    const e = townView.at(i);
     const entityHandle = parseInt(e, 10);
 
     const { name } = getNameCmpt(entityHandle);

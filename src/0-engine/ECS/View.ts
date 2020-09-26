@@ -1,50 +1,63 @@
-import { NComponentConstructor } from './NComponent';
+import { NComponent, NComponentConstructor } from './NComponent';
 import { ComponentManager } from './ComponentManager';
 import { EntityManager } from './EntityManager';
 
 type NComponentConstructorArray = NComponentConstructor<any>[];
 
-type CMgrs<T extends NComponentConstructorArray> = {
-  [K in keyof T]: T[K] extends NComponentConstructor<infer C> ? ComponentManager<C> : never;
+type CMgrs<T extends NComponent[]> = {
+  [K in keyof T]: T[K] extends NComponent ? ComponentManager<T[K]> : never;
 };
 
-type CsFromConstructors<T extends NComponentConstructorArray> = {
-  [K in keyof T]: T[K] extends NComponentConstructor<infer C> ? C : never;
+export type ConstructorsFromComponents<T extends unknown[]> = {
+  [K in keyof T]: T[K] extends NComponent ? NComponentConstructor<T[K]> : never;
 };
 
-export function GetView<T extends NComponentConstructorArray>(
-  eMgr: EntityManager,
-  without: number,
-  ...cons: T
-): View<T> {
-  return new View(eMgr, without, ...cons);
-}
+export class View<
+  ReadCmpts extends NComponent[],
+  WriteCmpts extends NComponent[],
+  WithoutCmpts extends NComponent[]
+> {
+  constructor(
+    eMgr: EntityManager,
+    // Not sure whether this makes a difference, e.g. for variadic tuples in Typescript 4.0
+    [...readCmpts]: ConstructorsFromComponents<ReadCmpts>,
+    writeCmpts: ConstructorsFromComponents<WriteCmpts>,
+    withoutCmpts: ConstructorsFromComponents<WithoutCmpts>,
+  ) {
+    this.readCMgrs = readCmpts.map((CClass) => eMgr.tryGetMgr(CClass)) as CMgrs<ReadCmpts>;
+    this.writeCMgrs = writeCmpts.map((CClass) => eMgr.tryGetMgrMut(CClass)) as CMgrs<WriteCmpts>;
+    this.withoutCMgrs = withoutCmpts.map((CClass) => eMgr.tryGetMgr(CClass)) as CMgrs<WithoutCmpts>;
 
-export class View<T extends NComponentConstructorArray> {
-  constructor(eMgr: EntityManager, without: number, ...cons: T) {
-    this.cMgrs = cons.map((CClass) => eMgr.tryGetMgrMut(CClass)) as CMgrs<T>;
-
-    this.entities = FindEntitiesWithComponents(this.cMgrs, without);
+    this.entities = FindEntitiesWithComponents(
+      [...this.readCMgrs, ...this.withoutCMgrs],
+      withoutCmpts.length,
+    );
   }
 
-  public cMgrs: CMgrs<T>;
+  private readCMgrs: CMgrs<ReadCmpts>;
+
+  private writeCMgrs: CMgrs<WriteCmpts>;
+
+  private withoutCMgrs: CMgrs<WithoutCmpts>;
 
   public entities: string[];
 
-  public At(idx: number): string {
+  public at(idx: number): string {
     return this.entities[idx];
   }
 
-  public get Count(): number {
+  public get count(): number {
     return this.entities.length;
   }
 
-  public ForEach(func: (e: string, components: CsFromConstructors<T>) => void): void {
-    for (let i = 0; i < this.Count; ++i) {
-      const e = this.At(i);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      const components = this.cMgrs.map((cMgr) => cMgr.getMut(e)) as CsFromConstructors<T>;
-      func(e, components);
+  public forEach(
+    func: (e: number | string, readCmpts: ReadCmpts, writeCmpts: WriteCmpts) => void,
+  ): void {
+    for (let i = 0; i < this.count; ++i) {
+      const e = this.at(i);
+      const readCmpts = this.readCMgrs.map((cMgr) => cMgr.get(e)) as ReadCmpts;
+      const writeCmpts = this.writeCMgrs.map((cMgr) => cMgr.getMut(e)) as WriteCmpts;
+      func(e, readCmpts, writeCmpts);
     }
   }
 }

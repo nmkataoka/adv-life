@@ -1,5 +1,5 @@
 import { Stats } from 'fs';
-import { ECSystem, GetView } from '0-engine';
+import { ECSystem } from '0-engine';
 import { EventCallbackArgs, EventSys } from '0-engine/ECS/event-system';
 import {
   ClassCmpt,
@@ -24,7 +24,7 @@ const createCharacter = ({
   race: string;
   stats: Stats;
 }>) => {
-  const playerAlreadyExists = GetView(eMgr, 0, PlayerCmpt).Count > 0;
+  const playerAlreadyExists = eMgr.getView([PlayerCmpt], [], []).count > 0;
   if (playerAlreadyExists) {
     ack({ error: 'Tried to create player character, but player already exists.' });
   }

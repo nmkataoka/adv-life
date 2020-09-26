@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { GetView } from '0-engine';
 import { GameManager } from '0-engine/GameManager';
 import { AppThunk } from '7-app/types';
 import { PlayerCmpt } from '1-game-code/ncomponents';
@@ -40,10 +39,10 @@ export default playerSlice.reducer;
 
 export const updatePlayerEntityFromEngine = (): AppThunk => (dispatch) => {
   const { eMgr } = GameManager.instance;
-  const players = GetView(eMgr, 0, PlayerCmpt);
+  const players = eMgr.getView([PlayerCmpt], [], []);
   let playerEntityHandle = -1;
-  if (players.Count > 0) {
-    playerEntityHandle = parseInt(players.At(0), 10);
+  if (players.count > 0) {
+    playerEntityHandle = parseInt(players.at(0), 10);
   }
   dispatch(setPlayerEntity(playerEntityHandle));
 };

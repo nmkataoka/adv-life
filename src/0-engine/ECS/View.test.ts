@@ -1,6 +1,5 @@
 import { EntityManager } from './EntityManager';
 import { NComponent } from './NComponent';
-import { GetView } from './View';
 
 class TestCmpt implements NComponent {}
 
@@ -14,7 +13,7 @@ describe('View', () => {
     const e = eMgr.createEntity();
     eMgr.addCmpt(e, new TestCmpt());
 
-    const view = GetView(eMgr, 0, TestCmpt);
-    expect(view.Count).toBe(1);
+    const view = eMgr.getView([TestCmpt], [], []);
+    expect(view.count).toBe(1);
   });
 });
