@@ -1,9 +1,8 @@
 import React from 'react';
-import { useDispatch, useSelector as useReduxSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useSelector } from '4-react-ecsal';
 import styled from '@emotion/styled';
-import { RootState } from '7-app/types';
-import { getPlayerInventory } from '3-frontend-api';
+import { getInventory, getPlayerInventory } from '3-frontend-api';
 import CharacterInventory from '../CharacterInfo/CharacterInventory';
 import { buyItemFromShop } from './townLocationsSlice';
 import ItemStack from './ItemStack';
@@ -14,9 +13,7 @@ type ShopInventoryProps = {
 
 const ShopInventory = ({ townLocationId }: ShopInventoryProps): JSX.Element => {
   const dispatch = useDispatch();
-  const inventory = useReduxSelector(
-    (state: RootState) => state.townLocations.byId[townLocationId]?.inventory,
-  );
+  const inventory = useSelector(getInventory(townLocationId));
   const { inventorySlots, gold: playerGold } = useSelector(getPlayerInventory);
 
   const handleBuyItem = (itemIndex: number) => () => {

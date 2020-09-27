@@ -1,16 +1,14 @@
-import React, {
-  useState, useMemo, useCallback, useEffect,
-} from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '7-app/types';
 import { usedModalZIndex } from './modalMetaSlice';
 
 type ModalProps = {
-  children?: React.ReactNode,
-  isShowing?: boolean,
-  onClose?: () => void,
-}
+  children?: React.ReactNode;
+  isShowing?: boolean;
+  onClose?: () => void;
+};
 
 export default function Modal({ children, isShowing, onClose }: ModalProps): JSX.Element | null {
   const dispatch = useDispatch();
@@ -40,12 +38,15 @@ export default function Modal({ children, isShowing, onClose }: ModalProps): JSX
   }, [zIndex, isShowing, handleFocus]);
 
   // We don't want to rerender the content just because nextZIndex changes
-  const content = useMemo(() => (
-    <RelativeDiv>
-      <CloseButton onClick={handleClose}>X</CloseButton>
-      {children}
-    </RelativeDiv>
-  ), [children, handleClose]);
+  const content = useMemo(
+    () => (
+      <RelativeDiv>
+        <CloseButton onClick={handleClose}>X</CloseButton>
+        {children}
+      </RelativeDiv>
+    ),
+    [children, handleClose],
+  );
 
   if (!isShowing) return null;
 
@@ -60,8 +61,8 @@ type ContainerProps = {
   offset: {
     x: number;
     y: number;
-  }
-}
+  };
+};
 const padding = '10px 15px';
 const Container = styled.div`
   position: absolute;

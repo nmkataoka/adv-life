@@ -1,6 +1,6 @@
 export type { TownInfo } from './TownInfo';
 export type { TownLocationInfo } from './TownLocationInfo';
 export { getAllTowns } from './getAllTowns';
-export { getTownLocationInfo } from './getTownLocationInfo';
+export { getTownLocation } from './getTownLocation';
 export { getTowns } from './getTowns';
-export { getTownInfo } from './getTownInfo';
+export { getTown } from './getTown';

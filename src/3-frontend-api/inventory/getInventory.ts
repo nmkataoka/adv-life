@@ -6,7 +6,7 @@ import { defaultInventorySlotInfo, InventoryInfo } from './InventoryInfo';
 export const getInventory = (e: number | string): Selector<InventoryInfo> => (
   eMgr: EntityManager,
 ) => {
-  const { gold, inventorySlots } = eMgr.getCmpt(InventoryCmpt, e);
+  const { gold = 0, inventorySlots = [] } = eMgr.tryGetCmpt(InventoryCmpt, e) ?? {};
   return {
     gold,
     inventorySlots: inventorySlots.map((slot) => {

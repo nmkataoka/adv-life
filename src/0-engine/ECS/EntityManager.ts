@@ -116,7 +116,7 @@ export class EntityManager {
   /** Returns a mutable reference to a component, which must exist. */
   public getCmptMut = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-    entityHandle: number,
+    entityHandle: number | string,
   ): C => {
     const cMgr = this.tryGetMgrMut<C>(cclass);
     return cMgr.getMut(entityHandle);
@@ -125,7 +125,7 @@ export class EntityManager {
   /** Returns a readonly reference to a component, or undefined if it doesn't exist. */
   public tryGetCmpt = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-    entityHandle: number,
+    entityHandle: number | string,
   ): DeepReadonly<C> | undefined => {
     const cMgr = this.tryGetMgr<C>(cclass);
     return cMgr.tryGet(entityHandle);
@@ -134,7 +134,7 @@ export class EntityManager {
   /** Returns a mutable reference to a component, or undefined if it doesn't exist. */
   public tryGetCmptMut = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-    entityHandle: number,
+    entityHandle: number | string,
   ): C | undefined => {
     const cMgr = this.tryGetMgrMut<C>(cclass);
     return cMgr.tryGetMut(entityHandle);

@@ -163,6 +163,6 @@ export const setMousePosition = (newPos: MousePos): AppThunk => (dispatch) =>
   updateMousePositionInner(dispatch, newPos);
 
 export const setIsPaused = (nextState: boolean): AppThunk => (dispatch) => {
-  GameManager.instance.SetPaused(nextState);
+  GameManager.instance.setPaused(nextState);
   dispatch(isPausedChanged(nextState));
 };

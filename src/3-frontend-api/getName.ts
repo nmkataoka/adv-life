@@ -1,7 +1,6 @@
-import { GameManager } from '0-engine/GameManager';
+import { EntityManager } from '0-engine';
 import { NameCmpt } from '1-game-code/ncomponents';
 
-export const getNameCmpt = (entityHandle: number): NameCmpt => {
-  const { eMgr } = GameManager.instance;
-  return eMgr.getCmptMut(NameCmpt, entityHandle);
+export const getNameCmpt = (e: number) => (eMgr: EntityManager): NameCmpt => {
+  return eMgr.getCmpt(NameCmpt, e);
 };
