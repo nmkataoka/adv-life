@@ -1,0 +1,1 @@
+export { getPlayerId } from './getPlayerId';

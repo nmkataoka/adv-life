@@ -1,32 +1,20 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from '4-react-ecsal';
 import styled from '@emotion/styled';
-import { RootState } from '7-app/types';
+import { getInventory, getPlayerInventory } from '3-frontend-api';
 import CharacterInventory from '../CharacterInfo/CharacterInventory';
 import { buyItemFromShop } from './townLocationsSlice';
-import useUILoop from '../useUILoop';
-import { updatePlayerInventoryFromEngine } from '../Player/playerSlice';
 import ItemStack from './ItemStack';
-import { updateItemClassesFromEngine } from '../Items/itemClassesSlice';
 
 type ShopInventoryProps = {
   townLocationId: number;
 };
 
-const engineActions = [updatePlayerInventoryFromEngine];
-
 const ShopInventory = ({ townLocationId }: ShopInventoryProps): JSX.Element => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(updateItemClassesFromEngine());
-  }, [dispatch]);
-  useUILoop(engineActions);
-  const inventory = useSelector(
-    (state: RootState) => state.townLocations.byId[townLocationId]?.inventory,
-  );
-  const { inventorySlots, gold: playerGold } = useSelector(
-    (state: RootState) => state.player.inventory,
-  );
+  const inventory = useSelector(getInventory(townLocationId));
+  const { inventorySlots, gold: playerGold } = useSelector(getPlayerInventory);
 
   const handleBuyItem = (itemIndex: number) => () => {
     const item = inventory.inventorySlots[itemIndex];

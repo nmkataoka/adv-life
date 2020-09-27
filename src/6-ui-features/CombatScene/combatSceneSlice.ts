@@ -1,7 +1,7 @@
 import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
 import throttle from 'lodash.throttle';
 import { GameManager } from '0-engine/GameManager';
-import { SetSkillTarget } from '3-frontend-api';
+import { setSkillTarget as setSkillTargetApi } from '3-frontend-api';
 import { UnitInfo as UnitInfoApi } from '3-frontend-api/UnitInfo';
 import { DictOf } from '8-helpers/DictOf';
 import { AppThunk } from '7-app/types';
@@ -151,7 +151,7 @@ const checkIfInCombat = (units: DictOf<UnitInfo>): boolean => {
 };
 
 export const setSkillTarget = (unit: number, targets: number[], action: ActionInfo): void => {
-  SetSkillTarget(unit, targets, action.name);
+  setSkillTargetApi(unit, targets, action.name);
 };
 
 const updateMousePositionInner = throttle((dispatch: Dispatch, newPos: MousePos) => {
@@ -163,6 +163,6 @@ export const setMousePosition = (newPos: MousePos): AppThunk => (dispatch) =>
   updateMousePositionInner(dispatch, newPos);
 
 export const setIsPaused = (nextState: boolean): AppThunk => (dispatch) => {
-  GameManager.instance.SetPaused(nextState);
+  GameManager.instance.setPaused(nextState);
   dispatch(isPausedChanged(nextState));
 };

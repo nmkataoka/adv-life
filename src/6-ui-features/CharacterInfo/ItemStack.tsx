@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
-import { RootState } from '7-app/types';
+import { useSelector } from '4-react-ecsal';
+import { getItemClass } from '3-frontend-api/items/getItemClass';
 
 type ItemStackProps = {
   itemClassId: number;
 };
 
 const ItemStack = ({ itemClassId }: ItemStackProps): JSX.Element => {
-  const name = useSelector((state: RootState) => state.itemClasses.byId[itemClassId]?.name);
+  const { name } = useSelector(getItemClass(itemClassId));
   return <ItemBox>{name}</ItemBox>;
 };
 

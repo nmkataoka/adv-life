@@ -22,6 +22,12 @@ export class GameManager {
   public isPaused = false;
 
   constructor() {
+    // expose gamemanager on window for debugging
+    if (process.env.NODE_ENV === 'development' && window) {
+      // eslint-disable-next-line
+      // @ts-ignore
+      window.gameManager = this;
+    }
     this.eMgr = new EntityManager(SystemList);
     this.router = new Router(ControllerList);
     this.storeSubscribers = new Set();
@@ -30,9 +36,9 @@ export class GameManager {
   public Start(): void {
     this.eMgr.Start();
     this.router.Start(this.eMgr.getSys(EventSys));
-    this.CreateMap();
-    this.CreateUnits();
-    this.EnterGameLoop();
+    this.createMap();
+    this.createUnits();
+    this.enterGameLoop();
   }
 
   /** Dispatch an event.
@@ -42,7 +48,7 @@ export class GameManager {
     this.router.handleRequest(routeName, data);
   };
 
-  public SetPaused(nextState: boolean): void {
+  public setPaused(nextState: boolean): void {
     this.isPaused = nextState;
   }
 
@@ -56,11 +62,11 @@ export class GameManager {
     };
   }
 
-  private GameLoopHandle?: NodeJS.Timeout;
+  private gameLoopHandle?: NodeJS.Timeout;
 
   private storeSubscribers: Set<StoreSubscriber>;
 
-  private CreateUnits(): void {
+  private createUnits(): void {
     for (let i = 0; i < 3; ++i) {
       createUnit(i);
     }
@@ -69,22 +75,29 @@ export class GameManager {
     }
   }
 
-  private CreateMap(): void {
+  private createMap(): void {
     createTown('Quietwater');
     createTown('Wandermere');
   }
 
-  private EnterGameLoop(): void {
-    if (this.GameLoopHandle) {
-      clearTimeout(this.GameLoopHandle);
+  private notifySubscribers = (): void => {
+    this.storeSubscribers.forEach((subscriber) => {
+      subscriber(this.eMgr);
+    });
+  };
+
+  private enterGameLoop(): void {
+    if (this.gameLoopHandle) {
+      clearTimeout(this.gameLoopHandle);
     }
 
-    this.GameLoopHandle = setTimeout(() => {
+    this.gameLoopHandle = setTimeout(() => {
       if (!this.isPaused) {
         this.eMgr.OnUpdate(GameManager.dt);
+        this.notifySubscribers();
       }
 
-      this.EnterGameLoop();
+      this.enterGameLoop();
     }, 1000 / GameManager.FPS);
   }
 }

@@ -3,7 +3,6 @@ import { GameManager } from '0-engine/GameManager';
 import { AppThunk } from '7-app/types';
 import { PlayerCmpt } from '1-game-code/ncomponents';
 import { InventoryInfo } from '3-frontend-api/inventory/InventoryInfo';
-import { getInventoryInfo } from '3-frontend-api/inventory/getInventoryInfo';
 import { updatedUnits } from '../CombatScene/actions';
 
 const initialState = {
@@ -19,9 +18,6 @@ const playerSlice = createSlice({
     setPlayerEntity(state, action: PayloadAction<number>) {
       state.playerId = action.payload;
     },
-    updatedPlayerInventory(state, action: PayloadAction<InventoryInfo>) {
-      state.inventory = action.payload;
-    },
   },
   extraReducers: {
     [updatedUnits.type]: (state, action) => {
@@ -33,7 +29,7 @@ const playerSlice = createSlice({
   },
 });
 
-export const { setPlayerEntity, updatedPlayerInventory } = playerSlice.actions;
+export const { setPlayerEntity } = playerSlice.actions;
 
 export default playerSlice.reducer;
 
@@ -42,13 +38,7 @@ export const updatePlayerEntityFromEngine = (): AppThunk => (dispatch) => {
   const players = eMgr.getView([PlayerCmpt], [], []);
   let playerEntityHandle = -1;
   if (players.count > 0) {
-    playerEntityHandle = parseInt(players.at(0), 10);
+    playerEntityHandle = players.at(0);
   }
   dispatch(setPlayerEntity(playerEntityHandle));
-};
-
-export const updatePlayerInventoryFromEngine = (): AppThunk => (dispatch, getState) => {
-  const { playerId } = getState().player;
-  const inventoryInfo = getInventoryInfo(playerId);
-  dispatch(updatedPlayerInventory(inventoryInfo));
 };

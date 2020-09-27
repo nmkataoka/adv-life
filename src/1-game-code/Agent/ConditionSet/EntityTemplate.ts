@@ -23,7 +23,7 @@ export default class EntityTemplate<
 
   public findCandidateEntities(eMgr: EntityManager): number[] {
     const view = eMgr.getView([...this.cclasses], [], []);
-    return view.entities.map((e) => parseInt(e, 10));
+    return view.entities;
   }
 
   public checkValid(entity: number, eMgr: EntityManager): boolean {

@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector as useReduxSelector, useDispatch } from 'react-redux';
 import { useRef } from 'react';
+import { RootState } from '7-app/types';
 import Unit from './Unit';
 import ActionBar from './ActionBar';
-import { RootState } from '7-app/types';
 import { setMousePosition, UnitInfo } from './combatSceneSlice';
 import { updateUnitsFromEngine } from './actions';
 import CombatLog from '../CombatLog';
@@ -13,19 +13,15 @@ import useUILoop from '../useUILoop';
 
 import useDetectKeypress from '../common/useDetectKeypress';
 import InfoSidebar from './InfoSidebar';
-import { updateCombatLogFromEngine } from '../CombatLog/combatLogSlice';
 
 function sortUnitsByCombatPosition(a: UnitInfo, b: UnitInfo) {
   return a.position - b.position;
 }
 
-const engineUpdates = [
-  updateCombatLogFromEngine,
-  updateUnitsFromEngine,
-];
+const engineUpdates = [updateUnitsFromEngine];
 
 export default function CombatScene(): JSX.Element {
-  const units = useSelector((state: RootState) => state.combatScene.units);
+  const units = useReduxSelector((state: RootState) => state.combatScene.units);
   const enemies = Object.values(units).filter((u) => u.isEnemy);
   const friendlies = Object.values(units).filter((f) => !f.isEnemy);
   const dispatch = useDispatch();
@@ -58,7 +54,9 @@ export default function CombatScene(): JSX.Element {
           ))}
         </Row>
         <ActionBar />
-        <CombatLogContainer><CombatLog /></CombatLogContainer>
+        <CombatLogContainer>
+          <CombatLog />
+        </CombatLogContainer>
       </MainContent>
       <InfoSidebar />
     </Container>

@@ -4,7 +4,7 @@ import { EntityManager } from './EntityManager';
 
 type NComponentConstructorArray = NComponentConstructor<any>[];
 
-type CMgrs<T extends NComponent[]> = {
+type CMgrs<T extends unknown[]> = {
   [K in keyof T]: T[K] extends NComponent ? ComponentManager<T[K]> : never;
 };
 
@@ -19,8 +19,7 @@ export class View<
 > {
   constructor(
     eMgr: EntityManager,
-    // Not sure whether this makes a difference, e.g. for variadic tuples in Typescript 4.0
-    [...readCmpts]: ConstructorsFromComponents<ReadCmpts>,
+    readCmpts: ConstructorsFromComponents<ReadCmpts>,
     writeCmpts: ConstructorsFromComponents<WriteCmpts>,
     withoutCmpts: ConstructorsFromComponents<WithoutCmpts>,
   ) {
@@ -40,9 +39,9 @@ export class View<
 
   private withoutCMgrs: CMgrs<WithoutCmpts>;
 
-  public entities: string[];
+  public entities: number[];
 
-  public at(idx: number): string {
+  public at(idx: number): number {
     return this.entities[idx];
   }
 
@@ -50,9 +49,7 @@ export class View<
     return this.entities.length;
   }
 
-  public forEach(
-    func: (e: number | string, readCmpts: ReadCmpts, writeCmpts: WriteCmpts) => void,
-  ): void {
+  public forEach(func: (e: number, readCmpts: ReadCmpts, writeCmpts: WriteCmpts) => void): void {
     for (let i = 0; i < this.count; ++i) {
       const e = this.at(i);
       const readCmpts = this.readCMgrs.map((cMgr) => cMgr.get(e)) as ReadCmpts;
@@ -62,7 +59,7 @@ export class View<
   }
 }
 
-function FindEntitiesWithComponents(cMgrs: ComponentManager<any>[], without: number): string[] {
+function FindEntitiesWithComponents(cMgrs: ComponentManager<any>[], without: number): number[] {
   const requiredCMgrs = cMgrs.slice(0, cMgrs.length - without);
   const withoutCMgrs = cMgrs.slice(cMgrs.length - without);
 
@@ -77,7 +74,7 @@ function FindEntitiesWithComponents(cMgrs: ComponentManager<any>[], without: num
   }
 
   const startingEntityList = Object.keys(requiredCMgrs[0].components);
-  const viewEntities: string[] = [];
+  const viewEntities: number[] = [];
   for (let i = 0; i < startingEntityList.length; ++i) {
     const e = startingEntityList[i];
 
@@ -101,7 +98,7 @@ function FindEntitiesWithComponents(cMgrs: ComponentManager<any>[], without: num
       }
 
       if (hasAllComponents) {
-        viewEntities.push(e);
+        viewEntities.push(parseInt(e, 10));
       }
     }
   }

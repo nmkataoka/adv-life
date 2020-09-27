@@ -1,15 +1,19 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
-import { RootState } from '7-app/types';
-import useUILoop from '../useUILoop';
-import { updatePlayerInventoryFromEngine } from '../Player/playerSlice';
+import { useSelector } from '4-react-ecsal';
+import { EntityManager } from '0-engine';
+import { InventoryCmpt } from '1-game-code/ncomponents';
+import { getPlayerId } from '3-frontend-api';
 
-const engineActions = [updatePlayerInventoryFromEngine];
+const selectPlayerGold = (player: number | string) => (eMgr: EntityManager) => {
+  const { gold } = eMgr.getCmpt(InventoryCmpt, player);
+  return gold;
+};
 
 const CharacterEquipment = (): JSX.Element => {
-  useUILoop(engineActions);
-  const playerGold = useSelector((state: RootState) => state.player.inventory.gold);
+  const playerGold = useSelector((eMgr: EntityManager) =>
+    selectPlayerGold(getPlayerId(eMgr))(eMgr),
+  );
   return (
     <LeftHalf>
       <h3>Player Name</h3>

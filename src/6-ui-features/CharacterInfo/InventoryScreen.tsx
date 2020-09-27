@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
+import { useSelector } from '4-react-ecsal';
+import { getPlayerInventory } from '3-frontend-api';
 import CharacterEquipment from './CharacterEquipment';
 import CharacterInventory from './CharacterInventory';
-import { RootState } from '7-app/types';
 
 const InventoryScreen = (): JSX.Element => {
-  const inventorySlots = useSelector((state: RootState) => state.player.inventory.inventorySlots);
+  const { inventorySlots } = useSelector(getPlayerInventory);
   return (
     <Container>
       <TwoHalves>

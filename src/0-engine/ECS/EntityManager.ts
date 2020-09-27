@@ -1,3 +1,4 @@
+import { DeepReadonly } from 'ts-essentials';
 import { ECSystem } from './ECSystem';
 import { NComponent, NComponentConstructor } from './NComponent';
 import { ComponentManager } from './ComponentManager';
@@ -71,21 +72,28 @@ export class EntityManager {
   /** Returns a readonly reference to a component manager, which must exist. */
   public getMgr = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-  ): Readonly<ComponentManager<C>> => {
-    return this.cMgrs[cclass.name] as ComponentManager<C>;
+  ): DeepReadonly<ComponentManager<C>> => {
+    return this.getMgrMut(cclass) as DeepReadonly<ComponentManager<C>>;
   };
 
   /** Returns a mutable reference to a component manager, which must exist. */
   public getMgrMut = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
   ): ComponentManager<C> => {
-    return this.getMgr(cclass);
+    return this.cMgrs[cclass.name] as ComponentManager<C>;
   };
 
   /** Returns a readonly reference to a component manager, which is created if it doesn't already exist. */
   public tryGetMgr = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-  ): Readonly<ComponentManager<C>> => {
+  ): DeepReadonly<ComponentManager<C>> => {
+    return this.tryGetMgrMut(cclass) as DeepReadonly<ComponentManager<C>>;
+  };
+
+  /** Returns a mutable reference to a component manager, which is created if it doesn't already exist. */
+  public tryGetMgrMut = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
+  ): ComponentManager<C> => {
     let cMgr = this.cMgrs[cclass.name];
 
     // Create componentManager if it doesn't exist
@@ -96,18 +104,11 @@ export class EntityManager {
     return cMgr as ComponentManager<C>;
   };
 
-  /** Returns a mutable reference to a component manager, which is created if it doesn't already exist. */
-  public tryGetMgrMut = <C extends NComponent>(
-    cclass: NComponentConstructor<C>,
-  ): ComponentManager<C> => {
-    return this.tryGetMgr(cclass);
-  };
-
   /** Returns a readonly reference to a component, which must exist. */
   public getCmpt = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
     e: number | string,
-  ): Readonly<C> => {
+  ): DeepReadonly<C> => {
     const cMgr = this.tryGetMgr(cclass);
     return cMgr.get(e);
   };
@@ -115,7 +116,7 @@ export class EntityManager {
   /** Returns a mutable reference to a component, which must exist. */
   public getCmptMut = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-    entityHandle: number,
+    entityHandle: number | string,
   ): C => {
     const cMgr = this.tryGetMgrMut<C>(cclass);
     return cMgr.getMut(entityHandle);
@@ -124,8 +125,8 @@ export class EntityManager {
   /** Returns a readonly reference to a component, or undefined if it doesn't exist. */
   public tryGetCmpt = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-    entityHandle: number,
-  ): Readonly<C> | undefined => {
+    entityHandle: number | string,
+  ): DeepReadonly<C> | undefined => {
     const cMgr = this.tryGetMgr<C>(cclass);
     return cMgr.tryGet(entityHandle);
   };
@@ -133,14 +134,16 @@ export class EntityManager {
   /** Returns a mutable reference to a component, or undefined if it doesn't exist. */
   public tryGetCmptMut = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-    entityHandle: number,
+    entityHandle: number | string,
   ): C | undefined => {
     const cMgr = this.tryGetMgrMut<C>(cclass);
     return cMgr.tryGetMut(entityHandle);
   };
 
   /** Gets a unique component, readonly. Convenenience function for special components like lookup tables. */
-  public getUniqueCmpt = <C extends NComponent>(cclass: NComponentConstructor<C>): Readonly<C> => {
+  public getUniqueCmpt = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
+  ): DeepReadonly<C> => {
     const cMgr = this.tryGetMgr<C>(cclass);
     const components = Object.values(cMgr.components);
     return components[0];
@@ -165,15 +168,15 @@ export class EntityManager {
 
   public getView = <
     ReadCmpts extends NComponent[],
-    WriteCmpts extends NComponent[],
-    WithoutCmpts extends NComponent[]
+    WriteCmpts extends NComponent[] = [],
+    WithoutCmpts extends NComponent[] = []
   >(
     readCmpts: ConstructorsFromComponents<ReadCmpts>,
-    writeCmpts: ConstructorsFromComponents<WriteCmpts>,
-    withoutCmpts: ConstructorsFromComponents<WithoutCmpts>,
+    writeCmpts?: ConstructorsFromComponents<WriteCmpts>,
+    withoutCmpts?: ConstructorsFromComponents<WithoutCmpts>,
   ): View<ReadCmpts, WriteCmpts, WithoutCmpts> => {
-    const view = new View(this, readCmpts, writeCmpts, withoutCmpts);
-    return view;
+    const view = new View(this, readCmpts, writeCmpts ?? [], withoutCmpts ?? []);
+    return view as View<ReadCmpts, WriteCmpts, WithoutCmpts>;
   };
 
   public queueEntityDestruction(e: number | string): void {
