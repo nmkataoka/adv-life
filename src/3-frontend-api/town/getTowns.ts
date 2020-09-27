@@ -2,7 +2,7 @@ import { TownLocationsCmpt } from '1-game-code/Town';
 import { GameManager } from '0-engine/GameManager';
 import { DictOf } from '8-helpers/DictOf';
 import { TownInfo } from './TownInfo';
-import { getNameCmpt } from '../getName';
+import { getName } from '../name/getName';
 
 /** @deprecated This should be updated to selectors */
 const getLocations = (entityHandle: number) => {
@@ -20,7 +20,7 @@ export const getTowns = (): DictOf<TownInfo> => {
   for (let i = 0; i < townView.count; ++i) {
     const e = townView.at(i);
 
-    const { name } = getNameCmpt(e)(eMgr);
+    const { name } = getName(e)(eMgr);
 
     towns[e] = {
       townId: e,

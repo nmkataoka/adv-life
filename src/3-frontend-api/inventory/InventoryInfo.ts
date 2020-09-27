@@ -1,3 +1,5 @@
+import { DeepReadonly } from 'ts-essentials';
+
 export type InventorySlotInfo = {
   health: number;
   itemClassId: number;
@@ -6,7 +8,7 @@ export type InventorySlotInfo = {
   stackCount: number;
 };
 
-export const defaultInventorySlotInfo = {
+export const defaultInventorySlotInfo: DeepReadonly<InventorySlotInfo> = {
   health: 1,
   itemClassId: -1,
   materialId: -1,
@@ -17,8 +19,4 @@ export const defaultInventorySlotInfo = {
 export type InventoryInfo = {
   inventorySlots: InventorySlotInfo[];
   gold: number;
-};
-
-export type InventoryInfosDict = {
-  [key: string]: InventoryInfo;
 };
