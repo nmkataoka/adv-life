@@ -49,9 +49,7 @@ export class View<
     return this.entities.length;
   }
 
-  public forEach(
-    func: (e: number, readCmpts: [...ReadCmpts], writeCmpts: [...WriteCmpts]) => void,
-  ): void {
+  public forEach(func: (e: number, readCmpts: ReadCmpts, writeCmpts: WriteCmpts) => void): void {
     for (let i = 0; i < this.count; ++i) {
       const e = this.at(i);
       const readCmpts = this.readCMgrs.map((cMgr) => cMgr.get(e)) as ReadCmpts;
