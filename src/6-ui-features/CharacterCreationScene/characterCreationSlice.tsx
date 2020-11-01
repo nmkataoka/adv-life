@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialCharacterAttributeGroups } from './characterCreationData';
-import CharacterAttributeGroup, { PointAllocation, Ranges, randomize, OneOf } from './CharacterAttributeGroup';
+import CharacterAttributeGroup, {
+  PointAllocation,
+  Ranges,
+  randomize,
+  OneOf,
+} from './CharacterAttributeGroup';
 import { createPlayerCharacter } from '3-frontend-api/characterCreation';
 import { AppThunk } from '7-app/types';
 import { PersonalityArray } from '1-game-code/ncomponents/PersonalityCmpt';
@@ -39,13 +44,18 @@ const characterCreationSlice = createSlice({
   reducers: {
     changedScreen(state, action: PayloadAction<string>) {
       const screenName = action.payload;
-      const newScreenIdx = state.characterAttributeGroups.findIndex((cag) => cag.name === screenName);
+      const newScreenIdx = state.characterAttributeGroups.findIndex(
+        (cag) => cag.name === screenName,
+      );
       if (newScreenIdx >= 0) {
         state.screenIdx = newScreenIdx;
         clearInfoWindow(state);
       }
     },
-    updateInfoWindow(state, action: PayloadAction<{ infoWindowTitle: string; infoWindowText: string }>) {
+    updateInfoWindow(
+      state,
+      action: PayloadAction<{ infoWindowTitle: string; infoWindowText: string }>,
+    ) {
       const { infoWindowTitle, infoWindowText } = action.payload;
       state.infoWindowTitle = infoWindowTitle;
       state.infoWindowText = infoWindowText;
@@ -75,7 +85,9 @@ const characterCreationSlice = createSlice({
     },
     increasedPointAllocationForAttribute(state, action: PayloadAction<{ label: string }>) {
       const { label } = action.payload;
-      const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as PointAllocation;
+      const characterAttributeGroup = state.characterAttributeGroups[
+        state.screenIdx
+      ] as PointAllocation;
       const { options, totalPoints } = characterAttributeGroup;
       const option = options.find((o) => o.label === label);
       if (option == null) {
@@ -90,7 +102,9 @@ const characterCreationSlice = createSlice({
     },
     decreasedPointAllocationForAttribute(state, action: PayloadAction<{ label: string }>) {
       const { label } = action.payload;
-      const characterAttributeGroup = state.characterAttributeGroups[state.screenIdx] as PointAllocation;
+      const characterAttributeGroup = state.characterAttributeGroups[
+        state.screenIdx
+      ] as PointAllocation;
       const { options } = characterAttributeGroup;
       const option = options.find((o) => o.label === label);
       if (option == null) {

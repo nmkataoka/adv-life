@@ -4,14 +4,14 @@ export type PointAllocationData = {
   value: number;
   min: number;
   max: number;
-}
+};
 
 export type PointAllocation = {
   name: string;
   selectType: 'pointAllocation';
   options: PointAllocationData[];
   totalPoints: number;
-}
+};
 
 // Sets all attributes to 0 then randomly increments them until it runs out of points
 export const randomize = (info: PointAllocation): PointAllocation => {

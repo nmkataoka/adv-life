@@ -6,14 +6,17 @@ import Header from './Header';
 import { randomizeCurrentWindow } from '../characterCreationSlice';
 
 type WindowProps = {
-  children?: React.ReactNode,
-  header: string,
-  randomize?: boolean,
-  showNavigation?: boolean,
-}
+  children?: React.ReactNode;
+  header: string;
+  randomize?: boolean;
+  showNavigation?: boolean;
+};
 
 export default function Window({
-  children, header, randomize, showNavigation,
+  children,
+  header,
+  randomize,
+  showNavigation,
 }: WindowProps): JSX.Element {
   const dispatch = useDispatch();
 

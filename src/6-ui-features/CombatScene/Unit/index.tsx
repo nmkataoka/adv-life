@@ -2,9 +2,7 @@
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  useRef, useState, useEffect,
-} from 'react';
+import { useRef, useState, useEffect } from 'react';
 import HealthBar from '../HealthBar';
 import { RootState } from '7-app/types';
 import { setSkillTarget, clickedOnUnit } from '../combatSceneSlice';
@@ -24,22 +22,21 @@ const blinkOnDamageFor = 1000;
 
 const targetCoordsSelector = (entityHandle: number) => (state: RootState) => {
   const { combatScene } = state;
-  const { units: { [entityHandle]: { targetEntity } } } = combatScene;
-  const { unitCoords: { [targetEntity]: targetCoords = undefined } } = combatScene;
+  const {
+    units: {
+      [entityHandle]: { targetEntity },
+    },
+  } = combatScene;
+  const {
+    unitCoords: { [targetEntity]: targetCoords = undefined },
+  } = combatScene;
   return targetCoords;
 };
 
 export default function Unit({ handle }: UnitProps): JSX.Element {
   const dispatch = useDispatch();
 
-  const {
-    health,
-    mana,
-    maxMana,
-    maxHealth,
-    isEnemy,
-    isStealthed,
-  } = useSelector(
+  const { health, mana, maxMana, maxHealth, isEnemy, isStealthed } = useSelector(
     (state: RootState) => state.combatScene.units[handle],
   );
   const [prevHealth, setPrevHealth] = useState(health ?? 0);
@@ -109,7 +106,7 @@ export default function Unit({ handle }: UnitProps): JSX.Element {
 
 type ContainerProps = {
   isStealthed: boolean;
-}
+};
 
 const Container = styled.div`
   display: flex;

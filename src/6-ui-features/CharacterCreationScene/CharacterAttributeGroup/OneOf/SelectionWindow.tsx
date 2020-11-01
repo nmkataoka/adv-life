@@ -5,17 +5,21 @@ import Window from '../../components/Window';
 import { updateInfoWindow, selectedOption } from '../../characterCreationSlice';
 
 export type OptionRowProps = {
-  label: string,
-  info: string,
-}
+  label: string;
+  info: string;
+};
 
 type SelectionWindowProps = {
   header: string;
   options: OptionRowProps[];
   selectedIdx: number;
-}
+};
 
-export default function SelectionWindow({ header, options, selectedIdx }: SelectionWindowProps): JSX.Element {
+export default function SelectionWindow({
+  header,
+  options,
+  selectedIdx,
+}: SelectionWindowProps): JSX.Element {
   const dispatch = useDispatch();
 
   const handleClick = ({ label, info }: OptionRowProps) => () => {
@@ -27,11 +31,7 @@ export default function SelectionWindow({ header, options, selectedIdx }: Select
     <Window header={header} randomize showNavigation>
       <OptionsContainer>
         {options.map((o, idx) => (
-          <Option
-            key={o.label}
-            onClick={handleClick(o)}
-            selected={selectedIdx === idx}
-          >
+          <Option key={o.label} onClick={handleClick(o)} selected={selectedIdx === idx}>
             {o.label}
           </Option>
         ))}
@@ -47,7 +47,7 @@ const OptionsContainer = styled.div`
 
 type OptionProps = {
   selected: boolean;
-}
+};
 
 const Option = styled.button`
   ${(props: OptionProps) => props.selected && 'background-color: lightblue;'}

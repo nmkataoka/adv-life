@@ -14,8 +14,6 @@ const topBarSlice = createSlice({
   },
 });
 
-export const {
-  changedTitle,
-} = topBarSlice.actions;
+export const { changedTitle } = topBarSlice.actions;
 
 export default topBarSlice.reducer;

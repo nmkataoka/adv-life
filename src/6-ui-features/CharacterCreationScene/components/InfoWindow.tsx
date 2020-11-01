@@ -7,8 +7,6 @@ export default function InfoWindow(): JSX.Element {
   const title = useSelector((state: RootState) => state.characterCreation.infoWindowTitle);
   const text = useSelector((state: RootState) => state.characterCreation.infoWindowText);
   return (
-    <Window header={title || 'Information'}>
-      {text || 'Click on an option to learn more.'}
-    </Window>
+    <Window header={title || 'Information'}>{text || 'Click on an option to learn more.'}</Window>
   );
 }

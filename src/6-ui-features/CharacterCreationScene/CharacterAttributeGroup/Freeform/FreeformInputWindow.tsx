@@ -8,12 +8,12 @@ export type FreeformRowProps = {
   label: string;
   type: string;
   value: string;
-}
+};
 
 type FreeformInputWindowProps = {
   header: string;
   options: FreeformRowProps[];
-}
+};
 
 const FreeformInputWindow = ({ header, options }: FreeformInputWindowProps): JSX.Element => {
   const dispatch = useDispatch();
@@ -28,7 +28,12 @@ const FreeformInputWindow = ({ header, options }: FreeformInputWindowProps): JSX
         {options.map(({ label, type, value }) => (
           <label key={label} htmlFor={`freeform-input-${label}`}>
             {label}
-            <Input id={`freeform-input-${label}`} onChange={handleChange(label)} type={type} value={value} />
+            <Input
+              id={`freeform-input-${label}`}
+              onChange={handleChange(label)}
+              type={type}
+              value={value}
+            />
           </label>
         ))}
       </OptionsContainer>
@@ -45,6 +50,6 @@ const OptionsContainer = styled.div`
 
 const Input = styled.input`
   margin-bottom: 1em;
-  margin-top: 0.25em;  
+  margin-top: 0.25em;
   display: block;
 `;

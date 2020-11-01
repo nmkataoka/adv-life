@@ -13,7 +13,7 @@ export type AttributeRowProps = {
   value: number;
   min?: number;
   max: number;
-}
+};
 
 export default function AttributeRow({ info, label, value }: AttributeRowProps): JSX.Element {
   const dispatch = useDispatch();

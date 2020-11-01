@@ -16,7 +16,7 @@ export enum StatusAbility {
   ActionSpeedSlow,
   SightRadiusMultiplier,
 
-  MAX
+  MAX,
 }
 
 // Destructuring for convenience
@@ -52,7 +52,7 @@ export const StatusEffect = {
 
 // Reverse mapping of StatusEffect
 export const StatusAbilityToStatusEffects = Object.entries(StatusEffect).reduce(
-  (map: {[key: number]: (keyof typeof StatusEffect)[]}, [statusEffect, statusAbilities]) => {
+  (map: { [key: number]: (keyof typeof StatusEffect)[] }, [statusEffect, statusAbilities]) => {
     statusAbilities.forEach((sa) => {
       if (map[sa] == null) {
         map[sa] = [];
@@ -60,5 +60,6 @@ export const StatusAbilityToStatusEffects = Object.entries(StatusEffect).reduce(
       map[sa].push(statusEffect as keyof typeof StatusEffect);
     });
     return map;
-  }, {},
+  },
+  {},
 );

@@ -14,10 +14,5 @@ export default function ArrowFromUnitToMouse({ fromRef }: ArrowFromUnitProps): J
   if (!fromRef || !fromRef.current) return null;
   const coords = getCoordsFromElement(fromRef.current);
 
-  return (
-    <Arrow
-      from={coords}
-      to={mousePos}
-    />
-  );
+  return <Arrow from={coords} to={mousePos} />;
 }

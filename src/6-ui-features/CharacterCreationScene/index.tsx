@@ -10,7 +10,9 @@ import { changedTitle } from '../TopBar/topBarSlice';
 
 const screenSelector = (state: RootState) => {
   const { screenIdx } = state.characterCreation;
-  const { characterAttributeGroups: { [screenIdx]: screenInfo } } = state.characterCreation;
+  const {
+    characterAttributeGroups: { [screenIdx]: screenInfo },
+  } = state.characterCreation;
   return screenInfo;
 };
 

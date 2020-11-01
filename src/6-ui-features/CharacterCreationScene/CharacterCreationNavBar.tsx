@@ -15,16 +15,11 @@ export default function CharacterCreationNavBar(): JSX.Element {
 
   return (
     <Container>
-      {navItems.map(
-        (screen) => (
-          <NavItem
-            key={screen}
-            onClick={handleClick(screen)}
-          >
-            {screen}
-          </NavItem>
-        ),
-      )}
+      {navItems.map((screen) => (
+        <NavItem key={screen} onClick={handleClick(screen)}>
+          {screen}
+        </NavItem>
+      ))}
     </Container>
   );
 }

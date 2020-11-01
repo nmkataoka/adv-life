@@ -4,7 +4,10 @@ import { EventSys } from '../ECS/event-system/EventSys';
 export type AckCallback = (data: any) => void;
 export type RequestHeaders = { userId: number };
 export type RequestData<T> = { payload: T; headers: RequestHeaders; ack?: AckCallback };
-export type RequestHandler<T> = (data: RequestData<T>, dispatch: typeof EventSys.prototype.Dispatch) => void;
+export type RequestHandler<T> = (
+  data: RequestData<T>,
+  dispatch: typeof EventSys.prototype.Dispatch,
+) => void;
 
 export class Router {
   constructor(controllerConstructors: ControllerConstructor<any>[]) {
