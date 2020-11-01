@@ -31,7 +31,7 @@ const ShopInventory = ({ townLocationId }: ShopInventoryProps): JSX.Element => {
       <VertFlexBox>
         {inventory.inventorySlots
           .filter(({ stackCount }) => stackCount > 0)
-          .map(({ itemClassId, publicSalePrice, stackCount }, itemIndex) => {
+          .map(({ itemClassId, publicSalePrice /* , stackCount */ }, itemIndex) => {
             // Inventory items are currently identified by index and otherwise may not be unique
             // eslint-disable-next-line react/no-array-index-key
             const key = `itemClass_${itemClassId}_${itemIndex}`;
@@ -41,7 +41,7 @@ const ShopInventory = ({ townLocationId }: ShopInventoryProps): JSX.Element => {
                 itemClassId={itemClassId}
                 publicSalePrice={publicSalePrice}
                 onDoubleClick={handleBuyItem(itemIndex)}
-                stackCount={stackCount}
+                // stackCount={stackCount}
               />
             );
           })}

@@ -4,7 +4,7 @@ import { ImportantKeycodes } from './constants';
 import { keyPressed } from './actions';
 import { keypressCallbacks } from './useOnKeypress';
 
-export default function useDetectKeypress() {
+export default function useDetectKeypress(): void {
   const dispatch = useDispatch();
 
   const onKeypress = useCallback(

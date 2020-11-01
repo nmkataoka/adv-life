@@ -1,7 +1,12 @@
 import { EntityManager } from '0-engine';
 import { CombatStatsCmpt } from '1-game-code/Combat/CombatStatsCmpt';
 
-export function getSkillData(user: number, targets: number[], skillName: string) {
+type SkillData = {
+  data: any;
+  recoveryDuration: number;
+};
+
+export function getSkillData(user: number, targets: number[], skillName: string): SkillData {
   let data: any;
   const recoveryDuration = getRecoveryDuration(user);
 

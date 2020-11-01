@@ -3,13 +3,16 @@ import SelectionWindow from '../CharacterAttributeGroup/OneOf/SelectionWindow';
 import AttributeWindow from '../CharacterAttributeGroup/PointAllocation/AttributeWindow';
 import SliderWindow from '../CharacterAttributeGroup/Ranges/SliderWindow';
 import CharacterAttributeGroup, {
-  OneOf, PointAllocation, Ranges, Freeform,
+  OneOf,
+  PointAllocation,
+  Ranges,
+  Freeform,
 } from '../CharacterAttributeGroup';
 import FreeformInputWindow from '../CharacterAttributeGroup/Freeform/FreeformInputWindow';
 
 type ScreenInfoToScreenProps = {
   screenInfo: CharacterAttributeGroup;
-}
+};
 
 const ScreenInfoToScreen = ({ screenInfo }: ScreenInfoToScreenProps): JSX.Element => {
   const { name: header, selectType } = screenInfo;

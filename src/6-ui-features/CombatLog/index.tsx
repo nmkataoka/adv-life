@@ -8,14 +8,12 @@ const CombatLog = (): JSX.Element => {
   return (
     <ReverserWrapper>
       <InnerWrapper>
-        {combatLogEntries.map(
+        {combatLogEntries.map((entry, idx) => (
           /* the idx in the key should be removed once timestamps
           /* are associated with the entries to make them unique */
           /* eslint-disable-next-line react/no-array-index-key */
-          (entry, idx) => (
-            <Entry key={`${entry}_${idx}`}>{entry}</Entry>
-          ),
-        )}
+          <Entry key={`${entry}_${idx}`}>{entry}</Entry>
+        ))}
       </InnerWrapper>
     </ReverserWrapper>
   );

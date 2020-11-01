@@ -6,8 +6,9 @@ export enum BoundActionStatus {
   Finished,
 }
 
-export class BoundAction<Data = any> {
-  public static Idle = (self: number) => new BoundAction(ProcRule.Idle(), [self], undefined);
+export class BoundAction<Data = void> {
+  public static Idle = (self: number): BoundAction<void> =>
+    new BoundAction<void>(ProcRule.Idle(), [self], undefined);
 
   public status: BoundActionStatus;
 

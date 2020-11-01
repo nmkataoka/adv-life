@@ -11,10 +11,16 @@ export type SliderRowProps = {
   minLabel: string;
   step: number;
   value: number;
-}
+};
 
 export default function SliderRow({
-  info, max, maxLabel, min, minLabel, step, value,
+  info,
+  max,
+  maxLabel,
+  min,
+  minLabel,
+  step,
+  value,
 }: SliderRowProps): JSX.Element {
   const dispatch = useDispatch();
 
@@ -28,15 +34,10 @@ export default function SliderRow({
 
   return (
     <Row>
-      <Label onClick={handleClick} style={{ textAlign: 'right' }}>{minLabel}</Label>
-      <Input
-        type="range"
-        min={min}
-        max={max}
-        onChange={handleChange}
-        step={step}
-        value={value}
-      />
+      <Label onClick={handleClick} style={{ textAlign: 'right' }}>
+        {minLabel}
+      </Label>
+      <Input type="range" min={min} max={max} onChange={handleChange} step={step} value={value} />
       <Label onClick={handleClick}>{maxLabel}</Label>
     </Row>
   );

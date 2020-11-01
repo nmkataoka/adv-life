@@ -1,5 +1,5 @@
-import { ProcRule, ExecutorStatus } from '../ProcRule';
 import { GetComponent } from '0-engine';
+import { ProcRule, ExecutorStatus } from '../ProcRule';
 import { StatusEffectsCmpt } from '../../Combat/StatusEffectsCmpt';
 
 export const stealth = new ProcRule(

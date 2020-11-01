@@ -1,18 +1,14 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  useRef, useState, useEffect,
-} from 'react';
-import HealthBar from '../HealthBar';
+import React, { useRef, useState, useEffect } from 'react';
 import { RootState } from '7-app/types';
+import { damageBlinkCss } from '5-react-components/arrow/damageBlink';
+import Arrow from '5-react-components/arrow';
+import HealthBar from '../HealthBar';
 import { setSkillTarget, clickedOnUnit } from '../combatSceneSlice';
 import ArrowFromUnitToMouse from '../ArrowFromUnitToMouse';
 import ManaBar from '../ManaBar';
-import { damageBlinkCss } from '5-react-components/arrow/damageBlink';
 import RecoveryBar from '../RecoveryBar';
-import Arrow from '5-react-components/arrow';
 import useUpdateCoords from './useUpdateCoords';
 
 type UnitProps = {
@@ -24,22 +20,21 @@ const blinkOnDamageFor = 1000;
 
 const targetCoordsSelector = (entityHandle: number) => (state: RootState) => {
   const { combatScene } = state;
-  const { units: { [entityHandle]: { targetEntity } } } = combatScene;
-  const { unitCoords: { [targetEntity]: targetCoords = undefined } } = combatScene;
+  const {
+    units: {
+      [entityHandle]: { targetEntity },
+    },
+  } = combatScene;
+  const {
+    unitCoords: { [targetEntity]: targetCoords = undefined },
+  } = combatScene;
   return targetCoords;
 };
 
 export default function Unit({ handle }: UnitProps): JSX.Element {
   const dispatch = useDispatch();
 
-  const {
-    health,
-    mana,
-    maxMana,
-    maxHealth,
-    isEnemy,
-    isStealthed,
-  } = useSelector(
+  const { health, mana, maxMana, maxHealth, isEnemy, isStealthed } = useSelector(
     (state: RootState) => state.combatScene.units[handle],
   );
   const [prevHealth, setPrevHealth] = useState(health ?? 0);
@@ -109,7 +104,7 @@ export default function Unit({ handle }: UnitProps): JSX.Element {
 
 type ContainerProps = {
   isStealthed: boolean;
-}
+};
 
 const Container = styled.div`
   display: flex;

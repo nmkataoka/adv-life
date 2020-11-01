@@ -6,21 +6,13 @@ import SliderRow, { SliderRowProps } from './SliderRow';
 type SliderWindowProps = {
   header: string;
   sliders: SliderRowProps[];
-}
+};
 
 export default function SliderWindow({ header, sliders }: SliderWindowProps): JSX.Element {
   return (
     <Window header={header} randomize showNavigation>
       <SliderContainer>
-        {sliders.map(({
-          info,
-          max,
-          maxLabel,
-          min,
-          minLabel,
-          step,
-          value,
-        }) => (
+        {sliders.map(({ info, max, maxLabel, min, minLabel, step, value }) => (
           <SliderRow
             info={info}
             key={maxLabel}

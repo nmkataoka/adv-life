@@ -6,13 +6,13 @@ export type RangeData = {
   min: number;
   max: number;
   step: number;
-}
+};
 
 export type Ranges = {
   name: string;
   selectType: 'ranges';
   options: RangeData[];
-}
+};
 
 export const randomize = (info: Ranges): Ranges => {
   const { options } = info;

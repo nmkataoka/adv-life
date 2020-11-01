@@ -12,7 +12,7 @@ const getId = (): number => {
 export type onKeyPressCallback = (keyCode: number) => void;
 export const keypressCallbacks: { [key: number]: onKeyPressCallback } = {};
 
-export default function useOnKeypress(cb: onKeyPressCallback) {
+export default function useOnKeypress(cb: onKeyPressCallback): void {
   const [myId] = useState(getId);
 
   useEffect(() => {

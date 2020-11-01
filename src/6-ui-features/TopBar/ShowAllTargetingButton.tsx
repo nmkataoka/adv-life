@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { setShowAllTargeting } from '../CombatScene/combatSceneSlice';
 import { RootState } from '7-app/types';
+import { setShowAllTargeting } from '../CombatScene/combatSceneSlice';
 
 export default function ShowAllTargetingButton(): JSX.Element {
   const dispatch = useDispatch();
@@ -12,12 +12,16 @@ export default function ShowAllTargetingButton(): JSX.Element {
     dispatch(setShowAllTargeting(!showAllTargeting));
   }, [dispatch, showAllTargeting]);
 
-  return <Button onClick={handleToggle} showAllTargeting={showAllTargeting}>Targeting</Button>;
+  return (
+    <Button onClick={handleToggle} showAllTargeting={showAllTargeting}>
+      Targeting
+    </Button>
+  );
 }
 
 type ButtonProps = {
   showAllTargeting: boolean;
-}
+};
 
 const Button = styled.div`
   align-items: center;
@@ -30,7 +34,6 @@ const Button = styled.div`
   margin: 0 10px;
   padding: 0 1em;
   user-select: none;
-  
 
   &:hover {
     cursor: pointer;

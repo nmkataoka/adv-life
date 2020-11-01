@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '7-app/types';
 import CharacterCreationNavBar from './CharacterCreationNavBar';
 import InfoWindow from './components/InfoWindow';
-import { RootState } from '7-app/types';
 import ScreenInfoToScreen from './components/ScreenInfoToScreen';
 import CharacterSummaryColumn from './CharacterSummaryColumn';
 import { changedTitle } from '../TopBar/topBarSlice';
 
 const screenSelector = (state: RootState) => {
   const { screenIdx } = state.characterCreation;
-  const { characterAttributeGroups: { [screenIdx]: screenInfo } } = state.characterCreation;
+  const {
+    characterAttributeGroups: { [screenIdx]: screenInfo },
+  } = state.characterCreation;
   return screenInfo;
 };
 

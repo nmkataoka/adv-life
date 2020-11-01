@@ -1,7 +1,5 @@
-// Draw an arrow from the center of an element to the cursor position
-
-/** @jsx jsx */
-import { jsx, css } from '@emotion/core';
+import React from 'react';
+import { css } from '@emotion/core';
 import useArrowId from './arrowId';
 
 export type Point = {
@@ -14,7 +12,8 @@ type ArrowProps = {
   to: Point;
 };
 
-export default function Arrow({ from, to }: ArrowProps) {
+/** Draws an arrow from the center of an element to the cursor position */
+export default function Arrow({ from, to }: ArrowProps): JSX.Element {
   const arrowId = useArrowId();
   const markerCssId = `markerArrow-${arrowId}`;
 

@@ -18,8 +18,11 @@ export default function useTimeoutLoop(func: () => void, interval: number): void
   }, [startLoop]);
 
   // If the timeoutHandle changes, clear the old timeout
-  useEffect(() => () => {
-    if (timeoutHandle) clearTimeout(timeoutHandle);
-    // No need to set timeoutHandle to null because it already has a new value queued up
-  }, [timeoutHandle]);
+  useEffect(
+    () => () => {
+      if (timeoutHandle) clearTimeout(timeoutHandle);
+      // No need to set timeoutHandle to null because it already has a new value queued up
+    },
+    [timeoutHandle],
+  );
 }

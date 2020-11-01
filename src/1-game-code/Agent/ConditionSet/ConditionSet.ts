@@ -110,7 +110,7 @@ export default class ConditionSet {
       // Not supplying SELF to an entityTemplate would currently
       // result in every entity being considered
       const error =
-        'Warning: not supplying ' + 'self to entityTemplate in an action is not yet supported.';
+        'Warning: not supplying self to entityTemplate in an action is not yet supported.';
       throw new Error(error);
     }
 

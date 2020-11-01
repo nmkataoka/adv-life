@@ -51,13 +51,15 @@ export class AgentSys extends ECSystem {
     }
   }
 
-  private GetNextAction(self: number, baction?: BoundAction): BoundAction {
+  private GetNextAction(self: number, baction?: BoundAction<any>): BoundAction<any> {
     if (!this.prdb) throw new Error('prdb not set');
 
     // Recovery forces a delay after a successful action
-    if (baction && baction.recoveryDuration > 0) {
+    const recoveryDuration = baction?.recoveryDuration;
+
+    if (typeof recoveryDuration === 'number' && recoveryDuration > 0) {
       const recoverPr = this.prdb.getProcRule('recover');
-      return new BoundAction(recoverPr, [self], baction.recoveryDuration, 0);
+      return new BoundAction(recoverPr, [self], recoveryDuration, 0);
     }
 
     // Player-controlled agents use GoalQueueCmpt to receive commands from the player
