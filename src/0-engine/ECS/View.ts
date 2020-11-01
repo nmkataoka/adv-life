@@ -2,8 +2,6 @@ import { NComponent, NComponentConstructor } from './NComponent';
 import { ComponentManager } from './ComponentManager';
 import { EntityManager } from './EntityManager';
 
-type NComponentConstructorArray = NComponentConstructor<any>[];
-
 type CMgrs<T extends unknown[]> = {
   [K in keyof T]: T[K] extends NComponent ? ComponentManager<T[K]> : never;
 };

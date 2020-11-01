@@ -22,7 +22,7 @@ export enum ExecutorStatus {
 export class ProcRule<ExecDataType = void> {
   public static readonly Nothing = Number.MAX_SAFE_INTEGER;
 
-  public static Idle() {
+  public static Idle(): ProcRule {
     return new ProcRule('idle', () => {
       const idleTime = 1;
       let timePassed = 0;
