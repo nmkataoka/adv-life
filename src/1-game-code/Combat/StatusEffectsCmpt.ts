@@ -20,7 +20,7 @@ export class StatusEffectsCmpt implements NComponent {
   public StartEffect(
     statusEffect: keyof typeof StatusEffect,
     data: { severity: number; duration: number },
-  ) {
+  ): void {
     const { severity, duration } = data;
     this.activeStatusEffects[statusEffect].push({
       severity,

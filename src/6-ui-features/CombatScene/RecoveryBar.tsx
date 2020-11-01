@@ -7,7 +7,7 @@ export type RecoveryBarProps = {
   handle: number;
 };
 
-export default function RecoveryBar({ handle }: RecoveryBarProps) {
+export default function RecoveryBar({ handle }: RecoveryBarProps): JSX.Element {
   const {
     isRecovering,
     recoveryRemaining,

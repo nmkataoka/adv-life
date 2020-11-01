@@ -2,7 +2,7 @@ import { GetComponent } from '0-engine';
 import { StatusEffectsCmpt } from '../Combat/StatusEffectsCmpt';
 
 // eslint-disable-next-line import/prefer-default-export
-export const createChannelTime = (duration: number) => {
+export const createChannelTime = (duration: number): ((self: number, dt: number) => boolean) => {
   let timePassed = 0;
 
   // Returns true if the channel is finished

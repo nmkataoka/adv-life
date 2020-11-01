@@ -16,6 +16,8 @@ import { setPlayerEntity } from '../Player/playerSlice';
 import { changedScene, Scenes } from '../sceneManager/sceneMetaSlice';
 import { travelToLocation } from '../WorldMap/actions';
 
+/* eslint-disable no-console */
+
 const randomizeCharacterAttributeGroups = (cags: CharacterAttributeGroup[]) => {
   cags.forEach((cag) => {
     randomize(cag);

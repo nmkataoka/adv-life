@@ -9,7 +9,7 @@ const selectedUnitInfoSelector = (state: RootState) => {
   return state.combatScene.units[selectedUnit];
 };
 
-export default function InfoSidebar() {
+export default function InfoSidebar(): JSX.Element {
   const unit = useSelector(selectedUnitInfoSelector);
 
   if (unit == null) return <Container />;

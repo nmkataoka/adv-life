@@ -7,7 +7,7 @@ type ItemStackProps = {
   itemClassId: number;
   onDoubleClick: () => void;
   publicSalePrice: number;
-  stackCount: number;
+  // stackCount: number;
 };
 
 const ItemStack = ({
