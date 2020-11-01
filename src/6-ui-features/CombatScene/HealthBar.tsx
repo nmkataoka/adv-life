@@ -1,12 +1,11 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
+import React from 'react';
 import styled from '@emotion/styled';
 
 type HealthBarProps = {
   health: number;
 };
 
-export default function HealthBar({ health }: HealthBarProps) {
+export default function HealthBar({ health }: HealthBarProps): JSX.Element {
   return (
     <Container>
       <Health style={{ width: `${(health * 100).toFixed(0)}%` }} />

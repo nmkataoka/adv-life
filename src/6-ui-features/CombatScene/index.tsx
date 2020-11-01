@@ -1,8 +1,6 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { useSelector as useReduxSelector, useDispatch } from 'react-redux';
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import { RootState } from '7-app/types';
 import Unit from './Unit';
 import ActionBar from './ActionBar';

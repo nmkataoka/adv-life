@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
+import React from 'react';
 import styled from '@emotion/styled';
 
 type ManaBarProps = {
@@ -7,7 +6,7 @@ type ManaBarProps = {
   maxMana: number;
 };
 
-export default function ManaBar({ mana, maxMana }: ManaBarProps) {
+export default function ManaBar({ mana, maxMana }: ManaBarProps): JSX.Element {
   return (
     <Container>
       <Mana style={{ width: `${((mana * 100) / maxMana).toFixed(0)}%` }} />

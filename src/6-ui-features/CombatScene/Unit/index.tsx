@@ -1,8 +1,6 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { RootState } from '7-app/types';
 import { damageBlinkCss } from '5-react-components/arrow/damageBlink';
 import Arrow from '5-react-components/arrow';
