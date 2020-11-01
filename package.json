@@ -47,7 +47,7 @@
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.6",
     "@types/lodash.throttle": "^4.1.6",
-    "@types/sinon": "^9.0.5",
+    "@types/sinon": "^9.0.8",
     "@types/webpack-env": "^1.15.3",
     "@typescript-eslint/eslint-plugin": "~4.6.0",
     "@typescript-eslint/parser": "~4.6.0",
