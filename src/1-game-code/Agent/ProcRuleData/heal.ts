@@ -1,7 +1,7 @@
-import { ProcRule, ExecutorStatus } from '../ProcRule';
 import { GetComponent } from '0-engine';
-import { HealthCmpt } from '../../ncomponents/HealthCmpt';
 import { DispatchEvent } from '0-engine/ECS/globals/DispatchEvent';
+import { ProcRule, ExecutorStatus } from '../ProcRule';
+import { HealthCmpt } from '../../ncomponents/HealthCmpt';
 import { UNIT_CAST_HEAL } from './Constants';
 
 export const heal = new ProcRule(

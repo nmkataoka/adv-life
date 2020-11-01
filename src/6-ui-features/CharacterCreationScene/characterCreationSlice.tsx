@@ -1,4 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createPlayerCharacter } from '3-frontend-api/characterCreation';
+import { AppThunk } from '7-app/types';
+import { PersonalityArray } from '1-game-code/ncomponents/PersonalityCmpt';
+import apiClient from '3-frontend-api/ApiClient';
+import { getTowns } from '3-frontend-api/town';
 import { initialCharacterAttributeGroups } from './characterCreationData';
 import CharacterAttributeGroup, {
   PointAllocation,
@@ -6,15 +11,10 @@ import CharacterAttributeGroup, {
   randomize,
   OneOf,
 } from './CharacterAttributeGroup';
-import { createPlayerCharacter } from '3-frontend-api/characterCreation';
-import { AppThunk } from '7-app/types';
-import { PersonalityArray } from '1-game-code/ncomponents/PersonalityCmpt';
 import { Freeform } from './CharacterAttributeGroup/Freeform';
 import { setPlayerEntity } from '../Player/playerSlice';
-import apiClient from '3-frontend-api/ApiClient';
 import { changedScene, Scenes } from '../sceneManager/sceneMetaSlice';
 import { travelToLocation } from '../WorldMap/actions';
-import { getTowns } from '3-frontend-api/town';
 
 const randomizeCharacterAttributeGroups = (cags: CharacterAttributeGroup[]) => {
   cags.forEach((cag) => {

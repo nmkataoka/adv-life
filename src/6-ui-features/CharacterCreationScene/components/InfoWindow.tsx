@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Window from './Window';
 import { RootState } from '7-app/types';
+import Window from './Window';
 
 export default function InfoWindow(): JSX.Element {
   const title = useSelector((state: RootState) => state.characterCreation.infoWindowTitle);
