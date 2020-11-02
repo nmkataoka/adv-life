@@ -13,7 +13,7 @@ import CharacterAttributeGroup, {
 } from './CharacterAttributeGroup';
 import { Freeform } from './CharacterAttributeGroup/Freeform';
 import { setPlayerEntity } from '../Player/playerSlice';
-import { changedScene, Scenes } from '../sceneManager/sceneMetaSlice';
+import { changedScene, Scene } from '../sceneManager/sceneMetaSlice';
 import { travelToLocation } from '../WorldMap/actions';
 
 /* eslint-disable no-console */
@@ -232,7 +232,7 @@ export const finishCharacterCreation = (): AppThunk => (dispatch, getState) => {
 
       const firstTown = Object.values(getTowns())[0];
       dispatch(travelToLocation({ id: firstTown.townId, locationType: 'Town' }));
-      dispatch(changedScene(Scenes.Town));
+      dispatch(changedScene(Scene.Town));
     },
   );
 };

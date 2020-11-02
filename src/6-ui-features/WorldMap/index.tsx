@@ -5,7 +5,7 @@ import { useSelector } from '4-react-ecsal';
 import { RootState } from '7-app/types';
 import { getAllTowns } from '3-frontend-api';
 import MapLocation from './MapLocation';
-import { changedScene, Scenes } from '../sceneManager/sceneMetaSlice';
+import { changedScene, Scene } from '../sceneManager/sceneMetaSlice';
 import { travelToLocation } from './actions';
 
 export default function WorldMap(): JSX.Element {
@@ -16,14 +16,14 @@ export default function WorldMap(): JSX.Element {
   const handleCombatClick = () => {
     if (!isInCombat) {
       dispatch(travelToLocation({ id: -1, locationType: 'Combat' }));
-      dispatch(changedScene(Scenes.Combat));
+      dispatch(changedScene(Scene.Combat));
     }
   };
 
   const handleTownClick = (townId: number) => () => {
     if (!isInCombat) {
       dispatch(travelToLocation({ id: townId, locationType: 'Town' }));
-      dispatch(changedScene(Scenes.Town));
+      dispatch(changedScene(Scene.Town));
     }
   };
 

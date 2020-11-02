@@ -1,20 +1,22 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export enum Scenes {
+export enum Scene {
   CharacterCreation = 'characterCreation',
+  Colosseum = 'colosseum',
   Combat = 'combat',
+  MainMenu = 'mainMenu',
   Town = 'town',
 }
 
 const initialState = {
-  currentScene: Scenes.CharacterCreation,
+  currentScene: Scene.MainMenu,
 };
 
 const sceneMetaSlice = createSlice({
   name: 'sceneMeta',
   initialState,
   reducers: {
-    changedScene(state, action) {
+    changedScene(state, action: PayloadAction<Scene>) {
       state.currentScene = action.payload;
     },
   },
