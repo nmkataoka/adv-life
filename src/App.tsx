@@ -6,6 +6,7 @@ import { GameManager } from '0-engine/GameManager';
 import { Provider as EcsalProvider } from '4-react-ecsal';
 
 import MainMenuScene from '6-ui-features/MainMenuScene';
+import ColosseumScene from '6-ui-features/ColosseumScene';
 import TopBar from './6-ui-features/TopBar';
 import { Scene } from './6-ui-features/sceneManager/sceneMetaSlice';
 
@@ -16,6 +17,7 @@ import CharacterCreationScene from './6-ui-features/CharacterCreationScene';
 
 const scenes = {
   [Scene.CharacterCreation]: CharacterCreationScene,
+  [Scene.Colosseum]: ColosseumScene,
   [Scene.Combat]: CombatScene,
   [Scene.MainMenu]: MainMenuScene,
   [Scene.Town]: TownScene,

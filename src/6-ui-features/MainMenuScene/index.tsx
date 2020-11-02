@@ -13,7 +13,7 @@ export default function MainMenuScene(): JSX.Element {
     <Col>
       <Title>Adventurer&apos;s Life</Title>
       <Button onClick={handleSceneSelection(Scene.CharacterCreation)}>New Game</Button>
-      <Button>Colosseum</Button>
+      <Button onClick={handleSceneSelection(Scene.Colosseum)}>Colosseum</Button>
     </Col>
   );
 }
