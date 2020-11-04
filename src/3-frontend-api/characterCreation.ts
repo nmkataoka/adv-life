@@ -1,6 +1,6 @@
 import { PersonalityArray } from '1-game-code/ncomponents';
 import { CREATE_CHARACTER } from '2-backend-api/controllers/CharacterCreationConstants';
-import apiClient, { AckCallback } from './ApiClient';
+import apiClient, { AckCallback } from '3-frontend-api/ApiClient';
 
 export type Stats = {
   dexterity: number;

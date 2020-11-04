@@ -26,7 +26,7 @@ export class View<
     this.withoutCMgrs = withoutCmpts.map((CClass) => eMgr.tryGetMgr(CClass)) as CMgrs<WithoutCmpts>;
 
     this.entities = FindEntitiesWithComponents(
-      [...this.readCMgrs, ...this.withoutCMgrs],
+      [...this.readCMgrs, ...this.writeCMgrs, ...this.withoutCMgrs],
       withoutCmpts.length,
     );
   }
