@@ -6,14 +6,14 @@ import { UNIT_CAST_HEAL } from './Constants';
 
 export const heal = new ProcRule(
   'heal',
-  () => (entityBinding: number[], dt: number, data: number) => {
+  () => async (entityBinding: number[], dt: number, data: number) => {
     const [self, target] = entityBinding;
     const healAmt = data;
     const healthCmpt = GetComponent(HealthCmpt, target);
     if (!healthCmpt) return ExecutorStatus.Error;
 
     healthCmpt.TakeDamage(-healAmt);
-    DispatchEvent({
+    await DispatchEvent({
       type: UNIT_CAST_HEAL,
       payload: {
         self,

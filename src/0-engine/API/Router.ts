@@ -22,7 +22,10 @@ export class Router {
     });
   };
 
-  public addRoute = <T>(routeName: string, requestHandler: RequestHandler<T>): void => {
+  public addRoute = <T extends unknown>(
+    routeName: string,
+    requestHandler: RequestHandler<T>,
+  ): void => {
     if (this.routes[routeName]) {
       throw new Error('Route already has a request handler');
     }

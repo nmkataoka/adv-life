@@ -5,8 +5,12 @@ export type EventCallbackArgs<Payload> = {
   payload: Payload;
 };
 
-export type EventCallback<Payload> = (args: EventCallbackArgs<Payload>) => Promise<void>;
+export type EventCallback<Payload> = (args: EventCallbackArgs<Payload>) => Promise<void> | void;
 
-export type EventCallbackError = {
-  message: string;
-};
+export class EventCallbackError {
+  constructor(message: string) {
+    this.message = message;
+  }
+
+  public message: string;
+}

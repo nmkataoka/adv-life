@@ -15,7 +15,7 @@ export const fireball = new ProcRule(
     const channelDuration = 2;
     const channel = createChannelTime(channelDuration);
 
-    return (entityBinding: number[], dt: number) => {
+    return async (entityBinding: number[], dt: number) => {
       const manaRequirement = 35;
       const damage = 30;
       const aoeRadius = 1;
@@ -48,7 +48,7 @@ export const fireball = new ProcRule(
           combatPositionMgr,
         );
       } catch (e) {
-        DispatchEvent({
+        await DispatchEvent({
           type: UNIT_CANCELED_ACTION,
           payload: {
             self,
@@ -60,7 +60,7 @@ export const fireball = new ProcRule(
         return ExecutorStatus.Error;
       }
 
-      DispatchEvent({
+      await DispatchEvent({
         type: UNIT_CAST_SPELL,
         payload: {
           self,

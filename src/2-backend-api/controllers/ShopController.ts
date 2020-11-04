@@ -10,10 +10,10 @@ export class ShopController extends Controller {
 
   public OnUpdate = (): void => {};
 
-  private OnBuyItem = (
-    { headers: { userId }, payload, ack }: RequestData<{ itemIndex: number; sellerId: number }>,
+  private OnBuyItem = async (
+    { headers: { userId }, payload }: RequestData<{ itemIndex: number; sellerId: number }>,
     dispatch: typeof EventSys.prototype.Dispatch,
-  ): void => {
-    dispatch({ type: BUY_ITEM_FROM_MERCHANT, payload: { ...payload, buyerId: userId }, ack });
+  ): Promise<void> => {
+    await dispatch({ type: BUY_ITEM_FROM_MERCHANT, payload: { ...payload, buyerId: userId } });
   };
 }

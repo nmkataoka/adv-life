@@ -16,11 +16,11 @@ export class AgentSys extends ECSystem {
     EntityManager.instance.addCmpt(prdbEntity, new ProcRuleDbCmpt());
   }
 
-  public OnUpdate(dt: number): void {
+  public async OnUpdate(dt: number): Promise<void> {
     this.setCachedComponents();
     const agentMgr = this.GetComponentManager(AgentCmpt);
 
-    Object.entries(agentMgr.components).forEach(([entityString, agentCmpt]) => {
+    const promises = Object.entries(agentMgr.components).map(async ([entityString, agentCmpt]) => {
       const self = parseInt(entityString, 10);
       let { baction } = agentCmpt;
 
@@ -34,13 +34,14 @@ export class AgentSys extends ECSystem {
         baction.status = BoundActionStatus.Active;
       }
 
-      const runStatus = baction.Continue(dt);
+      const runStatus = await baction.Continue(dt);
       if (runStatus !== ExecutorStatus.Running) {
         baction.status = BoundActionStatus.Finished;
       }
 
       agentCmpt.baction = baction;
     });
+    await Promise.all(promises);
   }
 
   private prdb?: ProcRuleDbCmpt;

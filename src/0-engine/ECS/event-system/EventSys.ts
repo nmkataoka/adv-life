@@ -63,7 +63,7 @@ export class EventSys extends ECSystem {
     }
   };
 
-  private InternalDispatch = async <T>({ payload, type }: EventAction<T>) => {
+  private InternalDispatch = async <T extends unknown>({ payload, type }: EventAction<T>) => {
     const listeners = this.eventListeners[type];
     let promises: Promise<void>[] = [];
     if (listeners) {
@@ -82,7 +82,7 @@ export class EventSys extends ECSystem {
       try {
         await p;
         return eventCallbackErrors;
-      } catch (e: unknown) {
+      } catch (e) {
         const err = e as EventCallbackError;
         return [...eventCallbackErrors, err];
       }
