@@ -18,11 +18,11 @@ const createCharacter = ({
   payload: { className, name, personality, race, stats },
   ack,
 }: EventCallbackArgs<{
-  className: string;
+  className?: string;
   name: string;
-  personality: PersonalityArray;
-  race: string;
-  stats: Stats;
+  personality?: PersonalityArray;
+  race?: string;
+  stats?: Stats;
 }>) => {
   const playerAlreadyExists = eMgr.getView([PlayerCmpt], [], []).count > 0;
   if (playerAlreadyExists) {
