@@ -19,10 +19,9 @@ export class CharacterCreationController extends Controller {
 
   public OnUpdate(): void {}
 
-  private OnCreateCharacter = (
+  private OnCreateCharacter = async (
     {
       payload,
-      ack,
     }: RequestData<{
       className: string;
       name: string;
@@ -31,7 +30,7 @@ export class CharacterCreationController extends Controller {
       stats: Stats;
     }>,
     dispatch: typeof EventSys.prototype.Dispatch,
-  ): void => {
-    dispatch({ type: ENGINE_CREATE_CHARACTER, payload, ack });
+  ): Promise<void> => {
+    return dispatch({ type: ENGINE_CREATE_CHARACTER, payload });
   };
 }

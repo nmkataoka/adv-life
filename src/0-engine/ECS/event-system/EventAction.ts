@@ -1,7 +1,13 @@
-import { AckCallback } from './AckCallback';
+type PromiseMeta = {
+  resolve: (value?: void) => void;
+  reject: (reason?: any) => void;
+};
 
 export type EventAction<T> = {
   type: string;
   payload: T;
-  ack?: AckCallback<any>;
+};
+
+export type EventActionWithPromise<T> = EventAction<T> & {
+  promise: PromiseMeta;
 };
