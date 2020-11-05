@@ -23,9 +23,10 @@ describe('EventSys', () => {
   });
 
   it('dispatch defaults to low priority, which results in the action dispatching on the next OnUpdate', async () => {
-    await eventSys.Dispatch({ type: TEST_EVENT, payload: 1 }, true);
+    const promise = eventSys.Dispatch({ type: TEST_EVENT, payload: 1 }, true);
     expect(callback.callCount).toBe(0);
     await eventSys.OnUpdate();
+    await promise;
     expect(callback.callCount).toBe(1);
     expect(callback.lastCall.args).toEqual([{ eMgr, payload: 1 }]);
   });
