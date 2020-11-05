@@ -1,5 +1,7 @@
 import { EventCallbackError } from '0-engine/ECS/event-system/EventCallback';
 import { GameManager } from '0-engine/GameManager';
+import { Selector } from '4-react-ecsal';
+import { DeepReadonly } from 'ts-essentials';
 
 type Headers = {
   userId: number;
@@ -23,6 +25,10 @@ class ApiClient {
       console.error(`Api error: ${errors.map((error) => error.message).join('\n')}`);
       return Promise.reject(errors);
     }
+  }
+
+  public get<T>(selector: Selector<T>): DeepReadonly<T> {
+    return selector(GameManager.instance.eMgr);
   }
 
   /*
