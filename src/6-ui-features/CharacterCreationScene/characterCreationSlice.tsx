@@ -171,7 +171,7 @@ export const {
 
 export default characterCreationSlice.reducer;
 
-export const finishCharacterCreation = (): AppThunk => async (dispatch, getState) => {
+export const createPlayerCharacter = (): AppThunk => async (dispatch, getState) => {
   const {
     characterCreation: { characterAttributeGroups: cags },
   } = getState();
@@ -229,7 +229,10 @@ export const finishCharacterCreation = (): AppThunk => async (dispatch, getState
   const playerId = apiClient.get(getPlayerId);
   apiClient.setHeader('userId', playerId);
   dispatch(setPlayerEntity(playerId));
+};
 
+export const finishCharacterCreation = (): AppThunk => (dispatch) => {
+  dispatch(createPlayerCharacter());
   const firstTown = Object.values(getTowns())[0];
   dispatch(travelToLocation({ id: firstTown.townId, locationType: 'Town' }));
   dispatch(changedScene(Scene.Town));
