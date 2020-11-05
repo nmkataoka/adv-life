@@ -2,6 +2,7 @@ export * from './ECS/built-in-components';
 export type { RequestData, RequestHandler } from './API';
 export { Controller, Router } from './API';
 export type { EventCallback, EventCallbackArgs } from './ECS/event-system';
+export { EventCallbackError } from './ECS/event-system';
 export { EventSys } from './ECS/event-system';
 export { ECSystem } from './ECS/ECSystem';
 export type {

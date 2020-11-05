@@ -26,7 +26,7 @@ describe('Router', () => {
   describe('addRoute', () => {
     it('throws an error if the route is already assigned', () => {
       router.Start((eventSys as unknown) as EventSys);
-      expect(() => router.addRoute(TEST_ROUTE, () => {})).toThrowError(
+      expect(() => router.addRoute(TEST_ROUTE, async () => {})).toThrowError(
         'Route already has a request handler',
       );
     });
@@ -35,20 +35,20 @@ describe('Router', () => {
   });
 
   describe('handleRequest', () => {
-    it('does not call the request handler if eventSys is not set', () => {
-      router.handleRequest(TEST_ROUTE, requestData);
+    it('does not call the request handler if eventSys is not set', async () => {
+      await router.handleRequest(TEST_ROUTE, requestData);
       expect(action.callCount).toBe(0);
     });
 
-    it('does not break if there is no request handler to handle the request', () => {
+    it('does not break if there is no request handler to handle the request', async () => {
       router.Start((eventSys as unknown) as EventSys);
-      router.handleRequest('nothing', requestData);
+      await router.handleRequest('nothing', requestData);
       expect(action.callCount).toBe(0);
     });
 
-    it('calls request handler with appropriate arguments', () => {
+    it('calls request handler with appropriate arguments', async () => {
       router.Start((eventSys as unknown) as EventSys);
-      router.handleRequest(TEST_ROUTE, requestData);
+      await router.handleRequest(TEST_ROUTE, requestData);
       expect(action.callCount).toBe(1);
       expect(action.lastCall.args).toEqual([requestData, eventSys.Dispatch]);
     });

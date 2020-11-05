@@ -1,5 +1,5 @@
 import { Stats } from 'fs';
-import { ECSystem } from '0-engine';
+import { ECSystem, EventCallbackError } from '0-engine';
 import { EventCallbackArgs, EventSys } from '0-engine/ECS/event-system';
 import {
   ClassCmpt,
@@ -16,7 +16,6 @@ export const CREATE_CHARACTER = 'characterCreation/createCharacter';
 const createCharacter = ({
   eMgr,
   payload: { className, name, personality, race, stats },
-  ack,
 }: EventCallbackArgs<{
   className?: string;
   name: string;
@@ -26,7 +25,7 @@ const createCharacter = ({
 }>) => {
   const playerAlreadyExists = eMgr.getView([PlayerCmpt], [], []).count > 0;
   if (playerAlreadyExists) {
-    ack({ error: 'Tried to create player character, but player already exists.' });
+    throw new EventCallbackError('Tried to create player character, but player already exists.');
   }
 
   const player = eMgr.createEntity(name || '');
@@ -60,10 +59,6 @@ const createCharacter = ({
     classCmpt.class = className;
   }
   eMgr.addCmpt(player, classCmpt);
-
-  if (ack) {
-    ack({ data: player });
-  }
 };
 
 export class CharacterCreationSys extends ECSystem {

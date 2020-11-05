@@ -44,8 +44,8 @@ export class GameManager {
   /** Dispatch an event.
    * Don't confuse this with the lower-level DispatchEvent on EntityManager.
    */
-  public dispatch = <Data>(routeName: string, data: RequestData<Data>): void => {
-    this.router.handleRequest(routeName, data);
+  public dispatch = async <Data>(routeName: string, data: RequestData<Data>): Promise<void> => {
+    await this.router.handleRequest(routeName, data);
   };
 
   public setPaused(nextState: boolean): void {

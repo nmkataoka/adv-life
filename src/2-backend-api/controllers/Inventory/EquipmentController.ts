@@ -6,25 +6,23 @@ import {
 } from '1-game-code/Inventory/Constants';
 import { HOLD_ITEM_FROM_INVENTORY } from './Constants';
 
-const holdItem = (
-  { headers: { userId }, payload, ack }: RequestData<{ itemIndex: number }>,
+const holdItem = async (
+  { headers: { userId }, payload }: RequestData<{ itemIndex: number }>,
   dispatch: typeof EventSys.prototype.Dispatch,
-): void => {
-  dispatch({
+): Promise<void> => {
+  await dispatch({
     type: HOLD_ITEM_FROM_INVENTORY_ENGINE,
     payload: { ...payload, agentId: userId },
-    ack,
   });
 };
 
-const wearItem = (
-  { headers: { userId }, payload, ack }: RequestData<{ itemIndex: number }>,
+const wearItem = async (
+  { headers: { userId }, payload }: RequestData<{ itemIndex: number }>,
   dispatch: typeof EventSys.prototype.Dispatch,
-): void => {
-  dispatch({
+): Promise<void> => {
+  await dispatch({
     type: WEAR_ITEM_FROM_INVENTORY_ENGINE,
     payload: { ...payload, agentId: userId },
-    ack,
   });
 };
 

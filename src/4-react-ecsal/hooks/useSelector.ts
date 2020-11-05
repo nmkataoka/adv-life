@@ -9,10 +9,11 @@ import {
 } from 'react';
 import { EntityManager } from '0-engine';
 import { GameManager } from '0-engine/GameManager';
+import { DeepReadonly } from 'ts-essentials';
 import { useEcsalContext } from './useEcsalContext';
 import { Subscription } from '../utils/Subscription';
 
-export type Selector<Data> = (eMgr: EntityManager) => Data;
+export type Selector<Data> = (eMgr: EntityManager) => DeepReadonly<Data>;
 
 type Comparator = (a: any, b: any) => boolean;
 
@@ -42,7 +43,7 @@ const useSelectorWithStoreAndSubscription = <Data>(
     //   storeState !== latestStoreState.current || // Immutability needed here
     //   latestSubscriptionCallbackError.current
     // ) {
-    selectedState = selector(storeState);
+    selectedState = selector(storeState) as Data;
     // } else {
     // selectedState = latestSelectedState.current;
     // }
@@ -68,7 +69,7 @@ const useSelectorWithStoreAndSubscription = <Data>(
       try {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore-next-line
-        const newSelectedState = latestSelector.current(store);
+        const newSelectedState = latestSelector.current(store) as Data;
 
         if (equalityFn(newSelectedState, latestSelectedState.current)) {
           return;

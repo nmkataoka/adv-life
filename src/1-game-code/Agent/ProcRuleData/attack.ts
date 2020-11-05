@@ -6,7 +6,7 @@ import { UNIT_ATTACKED } from './Constants';
 
 export const attack = new ProcRule(
   'attack',
-  () => (entityBinding: number[], dt: number, data: number) => {
+  () => async (entityBinding: number[], dt: number, data: number) => {
     const [self, target] = entityBinding;
     const targetHealthCmpt = GetComponent(HealthCmpt, target);
 
@@ -16,7 +16,7 @@ export const attack = new ProcRule(
     const damage = data;
     targetHealthCmpt.TakeDamage(damage);
 
-    DispatchEvent({ type: UNIT_ATTACKED, payload: { self, target, damage } });
+    await DispatchEvent({ type: UNIT_ATTACKED, payload: { self, target, damage } });
 
     return ExecutorStatus.Finished;
   },

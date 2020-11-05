@@ -1,13 +1,12 @@
 import { Controller, ControllerConstructor } from './Controller';
 import { EventSys } from '../ECS/event-system/EventSys';
 
-export type AckCallback = (data: any) => void;
 export type RequestHeaders = { userId: number };
-export type RequestData<T> = { payload: T; headers: RequestHeaders; ack?: AckCallback };
+export type RequestData<T> = { payload: T; headers: RequestHeaders };
 export type RequestHandler<T> = (
   data: RequestData<T>,
   dispatch: typeof EventSys.prototype.Dispatch,
-) => void;
+) => Promise<any>;
 
 export class Router {
   constructor(controllerConstructors: ControllerConstructor<any>[]) {
@@ -23,18 +22,23 @@ export class Router {
     });
   };
 
-  public addRoute = <T>(routeName: string, requestHandler: RequestHandler<T>): void => {
+  public addRoute = <T extends unknown>(
+    routeName: string,
+    requestHandler: RequestHandler<T>,
+  ): void => {
     if (this.routes[routeName]) {
       throw new Error('Route already has a request handler');
     }
     this.routes[routeName] = requestHandler;
   };
 
-  public handleRequest = <T>(routeName: string, data: RequestData<T>): void => {
+  public handleRequest = async <T>(routeName: string, data: RequestData<T>): Promise<any> => {
     const requestHandler = this.routes[routeName];
+    let result;
     if (this.eventSys && requestHandler) {
-      requestHandler(data, this.eventSys.Dispatch);
+      result = await requestHandler(data, this.eventSys.Dispatch);
     }
+    return Promise.resolve(result);
   };
 
   private controllers: Controller[] = [];

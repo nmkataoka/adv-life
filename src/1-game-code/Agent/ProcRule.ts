@@ -5,7 +5,7 @@ export type ProcRuleExecutor<DataType> = (
   entityBinding: number[],
   dt: number,
   data: DataType,
-) => ExecutorStatus;
+) => Promise<ExecutorStatus> | ExecutorStatus;
 
 // Takes closures instead of functions so the functions can own state
 export type ProcRuleExecutorFactory<D> = () => ProcRuleExecutor<D>;

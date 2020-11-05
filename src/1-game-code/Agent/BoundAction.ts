@@ -1,4 +1,4 @@
-import { ProcRule, ProcRuleExecutor } from './ProcRule';
+import { ExecutorStatus, ProcRule, ProcRuleExecutor } from './ProcRule';
 
 export enum BoundActionStatus {
   Prospective = 0,
@@ -34,7 +34,7 @@ export class BoundAction<Data = void> {
     this.exec = procRule.GenerateExecutor();
   }
 
-  public Continue(dt: number): number {
+  public async Continue(dt: number): Promise<ExecutorStatus> {
     return this.exec(this.entityBinding, dt, this.data);
   }
 

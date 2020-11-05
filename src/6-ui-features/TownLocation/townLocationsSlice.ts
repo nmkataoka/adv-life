@@ -39,10 +39,11 @@ export const buyItemFromShop = ({
   itemIndex: number;
   sellerId: number;
   price: number;
-}): AppThunk => (dispatch) => {
-  apiClient.emit(BUY_ITEM, { itemIndex, sellerId }, ({ status }) => {
-    if (status === 200) {
-      dispatch(playerBoughtItemFromShop({ itemIndex, sellerId, price }));
-    }
-  });
+}): AppThunk => async (dispatch) => {
+  try {
+    await apiClient.emit(BUY_ITEM, { itemIndex, sellerId });
+    dispatch(playerBoughtItemFromShop({ itemIndex, sellerId, price }));
+  } catch {
+    // do nothing
+  }
 };

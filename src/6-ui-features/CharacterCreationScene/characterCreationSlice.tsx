@@ -4,6 +4,7 @@ import { PersonalityArray } from '1-game-code/ncomponents/PersonalityCmpt';
 import apiClient from '3-frontend-api/ApiClient';
 import { getTowns } from '3-frontend-api/town';
 import { CREATE_CHARACTER } from '2-backend-api/controllers/CharacterCreationConstants';
+import { getPlayerId } from '3-frontend-api';
 import { initialCharacterAttributeGroups } from './characterCreationData';
 import CharacterAttributeGroup, {
   PointAllocation,
@@ -170,7 +171,7 @@ export const {
 
 export default characterCreationSlice.reducer;
 
-export const finishCharacterCreation = (): AppThunk => (dispatch, getState) => {
+export const finishCharacterCreation = (): AppThunk => async (dispatch, getState) => {
   const {
     characterCreation: { characterAttributeGroups: cags },
   } = getState();
@@ -218,22 +219,18 @@ export const finishCharacterCreation = (): AppThunk => (dispatch, getState) => {
     personality = personalityCAG.options.map((option) => option.value) as PersonalityArray;
   }
 
-  apiClient.emit(
-    CREATE_CHARACTER,
-    {
-      className,
-      name,
-      personality,
-      race,
-      stats,
-    },
-    ({ data }: { data: number }) => {
-      apiClient.setHeader('userId', data);
-      dispatch(setPlayerEntity(data));
+  await apiClient.emit(CREATE_CHARACTER, {
+    className,
+    name,
+    personality,
+    race,
+    stats,
+  });
+  const playerId = apiClient.get(getPlayerId);
+  apiClient.setHeader('userId', playerId);
+  dispatch(setPlayerEntity(playerId));
 
-      const firstTown = Object.values(getTowns())[0];
-      dispatch(travelToLocation({ id: firstTown.townId, locationType: 'Town' }));
-      dispatch(changedScene(Scene.Town));
-    },
-  );
+  const firstTown = Object.values(getTowns())[0];
+  dispatch(travelToLocation({ id: firstTown.townId, locationType: 'Town' }));
+  dispatch(changedScene(Scene.Town));
 };
