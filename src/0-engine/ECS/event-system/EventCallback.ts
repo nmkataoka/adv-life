@@ -12,5 +12,9 @@ export class EventCallbackError {
     this.message = message;
   }
 
+  public toString(): string {
+    return this.message;
+  }
+
   public message: string;
 }
