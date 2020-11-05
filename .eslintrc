@@ -31,6 +31,7 @@
     "no-plusplus": 0,
     "no-shadow": 0, // using @typescript-eslint/no-shadow
     "no-use-before-define": 0,
+    "no-void": ["error", {"allowAsStatement": true}],
     "object-curly-spacing": ["error", "always"],
     "prefer-destructuring": ["error", { "object": true, "array": false }],
     "react/jsx-filename-extension": 0,

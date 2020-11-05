@@ -1,8 +1,10 @@
 import { Stats } from 'fs';
 import { ECSystem, EventCallbackError } from '0-engine';
 import { EventCallbackArgs, EventSys } from '0-engine/ECS/event-system';
+import { MovementCmpt } from '1-game-code/Combat/MovementCmpt';
 import {
   ClassCmpt,
+  CombatPositionCmpt,
   CombatStatsCmpt,
   InventoryCmpt,
   PersonalityArray,
@@ -59,6 +61,11 @@ const createCharacter = ({
     classCmpt.class = className;
   }
   eMgr.addCmpt(player, classCmpt);
+
+  const movementCmpt = new MovementCmpt();
+  eMgr.addCmpt(player, movementCmpt);
+  const combatPosCmpt = new CombatPositionCmpt();
+  eMgr.addCmpt(player, combatPosCmpt);
 };
 
 export class CharacterCreationSys extends ECSystem {

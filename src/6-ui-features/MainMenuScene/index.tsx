@@ -2,10 +2,14 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { changedScene, Scene } from '6-ui-features/sceneManager/sceneMetaSlice';
 import { useDispatch } from 'react-redux';
+import { createPlayerCharacter } from '6-ui-features/CharacterCreationScene/characterCreationSlice';
 
 export default function MainMenuScene(): JSX.Element {
   const dispatch = useDispatch();
   const handleSceneSelection = (scene: Scene) => () => {
+    if (scene === Scene.Colosseum) {
+      dispatch(createPlayerCharacter());
+    }
     dispatch(changedScene(scene));
   };
 
