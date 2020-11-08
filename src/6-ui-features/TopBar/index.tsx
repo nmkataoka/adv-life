@@ -2,8 +2,6 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 import { RootState } from '7-app/types';
-import PauseButton from './PauseButton';
-import ShowAllTargetingButton from './ShowAllTargetingButton';
 import WorldMapButton from './WorldMapButton';
 
 const actions = ['Menu'];
@@ -20,8 +18,6 @@ export default function TopBar(): JSX.Element {
       <CenterGroup>{title && <h2>{title}</h2>}</CenterGroup>
       <RightGroup>
         <WorldMapButton />
-        <ShowAllTargetingButton />
-        <PauseButton />
       </RightGroup>
     </Container>
   );

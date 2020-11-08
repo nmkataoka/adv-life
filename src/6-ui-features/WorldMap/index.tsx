@@ -16,7 +16,7 @@ export default function WorldMap(): JSX.Element {
   const handleCombatClick = () => {
     if (!isInCombat) {
       dispatch(travelToLocation({ id: -1, locationType: 'Combat' }));
-      dispatch(changedScene(Scene.Combat));
+      dispatch(changedScene(Scene.Colosseum));
     }
   };
 

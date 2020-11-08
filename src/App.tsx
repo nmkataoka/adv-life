@@ -10,7 +10,6 @@ import ColosseumScene from '6-ui-features/ColosseumScene';
 import TopBar from './6-ui-features/TopBar';
 import { Scene } from './6-ui-features/sceneManager/sceneMetaSlice';
 
-import CombatScene from './6-ui-features/CombatScene';
 import TownScene from './6-ui-features/TownScene';
 import { RootState } from './7-app/types';
 import CharacterCreationScene from './6-ui-features/CharacterCreationScene';
@@ -18,7 +17,6 @@ import CharacterCreationScene from './6-ui-features/CharacterCreationScene';
 const scenes = {
   [Scene.CharacterCreation]: CharacterCreationScene,
   [Scene.Colosseum]: ColosseumScene,
-  [Scene.Combat]: CombatScene,
   [Scene.MainMenu]: MainMenuScene,
   [Scene.Town]: TownScene,
 };

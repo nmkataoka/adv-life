@@ -8,7 +8,6 @@ import { AppThunk } from '7-app/types';
 import { ActionInfo, CreateActionInfo } from './ActionInfo';
 import { keyPressed } from '../common/actions';
 import { Keycodes } from '../common/constants';
-import { updatedUnits } from './actions';
 
 type MousePos = {
   x: number;
@@ -45,7 +44,6 @@ const initialState = {
 
   isPaused: false,
   isInCombat: false,
-  showAllTargeting: false,
 };
 
 const combatSceneSlice = createSlice({
@@ -89,9 +87,6 @@ const combatSceneSlice = createSlice({
     isPausedChanged(state, action: PayloadAction<boolean>) {
       state.isPaused = action.payload;
     },
-    setShowAllTargeting(state, action: PayloadAction<boolean>) {
-      state.showAllTargeting = action.payload;
-    },
   },
   extraReducers: {
     [keyPressed.toString()]: (state, action) => {
@@ -107,48 +102,14 @@ const combatSceneSlice = createSlice({
         default:
       }
     },
-    [updatedUnits.type]: (state, action: PayloadAction<{ units: DictOf<UnitInfo> }>) => {
-      state.units = action.payload.units;
-
-      // Detect if combat has ended by checking if enemies
-      // are alive and targeting your party members
-      state.isInCombat = checkIfInCombat(action.payload.units);
-    },
   },
 });
 
-const { isPausedChanged, updateMousePosition, setSelectedAction } = combatSceneSlice.actions;
+const { isPausedChanged, updateMousePosition } = combatSceneSlice.actions;
 
-export const {
-  clearSelectedAction,
-  clickedOnUnit,
-  setShowAllTargeting,
-  updatedUnitCoords,
-} = combatSceneSlice.actions;
+export const { clearSelectedAction, clickedOnUnit, updatedUnitCoords } = combatSceneSlice.actions;
 
 export default combatSceneSlice.reducer;
-
-export const selectedAction = (action: ActionInfo): AppThunk => (dispatch, getState) => {
-  const {
-    combatScene: { selectedUnit },
-  } = getState();
-
-  // If no unit is selected, actions can't be clicked
-  if (selectedUnit) {
-    // If the action has no target, it fires immediately
-    if (!action.canTargetOthers) {
-      setSkillTarget(selectedUnit, [], action);
-    } else {
-      dispatch(setSelectedAction(action));
-    }
-  }
-};
-
-const checkIfInCombat = (units: DictOf<UnitInfo>): boolean => {
-  const unitsArr = Object.values(units);
-  const enemies = unitsArr.filter((u) => u.isEnemy);
-  return enemies.length > 0;
-};
 
 export const setSkillTarget = (unit: number, targets: number[], action: ActionInfo): void => {
   setSkillTargetApi(unit, targets, action.name);
