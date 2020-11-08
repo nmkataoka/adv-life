@@ -44,7 +44,6 @@ const initialState = {
 
   isPaused: false,
   isInCombat: false,
-  showAllTargeting: false,
 };
 
 const combatSceneSlice = createSlice({
@@ -88,9 +87,6 @@ const combatSceneSlice = createSlice({
     isPausedChanged(state, action: PayloadAction<boolean>) {
       state.isPaused = action.payload;
     },
-    setShowAllTargeting(state, action: PayloadAction<boolean>) {
-      state.showAllTargeting = action.payload;
-    },
   },
   extraReducers: {
     [keyPressed.toString()]: (state, action) => {
@@ -111,12 +107,7 @@ const combatSceneSlice = createSlice({
 
 const { isPausedChanged, updateMousePosition } = combatSceneSlice.actions;
 
-export const {
-  clearSelectedAction,
-  clickedOnUnit,
-  setShowAllTargeting,
-  updatedUnitCoords,
-} = combatSceneSlice.actions;
+export const { clearSelectedAction, clickedOnUnit, updatedUnitCoords } = combatSceneSlice.actions;
 
 export default combatSceneSlice.reducer;
 
