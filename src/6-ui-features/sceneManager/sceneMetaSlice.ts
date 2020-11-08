@@ -3,7 +3,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export enum Scene {
   CharacterCreation = 'characterCreation',
   Colosseum = 'colosseum',
-  Combat = 'combat',
   MainMenu = 'mainMenu',
   Town = 'town',
 }
