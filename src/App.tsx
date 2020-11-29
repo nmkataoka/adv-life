@@ -7,6 +7,7 @@ import { Provider as EcsalProvider } from '4-react-ecsal';
 
 import MainMenuScene from '6-ui-features/MainMenuScene';
 import ColosseumScene from '6-ui-features/ColosseumScene';
+import WorldGenScene from '6-ui-features/WorldGenScene';
 import TopBar from './6-ui-features/TopBar';
 import { Scene } from './6-ui-features/sceneManager/sceneMetaSlice';
 
@@ -19,6 +20,7 @@ const scenes = {
   [Scene.Colosseum]: ColosseumScene,
   [Scene.MainMenu]: MainMenuScene,
   [Scene.Town]: TownScene,
+  [Scene.WorldGen]: WorldGenScene,
 };
 
 function App(): JSX.Element {
