@@ -4,8 +4,10 @@ import React from 'react';
 export default function WorldGenScene(): JSX.Element {
   return (
     <div>
-      World Gen
-      <WorldMapCanvas />
+      <h2>World Gen</h2>
+      <div>
+        <WorldMapCanvas />
+      </div>
     </div>
   );
 }

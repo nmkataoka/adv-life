@@ -1,6 +1,22 @@
+import { WorldMap } from '1-game-code/World/WorldMap';
+import { getWorldMapLayer } from '3-frontend-api/worldMap';
+import { useSelector } from '4-react-ecsal';
 import React, { useCallback, useEffect, useRef } from 'react';
+import { Color, colorInterp } from './Color';
+import PixelMap from './PixelMap';
+
+function colorElevation(elev: number): Color {
+  if (elev < 0) {
+    // Ocean
+    return colorInterp(elev, -6000, 0, [0, 63, 128, 255], [128, 200, 238, 255]);
+  }
+  // Land
+  return colorInterp(elev, 0, 6000, [120, 177, 120, 255], [216, 221, 209, 255]);
+}
 
 export default function WorldMapCanvas(): JSX.Element {
+  const elevations = useSelector(getWorldMapLayer(WorldMap.Layer.Elevation));
+  const pixelMap = useRef(new PixelMap(elevations, colorElevation));
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const drawImage = useCallback((renderer: ImageBitmap) => {
@@ -15,18 +31,13 @@ export default function WorldMapCanvas(): JSX.Element {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !elevations) return;
 
-    const imgW = 20;
-    const imgH = 20;
-
-    // generate a 20*20 ImageData full of noise
-    const data = new Uint8Array(imgW * imgH * 4);
-    crypto.getRandomValues(data);
-    const img = new ImageData(new Uint8ClampedArray(data.buffer), imgW, imgH);
+    pixelMap.current.updateFromDataLayer(elevations);
+    const img = pixelMap.current.toImageData();
 
     void createImageBitmap(img).then(drawImage);
-  }, [drawImage]);
+  }, [drawImage, elevations]);
 
-  return <canvas ref={canvasRef} height={300} width={300} />;
+  return <canvas ref={canvasRef} height={300} width={400} />;
 }

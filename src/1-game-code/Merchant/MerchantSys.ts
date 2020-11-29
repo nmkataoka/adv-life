@@ -1,5 +1,5 @@
-import { ECSystem, EventCallbackArgs } from '0-engine';
-import { EventCallbackError, EventSys } from '0-engine/ECS/event-system';
+import { ECSystem, EventCallbackArgs, EventSys } from '0-engine';
+import { EventCallbackError } from '0-engine/ECS/event-system';
 import { InventoryCmpt } from '../ncomponents';
 import { BUY_ITEM_FROM_MERCHANT } from './constants';
 
