@@ -5,6 +5,7 @@ export enum Scene {
   Colosseum = 'colosseum',
   MainMenu = 'mainMenu',
   Town = 'town',
+  WorldGen = 'worldGen',
 }
 
 const initialState = {

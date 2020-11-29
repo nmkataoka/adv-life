@@ -18,6 +18,7 @@ export default function MainMenuScene(): JSX.Element {
       <Title>Adventurer&apos;s Life</Title>
       <Button onClick={handleSceneSelection(Scene.CharacterCreation)}>New Game</Button>
       <Button onClick={handleSceneSelection(Scene.Colosseum)}>Colosseum</Button>
+      <Button onClick={handleSceneSelection(Scene.WorldGen)}>Create World</Button>
     </Col>
   );
 }
