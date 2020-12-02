@@ -1,15 +1,15 @@
 import { DeepReadonly } from 'ts-essentials';
-import { ECSystem } from './ECSystem';
+import { ECSystem, ECSystemConstructor } from './ecsystem';
 import { NComponent, NComponentConstructor } from './NComponent';
 import { ComponentManager } from './ComponentManager';
-import { ECSystemConstructor } from './types/ECSystemTypes';
 import {
   GetComponentFuncType,
   GetComponentManagerFuncType,
   GetComponentUncertainFuncType,
 } from './types/EntityManagerAccessorTypes';
 import { NameCmpt } from './built-in-components';
-import { ConstructorsFromComponents, View } from './View';
+import { View } from './View';
+import { ComponentClasses, ComponentManagers } from './ComponentDependencies';
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
@@ -167,16 +167,15 @@ export class EntityManager {
   }
 
   public getView = <
-    ReadCmpts extends NComponent[],
+    ReadCmpts extends NComponent[] = [],
     WriteCmpts extends NComponent[] = [],
     WithoutCmpts extends NComponent[] = []
   >(
-    readCmpts: ConstructorsFromComponents<ReadCmpts>,
-    writeCmpts?: ConstructorsFromComponents<WriteCmpts>,
-    withoutCmpts?: ConstructorsFromComponents<WithoutCmpts>,
+    componentDependencies: ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>,
+    componentManagers?: ComponentManagers<ReadCmpts, WriteCmpts, WithoutCmpts>,
   ): View<ReadCmpts, WriteCmpts, WithoutCmpts> => {
-    const view = new View(this, readCmpts, writeCmpts ?? [], withoutCmpts ?? []);
-    return view as View<ReadCmpts, WriteCmpts, WithoutCmpts>;
+    const view = new View(this, componentDependencies, componentManagers);
+    return view;
   };
 
   public queueEntityDestruction(e: number | string): void {

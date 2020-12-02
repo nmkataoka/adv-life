@@ -4,7 +4,7 @@ export { Controller, Router } from './API';
 export type { EventCallback, EventCallbackArgs } from './ECS/event-system';
 export { EventCallbackError } from './ECS/event-system';
 export { EventSys } from './ECS/event-system';
-export { ECSystem } from './ECS/ECSystem';
+export { ECSystem } from './ECS/ecsystem';
 export type {
   GetComponentFuncType,
   GetComponentUncertainFuncType,

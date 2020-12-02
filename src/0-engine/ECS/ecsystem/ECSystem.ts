@@ -1,9 +1,9 @@
-import { EntityManager } from './EntityManager';
+import { EntityManager } from '../EntityManager';
 import {
   GetComponentFuncType,
   GetComponentManagerFuncType,
   GetComponentUncertainFuncType,
-} from './types/EntityManagerAccessorTypes';
+} from '../types/EntityManagerAccessorTypes';
 
 export abstract class ECSystem {
   public abstract Start(): void;

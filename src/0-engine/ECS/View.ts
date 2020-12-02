@@ -1,41 +1,30 @@
-import { NComponent, NComponentConstructor } from './NComponent';
+import { NComponent } from './NComponent';
 import { ComponentManager } from './ComponentManager';
 import { EntityManager } from './EntityManager';
-
-type CMgrs<T extends unknown[]> = {
-  [K in keyof T]: T[K] extends NComponent ? ComponentManager<T[K]> : never;
-};
-
-export type ConstructorsFromComponents<T extends unknown[]> = {
-  [K in keyof T]: T[K] extends NComponent ? NComponentConstructor<T[K]> : never;
-};
+import { ComponentClasses, ComponentManagers, Components } from './ComponentDependencies';
 
 export class View<
   ReadCmpts extends NComponent[],
   WriteCmpts extends NComponent[],
-  WithoutCmpts extends NComponent[]
+  WithoutCmpts extends NComponent[] = []
 > {
   constructor(
-    eMgr: EntityManager,
-    readCmpts: ConstructorsFromComponents<ReadCmpts>,
-    writeCmpts: ConstructorsFromComponents<WriteCmpts>,
-    withoutCmpts: ConstructorsFromComponents<WithoutCmpts>,
+    componentDependencies: ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>,
+    eMgr?: EntityManager,
+    cMgrs?: ComponentManagers<ReadCmpts, WriteCmpts, WithoutCmpts>,
   ) {
-    this.readCMgrs = readCmpts.map((CClass) => eMgr.tryGetMgr(CClass)) as CMgrs<ReadCmpts>;
-    this.writeCMgrs = writeCmpts.map((CClass) => eMgr.tryGetMgrMut(CClass)) as CMgrs<WriteCmpts>;
-    this.withoutCMgrs = withoutCmpts.map((CClass) => eMgr.tryGetMgr(CClass)) as CMgrs<WithoutCmpts>;
+    if (!cMgrs) {
+      if (!eMgr) {
+        throw new Error('View creation requires either `eMgr` or `cMgrs` must be supplied.');
+      }
+      cMgrs = componentDependencies.getComponentManagers(eMgr);
+    }
+    this.cMgrs = cMgrs;
 
-    this.entities = FindEntitiesWithComponents(
-      [...this.readCMgrs, ...this.writeCMgrs, ...this.withoutCMgrs],
-      withoutCmpts.length,
-    );
+    this.entities = FindEntitiesWithComponents(cMgrs.toArray(), cMgrs.withoutCMgrs?.length ?? 0);
   }
 
-  private readCMgrs: CMgrs<ReadCmpts>;
-
-  private writeCMgrs: CMgrs<WriteCmpts>;
-
-  private withoutCMgrs: CMgrs<WithoutCmpts>;
+  private cMgrs: ComponentManagers<ReadCmpts, WriteCmpts, WithoutCmpts>;
 
   public entities: number[];
 
@@ -47,12 +36,14 @@ export class View<
     return this.entities.length;
   }
 
-  public forEach(func: (e: number, readCmpts: ReadCmpts, writeCmpts: WriteCmpts) => void): void {
+  public forEach(func: (e: number, components: Components<ReadCmpts, WriteCmpts>) => void): void {
     for (let i = 0; i < this.count; ++i) {
       const e = this.at(i);
-      const readCmpts = this.readCMgrs.map((cMgr) => cMgr.get(e)) as ReadCmpts;
-      const writeCmpts = this.writeCMgrs.map((cMgr) => cMgr.getMut(e)) as WriteCmpts;
-      func(e, readCmpts, writeCmpts);
+      const components = {
+        readCmpts: this.cMgrs.readCMgrs?.map((cMgr) => cMgr.get(e)) as ReadCmpts,
+        writeCmpts: this.cMgrs.writeCMgrs?.map((cMgr) => cMgr.getMut(e)) as WriteCmpts,
+      };
+      func(e, components);
     }
   }
 }

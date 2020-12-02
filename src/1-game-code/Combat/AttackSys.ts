@@ -1,6 +1,4 @@
-import { ECSystem } from '0-engine/ECS/ECSystem';
-import { EntityManager } from '0-engine';
-
+import { ECSystem, EntityManager } from '0-engine';
 import { HealthCmpt } from '../ncomponents/HealthCmpt';
 
 export class AttackSys extends ECSystem {

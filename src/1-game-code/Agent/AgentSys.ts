@@ -1,5 +1,4 @@
-import { ECSystem } from '0-engine/ECS/ECSystem';
-import { EntityManager } from '0-engine';
+import { ECSystem, EntityManager } from '0-engine';
 import { GetPrdb } from '0-engine/ECS/globals/EntityManagerGlobals';
 import { getSkillData } from '3-frontend-api/SkillData';
 import { AgentCmpt } from '../ncomponents/AgentCmpt';

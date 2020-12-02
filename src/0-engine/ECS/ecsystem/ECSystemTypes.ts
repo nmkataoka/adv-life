@@ -1,4 +1,4 @@
-import { ECSystem } from '../ECSystem';
+import { ECSystem } from './ECSystem';
 import { EntityManager } from '../EntityManager';
 
 export interface ECSystemConstructor<C extends ECSystem> {
