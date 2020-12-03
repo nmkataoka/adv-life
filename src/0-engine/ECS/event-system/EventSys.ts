@@ -1,6 +1,6 @@
+import { AbstractComponentClasses, ComponentClasses } from '../ComponentDependencies';
 import { ECSystem } from '../ecsystem';
 import { EntityManager } from '../EntityManager';
-import { NComponent } from '../NComponent';
 import { EventAction, EventActionWithPromise } from './EventAction';
 import { EventCallbackError } from './EventCallback';
 import { EventListener } from './EventListener';
@@ -42,14 +42,9 @@ export class EventSys extends ECSystem {
   };
 
   // Returns a token that can be used to deregister a listener
-  public RegisterListener = <
-    Payload,
-    ReadCmpts extends NComponent[],
-    WriteCmpts extends NComponent[],
-    WithoutCmpts extends NComponent[] = []
-  >(
+  public RegisterListener = <Payload, ComponentDependencies extends AbstractComponentClasses>(
     eventName: string,
-    listener: EventListener<Payload, ReadCmpts, WriteCmpts, WithoutCmpts>,
+    listener: EventListener<Payload, ComponentDependencies>,
   ): number => {
     if (!this.eventListeners[eventName]) {
       this.eventListeners[eventName] = [];
@@ -103,7 +98,7 @@ export class EventSys extends ECSystem {
     return Promise.resolve();
   };
 
-  private eventListeners: { [key: string]: EventListener<any, any, any, any>[] };
+  private eventListeners: { [key: string]: EventListener<any, ComponentClasses<any, any, any>>[] };
 
   private lowPriorityEventQueue: EventActionWithPromise<any>[];
 }
