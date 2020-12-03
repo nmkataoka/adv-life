@@ -13,11 +13,11 @@ class ComponentManagers<
   WriteCmpts extends NComponent[] = [],
   WithoutCmpts extends NComponent[] = []
 > {
-  readCMgrs?: ComponentManager<ReadCmpts[number]>[];
+  readCMgrs: ComponentManager<ReadCmpts[number]>[] = [];
 
-  writeCMgrs?: ComponentManager<WriteCmpts[number]>[];
+  writeCMgrs: ComponentManager<WriteCmpts[number]>[] = [];
 
-  withoutCMgrs?: ComponentManager<WithoutCmpts[number]>[];
+  withoutCMgrs: ComponentManager<WithoutCmpts[number]>[] = [];
 
   constructor(
     data?: Partial<ComponentManagers<[...ReadCmpts], [...WriteCmpts], [...WithoutCmpts]>>,
