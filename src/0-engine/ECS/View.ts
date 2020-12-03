@@ -1,31 +1,35 @@
-import { DeepReadonly } from 'ts-essentials';
-import { NComponent } from './NComponent';
 import { ComponentManager } from './ComponentManager';
 import { EntityManager } from './EntityManager';
-import { ComponentClasses, ComponentManagers, Components } from './ComponentDependencies';
+import {
+  AbstractComponentClasses,
+  ComponentManagersFromClasses,
+  PresentComponents,
+} from './ComponentDependencies';
 
-export class View<
-  ReadCmpts extends NComponent[],
-  WriteCmpts extends NComponent[],
-  WithoutCmpts extends NComponent[] = []
-> {
+export class View<ComponentDependencies extends AbstractComponentClasses> {
   constructor(
-    componentDependencies: ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>,
+    componentDependencies: ComponentDependencies,
     eMgr?: EntityManager,
-    cMgrs?: ComponentManagers<ReadCmpts, WriteCmpts, WithoutCmpts>,
+    cMgrs?: ComponentManagersFromClasses<ComponentDependencies>,
   ) {
     if (!cMgrs) {
       if (!eMgr) {
         throw new Error('View creation requires either `eMgr` or `cMgrs` must be supplied.');
       }
-      cMgrs = componentDependencies.getComponentManagers(eMgr);
+      this.cMgrs = componentDependencies.getComponentManagers(
+        eMgr,
+      ) as ComponentManagersFromClasses<ComponentDependencies>;
+    } else {
+      this.cMgrs = cMgrs;
     }
-    this.cMgrs = cMgrs;
 
-    this.entities = FindEntitiesWithComponents(cMgrs.toArray(), cMgrs.withoutCMgrs?.length ?? 0);
+    this.entities = FindEntitiesWithComponents(
+      this.cMgrs.toArray(),
+      this.cMgrs.withoutCMgrs?.length ?? 0,
+    );
   }
 
-  private cMgrs: ComponentManagers<ReadCmpts, WriteCmpts, WithoutCmpts>;
+  private cMgrs: ComponentManagersFromClasses<ComponentDependencies>;
 
   public entities: number[];
 
@@ -37,13 +41,15 @@ export class View<
     return this.entities.length;
   }
 
-  public forEach(func: (e: number, components: Components<ReadCmpts, WriteCmpts>) => void): void {
+  public forEach(
+    func: (e: number, components: PresentComponents<ComponentDependencies>) => void,
+  ): void {
     for (let i = 0; i < this.count; ++i) {
       const e = this.at(i);
       const components = {
-        readCmpts: this.cMgrs.readCMgrs?.map((cMgr) => cMgr.get(e)) as DeepReadonly<ReadCmpts>,
-        writeCmpts: this.cMgrs.writeCMgrs?.map((cMgr) => cMgr.getMut(e)) as WriteCmpts,
-      };
+        readCmpts: this.cMgrs.readCMgrs?.map((cMgr) => cMgr.get(e)),
+        writeCmpts: this.cMgrs.writeCMgrs?.map((cMgr) => cMgr.getMut(e)),
+      } as PresentComponents<ComponentDependencies>;
       func(e, components);
     }
   }

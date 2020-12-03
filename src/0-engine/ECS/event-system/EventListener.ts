@@ -1,23 +1,20 @@
-import { ComponentClasses } from '../ComponentDependencies';
-import { NComponent } from '../NComponent';
+import { AbstractComponentClasses, ComponentClasses } from '../ComponentDependencies';
 import { View } from '../View';
 import { EventCallback, EventCallbackArgs, EventCallbackWithView } from './EventCallback';
 
 export class EventListener<
   Payload = undefined,
-  ReadCmpts extends NComponent[] = [],
-  WriteCmpts extends NComponent[] = [],
-  WithoutCmpts extends NComponent[] = []
+  ComponentDependencies extends AbstractComponentClasses = ComponentClasses<[], [], []>
 > {
-  public callback: EventCallback<Payload, ReadCmpts, WriteCmpts, WithoutCmpts>;
+  public callback: EventCallback<Payload, ComponentDependencies>;
 
   public active: boolean;
 
-  public componentDependencies: ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>;
+  public componentDependencies: ComponentDependencies;
 
   constructor(
-    componentDependencies: ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>,
-    callback: EventCallback<Payload, ReadCmpts, WriteCmpts, WithoutCmpts>,
+    componentDependencies: ComponentDependencies,
+    callback: EventCallback<Payload, ComponentDependencies>,
   ) {
     this.active = true;
     this.componentDependencies = componentDependencies;
@@ -31,28 +28,16 @@ export class EventListener<
  */
 export class EventListenerWithView<
   Payload,
-  ReadCmpts extends NComponent[],
-  WriteCmpts extends NComponent[],
-  WithoutCmpts extends NComponent[] = []
-> extends EventListener<Payload, ReadCmpts, WriteCmpts, WithoutCmpts> {
+  ComponentDependencies extends AbstractComponentClasses = ComponentClasses<[], [], []>
+> extends EventListener<Payload, ComponentDependencies> {
   constructor(
-    componentDependencies: ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>,
-    callback: EventCallbackWithView<Payload, ReadCmpts, WriteCmpts, WithoutCmpts>,
+    componentDependencies: ComponentDependencies,
+    callback: EventCallbackWithView<Payload, ComponentDependencies>,
   ) {
     super(
       componentDependencies,
-      ({
-        componentManagers,
-        payload,
-      }: EventCallbackArgs<Payload, ReadCmpts, WriteCmpts, WithoutCmpts>) => {
-        return callback(
-          new View<ReadCmpts, WriteCmpts, WithoutCmpts>(
-            componentDependencies,
-            undefined,
-            componentManagers,
-          ),
-          payload,
-        );
+      ({ componentManagers, payload }: EventCallbackArgs<Payload, ComponentDependencies>) => {
+        return callback(new View(componentDependencies, undefined, componentManagers), payload);
       },
     );
   }

@@ -1,7 +1,6 @@
-import { ComponentClasses } from '../ComponentDependencies';
+import { AbstractComponentClasses } from '../ComponentDependencies';
 import { EventAction, EventCallback, EventListener, EventListenerWithView } from '../event-system';
 import { EventCallbackWithView } from '../event-system/EventCallback';
-import { NComponent } from '../NComponent';
 
 type EventCreator<Payload> = { (payload: Payload): EventAction<Payload>; type: string };
 
@@ -9,14 +8,9 @@ type EventCreator<Payload> = { (payload: Payload): EventAction<Payload>; type: s
  * Return value of createEventListener. Only contains one event listener,
  * unlike Redux Toolkit's Slice.
  */
-type EventSlice<
-  Payload,
-  ReadCmpts extends NComponent[],
-  WriteCmpts extends NComponent[],
-  WithoutCmpts extends NComponent[] = []
-> = {
+type EventSlice<Payload, ComponentDependencies extends AbstractComponentClasses> = {
   createEvent: EventCreator<Payload>;
-  eventListener: EventListener<Payload, ReadCmpts, WriteCmpts, WithoutCmpts>;
+  eventListener: EventListener<Payload, ComponentDependencies>;
 };
 
 function createEventName(callbackName: string, scope: string): string {
@@ -28,16 +22,12 @@ function createEventName(callbackName: string, scope: string): string {
   return eventType;
 }
 
-export const createEventListener = <
-  ReadCmpts extends NComponent[] = [],
-  WriteCmpts extends NComponent[] = [],
-  WithoutCmpts extends NComponent[] = []
->(
-  componentDependencies: ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>,
+export const createEventListener = <ComponentDependencies extends AbstractComponentClasses>(
+  componentDependencies: ComponentDependencies,
 ) => <Payload>(
-  eventCallback: EventCallback<Payload, ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>>,
+  eventCallback: EventCallback<Payload, ComponentDependencies>,
   scope = '',
-): EventSlice<Payload, ReadCmpts, WriteCmpts, WithoutCmpts> => {
+): EventSlice<Payload, ComponentDependencies> => {
   const eventType = createEventName(eventCallback.name, scope);
   const createEvent: EventCreator<Payload> = (payload: Payload) => ({ type: eventType, payload });
   createEvent.type = eventCallback.name;
@@ -49,14 +39,12 @@ export const createEventListener = <
 
 export function createEventListenerWithView<
   Payload,
-  ReadCmpts extends NComponent[],
-  WriteCmpts extends NComponent[],
-  WithoutCmpts extends NComponent[]
+  ComponentDependencies extends AbstractComponentClasses
 >(
-  componentDependencies: ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>,
-  eventCallback: EventCallbackWithView<Payload, ReadCmpts, WriteCmpts, WithoutCmpts>,
+  componentDependencies: ComponentDependencies,
+  eventCallback: EventCallbackWithView<Payload, ComponentDependencies>,
   scope = '',
-): EventSlice<Payload, ReadCmpts, WriteCmpts, WithoutCmpts> {
+): EventSlice<Payload, ComponentDependencies> {
   const eventType = createEventName(eventCallback.name, scope);
   const createEvent: EventCreator<Payload> = (payload: Payload) => ({ type: eventType, payload });
   createEvent.type = eventType;

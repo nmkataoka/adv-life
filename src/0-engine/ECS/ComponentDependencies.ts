@@ -3,11 +3,13 @@ import { ComponentManager } from './ComponentManager';
 import { EntityManager } from './EntityManager';
 import { NComponent, NComponentConstructor } from './NComponent';
 
+export type AbstractComponentClasses = ComponentClasses<NComponent[], NComponent[], NComponent[]>;
+
 export type ConstructorsFromComponents<T extends unknown[]> = {
   [K in keyof T]: T[K] extends NComponent ? NComponentConstructor<T[K]> : never;
 };
 
-export class ComponentManagers<
+class ComponentManagers<
   ReadCmpts extends NComponent[] = [],
   WriteCmpts extends NComponent[] = [],
   WithoutCmpts extends NComponent[] = []
@@ -82,3 +84,23 @@ export type Components<
   writeCmpts?: WriteCmpts;
   withoutCmpts?: WithoutCmpts;
 };
+
+export type PresentComponents<
+  ComponentDependencies extends AbstractComponentClasses
+> = ComponentDependencies extends ComponentClasses<
+  infer ReadCmpts,
+  infer WriteCmpts,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  infer WithoutCmpts
+>
+  ? Components<ReadCmpts, WriteCmpts, []>
+  : never;
+
+/** Get ComponentManagers type from ComponentClasses */
+export type ComponentManagersFromClasses<T> = T extends ComponentClasses<
+  infer ReadCmpts,
+  infer WriteCmpts,
+  infer WithoutCmpts
+>
+  ? ComponentManagers<ReadCmpts, WriteCmpts, WithoutCmpts>
+  : never;

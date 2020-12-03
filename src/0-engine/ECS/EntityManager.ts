@@ -9,7 +9,7 @@ import {
 } from './types/EntityManagerAccessorTypes';
 import { NameCmpt } from './built-in-components';
 import { View } from './View';
-import { ComponentClasses, ComponentManagers } from './ComponentDependencies';
+import { AbstractComponentClasses, ComponentManagersFromClasses } from './ComponentDependencies';
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
@@ -166,14 +166,10 @@ export class EntityManager {
     return this.systems[sysClass.name] as Sys;
   }
 
-  public getView = <
-    ReadCmpts extends NComponent[] = [],
-    WriteCmpts extends NComponent[] = [],
-    WithoutCmpts extends NComponent[] = []
-  >(
-    componentDependencies: ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>,
-    componentManagers?: ComponentManagers<ReadCmpts, WriteCmpts, WithoutCmpts>,
-  ): View<ReadCmpts, WriteCmpts, WithoutCmpts> => {
+  public getView = <ComponentDependencies extends AbstractComponentClasses>(
+    componentDependencies: ComponentDependencies,
+    componentManagers?: ComponentManagersFromClasses<ComponentDependencies>,
+  ): View<ComponentDependencies> => {
     const view = new View(componentDependencies, this, componentManagers);
     return view;
   };
