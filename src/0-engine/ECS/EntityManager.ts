@@ -174,7 +174,7 @@ export class EntityManager {
     componentDependencies: ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>,
     componentManagers?: ComponentManagers<ReadCmpts, WriteCmpts, WithoutCmpts>,
   ): View<ReadCmpts, WriteCmpts, WithoutCmpts> => {
-    const view = new View(this, componentDependencies, componentManagers);
+    const view = new View(componentDependencies, this, componentManagers);
     return view;
   };
 

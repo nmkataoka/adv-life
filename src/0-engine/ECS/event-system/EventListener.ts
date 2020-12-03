@@ -4,9 +4,9 @@ import { View } from '../View';
 import { EventCallback, EventCallbackArgs, EventCallbackWithView } from './EventCallback';
 
 export class EventListener<
-  Payload,
-  ReadCmpts extends NComponent[],
-  WriteCmpts extends NComponent[],
+  Payload = undefined,
+  ReadCmpts extends NComponent[] = [],
+  WriteCmpts extends NComponent[] = [],
   WithoutCmpts extends NComponent[] = []
 > {
   public callback: EventCallback<Payload, ReadCmpts, WriteCmpts, WithoutCmpts>;

@@ -1,3 +1,4 @@
+import { DeepReadonly } from 'ts-essentials';
 import { NComponent } from './NComponent';
 import { ComponentManager } from './ComponentManager';
 import { EntityManager } from './EntityManager';
@@ -40,7 +41,7 @@ export class View<
     for (let i = 0; i < this.count; ++i) {
       const e = this.at(i);
       const components = {
-        readCmpts: this.cMgrs.readCMgrs?.map((cMgr) => cMgr.get(e)) as ReadCmpts,
+        readCmpts: this.cMgrs.readCMgrs?.map((cMgr) => cMgr.get(e)) as DeepReadonly<ReadCmpts>,
         writeCmpts: this.cMgrs.writeCMgrs?.map((cMgr) => cMgr.getMut(e)) as WriteCmpts,
       };
       func(e, components);

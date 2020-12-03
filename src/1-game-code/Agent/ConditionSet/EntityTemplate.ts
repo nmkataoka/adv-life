@@ -1,4 +1,5 @@
 import { EntityManager, NComponentConstructor } from '0-engine';
+import { ComponentClasses } from '0-engine/ECS/ComponentDependencies';
 
 /// Entity template base class. If a component is a subset, i.e. C1 implies C2,
 /// C2 doesn't need to be in the template.
@@ -22,7 +23,7 @@ export default class EntityTemplate<
   }
 
   public findCandidateEntities(eMgr: EntityManager): number[] {
-    const view = eMgr.getView([...this.cclasses], [], []);
+    const view = eMgr.getView(new ComponentClasses({ readCmpts: [...this.cclasses] }));
     return view.entities;
   }
 

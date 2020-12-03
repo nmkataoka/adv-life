@@ -1,7 +1,9 @@
 import { Stats } from 'fs';
 import { ECSystem, EventCallbackError } from '0-engine';
-import { EventCallbackArgs, EventSys } from '0-engine/ECS/event-system';
+import { EventSys } from '0-engine/ECS/event-system';
 import { MovementCmpt } from '1-game-code/Combat/MovementCmpt';
+import { ComponentClasses } from '0-engine/ECS/ComponentDependencies';
+import { createEventListener } from '0-engine/ECS/ecsystem';
 import {
   ClassCmpt,
   CombatPositionCmpt,
@@ -15,17 +17,30 @@ import {
 
 export const CREATE_CHARACTER = 'characterCreation/createCharacter';
 
-const createCharacter = ({
-  eMgr,
-  payload: { className, name, personality, race, stats },
-}: EventCallbackArgs<{
+// This event handler should probably be split up
+
+const slice = createEventListener(
+  new ComponentClasses({
+    writeCmpts: [
+      ClassCmpt,
+      CombatPositionCmpt,
+      CombatStatsCmpt,
+      InventoryCmpt,
+      MovementCmpt,
+      PersonalityCmpt,
+      PlayerCmpt,
+      RaceCmpt,
+    ],
+  }),
+)<{
   className?: string;
   name: string;
   personality?: PersonalityArray;
   race?: string;
   stats?: Stats;
-}>) => {
-  const playerAlreadyExists = eMgr.getView([PlayerCmpt], [], []).count > 0;
+}>(function createCharacter({ eMgr, payload: { className, name, personality, race, stats } }) {
+  const playerAlreadyExists =
+    eMgr.getView(new ComponentClasses({ readCmpts: [PlayerCmpt] })).count > 0;
   if (playerAlreadyExists) {
     throw new EventCallbackError('Tried to create player character, but player already exists.');
   }
@@ -66,11 +81,11 @@ const createCharacter = ({
   eMgr.addCmpt(player, movementCmpt);
   const combatPosCmpt = new CombatPositionCmpt();
   eMgr.addCmpt(player, combatPosCmpt);
-};
+}, 'createCharacter');
 
 export class CharacterCreationSys extends ECSystem {
   public Start(): void {
-    this.eMgr.getSys(EventSys).RegisterListener(CREATE_CHARACTER, createCharacter);
+    this.eMgr.getSys(EventSys).RegisterListener(CREATE_CHARACTER, slice.eventListener);
   }
 
   public OnUpdate(): void {}

@@ -1,11 +1,16 @@
 import sinon, { SinonStub } from 'sinon';
+import { ComponentClasses } from '../ComponentDependencies';
+import { createEventListener } from '../ecsystem';
 import { EntityManager } from '../EntityManager';
+import { EventCallback } from './EventCallback';
+import { EventListener } from './EventListener';
 import { EventSys } from './EventSys';
 
 describe('EventSys', () => {
   let eMgr: EntityManager;
   let eventSys: EventSys;
   let callback: SinonStub;
+  let listener: EventListener;
   const TEST_EVENT = 'test_event';
   let token: number;
 
@@ -13,7 +18,8 @@ describe('EventSys', () => {
     eMgr = new EntityManager([]);
     eventSys = new EventSys(eMgr);
     callback = sinon.stub();
-    token = eventSys.RegisterListener(TEST_EVENT, callback);
+    listener = createEventListener(new ComponentClasses(), callback as EventCallback).eventListener;
+    token = eventSys.RegisterListener(TEST_EVENT, listener);
   });
 
   it('dispatch defaults to high priority, which results in immediate dispatch', async () => {

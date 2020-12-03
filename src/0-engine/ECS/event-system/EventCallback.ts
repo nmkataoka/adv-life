@@ -1,15 +1,18 @@
-import { ComponentManagers } from '../ComponentDependencies';
+import { ComponentClasses, ComponentManagers } from '../ComponentDependencies';
 import { EntityManager } from '../EntityManager';
 import { NComponent } from '../NComponent';
 import { View } from '../View';
 
-export type EventCallbackArgs<
-  Payload,
-  ReadCmpts extends NComponent[],
-  WriteCmpts extends NComponent[],
-  WithoutCmpts extends NComponent[] = []
-> = {
-  componentManagers: ComponentManagers<ReadCmpts, WriteCmpts, WithoutCmpts>;
+type AbstractComponentClasses = ComponentClasses<NComponent[], NComponent[], NComponent[]>;
+
+export type EventCallbackArgs<Payload, ComponentDependencies extends AbstractComponentClasses> = {
+  componentManagers: ComponentDependencies extends ComponentClasses<
+    infer ReadCmpts,
+    infer WriteCmpts,
+    infer WithoutCmpts
+  >
+    ? ComponentManagers<ReadCmpts, WriteCmpts, WithoutCmpts>
+    : never;
   payload: Payload;
 
   /**
@@ -21,15 +24,34 @@ export type EventCallbackArgs<
   eMgr: EntityManager;
 };
 
+// export type EventCallbackArgs<
+//   Payload,
+//   ReadCmpts extends NComponent[] = [],
+//   WriteCmpts extends NComponent[] = [],
+//   WithoutCmpts extends NComponent[] = []
+// > = {
+//   componentManagers: ComponentManagers<ReadCmpts, WriteCmpts, WithoutCmpts>;
+//   payload: Payload;
+
+//   /**
+//    * Avoid using this whenever possible!
+//    *
+//    * @deprecated Use ComponentManagers or View that are automatically supplied.
+//    * Use of this `eMgr` reference indicates a need to change this architecture.
+//    */
+//   eMgr: EntityManager;
+// };
+
 /**
  * Normal way to implement game code. Operates on a set of component managers
  */
 export type EventCallback<
-  Payload,
-  ReadCmpts extends NComponent[],
-  WriteCmpts extends NComponent[],
-  WithoutCmpts extends NComponent[] = []
-> = (args: EventCallbackArgs<Payload, ReadCmpts, WriteCmpts, WithoutCmpts>) => Promise<void> | void;
+  Payload = undefined,
+  // ReadCmpts extends NComponent[] = [],
+  // WriteCmpts extends NComponent[] = [],
+  // WithoutCmpts extends NComponent[] = []
+  ComponentDependencies extends AbstractComponentClasses = ComponentClasses<[], [], []>
+> = (args: EventCallbackArgs<Payload, ComponentDependencies>) => Promise<void> | void;
 
 export class EventCallbackError {
   constructor(message: string) {

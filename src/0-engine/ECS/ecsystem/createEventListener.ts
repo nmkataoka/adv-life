@@ -28,16 +28,16 @@ function createEventName(callbackName: string, scope: string): string {
   return eventType;
 }
 
-export function createEventListener<
-  Payload,
-  ReadCmpts extends NComponent[],
-  WriteCmpts extends NComponent[],
+export const createEventListener = <
+  ReadCmpts extends NComponent[] = [],
+  WriteCmpts extends NComponent[] = [],
   WithoutCmpts extends NComponent[] = []
 >(
   componentDependencies: ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>,
-  eventCallback: EventCallback<Payload, ReadCmpts, WriteCmpts, WithoutCmpts>,
+) => <Payload>(
+  eventCallback: EventCallback<Payload, ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>>,
   scope = '',
-): EventSlice<Payload, ReadCmpts, WriteCmpts, WithoutCmpts> {
+): EventSlice<Payload, ReadCmpts, WriteCmpts, WithoutCmpts> => {
   const eventType = createEventName(eventCallback.name, scope);
   const createEvent: EventCreator<Payload> = (payload: Payload) => ({ type: eventType, payload });
   createEvent.type = eventCallback.name;
@@ -45,7 +45,7 @@ export function createEventListener<
     createEvent,
     eventListener: new EventListener(componentDependencies, eventCallback),
   };
-}
+};
 
 export function createEventListenerWithView<
   Payload,

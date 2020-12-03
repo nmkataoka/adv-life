@@ -1,3 +1,4 @@
+import { ComponentClasses } from './ComponentDependencies';
 import { EntityManager } from './EntityManager';
 import { NComponent } from './NComponent';
 
@@ -13,7 +14,7 @@ describe('View', () => {
     const e = eMgr.createEntity();
     eMgr.addCmpt(e, new TestCmpt());
 
-    const view = eMgr.getView([TestCmpt], [], []);
+    const view = eMgr.getView(new ComponentClasses({ readCmpts: [TestCmpt] }));
     expect(view.count).toBe(1);
   });
 });
