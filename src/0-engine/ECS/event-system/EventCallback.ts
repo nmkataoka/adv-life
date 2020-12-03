@@ -39,10 +39,25 @@ export class EventCallbackError {
   public message: string;
 }
 
+export type EventCallbackWithViewArgs<
+  Payload,
+  ComponentDependences extends AbstractComponentClasses
+> = {
+  view: View<ComponentDependences>;
+  payload: Payload;
+  /**
+   * Avoid using this whenever possible!
+   *
+   * @deprecated Use ComponentManagers or View that are automatically supplied.
+   * Use of this `eMgr` reference indicates a need to change this architecture.
+   */
+  eMgr: EntityManager;
+};
+
 /** Event callback for iterating over entities with the same components.
  * Prefer this over the normal EventCallback when it makes sense.
  */
 export type EventCallbackWithView<
   Payload,
   ComponentDependencies extends AbstractComponentClasses = ComponentClasses<[], [], []>
-> = (view: View<ComponentDependencies>, payload: Payload) => Promise<void>;
+> = (args: EventCallbackWithViewArgs<Payload, ComponentDependencies>) => Promise<void> | void;

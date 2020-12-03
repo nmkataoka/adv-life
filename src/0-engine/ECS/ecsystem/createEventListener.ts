@@ -1,6 +1,7 @@
-import { AbstractComponentClasses } from '../ComponentDependencies';
+import { AbstractComponentClasses, ComponentClasses } from '../ComponentDependencies';
 import { EventAction, EventCallback, EventListener, EventListenerWithView } from '../event-system';
 import { EventCallbackWithView } from '../event-system/EventCallback';
+import { NComponent } from '../NComponent';
 
 type EventCreator<Payload> = { (payload: Payload): EventAction<Payload>; type: string };
 
@@ -22,32 +23,44 @@ function createEventName(callbackName: string, scope: string): string {
   return eventType;
 }
 
-export const createEventListener = <ComponentDependencies extends AbstractComponentClasses>(
-  componentDependencies: ComponentDependencies,
-) => <Payload>(
-  eventCallback: EventCallback<Payload, ComponentDependencies>,
-  scope = '',
-): EventSlice<Payload, ComponentDependencies> => {
-  const eventType = createEventName(eventCallback.name, scope);
-  const createEvent: EventCreator<Payload> = (payload: Payload) => ({ type: eventType, payload });
-  createEvent.type = eventCallback.name;
-  return {
-    createEvent,
-    eventListener: new EventListener(componentDependencies, eventCallback),
+export function createEventListener<
+  ReadCmpts extends NComponent[] = [],
+  WriteCmpts extends NComponent[] = [],
+  WithoutCmpts extends NComponent[] = []
+>(componentDependencies: Partial<ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>>) {
+  return <Payload>(
+    eventCallback: EventCallback<Payload, ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>>,
+    scope = '',
+  ): EventSlice<Payload, ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>> => {
+    const eventType = createEventName(eventCallback.name, scope);
+    const createEvent: EventCreator<Payload> = (payload: Payload) => ({ type: eventType, payload });
+    createEvent.type = eventCallback.name;
+    return {
+      createEvent,
+      eventListener: new EventListener(new ComponentClasses(componentDependencies), eventCallback),
+    };
   };
-};
+}
 
 export function createEventListenerWithView<
-  Payload,
-  ComponentDependencies extends AbstractComponentClasses
->(
-  componentDependencies: ComponentDependencies,
-  eventCallback: EventCallbackWithView<Payload, ComponentDependencies>,
-  scope = '',
-): EventSlice<Payload, ComponentDependencies> {
-  const eventType = createEventName(eventCallback.name, scope);
-  const createEvent: EventCreator<Payload> = (payload: Payload) => ({ type: eventType, payload });
-  createEvent.type = eventType;
-  const eventListener = new EventListenerWithView(componentDependencies, eventCallback);
-  return { createEvent, eventListener };
+  ReadCmpts extends NComponent[] = [],
+  WriteCmpts extends NComponent[] = [],
+  WithoutCmpts extends NComponent[] = []
+>(componentDependencies: Partial<ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>>) {
+  return <Payload>(
+    eventCallback: EventCallbackWithView<
+      Payload,
+      ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>
+    >,
+    scope = '',
+  ): EventSlice<Payload, ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>> => {
+    const eventType = createEventName(eventCallback.name, scope);
+    const createEvent: EventCreator<Payload> = (payload: Payload) => ({ type: eventType, payload });
+    createEvent.type = eventType;
+    const eventListener = new EventListenerWithView(
+      new ComponentClasses(componentDependencies),
+      eventCallback,
+    );
+    return { createEvent, eventListener };
+  };
 }

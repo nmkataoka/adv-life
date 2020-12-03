@@ -1,9 +1,8 @@
 import { Stats } from 'fs';
-import { ECSystem, EventCallbackError } from '0-engine';
+import { ECSystem, EventCallbackError, createEventListener } from '0-engine';
 import { EventSys } from '0-engine/ECS/event-system';
 import { MovementCmpt } from '1-game-code/Combat/MovementCmpt';
 import { ComponentClasses } from '0-engine/ECS/ComponentDependencies';
-import { createEventListener } from '0-engine/ECS/ecsystem';
 import {
   ClassCmpt,
   CombatPositionCmpt,
@@ -19,20 +18,18 @@ export const CREATE_CHARACTER = 'characterCreation/createCharacter';
 
 // This event handler should probably be split up
 
-const slice = createEventListener(
-  new ComponentClasses({
-    writeCmpts: [
-      ClassCmpt,
-      CombatPositionCmpt,
-      CombatStatsCmpt,
-      InventoryCmpt,
-      MovementCmpt,
-      PersonalityCmpt,
-      PlayerCmpt,
-      RaceCmpt,
-    ],
-  }),
-)<{
+const slice = createEventListener({
+  writeCmpts: [
+    ClassCmpt,
+    CombatPositionCmpt,
+    CombatStatsCmpt,
+    InventoryCmpt,
+    MovementCmpt,
+    PersonalityCmpt,
+    PlayerCmpt,
+    RaceCmpt,
+  ],
+})<{
   className?: string;
   name: string;
   personality?: PersonalityArray;

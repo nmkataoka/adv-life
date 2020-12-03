@@ -1,11 +1,10 @@
-import { DeepReadonly } from 'ts-essentials';
 import { ComponentManager } from './ComponentManager';
 import { EntityManager } from './EntityManager';
 import { NComponent, NComponentConstructor } from './NComponent';
 
 export type AbstractComponentClasses = ComponentClasses<NComponent[], NComponent[], NComponent[]>;
 
-export type ConstructorsFromComponents<T extends unknown[]> = {
+type ConstructorsFromComponents<T extends unknown[]> = {
   [K in keyof T]: T[K] extends NComponent ? NComponentConstructor<T[K]> : never;
 };
 
@@ -75,16 +74,6 @@ export class ComponentClasses<
 /**
  * Views only need a subset of the component types in ComponentDependencies.
  */
-export type Components<
-  ReadCmpts extends NComponent = [],
-  WriteCmpts extends NComponent = [],
-  WithoutCmpts extends NComponent[] = []
-> = {
-  readCmpts?: DeepReadonly<ReadCmpts>;
-  writeCmpts?: WriteCmpts;
-  withoutCmpts?: WithoutCmpts;
-};
-
 export type PresentComponents<
   ComponentDependencies extends AbstractComponentClasses
 > = ComponentDependencies extends ComponentClasses<
@@ -93,7 +82,7 @@ export type PresentComponents<
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer WithoutCmpts
 >
-  ? Components<ReadCmpts, WriteCmpts, []>
+  ? { readCmpts: ReadCmpts; writeCmpts: WriteCmpts }
   : never;
 
 /** Get ComponentManagers type from ComponentClasses */
