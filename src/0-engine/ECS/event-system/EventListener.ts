@@ -36,8 +36,12 @@ export class EventListenerWithView<
   ) {
     super(
       componentDependencies,
-      ({ componentManagers, payload }: EventCallbackArgs<Payload, ComponentDependencies>) => {
-        return callback(new View(componentDependencies, undefined, componentManagers), payload);
+      ({ componentManagers, eMgr, payload }: EventCallbackArgs<Payload, ComponentDependencies>) => {
+        return callback({
+          eMgr,
+          view: new View(componentDependencies, undefined, componentManagers),
+          payload,
+        });
       },
     );
   }
