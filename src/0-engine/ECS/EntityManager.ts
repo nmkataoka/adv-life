@@ -1,7 +1,7 @@
 import { DeepReadonly } from 'ts-essentials';
 import { ECSystem, ECSystemConstructor } from './ecsystem';
 import { NComponent, NComponentConstructor } from './NComponent';
-import { ComponentManager } from './ComponentManager';
+import { ComponentManager, ReadonlyComponentManager } from './ComponentManager';
 import {
   GetComponentFuncType,
   GetComponentManagerFuncType,
@@ -72,8 +72,8 @@ export class EntityManager {
   /** Returns a readonly reference to a component manager, which must exist. */
   public getMgr = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-  ): DeepReadonly<ComponentManager<C>> => {
-    return this.getMgrMut(cclass) as DeepReadonly<ComponentManager<C>>;
+  ): ReadonlyComponentManager<C> => {
+    return this.getMgrMut(cclass) as ReadonlyComponentManager<C>;
   };
 
   /** Returns a mutable reference to a component manager, which must exist. */
@@ -86,8 +86,8 @@ export class EntityManager {
   /** Returns a readonly reference to a component manager, which is created if it doesn't already exist. */
   public tryGetMgr = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-  ): DeepReadonly<ComponentManager<C>> => {
-    return this.tryGetMgrMut(cclass) as DeepReadonly<ComponentManager<C>>;
+  ): ReadonlyComponentManager<C> => {
+    return this.tryGetMgrMut(cclass) as ReadonlyComponentManager<C>;
   };
 
   /** Returns a mutable reference to a component manager, which is created if it doesn't already exist. */
@@ -145,14 +145,14 @@ export class EntityManager {
     cclass: NComponentConstructor<C>,
   ): DeepReadonly<C> => {
     const cMgr = this.tryGetMgr<C>(cclass);
-    const components = Object.values(cMgr.components);
+    const components = cMgr.getAsArray();
     return components[0];
   };
 
   /** Gets a unique component, mutable. Convenenience function for special components like lookup tables. */
   public getUniqueCmptMut = <C extends NComponent>(cclass: NComponentConstructor<C>): C => {
     const cMgr = this.tryGetMgrMut<C>(cclass);
-    const components = Object.values(cMgr.components);
+    const components = cMgr.getAsArrayMut();
     return components[0];
   };
 

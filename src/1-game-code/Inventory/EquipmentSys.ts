@@ -1,15 +1,22 @@
-import { ECSystem, EventCallbackArgs, EventCallbackError, EventSys } from '0-engine';
+import { createEventListener, ECSystem, EventCallbackError, EventSys } from '0-engine';
 import { HOLD_ITEM_FROM_INVENTORY, WEAR_ITEM_FROM_INVENTORY } from './Constants';
 import { HeldItemsCmpt } from './HeldItemsCmpt';
 import { InventoryCmpt } from './InventoryCmpt';
 import { WornItemsCmpt } from './WornItemsCmpt';
 
-const holdItemFromInventory = ({
-  eMgr,
+const holdItemFromInventorySlice = createEventListener({
+  writeCmpts: [HeldItemsCmpt, InventoryCmpt],
+})<{
+  agentId: number;
+  itemIndex: number;
+}>(function holdItemFromInventory({
+  componentManagers: {
+    writeCMgrs: [heldItemsMgr, inventoryMgr],
+  },
   payload: { agentId, itemIndex },
-}: EventCallbackArgs<{ agentId: number; itemIndex: number }>) => {
-  const inventoryCmpt = eMgr.tryGetCmptMut(InventoryCmpt, agentId);
-  const heldItemsCmpt = eMgr.tryGetCmptMut(HeldItemsCmpt, agentId);
+}) {
+  const inventoryCmpt = inventoryMgr.tryGetMut(agentId);
+  const heldItemsCmpt = heldItemsMgr.tryGetMut(agentId);
 
   if (!inventoryCmpt || !heldItemsCmpt) {
     throw new EventCallbackError('Missing inventoryCmpt or heldItemsCmpt');
@@ -22,14 +29,21 @@ const holdItemFromInventory = ({
 
   heldItemsCmpt.items.push(item);
   inventoryCmpt.removeAt(itemIndex);
-};
+});
 
-const wearItemFromInventory = ({
-  eMgr,
+const wearItemFromInventorySlice = createEventListener({
+  writeCmpts: [InventoryCmpt, WornItemsCmpt],
+})<{
+  agentId: number;
+  itemIndex: number;
+}>(function wearItemFromInventory({
+  componentManagers: {
+    writeCMgrs: [inventoryMgr, wornItemsMgr],
+  },
   payload: { agentId, itemIndex },
-}: EventCallbackArgs<{ agentId: number; itemIndex: number }>) => {
-  const inventoryCmpt = eMgr.tryGetCmptMut(InventoryCmpt, agentId);
-  const wornItemsCmpt = eMgr.tryGetCmptMut(WornItemsCmpt, agentId);
+}) {
+  const inventoryCmpt = inventoryMgr.tryGetMut(agentId);
+  const wornItemsCmpt = wornItemsMgr.tryGetMut(agentId);
 
   if (!inventoryCmpt || !wornItemsCmpt) {
     throw new EventCallbackError('Missing inventoryCmpt or wornItemsCmpt');
@@ -42,13 +56,13 @@ const wearItemFromInventory = ({
 
   wornItemsCmpt.items.push(item);
   inventoryCmpt.removeAt(itemIndex);
-};
+});
 
 export class EquipmentSys extends ECSystem {
   public Start = (): void => {
     const eventSys = this.eMgr.getSys(EventSys);
-    eventSys.RegisterListener(HOLD_ITEM_FROM_INVENTORY, holdItemFromInventory);
-    eventSys.RegisterListener(WEAR_ITEM_FROM_INVENTORY, wearItemFromInventory);
+    eventSys.RegisterListener(HOLD_ITEM_FROM_INVENTORY, holdItemFromInventorySlice.eventListener);
+    eventSys.RegisterListener(WEAR_ITEM_FROM_INVENTORY, wearItemFromInventorySlice.eventListener);
   };
 
   public OnUpdate = (): void => {};

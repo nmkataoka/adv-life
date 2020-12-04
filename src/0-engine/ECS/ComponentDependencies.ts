@@ -1,11 +1,24 @@
-import { ComponentManager } from './ComponentManager';
+import { ComponentManager, ReadonlyComponentManager } from './ComponentManager';
 import { EntityManager } from './EntityManager';
 import { NComponent, NComponentConstructor } from './NComponent';
 
 export type AbstractComponentClasses = ComponentClasses<NComponent[], NComponent[], NComponent[]>;
 
+// For some reason, this syntax works for tuples and arrays,
+// whereas the base syntax
+//    ComponentManager<ReadCmpts[number]>[]
+// always outputs an array. So the tuple type [Cmpt1, Cmpt2] becomes (Cmpt1 | Cmpt2)[]
+// which we don't want.
 type ConstructorsFromComponents<T extends unknown[]> = {
   [K in keyof T]: T[K] extends NComponent ? NComponentConstructor<T[K]> : never;
+};
+
+type ManagersFromClasses<T extends unknown[]> = {
+  [K in keyof T]: T[K] extends NComponent ? ComponentManager<T[K]> : never;
+};
+
+type ReadonlyManagersFromClasses<T extends unknown[]> = {
+  [K in keyof T]: T[K] extends NComponent ? ReadonlyComponentManager<T[K]> : never;
 };
 
 class ComponentManagers<
@@ -13,16 +26,29 @@ class ComponentManagers<
   WriteCmpts extends NComponent[] = [],
   WithoutCmpts extends NComponent[] = []
 > {
-  readCMgrs: ComponentManager<ReadCmpts[number]>[] = [];
+  // Complicated type on default value because TypeScript can't
+  // enforce that correct data is supplied
+  readCMgrs: ReadonlyManagersFromClasses<ReadCmpts>;
 
-  writeCMgrs: ComponentManager<WriteCmpts[number]>[] = [];
+  writeCMgrs: ManagersFromClasses<WriteCmpts>;
 
-  withoutCMgrs: ComponentManager<WithoutCmpts[number]>[] = [];
+  withoutCMgrs: ReadonlyManagersFromClasses<WithoutCmpts>;
 
-  constructor(
-    data?: Partial<ComponentManagers<[...ReadCmpts], [...WriteCmpts], [...WithoutCmpts]>>,
-  ) {
-    Object.assign(this, data);
+  constructor({
+    readCMgrs,
+    writeCMgrs,
+    withoutCMgrs,
+  }: {
+    readCMgrs?: ReadonlyManagersFromClasses<[...ReadCmpts]>;
+    writeCMgrs?: ManagersFromClasses<[...WriteCmpts]>;
+    withoutCMgrs?: ReadonlyManagersFromClasses<[...WithoutCmpts]>;
+  }) {
+    // Type complexity here arises from the fact that it's difficult to tell
+    // TypeScript that default assignment will only occur when the Cmpts types
+    // are also default assigned to []
+    this.readCMgrs = readCMgrs ?? ([] as any);
+    this.writeCMgrs = writeCMgrs ?? ([] as any);
+    this.withoutCMgrs = withoutCMgrs ?? ([] as any);
   }
 
   public toArray = (): ComponentManager<any>[] => [
@@ -41,11 +67,11 @@ export class ComponentClasses<
   WriteCmpts extends NComponent[] = [],
   WithoutCmpts extends NComponent[] = []
 > {
-  public readCmpts?: ConstructorsFromComponents<[...ReadCmpts]>;
+  public readCmpts: ConstructorsFromComponents<[...ReadCmpts]>;
 
-  public writeCmpts?: ConstructorsFromComponents<[...WriteCmpts]>;
+  public writeCmpts: ConstructorsFromComponents<[...WriteCmpts]>;
 
-  public withoutCmpts?: ConstructorsFromComponents<[...WithoutCmpts]>;
+  public withoutCmpts: ConstructorsFromComponents<[...WithoutCmpts]>;
 
   constructor({
     readCmpts,
@@ -55,18 +81,34 @@ export class ComponentClasses<
     readCmpts?: ConstructorsFromComponents<[...ReadCmpts]>;
     writeCmpts?: ConstructorsFromComponents<[...WriteCmpts]>;
     withoutCmpts?: ConstructorsFromComponents<[...WithoutCmpts]>;
-  } = {}) {
-    this.readCmpts = readCmpts;
-    this.writeCmpts = writeCmpts;
-    this.withoutCmpts = withoutCmpts;
+  }) {
+    // Again, type complexity arises from the fact that it's
+    // difficult to tell TypeScript that default assignment will
+    // only occur when the generic params also default assign
+    this.readCmpts = readCmpts ?? ([] as any);
+    this.writeCmpts = writeCmpts ?? ([] as any);
+    this.withoutCmpts = withoutCmpts ?? ([] as any);
   }
 
+  // Not sure why all these explicit type conversions are necessary.
+  // Might be getting messed up by DeepReadonly. Still seems worth it for now, but
+  // if this happens again, might be worth stripping out DeepReadonly and only
+  // wrapping public-facing engine methods in DeepReadonly.
   public getComponentManagers = (
     eMgr: EntityManager,
   ): ComponentManagers<ReadCmpts, WriteCmpts, WithoutCmpts> => {
-    const readCMgrs = this.readCmpts?.map((CClass) => eMgr.tryGetMgr(CClass));
-    const writeCMgrs = this.writeCmpts?.map((CClass) => eMgr.tryGetMgrMut(CClass));
-    const withoutCMgrs = this.withoutCmpts?.map((CClass) => eMgr.tryGetMgr(CClass));
+    const readCMgrs = this.readCmpts?.map((CClass) =>
+      eMgr.tryGetMgr(CClass),
+    ) as ReadonlyManagersFromClasses<[...ReadCmpts]>;
+
+    const writeCMgrs = this.writeCmpts?.map((CClass) =>
+      eMgr.tryGetMgrMut(CClass),
+    ) as ManagersFromClasses<[...WriteCmpts]>;
+
+    const withoutCMgrs = this.withoutCmpts?.map((CClass) =>
+      eMgr.tryGetMgr(CClass),
+    ) as ReadonlyManagersFromClasses<[...WithoutCmpts]>;
+
     return new ComponentManagers({ readCMgrs, writeCMgrs, withoutCMgrs });
   };
 }
