@@ -1,15 +1,22 @@
-import { ECSystem, EventCallbackArgs, EventSys } from '0-engine';
+import { createEventListener, ECSystem, EventSys } from '0-engine';
 import { EventCallbackError } from '0-engine/ECS/event-system';
 import { InventoryCmpt } from '../ncomponents';
 import { BUY_ITEM_FROM_MERCHANT } from './constants';
 
-const entityBuysItemFromMerchant = ({
-  eMgr,
+const entityBuysItemFromMerchantSlice = createEventListener({
+  writeCmpts: [InventoryCmpt],
+})<{
+  buyerId: number;
+  itemIndex: number;
+  sellerId: number;
+}>(function entityBuysItemFromMerchant({
+  componentManagers: {
+    writeCMgrs: [inventoryMgr],
+  },
   payload: { buyerId, itemIndex, sellerId },
-}: EventCallbackArgs<{ itemIndex: number; buyerId: number; sellerId: number }>) => {
-  const inventoryCMgr = eMgr.tryGetMgrMut(InventoryCmpt);
-  const buyerInventoryCmpt = inventoryCMgr.getMut(buyerId);
-  const sellerInventoryCmpt = inventoryCMgr.getMut(sellerId);
+}) {
+  const buyerInventoryCmpt = inventoryMgr.getMut(buyerId);
+  const sellerInventoryCmpt = inventoryMgr.getMut(sellerId);
   const item = sellerInventoryCmpt.getAt(itemIndex);
 
   if (item != null) {
@@ -28,11 +35,13 @@ const entityBuysItemFromMerchant = ({
     buyerInventoryCmpt.gold -= publicSalePrice;
     sellerInventoryCmpt.gold += publicSalePrice;
   }
-};
+});
 
 export class MerchantSys extends ECSystem {
   public Start = (): void => {
-    this.eMgr.getSys(EventSys).RegisterListener(BUY_ITEM_FROM_MERCHANT, entityBuysItemFromMerchant);
+    this.eMgr
+      .getSys(EventSys)
+      .RegisterListener(BUY_ITEM_FROM_MERCHANT, entityBuysItemFromMerchantSlice.eventListener);
   };
 
   public OnUpdate = (): void => {};
