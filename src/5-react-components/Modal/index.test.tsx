@@ -1,12 +1,12 @@
 import React from 'react';
-import * as sinon from 'sinon';
+import { stub } from 'sinon';
 import { render, fireEvent, screen, waitFor } from '8-helpers/test-utils';
 
 import Modal from '.';
 
 describe('<Modal />', () => {
   it('when close button is clicked, closes and calls onClose', async () => {
-    const handleClose = sinon.stub();
+    const handleClose = stub();
     render(
       <Modal isShowing onClose={handleClose}>
         <div>Hello!</div>
