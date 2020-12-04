@@ -1,10 +1,12 @@
-import { createEventListener, ECSystem, EventSys } from '0-engine';
+import { createEventSlice } from '0-engine';
 import { Vector2 } from '8-helpers/math';
 import { MovementCmpt } from './MovementCmpt';
 
 export const SET_PLAYER_DESTINATION = 'combat/set-player-destination';
 
-const setPlayerDestinationSlice = createEventListener({ writeCmpts: [MovementCmpt] })<{
+const setPlayerDestinationSlice = createEventSlice('setPlayerDestination', {
+  writeCmpts: [MovementCmpt],
+})<{
   unitId: number;
   destination: Vector2;
 }>(function setPlayerDestination({
@@ -19,12 +21,4 @@ const setPlayerDestinationSlice = createEventListener({ writeCmpts: [MovementCmp
   }
 });
 
-export class SetPlayerDestinationSys extends ECSystem {
-  public Start(): void {
-    this.eMgr
-      .getSys(EventSys)
-      .RegisterListener(SET_PLAYER_DESTINATION, setPlayerDestinationSlice.eventListener);
-  }
-
-  public OnUpdate(): void {}
-}
+export default [setPlayerDestinationSlice.eventListener];

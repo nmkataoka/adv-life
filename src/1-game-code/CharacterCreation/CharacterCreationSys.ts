@@ -1,6 +1,5 @@
 import { Stats } from 'fs';
-import { ECSystem, EventCallbackError, createEventListener } from '0-engine';
-import { EventSys } from '0-engine/ECS/event-system';
+import { EventCallbackError, createEventSlice } from '0-engine';
 import { MovementCmpt } from '1-game-code/Combat/MovementCmpt';
 import { ComponentClasses } from '0-engine/ECS/ComponentDependencies';
 import {
@@ -18,7 +17,7 @@ export const CREATE_CHARACTER = 'characterCreation/createCharacter';
 
 // This event handler should probably be split up
 
-const slice = createEventListener({
+const slice = createEventSlice('createCharacter', {
   writeCmpts: [
     ClassCmpt,
     CombatPositionCmpt,
@@ -35,7 +34,7 @@ const slice = createEventListener({
   personality?: PersonalityArray;
   race?: string;
   stats?: Stats;
-}>(function createCharacter({ eMgr, payload: { className, name, personality, race, stats } }) {
+}>(({ eMgr, payload: { className, name, personality, race, stats } }) => {
   const playerAlreadyExists =
     eMgr.getView(new ComponentClasses({ readCmpts: [PlayerCmpt] })).count > 0;
   if (playerAlreadyExists) {
@@ -80,10 +79,4 @@ const slice = createEventListener({
   eMgr.addCmpt(player, combatPosCmpt);
 }, 'createCharacter');
 
-export class CharacterCreationSys extends ECSystem {
-  public Start(): void {
-    this.eMgr.getSys(EventSys).RegisterListener(CREATE_CHARACTER, slice.eventListener);
-  }
-
-  public OnUpdate(): void {}
-}
+export default [slice.eventListener];

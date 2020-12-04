@@ -1,19 +1,13 @@
-import { ECSystem } from '0-engine';
+import { createEventSliceWithView } from '0-engine';
 import { CombatStatsCmpt } from './CombatStatsCmpt';
 
-export class ManaRegenSys extends ECSystem {
-  public Start(): void {}
+const regenManaSlice = createEventSliceWithView('regenMana', {
+  writeCmpts: [CombatStatsCmpt],
+})<{ dt: number }>(({ payload: { dt }, view }) => {
+  view.forEach((e: number, { writeCmpts: [combatStatsCmpt] }) => {
+    const { maxMana, mana, manaRegen } = combatStatsCmpt;
+    combatStatsCmpt.mana = Math.min(maxMana, mana + manaRegen * dt);
+  });
+});
 
-  public OnUpdate(dt: number): void {
-    this.regenMana(dt);
-  }
-
-  private regenMana(dt: number) {
-    const combatStatsMgr = this.GetComponentManager(CombatStatsCmpt);
-
-    Object.values(combatStatsMgr.components).forEach((combatStatsCmpt) => {
-      const { maxMana, mana, manaRegen } = combatStatsCmpt;
-      combatStatsCmpt.mana = Math.min(maxMana, mana + manaRegen * dt);
-    });
-  }
-}
+export default [regenManaSlice.eventListener];

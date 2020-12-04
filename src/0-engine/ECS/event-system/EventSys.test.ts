@@ -1,6 +1,6 @@
 import sinon, { SinonStub } from 'sinon';
 import { ComponentClasses } from '../ComponentDependencies';
-import { createEventListener } from '../ecsystem';
+import { createEventSlice } from '../ecsystem';
 import { EntityManager } from '../EntityManager';
 import { EventCallback } from './EventCallback';
 import { EventListener } from './EventListener';
@@ -18,7 +18,7 @@ describe('EventSys', () => {
     eMgr = new EntityManager([]);
     eventSys = new EventSys(eMgr);
     callback = sinon.stub();
-    listener = createEventListener(new ComponentClasses(), callback as EventCallback).eventListener;
+    listener = createEventSlice(new ComponentClasses(), callback as EventCallback).eventListener;
     token = eventSys.RegisterListener(TEST_EVENT, listener);
   });
 

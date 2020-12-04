@@ -1,9 +1,8 @@
-import { createEventListener, ECSystem, EventSys } from '0-engine';
+import { createEventSlice } from '0-engine';
 import { EventCallbackError } from '0-engine/ECS/event-system';
 import { InventoryCmpt } from '../ncomponents';
-import { BUY_ITEM_FROM_MERCHANT } from './constants';
 
-const entityBuysItemFromMerchantSlice = createEventListener({
+const entityBuysItemFromMerchantSlice = createEventSlice('entityBuysItemFromMerchant', {
   writeCmpts: [InventoryCmpt],
 })<{
   buyerId: number;
@@ -37,12 +36,4 @@ const entityBuysItemFromMerchantSlice = createEventListener({
   }
 });
 
-export class MerchantSys extends ECSystem {
-  public Start = (): void => {
-    this.eMgr
-      .getSys(EventSys)
-      .RegisterListener(BUY_ITEM_FROM_MERCHANT, entityBuysItemFromMerchantSlice.eventListener);
-  };
-
-  public OnUpdate = (): void => {};
-}
+export default [entityBuysItemFromMerchantSlice.eventListener];

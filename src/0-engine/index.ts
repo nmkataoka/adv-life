@@ -3,8 +3,7 @@ export type { RequestData, RequestHandler } from './API';
 export { Controller, Router } from './API';
 export type { EventCallback } from './ECS/event-system';
 export { EventCallbackError } from './ECS/event-system';
-export { EventSys } from './ECS/event-system';
-export { ECSystem, createEventListener, createEventListenerWithView } from './ECS/ecsystem';
+export { copyEventSlice, createEventSlice, createEventSliceWithView } from './ECS/ecsystem';
 export type {
   GetComponentFuncType,
   GetComponentUncertainFuncType,

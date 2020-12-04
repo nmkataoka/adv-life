@@ -1,7 +1,7 @@
-import { createEventListenerWithView, ECSystem } from '0-engine';
+import { createEventSliceWithView, DefaultEvent } from '0-engine';
 import { HealthCmpt } from '../ncomponents/HealthCmpt';
 
-const slice = createEventListenerWithView({
+const checkForDeathsSlice = createEventSliceWithView(DefaultEvent.Update, {
   readCmpts: [HealthCmpt],
 })<undefined>(function checkForDeaths({ eMgr, view }) {
   view.forEach((e: number | string, { readCmpts: [healthCmpt] }) => {
@@ -11,10 +11,4 @@ const slice = createEventListenerWithView({
   });
 });
 
-export class AttackSys extends ECSystem {
-  public Start(): void {}
-
-  public OnUpdate(): void {
-    this.checkForDeaths();
-  }
-}
+export default [checkForDeathsSlice.eventListener];
