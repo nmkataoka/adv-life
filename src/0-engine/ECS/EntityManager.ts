@@ -9,20 +9,6 @@ import {
   ComponentManagersFromClasses,
 } from './component-dependencies/ComponentDependencies';
 
-type GetComponentFuncType = <C extends NComponent>(
-  cclass: NComponentConstructor<C>,
-  entityHandle: number,
-) => C;
-
-type GetComponentUncertainFuncType = <C extends NComponent>(
-  cclass: NComponentConstructor<C>,
-  entityHandle: number,
-) => C | undefined;
-
-type GetComponentManagerFuncType = <C extends NComponent>(
-  cclass: NComponentConstructor<C>,
-) => ComponentManager<C>;
-
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
 
@@ -208,6 +194,15 @@ export class EntityManager {
   }
 }
 
+type GetComponentFuncType = <C extends NComponent>(
+  cclass: NComponentConstructor<C>,
+  entityHandle: number,
+) => C;
+
+type GetComponentManagerFuncType = <C extends NComponent>(
+  cclass: NComponentConstructor<C>,
+) => ComponentManager<C>;
+
 /** @deprecated Avoid global accessor functions */
 export const GetComponentManager: GetComponentManagerFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
@@ -218,14 +213,3 @@ export const GetComponent: GetComponentFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
   entity: number,
 ): C => EntityManager.instance.tryGetMgrMut<C>(cclass).getMut(entity);
-
-/** @deprecated Avoid global accessor functions */
-export const GetComponentUncertain: GetComponentUncertainFuncType = <C extends NComponent>(
-  cclass: NComponentConstructor<C>,
-  entity: number,
-): C | undefined => EntityManager.instance.tryGetMgrMut<C>(cclass).tryGetMut(entity);
-
-/** @deprecated Avoid global accessor functions */
-export function GetSystem<Sys extends ECSystem>(sysClass: ECSystemConstructor<Sys>): Sys {
-  return EntityManager.instance.getSys(sysClass);
-}

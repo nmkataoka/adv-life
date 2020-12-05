@@ -43,7 +43,7 @@ describe('View', () => {
       testCmpt.num += i;
       i += 1;
     });
-    expect(eMgr.getCmpt(TestCmpt, e)).toBe(1);
-    expect(eMgr.getCmpt(TestCmpt, e2)).toBe(2);
+    expect(eMgr.getCmpt(TestCmpt, e).num).toBe(1);
+    expect(eMgr.getCmpt(TestCmpt, e2).num).toBe(2);
   });
 });
