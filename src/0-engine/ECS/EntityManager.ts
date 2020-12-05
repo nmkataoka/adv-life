@@ -1,15 +1,13 @@
 import { DeepReadonly } from 'ts-essentials';
-import { ECSystem } from './ECSystem';
+import { ECSystem, ECSystemConstructor } from './ecsystem';
 import { NComponent, NComponentConstructor } from './NComponent';
-import { ComponentManager } from './ComponentManager';
-import { ECSystemConstructor } from './types/ECSystemTypes';
-import {
-  GetComponentFuncType,
-  GetComponentManagerFuncType,
-  GetComponentUncertainFuncType,
-} from './types/EntityManagerAccessorTypes';
+import { ComponentManager, ReadonlyComponentManager } from './component-manager/ComponentManager';
 import { NameCmpt } from './built-in-components';
-import { ConstructorsFromComponents, View } from './View';
+import { View } from './view/View';
+import {
+  AbstractComponentClasses,
+  ComponentManagersFromClasses,
+} from './component-dependencies/ComponentDependencies';
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
@@ -72,8 +70,8 @@ export class EntityManager {
   /** Returns a readonly reference to a component manager, which must exist. */
   public getMgr = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-  ): DeepReadonly<ComponentManager<C>> => {
-    return this.getMgrMut(cclass) as DeepReadonly<ComponentManager<C>>;
+  ): ReadonlyComponentManager<C> => {
+    return this.getMgrMut(cclass) as ReadonlyComponentManager<C>;
   };
 
   /** Returns a mutable reference to a component manager, which must exist. */
@@ -86,8 +84,8 @@ export class EntityManager {
   /** Returns a readonly reference to a component manager, which is created if it doesn't already exist. */
   public tryGetMgr = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-  ): DeepReadonly<ComponentManager<C>> => {
-    return this.tryGetMgrMut(cclass) as DeepReadonly<ComponentManager<C>>;
+  ): ReadonlyComponentManager<C> => {
+    return this.tryGetMgrMut(cclass) as ReadonlyComponentManager<C>;
   };
 
   /** Returns a mutable reference to a component manager, which is created if it doesn't already exist. */
@@ -145,14 +143,14 @@ export class EntityManager {
     cclass: NComponentConstructor<C>,
   ): DeepReadonly<C> => {
     const cMgr = this.tryGetMgr<C>(cclass);
-    const components = Object.values(cMgr.components);
+    const components = cMgr.getAsArray();
     return components[0];
   };
 
   /** Gets a unique component, mutable. Convenenience function for special components like lookup tables. */
   public getUniqueCmptMut = <C extends NComponent>(cclass: NComponentConstructor<C>): C => {
     const cMgr = this.tryGetMgrMut<C>(cclass);
-    const components = Object.values(cMgr.components);
+    const components = cMgr.getAsArrayMut();
     return components[0];
   };
 
@@ -166,17 +164,12 @@ export class EntityManager {
     return this.systems[sysClass.name] as Sys;
   }
 
-  public getView = <
-    ReadCmpts extends NComponent[],
-    WriteCmpts extends NComponent[] = [],
-    WithoutCmpts extends NComponent[] = []
-  >(
-    readCmpts: ConstructorsFromComponents<ReadCmpts>,
-    writeCmpts?: ConstructorsFromComponents<WriteCmpts>,
-    withoutCmpts?: ConstructorsFromComponents<WithoutCmpts>,
-  ): View<ReadCmpts, WriteCmpts, WithoutCmpts> => {
-    const view = new View(this, readCmpts, writeCmpts ?? [], withoutCmpts ?? []);
-    return view as View<ReadCmpts, WriteCmpts, WithoutCmpts>;
+  public getView = <ComponentDependencies extends AbstractComponentClasses>(
+    componentDependencies: ComponentDependencies,
+    componentManagers?: ComponentManagersFromClasses<ComponentDependencies>,
+  ): View<ComponentDependencies> => {
+    const view = new View(componentDependencies, this, componentManagers);
+    return view;
   };
 
   public queueEntityDestruction(e: number | string): void {
@@ -201,6 +194,15 @@ export class EntityManager {
   }
 }
 
+type GetComponentFuncType = <C extends NComponent>(
+  cclass: NComponentConstructor<C>,
+  entityHandle: number,
+) => C;
+
+type GetComponentManagerFuncType = <C extends NComponent>(
+  cclass: NComponentConstructor<C>,
+) => ComponentManager<C>;
+
 /** @deprecated Avoid global accessor functions */
 export const GetComponentManager: GetComponentManagerFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
@@ -211,14 +213,3 @@ export const GetComponent: GetComponentFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
   entity: number,
 ): C => EntityManager.instance.tryGetMgrMut<C>(cclass).getMut(entity);
-
-/** @deprecated Avoid global accessor functions */
-export const GetComponentUncertain: GetComponentUncertainFuncType = <C extends NComponent>(
-  cclass: NComponentConstructor<C>,
-  entity: number,
-): C | undefined => EntityManager.instance.tryGetMgrMut<C>(cclass).tryGetMut(entity);
-
-/** @deprecated Avoid global accessor functions */
-export function GetSystem<Sys extends ECSystem>(sysClass: ECSystemConstructor<Sys>): Sys {
-  return EntityManager.instance.getSys(sysClass);
-}

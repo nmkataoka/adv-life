@@ -1,6 +1,4 @@
-import { ECSystem } from '0-engine/ECS/ECSystem';
-import { EventCallbackArgs } from '0-engine';
-import { GetEventSys } from '0-engine/ECS/globals/DispatchEvent';
+import { createEventSlice } from '0-engine';
 import {
   UNIT_ATTACKED,
   UNIT_CAST_SPELL,
@@ -8,61 +6,63 @@ import {
   UNIT_CANCELED_ACTION,
 } from '../Agent/ProcRuleData/Constants';
 
-export class CombatLogSys extends ECSystem {
-  public entries: string[] = [];
+export const combatLog: string[] = [];
 
-  public Start(): void {
-    const eventSys = GetEventSys();
-    eventSys.RegisterListener(UNIT_ATTACKED, this.OnUnitAttacked);
-    eventSys.RegisterListener(UNIT_CAST_HEAL, this.OnUnitCastHeal);
-    eventSys.RegisterListener(UNIT_CAST_SPELL, this.OnUnitCastSpell);
-    eventSys.RegisterListener(UNIT_CANCELED_ACTION, this.OnUnitCanceledAction);
-  }
+const onUnitAttackedSlice = createEventSlice(
+  UNIT_ATTACKED,
+  {},
+)<{
+  self: number;
+  target: number;
+  damage: number;
+}>(function onUnitAttacked({ payload: { self, target, damage } }) {
+  combatLog.push(`Unit ${self} attacked Unit ${target} for ${damage} damage.`);
+});
 
-  public OnUpdate(): void {}
+const onUnitCastSpellSlice = createEventSlice(
+  UNIT_CAST_SPELL,
+  {},
+)<{
+  self: number;
+  targets: number[];
+  name: string;
+  damage: number;
+}>(function onUnitCastSpell({ payload: { self, targets, name, damage } }) {
+  combatLog.push(`Unit ${self} cast ${name} and hit ${getUnitText(targets)} for ${damage} damage.`);
+});
 
-  public OnUnitAttacked = ({
-    payload: { self, target, damage },
-  }: EventCallbackArgs<{ self: number; target: number; damage: number }>): void => {
-    this.entries.push(`Unit ${self} attacked Unit ${target} for ${damage} damage.`);
-  };
+const onUnitCastHealSlice = createEventSlice(
+  UNIT_CAST_HEAL,
+  {},
+)<{
+  self: number;
+  targets: number[];
+  name: string;
+  amount: number;
+}>(function onUnitCastHealSlice({ payload: { self, targets, name, amount } }) {
+  combatLog.push(`Unit ${self} healed ${getUnitText(targets)} with ${name} for ${amount}.`);
+});
 
-  public OnUnitCastSpell = ({
-    payload: { self, targets, name, damage },
-  }: EventCallbackArgs<{
-    self: number;
-    targets: number[];
-    name: string;
-    damage: number;
-  }>): void => {
-    this.entries.push(
-      `Unit ${self} cast ${name} and hit ${getUnitText(targets)} for ${damage} damage.`,
-    );
-  };
+const onUnitCanceledActionSlice = createEventSlice(
+  UNIT_CANCELED_ACTION,
+  {},
+)<{
+  self: number;
+  target: number;
+  actionName: string;
+  reason: string;
+}>(function onUnitCanceledAction({ payload: { self, target, actionName, reason } }) {
+  combatLog.push(
+    `Unit ${self} canceled ${actionName} on ${getUnitText(target)} because: ${reason}`,
+  );
+});
 
-  public OnUnitCastHeal = ({
-    payload: { self, targets, name, amount },
-  }: EventCallbackArgs<{
-    self: number;
-    targets: number[];
-    name: string;
-    amount: number;
-  }>): void => {
-    this.entries.push(`Unit ${self} healed ${getUnitText(targets)} with ${name} for ${amount}.`);
-  };
-
-  public OnUnitCanceledAction = ({
-    payload: { self, target, actionName, reason },
-  }: EventCallbackArgs<{
-    self: number;
-    target: number;
-    actionName: string;
-    reason: string;
-  }>): void => {
-    const msg = `Unit ${self} canceled ${actionName} on ${getUnitText(target)} because: ${reason}`;
-    this.entries.push(msg);
-  };
-}
+export default [
+  onUnitAttackedSlice.eventListener,
+  onUnitCastHealSlice.eventListener,
+  onUnitCastSpellSlice.eventListener,
+  onUnitCanceledActionSlice.eventListener,
+];
 
 function getUnitText(units: number | string | number[] | string[]): string {
   if (Array.isArray(units)) {

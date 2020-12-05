@@ -1,5 +1,5 @@
 import { ComponentManager } from './ComponentManager';
-import { NComponent } from './NComponent';
+import { NComponent } from '../NComponent';
 
 class TestCmpt implements NComponent {
   constructor(health = 100) {
@@ -17,7 +17,7 @@ describe('component manager', () => {
     for (let i = 0; i < numComponents; ++i) {
       cMgr.add(i, new TestCmpt());
     }
-    expect(Object.values(cMgr.components).length).toBe(numComponents);
+    expect(cMgr.getAsArray().length).toBe(numComponents);
   });
 
   it('add and get components', () => {

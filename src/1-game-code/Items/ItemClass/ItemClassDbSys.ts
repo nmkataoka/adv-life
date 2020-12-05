@@ -1,15 +1,22 @@
-import { ECSystem } from '0-engine';
+import { createEventSlice, DefaultEvent } from '0-engine';
 import { ItemClass } from './ItemClass';
 import { ItemClassDbCmpt } from './ItemClassDbCmpt';
 import itemClassesData from './itemClassesData.json';
 
-export class ItemClassDbSys extends ECSystem {
-  public Start = (): void => {
-    const e = this.eMgr.createEntity('ItemClassDb');
+const itemClassDbSysSlice = createEventSlice(DefaultEvent.Start, {
+  writeCmpts: [ItemClassDbCmpt],
+})<undefined>(
+  ({
+    componentManagers: {
+      writeCMgrs: [itemClassDbMgr],
+    },
+    eMgr,
+  }) => {
+    const e = eMgr.createEntity('ItemClassDb');
     const itemClassDbCmpt = new ItemClassDbCmpt(ItemClass);
     itemClassDbCmpt.readFromArray(itemClassesData);
-    this.eMgr.addCmpt(e, itemClassDbCmpt);
-  };
+    itemClassDbMgr.add(e, itemClassDbCmpt);
+  },
+);
 
-  public OnUpdate = (): void => {};
-}
+export default [itemClassDbSysSlice.eventListener];

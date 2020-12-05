@@ -1,6 +1,7 @@
 import { TownLocationsCmpt } from '1-game-code/Town';
 import { GameManager } from '0-engine/GameManager';
 import { DictOf } from '8-helpers/DictOf';
+import { ComponentClasses } from '0-engine/ECS/component-dependencies/ComponentDependencies';
 import { TownInfo } from './TownInfo';
 import { getName } from '../name/getName';
 
@@ -15,7 +16,7 @@ const getLocations = (entityHandle: number) => {
 export const getTowns = (): DictOf<TownInfo> => {
   const { eMgr } = GameManager.instance;
   const towns: DictOf<TownInfo> = {};
-  const townView = eMgr.getView([TownLocationsCmpt], [], []);
+  const townView = eMgr.getView(new ComponentClasses({ readCmpts: [TownLocationsCmpt] }));
 
   for (let i = 0; i < townView.count; ++i) {
     const e = townView.at(i);

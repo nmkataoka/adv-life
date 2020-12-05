@@ -1,7 +1,12 @@
-import { ECSystem } from '../ECSystem';
+import { DefaultEvent } from '../built-in-components';
+import {
+  AbstractComponentClasses,
+  ComponentClasses,
+} from '../component-dependencies/ComponentDependencies';
+import { ECSystem } from '../ecsystem';
 import { EntityManager } from '../EntityManager';
 import { EventAction, EventActionWithPromise } from './EventAction';
-import { EventCallback, EventCallbackError } from './EventCallback';
+import { EventCallbackError } from './EventCallback';
 import { EventListener } from './EventListener';
 
 export class EventSys extends ECSystem {
@@ -11,10 +16,13 @@ export class EventSys extends ECSystem {
     this.lowPriorityEventQueue = [];
   }
 
-  public Start(): void {}
+  public async Start(): Promise<void> {
+    await this.Dispatch({ type: DefaultEvent.Start, payload: undefined });
+  }
 
-  public OnUpdate = async (): Promise<void> => {
+  public OnUpdate = async (dt: number): Promise<void> => {
     await this.ExecuteLowPriorityActions();
+    await this.Dispatch({ type: DefaultEvent.Update, payload: { dt } });
   };
 
   // Low priority actions are deferred in a queue to be executed after the current tick finishes.
@@ -41,15 +49,15 @@ export class EventSys extends ECSystem {
   };
 
   // Returns a token that can be used to deregister a listener
-  public RegisterListener = <Payload>(
+  public RegisterListener = <Payload, ComponentDependencies extends AbstractComponentClasses>(
     eventName: string,
-    callback: EventCallback<Payload>,
+    listener: EventListener<Payload, ComponentDependencies>,
   ): number => {
     if (!this.eventListeners[eventName]) {
       this.eventListeners[eventName] = [];
     }
 
-    this.eventListeners[eventName].push(new EventListener(callback));
+    this.eventListeners[eventName].push(listener);
     return this.eventListeners[eventName].length - 1;
   };
 
@@ -69,7 +77,8 @@ export class EventSys extends ECSystem {
     if (listeners) {
       promises = listeners.map(async (l) => {
         if (l.active) {
-          return l.callback({ eMgr: this.eMgr, payload });
+          const componentManagers = l.componentDependencies.getComponentManagers(this.eMgr);
+          return l.callback({ eMgr: this.eMgr, componentManagers, payload });
         }
         return Promise.resolve();
       });
@@ -96,7 +105,7 @@ export class EventSys extends ECSystem {
     return Promise.resolve();
   };
 
-  private eventListeners: { [key: string]: EventListener<any>[] };
+  private eventListeners: { [key: string]: EventListener<any, ComponentClasses<any, any, any>>[] };
 
   private lowPriorityEventQueue: EventActionWithPromise<any>[];
 }

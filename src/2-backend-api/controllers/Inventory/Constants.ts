@@ -1,4 +1,2 @@
-export {
-  HOLD_ITEM_FROM_INVENTORY,
-  WEAR_ITEM_FROM_INVENTORY,
-} from '1-game-code/Inventory/Constants';
+export const HOLD_ITEM_FROM_INVENTORY = 'holdItemFromInventory';
+export const WEAR_ITEM_FROM_INVENTORY = 'wearItemFromInventory';
