@@ -1,5 +1,6 @@
-import { Controller, EventSys, RequestData, Router } from '0-engine';
-import { CREATE_NOISED_WORLD_MAP } from '1-game-code/World/constants';
+import { Controller, RequestData, Router } from '0-engine';
+import { EventSys } from '0-engine/ECS/event-system';
+import { createNoisedWorldMap } from '1-game-code/World/TerrainGenSys';
 import { CREATE_NOISED_TERRAIN } from './TerrainGenConstants';
 
 export class TerrainGenController extends Controller {
@@ -13,6 +14,6 @@ export class TerrainGenController extends Controller {
     { payload }: RequestData<undefined>,
     dispatch: typeof EventSys.prototype.Dispatch,
   ): Promise<void> => {
-    return dispatch({ type: CREATE_NOISED_WORLD_MAP, payload });
+    return dispatch(createNoisedWorldMap(payload));
   };
 }

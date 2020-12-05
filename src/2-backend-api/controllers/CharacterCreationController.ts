@@ -1,7 +1,7 @@
 import { Controller, RequestData, Router } from '0-engine';
 import { EventSys } from '0-engine/ECS/event-system';
+import { createCharacter } from '1-game-code/CharacterCreation/CharacterCreationSys';
 import { PersonalityArray } from '1-game-code/ncomponents';
-import { CREATE_CHARACTER as ENGINE_CREATE_CHARACTER } from '1-game-code/CharacterCreation/CharacterCreationSys';
 import { CREATE_CHARACTER } from './CharacterCreationConstants';
 
 export type Stats = {
@@ -31,6 +31,6 @@ export class CharacterCreationController extends Controller {
     }>,
     dispatch: typeof EventSys.prototype.Dispatch,
   ): Promise<void> => {
-    return dispatch({ type: ENGINE_CREATE_CHARACTER, payload });
+    return dispatch(createCharacter(payload));
   };
 }

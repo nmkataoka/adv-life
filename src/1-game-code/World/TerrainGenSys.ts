@@ -22,4 +22,6 @@ const createNoisedWorldMapSlice = createEventSlice('createNoisedWorldMap', {
 // TODO: move this off of start into its own event
 const start = copyEventSlice(DefaultEvent.Start, createNoisedWorldMapSlice);
 
+export const { createNoisedWorldMap } = createNoisedWorldMapSlice;
+
 export default [start.eventListener, createNoisedWorldMapSlice.eventListener];

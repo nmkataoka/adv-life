@@ -61,4 +61,7 @@ const wearItemFromInventorySlice = createEventSlice('wearItemFromInventory', {
   },
 );
 
+export const { holdItemFromInventory } = holdItemFromInventorySlice;
+export const { wearItemFromInventory } = wearItemFromInventorySlice;
+
 export default [holdItemFromInventorySlice.eventListener, wearItemFromInventorySlice.eventListener];

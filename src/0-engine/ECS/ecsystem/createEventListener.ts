@@ -41,10 +41,14 @@ export function createEventSlice<
   ): EventSlice<Payload, EventName, ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>> => {
     const eventType = createEventName(eventName, scope);
     const createEvent: EventCreator<Payload> = (payload: Payload) => ({ type: eventType, payload });
-    createEvent.type = eventCallback.name;
+    createEvent.type = eventType;
     return {
       [eventName]: createEvent,
-      eventListener: new EventListener(new ComponentClasses(componentDependencies), eventCallback),
+      eventListener: new EventListener(
+        eventType,
+        new ComponentClasses(componentDependencies),
+        eventCallback,
+      ),
     } as EventSlice<Payload, EventName, ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>>;
   };
 }
@@ -84,6 +88,7 @@ export function createEventSliceWithView<
     const createEvent: EventCreator<Payload> = (payload: Payload) => ({ type: eventType, payload });
     createEvent.type = eventType;
     const eventListener = new EventListenerWithView(
+      eventType,
       new ComponentClasses(componentDependencies),
       eventCallback,
     );

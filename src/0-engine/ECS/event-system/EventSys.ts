@@ -1,3 +1,4 @@
+import { DefaultEvent } from '../built-in-components';
 import { AbstractComponentClasses, ComponentClasses } from '../ComponentDependencies';
 import { ECSystem } from '../ecsystem';
 import { EntityManager } from '../EntityManager';
@@ -12,10 +13,13 @@ export class EventSys extends ECSystem {
     this.lowPriorityEventQueue = [];
   }
 
-  public Start(): void {}
+  public async Start(): Promise<void> {
+    await this.Dispatch({ type: DefaultEvent.Start, payload: undefined });
+  }
 
-  public OnUpdate = async (): Promise<void> => {
+  public OnUpdate = async (dt: number): Promise<void> => {
     await this.ExecuteLowPriorityActions();
+    await this.Dispatch({ type: DefaultEvent.Update, payload: { dt } });
   };
 
   // Low priority actions are deferred in a queue to be executed after the current tick finishes.

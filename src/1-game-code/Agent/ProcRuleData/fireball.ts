@@ -102,7 +102,7 @@ function getTargetsInAoeRadius(
   combatPositionMgr: ComponentManager<CombatPositionCmpt>,
 ): number[] {
   // Get enemies in combat order
-  const enemies = Object.entries(factionMgr.components).filter((faction) => faction[1].isEnemy);
+  const enemies = factionMgr.entries().filter((faction) => faction[1].isEnemy);
   const enemyPositions: EntityCombatPos[] = enemies.map((e) => {
     const entityHandle = parseInt(e[0], 10);
     const combatPos = combatPositionMgr.getMut(entityHandle);

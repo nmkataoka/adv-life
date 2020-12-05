@@ -1,4 +1,3 @@
-import { Stats } from 'fs';
 import { EventCallbackError, createEventSlice } from '0-engine';
 import { MovementCmpt } from '1-game-code/Combat/MovementCmpt';
 import { ComponentClasses } from '0-engine/ECS/ComponentDependencies';
@@ -13,11 +12,8 @@ import {
   RaceCmpt,
 } from '../ncomponents';
 
-export const CREATE_CHARACTER = 'characterCreation/createCharacter';
-
 // This event handler should probably be split up
-
-const slice = createEventSlice('createCharacter', {
+const characterCreationSlice = createEventSlice('createCharacter', {
   writeCmpts: [
     ClassCmpt,
     CombatPositionCmpt,
@@ -33,7 +29,7 @@ const slice = createEventSlice('createCharacter', {
   name: string;
   personality?: PersonalityArray;
   race?: string;
-  stats?: Stats;
+  stats?: Partial<CombatStatsCmpt>;
 }>(({ eMgr, payload: { className, name, personality, race, stats } }) => {
   const playerAlreadyExists =
     eMgr.getView(new ComponentClasses({ readCmpts: [PlayerCmpt] })).count > 0;
@@ -79,4 +75,6 @@ const slice = createEventSlice('createCharacter', {
   eMgr.addCmpt(player, combatPosCmpt);
 }, 'createCharacter');
 
-export default [slice.eventListener];
+export const { createCharacter } = characterCreationSlice;
+
+export default [characterCreationSlice.eventListener];

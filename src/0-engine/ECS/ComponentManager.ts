@@ -61,10 +61,20 @@ export class ComponentManager<C extends NComponent> {
     return !!this.components[e];
   }
 
+  public entries(): [string, C][] {
+    return Object.entries(this.components);
+  }
+
+  public entities(): string[] {
+    return Object.keys(this.components);
+  }
+
+  /** Returns all components as an array */
   public getAsArray(): DeepReadonly<C>[] {
     return Object.values(this.components) as DeepReadonly<C>[];
   }
 
+  /** Returns all components mutably as an array */
   public getAsArrayMut(): C[] {
     return Object.values(this.components);
   }

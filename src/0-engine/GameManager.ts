@@ -1,5 +1,6 @@
 import { createUnit } from '1-game-code/Unit/createUnit';
 import { createTown } from '1-game-code/Town/createTown';
+import eventListeners from '1-game-code/eventListeners';
 import { EntityManager } from './ECS/EntityManager';
 import ControllerList from './ControllerList';
 import SystemList from './SystemList';
@@ -31,11 +32,16 @@ export class GameManager {
     this.eMgr = new EntityManager(SystemList);
     this.router = new Router(ControllerList);
     this.storeSubscribers = new Set();
+    eventListeners.forEach((listener) => {
+      this.eMgr.getSys(EventSys).RegisterListener(listener.eventType, listener);
+    });
   }
 
   public Start(): void {
     this.eMgr.Start();
     this.router.Start(this.eMgr.getSys(EventSys));
+
+    // This is game logic that should be separated from the engine stuff like the game loop
     this.createMap();
     this.createUnits();
     this.enterGameLoop();

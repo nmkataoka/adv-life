@@ -36,4 +36,6 @@ const entityBuysItemFromMerchantSlice = createEventSlice('entityBuysItemFromMerc
   }
 });
 
+export const { entityBuysItemFromMerchant } = entityBuysItemFromMerchantSlice;
+
 export default [entityBuysItemFromMerchantSlice.eventListener];

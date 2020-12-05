@@ -6,7 +6,7 @@ import {
   UNIT_CANCELED_ACTION,
 } from '../Agent/ProcRuleData/Constants';
 
-const combatLog = [];
+export const combatLog: string[] = [];
 
 const onUnitAttackedSlice = createEventSlice(
   UNIT_ATTACKED,

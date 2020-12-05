@@ -1,11 +1,11 @@
 import { BoundAction } from '1-game-code/Agent/BoundAction';
 import { GoalQueueCmpt } from '1-game-code/Agent/GoalQueueCmpt';
 import { EntityManager } from '0-engine';
-import { GetPrdb } from '0-engine/ECS/globals/EntityManagerGlobals';
+import { ProcRuleDbCmpt } from '1-game-code/Agent/ProcRuleDatabaseCmpt';
 import { getSkillData } from '../SkillData';
 
 export function setSkillTarget(user: number, targets: number[], skillName: string): void {
-  const prdb = GetPrdb();
+  const prdb = EntityManager.instance.getUniqueCmptMut(ProcRuleDbCmpt);
 
   const procRule = prdb.getProcRule(skillName);
   const entityBinding = [user, ...targets];

@@ -1,6 +1,7 @@
-import { ECSystem, EntityManager } from '0-engine';
-import { GetPrdb } from '0-engine/ECS/globals/EntityManagerGlobals';
+import { createEventSlice, DefaultEvent } from '0-engine';
 import { getSkillData } from '3-frontend-api/SkillData';
+import { ComponentManager } from '0-engine/ECS/ComponentManager';
+import { DeepReadonly } from 'ts-essentials';
 import { AgentCmpt } from '../ncomponents/AgentCmpt';
 import { BoundActionStatus, BoundAction } from './BoundAction';
 import { ExecutorStatus } from './ProcRule';
@@ -8,24 +9,38 @@ import { ProcRuleDbCmpt } from './ProcRuleDatabaseCmpt';
 import { GoalQueueCmpt } from './GoalQueueCmpt';
 import { FactionCmpt } from '../ncomponents/FactionCmpt';
 
-export class AgentSys extends ECSystem {
-  public Start(): void {
-    // Create the proc rule database
-    const prdbEntity = EntityManager.instance.createEntity();
-    EntityManager.instance.addCmpt(prdbEntity, new ProcRuleDbCmpt());
-  }
+const agentStartSlice = createEventSlice(DefaultEvent.Start, {
+  writeCmpts: [ProcRuleDbCmpt],
+})<undefined>(
+  ({
+    componentManagers: {
+      writeCMgrs: [procRuleDbMgr],
+    },
+    eMgr,
+  }) => {
+    const e = eMgr.createEntity('procRuleDb');
+    procRuleDbMgr.add(e, new ProcRuleDbCmpt());
+  },
+);
 
-  public async OnUpdate(dt: number): Promise<void> {
-    this.setCachedComponents();
-    const agentMgr = this.GetComponentManager(AgentCmpt);
-
-    const promises = Object.entries(agentMgr.components).map(async ([entityString, agentCmpt]) => {
+const agentUpdateSlice = createEventSlice(DefaultEvent.Update, {
+  readCmpts: [FactionCmpt, ProcRuleDbCmpt],
+  writeCmpts: [AgentCmpt, GoalQueueCmpt],
+})<{ dt: number }>(
+  async ({
+    componentManagers: {
+      readCMgrs: [factionMgr, procRuleDbMgr],
+      writeCMgrs: [agentMgr, goalQueueMgr],
+    },
+    payload: { dt },
+  }) => {
+    const promises = agentMgr.entries().map(async ([entityString, agentCmpt]) => {
       const self = parseInt(entityString, 10);
       let { baction } = agentCmpt;
 
       // Get new action if necessary
       if (!baction || baction.status === BoundActionStatus.Finished) {
-        baction = this.GetNextAction(self, baction);
+        baction = getNextAction(factionMgr, procRuleDbMgr, goalQueueMgr, self, baction);
       }
 
       // Start or continue action
@@ -41,66 +56,68 @@ export class AgentSys extends ECSystem {
       agentCmpt.baction = baction;
     });
     await Promise.all(promises);
+  },
+);
+
+function getNextAction(
+  factionMgr: ComponentManager<FactionCmpt>,
+  procRuleDbMgr: ComponentManager<ProcRuleDbCmpt>,
+  goalQueueMgr: ComponentManager<GoalQueueCmpt>,
+  self: number,
+  baction?: BoundAction<any>,
+): BoundAction<any> {
+  const prdb = procRuleDbMgr.getAsArray()[0];
+
+  // Recovery forces a delay after a successful action
+  const recoveryDuration = baction?.recoveryDuration;
+
+  if (typeof recoveryDuration === 'number' && recoveryDuration > 0) {
+    const recoverPr = prdb.getProcRule('recover');
+    return new BoundAction(recoverPr, [self], recoveryDuration, 0);
   }
 
-  private prdb?: ProcRuleDbCmpt;
-
-  private setCachedComponents(): void {
-    if (!this.prdb) {
-      this.prdb = Object.values(this.GetComponentManager(ProcRuleDbCmpt).components)[0];
-    }
+  // Player-controlled agents use GoalQueueCmpt to receive commands from the player
+  const goalQueueCmpt = goalQueueMgr.tryGetMut(self);
+  if (goalQueueCmpt && goalQueueCmpt.nextAction) {
+    const { nextAction } = goalQueueCmpt;
+    goalQueueCmpt.nextAction = undefined;
+    return nextAction;
   }
 
-  private GetNextAction(self: number, baction?: BoundAction<any>): BoundAction<any> {
-    if (!this.prdb) throw new Error('prdb not set');
+  // All units can use an AI to attack an enemy
+  const nextAction = attackRandomEnemy(factionMgr, prdb, self);
+  if (nextAction) return nextAction;
 
-    // Recovery forces a delay after a successful action
-    const recoveryDuration = baction?.recoveryDuration;
-
-    if (typeof recoveryDuration === 'number' && recoveryDuration > 0) {
-      const recoverPr = this.prdb.getProcRule('recover');
-      return new BoundAction(recoverPr, [self], recoveryDuration, 0);
-    }
-
-    // Player-controlled agents use GoalQueueCmpt to receive commands from the player
-    const goalQueueCmpt = this.GetComponentUncertain(GoalQueueCmpt, self);
-    if (goalQueueCmpt && goalQueueCmpt.nextAction) {
-      const { nextAction } = goalQueueCmpt;
-      goalQueueCmpt.nextAction = undefined;
-      return nextAction;
-    }
-
-    // All units can use an AI to attack an enemy
-    const nextAction = this.AttackRandomEnemy(self);
-    if (nextAction) return nextAction;
-
-    // Default return
-    return BoundAction.Idle(self);
-  }
-
-  private AttackRandomEnemy(self: number): BoundAction | undefined {
-    const factionCmpt = this.GetComponent(FactionCmpt, self);
-    if (!factionCmpt) return undefined;
-
-    const enemies = this.GetEnemies(factionCmpt.isEnemy);
-    if (enemies.length === 0) return undefined;
-
-    // Attack a random enemy
-    const targetIdx = Math.floor(Math.random() * enemies.length);
-    const enemyHandle = enemies[targetIdx];
-    const prdb = GetPrdb();
-    const attack = prdb.getProcRule('attack');
-    const { data, recoveryDuration } = getSkillData(self, [enemyHandle], 'attack');
-    const baction = new BoundAction(attack, [self, enemyHandle], data, recoveryDuration);
-    return baction;
-  }
-
-  private GetEnemies(isEnemy: boolean): number[] {
-    const factionMgr = this.GetComponentManager(FactionCmpt);
-    const enemies = Object.entries(factionMgr.components).filter(
-      ([, factionCmpt]) => factionCmpt.isEnemy !== isEnemy,
-    );
-
-    return enemies.map(([entityStr]) => parseInt(entityStr, 10));
-  }
+  // Default return
+  return BoundAction.Idle(self);
 }
+
+function attackRandomEnemy(
+  factionMgr: ComponentManager<FactionCmpt>,
+  prdb: DeepReadonly<ProcRuleDbCmpt>,
+  self: number,
+): BoundAction | undefined {
+  const factionCmpt = factionMgr.tryGet(self);
+  if (!factionCmpt) return undefined;
+
+  const enemies = getEnemies(factionMgr, factionCmpt.isEnemy);
+  if (enemies.length === 0) return undefined;
+
+  // Attack a random enemy
+  const targetIdx = Math.floor(Math.random() * enemies.length);
+  const enemyHandle = enemies[targetIdx];
+  const attack = prdb.getProcRule('attack');
+  const { data, recoveryDuration } = getSkillData(self, [enemyHandle], 'attack');
+  const baction = new BoundAction(attack, [self, enemyHandle], data, recoveryDuration);
+  return baction;
+}
+
+function getEnemies(factionMgr: ComponentManager<FactionCmpt>, isEnemy: boolean): number[] {
+  const enemies = Object.entries(factionMgr.getAsArray()).filter(
+    ([, factionCmpt]) => factionCmpt.isEnemy !== isEnemy,
+  );
+
+  return enemies.map(([entityStr]) => parseInt(entityStr, 10));
+}
+
+export default [agentStartSlice.eventListener, agentUpdateSlice.eventListener];

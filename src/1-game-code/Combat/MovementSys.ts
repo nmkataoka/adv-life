@@ -1,11 +1,11 @@
-import { createEventSliceWithView, DefaultEvent, ECSystem } from '0-engine';
+import { createEventSliceWithView, DefaultEvent } from '0-engine';
 import { CombatPositionCmpt } from './CombatPositionCmpt';
 import { MovementCmpt } from './MovementCmpt';
 
 const moveUnitsSlice = createEventSliceWithView(DefaultEvent.Update, {
   readCmpts: [MovementCmpt],
   writeCmpts: [CombatPositionCmpt],
-})<{ dt: number }>(({ view }) => {
+})<{ dt: number }>(({ payload: { dt }, view }) => {
   view.forEach((e: number, { readCmpts: [movementCmpt], writeCmpts: [combatPosCmpt] }) => {
     const { speed, destination } = movementCmpt;
     const { pos } = combatPosCmpt;

@@ -2,8 +2,6 @@ import { createEventSlice } from '0-engine';
 import { Vector2 } from '8-helpers/math';
 import { MovementCmpt } from './MovementCmpt';
 
-export const SET_PLAYER_DESTINATION = 'combat/set-player-destination';
-
 const setPlayerDestinationSlice = createEventSlice('setPlayerDestination', {
   writeCmpts: [MovementCmpt],
 })<{
@@ -20,5 +18,7 @@ const setPlayerDestinationSlice = createEventSlice('setPlayerDestination', {
     movementCmpt.destination = destination;
   }
 });
+
+export const { setPlayerDestination } = setPlayerDestinationSlice;
 
 export default [setPlayerDestinationSlice.eventListener];

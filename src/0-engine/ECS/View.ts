@@ -69,7 +69,7 @@ function FindEntitiesWithComponents(cMgrs: ComponentManager<any>[], without: num
     throw new Error('Entity view must contain at least one required component.');
   }
 
-  const startingEntityList = Object.keys(requiredCMgrs[0].components);
+  const startingEntityList = requiredCMgrs[0].entities();
   const viewEntities: number[] = [];
   for (let i = 0; i < startingEntityList.length; ++i) {
     const e = startingEntityList[i];
