@@ -1,6 +1,6 @@
 import { EventCallbackError, createEventSlice } from '0-engine';
 import { MovementCmpt } from '1-game-code/Combat/MovementCmpt';
-import { ComponentClasses } from '0-engine/ECS/ComponentDependencies';
+import { ComponentClasses } from '0-engine/ECS/component-dependencies/ComponentDependencies';
 import {
   ClassCmpt,
   CombatPositionCmpt,

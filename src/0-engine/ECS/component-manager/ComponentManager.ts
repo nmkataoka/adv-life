@@ -1,5 +1,5 @@
 import { DeepReadonly } from 'ts-essentials';
-import { NComponent, NComponentConstructor } from './NComponent';
+import { NComponent, NComponentConstructor } from '../NComponent';
 
 export class ComponentManager<C extends NComponent> {
   constructor(c: NComponentConstructor<C>) {

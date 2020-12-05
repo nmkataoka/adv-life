@@ -1,15 +1,27 @@
 import { DeepReadonly } from 'ts-essentials';
 import { ECSystem, ECSystemConstructor } from './ecsystem';
 import { NComponent, NComponentConstructor } from './NComponent';
-import { ComponentManager, ReadonlyComponentManager } from './ComponentManager';
-import {
-  GetComponentFuncType,
-  GetComponentManagerFuncType,
-  GetComponentUncertainFuncType,
-} from './types/EntityManagerAccessorTypes';
+import { ComponentManager, ReadonlyComponentManager } from './component-manager/ComponentManager';
 import { NameCmpt } from './built-in-components';
-import { View } from './View';
-import { AbstractComponentClasses, ComponentManagersFromClasses } from './ComponentDependencies';
+import { View } from './view/View';
+import {
+  AbstractComponentClasses,
+  ComponentManagersFromClasses,
+} from './component-dependencies/ComponentDependencies';
+
+type GetComponentFuncType = <C extends NComponent>(
+  cclass: NComponentConstructor<C>,
+  entityHandle: number,
+) => C;
+
+type GetComponentUncertainFuncType = <C extends NComponent>(
+  cclass: NComponentConstructor<C>,
+  entityHandle: number,
+) => C | undefined;
+
+type GetComponentManagerFuncType = <C extends NComponent>(
+  cclass: NComponentConstructor<C>,
+) => ComponentManager<C>;
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;

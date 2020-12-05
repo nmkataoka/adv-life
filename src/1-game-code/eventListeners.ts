@@ -1,4 +1,4 @@
-import { EventListener } from '0-engine/ECS/event-system';
+import { EventListener } from '0-engine/ECS/event-system/EventListener';
 import AgentSys from './Agent/AgentSys';
 import CharacterCreationSys from './CharacterCreation/CharacterCreationSys';
 import AttackSys from './Combat/AttackSys';

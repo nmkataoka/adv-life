@@ -1,6 +1,10 @@
-import { AbstractComponentClasses, ComponentClasses } from '../ComponentDependencies';
-import { EventAction, EventCallback, EventListener, EventListenerWithView } from '../event-system';
-import { EventCallbackWithView } from '../event-system/EventCallback';
+import {
+  AbstractComponentClasses,
+  ComponentClasses,
+} from '../component-dependencies/ComponentDependencies';
+import { EventAction } from '.';
+import { EventCallback, EventCallbackWithView } from './EventCallback';
+import { EventListener, EventListenerWithView } from './EventListener';
 import { NComponent } from '../NComponent';
 
 type EventCreator<Payload> = { (payload: Payload): EventAction<Payload>; type: string };

@@ -1,6 +1,6 @@
-import { ComponentManager, ReadonlyComponentManager } from './ComponentManager';
-import { EntityManager } from './EntityManager';
-import { NComponent, NComponentConstructor } from './NComponent';
+import { ComponentManager, ReadonlyComponentManager } from '../component-manager/ComponentManager';
+import { EntityManager } from '../EntityManager';
+import { NComponent, NComponentConstructor } from '../NComponent';
 
 export type AbstractComponentClasses = ComponentClasses<NComponent[], NComponent[], NComponent[]>;
 

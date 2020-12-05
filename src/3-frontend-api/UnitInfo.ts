@@ -6,7 +6,7 @@ import { CombatPositionCmpt } from '1-game-code/Combat/CombatPositionCmpt';
 import { StatusEffectsCmpt } from '1-game-code/Combat/StatusEffectsCmpt';
 import { GoalQueueCmpt } from '1-game-code/Agent/GoalQueueCmpt';
 import { DictOf } from '8-helpers/DictOf';
-import { ComponentClasses } from '0-engine/ECS/ComponentDependencies';
+import { ComponentClasses } from '0-engine/ECS/component-dependencies/ComponentDependencies';
 
 export type UnitInfo = {
   entityHandle: number;

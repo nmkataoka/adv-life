@@ -1,5 +1,8 @@
 import { DefaultEvent } from '../built-in-components';
-import { AbstractComponentClasses, ComponentClasses } from '../ComponentDependencies';
+import {
+  AbstractComponentClasses,
+  ComponentClasses,
+} from '../component-dependencies/ComponentDependencies';
 import { ECSystem } from '../ecsystem';
 import { EntityManager } from '../EntityManager';
 import { EventAction, EventActionWithPromise } from './EventAction';

@@ -1,6 +1,6 @@
-import { ComponentClasses } from './ComponentDependencies';
-import { EntityManager } from './EntityManager';
-import { NComponent } from './NComponent';
+import { ComponentClasses } from '../component-dependencies/ComponentDependencies';
+import { EntityManager } from '../EntityManager';
+import { NComponent } from '../NComponent';
 
 class TestCmpt implements NComponent {}
 

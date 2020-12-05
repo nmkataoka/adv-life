@@ -1,5 +1,5 @@
 import { ComponentManager } from './ComponentManager';
-import { NComponent } from './NComponent';
+import { NComponent } from '../NComponent';
 
 class TestCmpt implements NComponent {
   constructor(health = 100) {

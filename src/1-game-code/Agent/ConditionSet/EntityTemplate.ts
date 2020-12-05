@@ -1,5 +1,5 @@
 import { EntityManager, NComponentConstructor } from '0-engine';
-import { ComponentClasses } from '0-engine/ECS/ComponentDependencies';
+import { ComponentClasses } from '0-engine/ECS/component-dependencies/ComponentDependencies';
 
 /// Entity template base class. If a component is a subset, i.e. C1 implies C2,
 /// C2 doesn't need to be in the template.

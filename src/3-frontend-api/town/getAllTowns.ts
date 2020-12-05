@@ -1,5 +1,5 @@
 import { EntityManager, NameCmpt } from '0-engine';
-import { ComponentClasses } from '0-engine/ECS/ComponentDependencies';
+import { ComponentClasses } from '0-engine/ECS/component-dependencies/ComponentDependencies';
 import { TownLocationsCmpt } from '1-game-code/Town';
 import { Selector } from '4-react-ecsal';
 import { TownInfo } from './TownInfo';

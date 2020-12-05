@@ -1,5 +1,5 @@
 import { GetComponent, GetComponentManager } from '0-engine';
-import { ComponentManager } from '0-engine/ECS/ComponentManager';
+import { ComponentManager } from '0-engine/ECS/component-manager/ComponentManager';
 import { DispatchEvent } from '0-engine/ECS/globals/DispatchEvent';
 import { ProcRule, ExecutorStatus } from '../ProcRule';
 import { HealthCmpt } from '../../ncomponents/HealthCmpt';

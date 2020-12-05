@@ -1,7 +1,7 @@
 import { TownLocationsCmpt } from '1-game-code/Town';
 import { GameManager } from '0-engine/GameManager';
 import { DictOf } from '8-helpers/DictOf';
-import { ComponentClasses } from '0-engine/ECS/ComponentDependencies';
+import { ComponentClasses } from '0-engine/ECS/component-dependencies/ComponentDependencies';
 import { TownInfo } from './TownInfo';
 import { getName } from '../name/getName';
 

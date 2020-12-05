@@ -1,10 +1,10 @@
-import { ComponentManager } from './ComponentManager';
-import { EntityManager } from './EntityManager';
+import { ComponentManager } from '../component-manager/ComponentManager';
+import { EntityManager } from '../EntityManager';
 import {
   AbstractComponentClasses,
   ComponentManagersFromClasses,
   PresentComponents,
-} from './ComponentDependencies';
+} from '../component-dependencies/ComponentDependencies';
 
 export class View<ComponentDependencies extends AbstractComponentClasses> {
   constructor(
