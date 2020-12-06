@@ -72,7 +72,7 @@ export const fireball = new ProcRule(
 
       const healthMgr = GetComponentManager(HealthCmpt);
       targetEntities.forEach((targetHandle) => {
-        const targetHealthCmpt = healthMgr.getMut(targetHandle);
+        const targetHealthCmpt = healthMgr.tryGetMut(targetHandle);
         if (targetHealthCmpt) {
           targetHealthCmpt.TakeDamage(damage);
         }

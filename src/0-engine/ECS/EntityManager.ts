@@ -197,7 +197,7 @@ export class EntityManager {
 type GetComponentFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
   entityHandle: number,
-) => C;
+) => C | undefined;
 
 type GetComponentManagerFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
@@ -212,4 +212,4 @@ export const GetComponentManager: GetComponentManagerFuncType = <C extends NComp
 export const GetComponent: GetComponentFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
   entity: number,
-): C => EntityManager.instance.tryGetMgrMut<C>(cclass).getMut(entity);
+): C | undefined => EntityManager.instance.tryGetMgrMut<C>(cclass).tryGetMut(entity);
