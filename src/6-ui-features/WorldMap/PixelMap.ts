@@ -1,13 +1,18 @@
 import { DataLayer } from '1-game-code/World';
+import assert from 'assert';
 import { Color } from './Color';
 
 type ColoringFunc = (v: number) => Color;
+
+type Rgba = [number, number, number, number];
 
 /** Renders WorldMap by converting from engine data structure to renderable */
 export default class PixelMap {
   coloringFunc: ColoringFunc;
 
-  data: Uint8ClampedArray;
+  private pixels: Uint8ClampedArray;
+
+  private data: DataLayer;
 
   height: number;
 
@@ -17,27 +22,146 @@ export default class PixelMap {
     this.height = data.height;
     this.width = data.width;
     this.coloringFunc = coloringFunc;
-    this.data = new Uint8ClampedArray(4 * data.data.length);
+    this.data = data;
+    this.pixels = new Uint8ClampedArray(4 * data.data.length);
   }
 
-  updateFromDataLayer = (data: DataLayer): void => {
+  /** Gets the color of a pixel in the pixel map */
+  private getPixelColor = (firstIdx: number): Rgba => {
+    const r = this.pixels[firstIdx];
+    const g = this.pixels[firstIdx + 1];
+    const b = this.pixels[firstIdx + 2];
+    const a = this.pixels[firstIdx + 3];
+    return [r, g, b, a];
+  };
+
+  /** Set the color of a pixel in the pixel map */
+  private setPixelColor = (firstIdx: number, [r, g, b, a]: Rgba) => {
+    this.pixels[firstIdx] = r;
+    this.pixels[firstIdx + 1] = g;
+    this.pixels[firstIdx + 2] = b;
+    this.pixels[firstIdx + 3] = a;
+  };
+
+  updateFromDataLayer = (data: DataLayer, useShearedElev: boolean): void => {
     if (this.height !== data.height || this.width !== data.width) {
       throw new Error('DataLayer height/width does not match WorldBitmap');
     }
 
-    for (let i = 0; i < data.data.length; ++i) {
-      const datum = data.data[i];
+    this.data = useShearedElev ? shearElevs(data) : data;
+
+    const floatMap = this.data.data;
+    for (let i = 0; i < floatMap.length; ++i) {
+      const datum = floatMap[i];
       const [r, g, b, a] = this.coloringFunc(datum);
 
       const renderIdx = i * 4;
-      this.data[renderIdx] = r;
-      this.data[renderIdx + 1] = g;
-      this.data[renderIdx + 2] = b;
-      this.data[renderIdx + 3] = a;
+      this.setPixelColor(renderIdx, [r, g, b, a]);
+    }
+
+    if (useShearedElev) {
+      this.applyShading();
+    }
+  };
+
+  /** When there is a steep drop in the northeast direction,
+   * add shading. This causes mountains to cast shadows to the northeast.
+   */
+  applyShading = (): void => {
+    for (let y = this.height - 1; y > 0; --y) {
+      for (let x = 1; x < this.width - 1; ++x) {
+        const elev = this.data.at(x, y);
+        const elevSouth = this.data.at(x, y + 1);
+        const elevWest = this.data.at(x - 1, y);
+        let totalElevDrop = 0;
+        if (elevSouth > elev) totalElevDrop += elevSouth - elev;
+        if (elevWest > elev) totalElevDrop += elevWest - elev;
+        let shadeFactor = 1 - Math.sqrt(totalElevDrop) * 0.008;
+        shadeFactor = Math.min(1, Math.max(0.8, shadeFactor));
+
+        const pixelIdx = (y * this.width + x) * 4;
+        const [r, g, b, a] = this.getPixelColor(pixelIdx);
+        const newColor: Rgba = [r * shadeFactor, g * shadeFactor, b * shadeFactor, a * shadeFactor];
+        this.setPixelColor(pixelIdx, newColor);
+      }
     }
   };
 
   toImageData = (): ImageData => {
-    return new ImageData(this.data, this.width, this.height);
+    return new ImageData(this.pixels, this.width, this.height);
   };
+}
+
+/** Shears map in the y-direction based on elevations so
+ * it looks 2.5D */
+function shearElevs(map: DataLayer, shearFrac = 0.004): DataLayer {
+  const output = new DataLayer(map.width, map.height);
+  /**
+   *
+   * For each column, start at the bottom of the map. In the output map, stretch
+   * the color when elevation is increasing.
+   */
+
+  /* Since we are only shearing in 1 dimension, we can process each column
+   * of pixels separately.
+   */
+  for (let x = 0; x < map.width; ++x) {
+    /* Start at the bottom of the map */
+
+    /** Tracks our y-position on the input map */
+    let inputY = map.height - 1;
+
+    /** Tracks our y-position on the output map */
+    let outputY = map.height - 1;
+
+    /** Elevation at @see yi */
+    let inputElev = map.at(x, inputY);
+
+    /** Tracks where inputY should map to on the output map
+     * after displacement due to elevation shearing
+     */
+    let shearedInputY = inputY - inputElev * shearFrac;
+
+    while (outputY > shearedInputY) {
+      /* The elevation is decreasing with decreasing y, and the current pixel on the
+       * output map is obstructed by higher elevations in front of it.
+       *
+       * Skip ahead to where we get out from under the shadow of this
+       * mountain.
+       */
+      --outputY;
+    }
+
+    while (outputY >= 0 && inputY - 1 >= 0) {
+      assert(outputY <= shearedInputY);
+      const nextInputY = inputY - 1;
+      const nextInputElev = map.at(x, nextInputY);
+      const shearedNextInputY = nextInputY - nextInputElev * shearFrac;
+
+      if (outputY > shearedNextInputY) {
+        /* The current outputY lies between shearedY and shearedNextInputY
+         *   shearedInputY > outputY > shearedNextInputY
+         * so the elevation for outputY can be interpolated between the
+         * elevations for inputY and nextInputY
+         */
+
+        /** How close outputY is to shearedNextInputY vs shearedInputY */
+        const interpFrac = (outputY - shearedInputY) / (shearedNextInputY - shearedInputY);
+        const outputElev = interpFrac * (nextInputElev - inputElev) + inputElev;
+        output.set(x, outputY, outputElev);
+
+        /** Ready to calculate the elevation for the next pixel in the output map */
+        --outputY;
+      } else {
+        /* The current outputY is not between shearedY and shearedNextInputY
+         *   sharedInputY > shearedNextInputY > outputY
+         * so the elevation for it can't be interpolated yet
+         */
+        shearedInputY = shearedNextInputY;
+        --inputY;
+        inputElev = map.at(x, inputY);
+      }
+    }
+  }
+  return output;
 }

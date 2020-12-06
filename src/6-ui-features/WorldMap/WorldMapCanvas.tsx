@@ -1,7 +1,9 @@
 import { WorldMap } from '1-game-code/World/WorldMap';
 import { getWorldMapLayer } from '3-frontend-api/worldMap';
 import { useSelector } from '4-react-ecsal';
+import { useSelector as useReduxSelector } from 'react-redux';
 import React, { useCallback, useEffect, useRef } from 'react';
+import { RootState } from '7-app/types';
 import { Color, colorInterp } from './Color';
 import PixelMap from './PixelMap';
 
@@ -15,6 +17,7 @@ function colorElevation(elev: number): Color {
 }
 
 export default function WorldMapCanvas(): JSX.Element {
+  const useShearedElev = useReduxSelector((state: RootState) => state.worldMap.useShearedElev);
   const elevations = useSelector(getWorldMapLayer(WorldMap.Layer.Elevation));
   const pixelMap = useRef(new PixelMap(elevations, colorElevation));
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -33,11 +36,11 @@ export default function WorldMapCanvas(): JSX.Element {
     const canvas = canvasRef.current;
     if (!canvas || !elevations) return;
 
-    pixelMap.current.updateFromDataLayer(elevations);
+    pixelMap.current.updateFromDataLayer(elevations, useShearedElev);
     const img = pixelMap.current.toImageData();
 
     void createImageBitmap(img).then(drawImage);
-  }, [drawImage, elevations]);
+  }, [drawImage, elevations, useShearedElev]);
 
   return <canvas ref={canvasRef} height={300} width={400} />;
 }
