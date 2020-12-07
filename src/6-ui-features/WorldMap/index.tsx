@@ -7,6 +7,12 @@ import { getAllTowns } from '3-frontend-api';
 import MapLocation from './MapLocation';
 import { changedScene, Scene } from '../sceneManager/sceneMetaSlice';
 import { travelToLocation } from './actions';
+import WorldMapCanvas from './WorldMapCanvas';
+
+const mapHeight = 400;
+const mapWidth = 600;
+const mapPaddingSides = 10;
+const mapPaddingBottom = 10;
 
 export default function WorldMap(): JSX.Element {
   const dispatch = useDispatch();
@@ -30,25 +36,36 @@ export default function WorldMap(): JSX.Element {
   return (
     <Container>
       <h1>World Map</h1>
-      <LocationContainer>
-        {towns.map(({ townId, name }) => (
-          <MapLocation key={name} name={name} onClick={handleTownClick(townId)} />
-        ))}
-        <MapLocation name="Combat" onClick={handleCombatClick} />
-        <MapLocation name="Combat" onClick={handleCombatClick} />
-        <MapLocation name="Combat" onClick={handleCombatClick} />
-        <MapLocation name="Combat" onClick={handleCombatClick} />
-      </LocationContainer>
+      <WorldMapContainer>
+        <WorldMapCanvas height={mapHeight} width={mapWidth} />
+        <LocationContainer>
+          {towns.map(({ townId, name }) => (
+            <MapLocation key={name} name={name} onClick={handleTownClick(townId)} />
+          ))}
+          <MapLocation name="Combat" onClick={handleCombatClick} />
+          <MapLocation name="Combat" onClick={handleCombatClick} />
+          <MapLocation name="Combat" onClick={handleCombatClick} />
+          <MapLocation name="Combat" onClick={handleCombatClick} />
+        </LocationContainer>
+      </WorldMapContainer>
     </Container>
   );
 }
 
 const Container = styled.div`
-  min-width: 500px;
-  min-height: 300px;
+  box-sizing: border-box;
+  width: ${mapWidth + 2 * mapPaddingSides}px;
+  height: ${mapHeight + 70 + mapPaddingBottom}px;
+  padding: 0 ${mapPaddingBottom}px ${mapPaddingSides}px;
+`;
+
+const WorldMapContainer = styled.div`
+  position: relative;
 `;
 
 const LocationContainer = styled.div`
   display: flex;
   justify-content: space-around;
+  position: absolute;
+  z-index: 1;
 `;

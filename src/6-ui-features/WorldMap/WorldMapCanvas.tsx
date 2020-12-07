@@ -16,7 +16,12 @@ function colorElevation(elev: number): Color {
   return colorInterp(elev, 0, 6000, [120, 177, 120, 255], [216, 221, 209, 255]);
 }
 
-export default function WorldMapCanvas(): JSX.Element {
+type WorldMapCanvasProps = {
+  height: number;
+  width: number;
+};
+
+export default function WorldMapCanvas({ height, width }: WorldMapCanvasProps): JSX.Element {
   const useShearedElev = useReduxSelector((state: RootState) => state.worldMap.useShearedElev);
   const elevations = useSelector(getWorldMapLayer(WorldMap.Layer.Elevation));
   const pixelMap = useRef(new PixelMap(elevations, colorElevation));
@@ -42,5 +47,5 @@ export default function WorldMapCanvas(): JSX.Element {
     void createImageBitmap(img).then(drawImage);
   }, [drawImage, elevations, useShearedElev]);
 
-  return <canvas ref={canvasRef} height={300} width={400} />;
+  return <canvas style={{ position: 'absolute' }} ref={canvasRef} height={height} width={width} />;
 }
