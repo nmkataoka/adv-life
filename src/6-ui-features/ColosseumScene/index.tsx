@@ -8,6 +8,7 @@ import { getUnitPosition } from '3-frontend-api';
 import Ground from './Ground';
 import Unit from './Unit';
 import ActionBar from './ActionBar';
+import ColosseumActionBar from './ColosseumActionBar';
 
 export default function ColosseumScene(): JSX.Element {
   const playerId = useReduxSelector((state: RootState) => state.player.playerId);
@@ -25,6 +26,7 @@ export default function ColosseumScene(): JSX.Element {
         <Unit position={[1.2, 0, 0]} color="red" />
         <Unit position={[4.2, 0, 0]} color="red" />
       </Canvas>
+      <ColosseumActionBar />
       <ActionBar />
     </Container>
   );
