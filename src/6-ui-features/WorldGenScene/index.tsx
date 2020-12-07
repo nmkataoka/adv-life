@@ -6,7 +6,7 @@ export default function WorldGenScene(): JSX.Element {
     <div>
       <h2>World Gen</h2>
       <div>
-        <WorldMapCanvas />
+        <WorldMapCanvas height={300} width={400} />
       </div>
     </div>
   );

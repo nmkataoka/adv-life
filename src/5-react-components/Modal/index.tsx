@@ -73,6 +73,7 @@ const Container = styled.div`
 `;
 
 const RelativeDiv = styled.div`
+  box-sizing: border-box;
   position: relative;
   width: 100%;
   height: 100%;
