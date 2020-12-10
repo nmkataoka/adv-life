@@ -2,8 +2,9 @@ import { WorldMap } from '1-game-code/World/WorldMap';
 import { getWorldMapLayer } from '3-frontend-api/worldMap';
 import { useSelector } from '4-react-ecsal';
 import { useSelector as useReduxSelector } from 'react-redux';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { RootState } from '7-app/types';
+import useZoomOnScroll from '5-react-components/useZoomOnScroll';
 import { Color, colorInterp } from './Color';
 import PixelMap from './PixelMap';
 
@@ -23,9 +24,11 @@ type WorldMapCanvasProps = {
 
 export default function WorldMapCanvas({ height, width }: WorldMapCanvasProps): JSX.Element {
   const useShearedElev = useReduxSelector((state: RootState) => state.worldMap.useShearedElev);
+  const [imageBitmap, setImageBitmap] = useState(null as ImageBitmap | null);
   const elevations = useSelector(getWorldMapLayer(WorldMap.Layer.Elevation));
   const pixelMap = useRef(new PixelMap(elevations, colorElevation));
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const scale = useZoomOnScroll(canvasRef);
 
   const drawImage = useCallback((renderer: ImageBitmap) => {
     const canvas = canvasRef.current;
@@ -44,8 +47,14 @@ export default function WorldMapCanvas({ height, width }: WorldMapCanvasProps): 
     pixelMap.current.updateFromDataLayer(elevations, useShearedElev);
     const img = pixelMap.current.toImageData();
 
-    void createImageBitmap(img).then(drawImage);
+    void createImageBitmap(img).then((bitmap) => setImageBitmap(bitmap));
   }, [drawImage, elevations, useShearedElev]);
+
+  useEffect(() => {
+    if (imageBitmap) {
+      drawImage(imageBitmap);
+    }
+  }, [drawImage, imageBitmap, scale]);
 
   return <canvas style={{ position: 'absolute' }} ref={canvasRef} height={height} width={width} />;
 }

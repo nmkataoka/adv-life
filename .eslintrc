@@ -70,6 +70,7 @@
       "files": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
         "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+        "@typescript-eslint/no-non-null-assertion": 0, // Assertions are useful in tests, especially when they're 1 character
         "@typescript-eslint/no-unsafe-call": 0
       }
     }
