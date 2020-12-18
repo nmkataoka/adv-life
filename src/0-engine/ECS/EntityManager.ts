@@ -1,5 +1,4 @@
 import { DeepReadonly } from 'ts-essentials';
-import { ECSystem, ECSystemConstructor } from './ecsystem';
 import { NComponent, NComponentConstructor } from './NComponent';
 import { ComponentManager, ReadonlyComponentManager } from './component-manager/ComponentManager';
 import { NameCmpt } from './built-in-components';
@@ -8,6 +7,11 @@ import {
   AbstractComponentClasses,
   ComponentManagersFromClasses,
 } from './component-dependencies/ComponentDependencies';
+import { Dispatch, EventAction, EventSys } from './event-system';
+import { Thunk } from './Thunk';
+import { EventListener } from './event-system/EventListener';
+
+export type StoreSubscriber = (eMgr: EntityManager) => void;
 
 export class EntityManager {
   public static readonly MAX_ENTITIES = Number.MAX_SAFE_INTEGER;
@@ -16,37 +20,69 @@ export class EntityManager {
 
   private count = 0;
 
-  private nextEntityId = 0;
+  private eventSys: EventSys;
 
-  private systems: { [key: string]: ECSystem };
+  private nextEntityId = 0;
 
   private cMgrs: { [key: string]: ComponentManager<NComponent> };
 
   private entitiesToDestroy: (number | string)[] = [];
 
-  // For testing purposes, specific systems can be passed
-  constructor(systemConstructors: ECSystemConstructor<any>[]) {
+  private storeSubscribers: Set<StoreSubscriber>;
+
+  constructor() {
     EntityManager.instance = this;
-
-    this.systems = {};
-
-    const systemsToCreate = systemConstructors;
-    const createSystem = (S: ECSystemConstructor<any>) => {
-      this.systems[S.name] = new S(this);
-    };
-    systemsToCreate.forEach(createSystem);
-
     this.cMgrs = {};
+    this.eventSys = new EventSys(this);
+    this.storeSubscribers = new Set();
   }
 
-  public Start(): void {
-    Object.values(this.systems).forEach((s) => s.Start());
+  public async Start(): Promise<void> {
+    await this.eventSys.Start();
   }
 
-  public OnUpdate(dt: number): void {
-    Object.values(this.systems).forEach((s) => s.OnUpdate(dt));
+  // TODO: This OnUpdate should be fully coded as a dispatch default event
+  public async OnUpdate(dt: number): Promise<void> {
+    await this.eventSys.OnUpdate(dt);
     this.destroyQueuedEntities();
   }
+
+  public registerEventListener<Payload, ComponentDependencies extends AbstractComponentClasses>(
+    eventName: string,
+    listener: EventListener<Payload, ComponentDependencies>,
+  ): void {
+    this.eventSys.RegisterListener(eventName, listener);
+  }
+
+  // This really ought to be implemented as middleware, but that's too much effort
+  public dispatch = <Payload>(action: Thunk | EventAction<Payload>): Promise<void> => {
+    if (typeof action === 'function') {
+      return action(this.dispatch, this);
+    }
+    return this.originalDispatch(action);
+  };
+
+  /** If middlewares are applied, this stores a copy of the lowest, no-middleware dispatch */
+  private originalDispatch: Dispatch = async (...args) => this.eventSys.dispatch(...args);
+
+  /** Register a callback to be called at the end of each tick
+   * @returns A callback used to unsubscribe
+   */
+  public subscribe(callback: StoreSubscriber): () => void {
+    this.storeSubscribers.add(callback);
+    return () => {
+      this.storeSubscribers.delete(callback);
+    };
+  }
+
+  /** Triggers an update to all subscribers.
+   * E.g. useSelector consumers if using react-ecsal
+   */
+  public notifySubscribers = (): void => {
+    this.storeSubscribers.forEach((subscriber) => {
+      subscriber(this);
+    });
+  };
 
   /** Creates and returns a new entity. If a `name` string is passed, will also create an associated `NameCmpt`. */
   public createEntity(name?: string): number {
@@ -158,10 +194,6 @@ export class EntityManager {
   public addCmpt<C extends NComponent>(e: number, cmpt: C): void {
     const cMgr = this.tryGetMgrMut<C>(cmpt.constructor as NComponentConstructor<C>);
     cMgr.add(e, cmpt);
-  }
-
-  public getSys<Sys extends ECSystem>(sysClass: ECSystemConstructor<Sys>): Sys {
-    return this.systems[sysClass.name] as Sys;
   }
 
   public getView = <ComponentDependencies extends AbstractComponentClasses>(

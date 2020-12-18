@@ -1,4 +1,4 @@
-import { GameManager } from '0-engine/GameManager';
+import { EntityManager } from '0-engine';
 import { useContext } from 'react';
 import ReactEcsalContext from '../components/Context';
 import { useEcsalContext as useDefaultEcsalContext } from './useEcsalContext';
@@ -9,7 +9,7 @@ import { useEcsalContext as useDefaultEcsalContext } from './useEcsalContext';
  * @param Context passed to your `<Provider>`.
  * @returns A `useStore` hook bound to the specified context.
  */
-export function createStoreHook(context = ReactEcsalContext): () => GameManager {
+export function createStoreHook(context = ReactEcsalContext): () => EntityManager {
   const useEcsalContext =
     context === ReactEcsalContext ? useDefaultEcsalContext : () => useContext(context);
 

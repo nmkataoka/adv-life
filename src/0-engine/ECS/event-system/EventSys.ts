@@ -3,32 +3,33 @@ import {
   AbstractComponentClasses,
   ComponentClasses,
 } from '../component-dependencies/ComponentDependencies';
-import { ECSystem } from '../ecsystem';
 import { EntityManager } from '../EntityManager';
 import { EventAction, EventActionWithPromise } from './EventAction';
 import { EventCallbackError } from './EventCallback';
 import { EventListener } from './EventListener';
 
-export class EventSys extends ECSystem {
+export type Dispatch = EventSys['dispatch'];
+
+export class EventSys {
   constructor(eMgr: EntityManager) {
-    super(eMgr);
+    this.eMgr = eMgr;
     this.eventListeners = {};
     this.lowPriorityEventQueue = [];
   }
 
   public async Start(): Promise<void> {
-    await this.Dispatch({ type: DefaultEvent.Start, payload: undefined });
+    await this.dispatch({ type: DefaultEvent.Start, payload: undefined });
   }
 
   public OnUpdate = async (dt: number): Promise<void> => {
     await this.ExecuteLowPriorityActions();
-    await this.Dispatch({ type: DefaultEvent.Update, payload: { dt } });
+    await this.dispatch({ type: DefaultEvent.Update, payload: { dt } });
   };
 
   // Low priority actions are deferred in a queue to be executed after the current tick finishes.
   // High priority actions are dispatched immediately.
   // All actions coming from the frontend should be low priority.
-  public Dispatch = async <T>(action: EventAction<T>, isLowPriority = false): Promise<void> => {
+  public dispatch = async <T>(action: EventAction<T>, isLowPriority = false): Promise<void> => {
     if (isLowPriority) {
       const promise = new Promise<void>((resolve, reject) => {
         const actionWithPromise = { ...action, promise: { resolve, reject } };
@@ -99,11 +100,15 @@ export class EventSys extends ECSystem {
 
     // If there are errors, reject
     if (errors.length > 0) {
+      // eslint-disable-next-line no-console
+      console.error(`Api error: ${errors.map((error) => error.message).join('\n')}`);
       return Promise.reject(errors);
     }
 
     return Promise.resolve();
   };
+
+  private eMgr: EntityManager;
 
   private eventListeners: { [key: string]: EventListener<any, ComponentClasses<any, any, any>>[] };
 

@@ -15,7 +15,7 @@ describe('EventSys', () => {
   let token: number;
 
   beforeEach(() => {
-    eMgr = new EntityManager([]);
+    eMgr = new EntityManager();
     eventSys = new EventSys(eMgr);
     callback = sinon.stub();
     listener = createEventSlice(
@@ -26,7 +26,7 @@ describe('EventSys', () => {
   });
 
   it('dispatch defaults to high priority, which results in immediate dispatch', async () => {
-    await eventSys.Dispatch({ type: TEST_EVENT, payload: 1 });
+    await eventSys.dispatch({ type: TEST_EVENT, payload: 1 });
     expect(callback.callCount).toBe(1);
     const { eMgr: eMgrReceived, payload } = callback.lastCall.args[0];
     expect(eMgrReceived).toBe(eMgr);
@@ -34,7 +34,7 @@ describe('EventSys', () => {
   });
 
   it('dispatch defaults to low priority, which results in the action dispatching on the next OnUpdate', async () => {
-    const promise = eventSys.Dispatch({ type: TEST_EVENT, payload: 1 }, true);
+    const promise = eventSys.dispatch({ type: TEST_EVENT, payload: 1 }, true);
     expect(callback.callCount).toBe(0);
     await eventSys.OnUpdate(1);
     await promise;
@@ -46,7 +46,7 @@ describe('EventSys', () => {
 
   it('remove listener removes the listener', async () => {
     eventSys.RemoveListener(TEST_EVENT, token);
-    await eventSys.Dispatch({ type: TEST_EVENT, payload: 1 }, false);
+    await eventSys.dispatch({ type: TEST_EVENT, payload: 1 }, false);
     expect(callback.callCount).toBe(0);
   });
 });

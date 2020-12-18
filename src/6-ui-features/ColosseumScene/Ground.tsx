@@ -1,4 +1,4 @@
-import { SET_PLAYER_DESTINATION } from '2-backend-api/controllers/PlayerMovementController';
+import { setPlayerDestination } from '2-backend-api/PlayerMovement/setPlayerDestination';
 import apiClient from '3-frontend-api/ApiClient';
 import { Vector2 } from '8-helpers/math';
 import { MeshProps } from '9-three-helpers';
@@ -24,7 +24,7 @@ export default function Ground(props: MeshProps): JSX.Element {
     pos.setZ(0);
     setXposition(pos);
     const destination = new Vector2(pos.x, pos.y);
-    void apiClient.emit(SET_PLAYER_DESTINATION, { destination });
+    void apiClient.emit(setPlayerDestination({ destination }));
   };
 
   return (

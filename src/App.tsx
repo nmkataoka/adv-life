@@ -25,7 +25,7 @@ const scenes = {
 
 function App(): JSX.Element {
   useEffect(() => {
-    GameManager.instance.Start();
+    void GameManager.instance.Start();
 
     // Only start once
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -35,7 +35,7 @@ function App(): JSX.Element {
   const SceneComponent = scenes[currentScene];
 
   return (
-    <EcsalProvider store={GameManager.instance}>
+    <EcsalProvider store={GameManager.instance.eMgr}>
       <Container>
         <TopBar />
         <SceneComponent />
