@@ -3,8 +3,8 @@ import { AppThunk } from '7-app/types';
 import { PersonalityArray } from '1-game-code/ncomponents/PersonalityCmpt';
 import apiClient from '3-frontend-api/ApiClient';
 import { getTowns } from '3-frontend-api/town';
-import { CREATE_CHARACTER } from '2-backend-api/controllers/CharacterCreationConstants';
 import { getPlayerId } from '3-frontend-api';
+import { createCharacter } from '1-game-code/CharacterCreation/CharacterCreationSys';
 import { initialCharacterAttributeGroups } from './characterCreationData';
 import CharacterAttributeGroup, {
   PointAllocation,
@@ -219,13 +219,16 @@ export const createPlayerCharacter = (): AppThunk => async (dispatch, getState) 
     personality = personalityCAG.options.map((option) => option.value) as PersonalityArray;
   }
 
-  await apiClient.emit(CREATE_CHARACTER, {
-    className,
-    name,
-    personality,
-    race,
-    stats,
-  });
+  await apiClient.emit(
+    createCharacter({
+      className,
+      name: name ?? 'Unnamed',
+      personality,
+      race,
+      stats,
+    }),
+  );
+
   const playerId = apiClient.get(getPlayerId);
   apiClient.setHeader('userId', playerId);
   dispatch(setPlayerEntity(playerId));

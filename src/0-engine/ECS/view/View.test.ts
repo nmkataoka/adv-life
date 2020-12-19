@@ -11,7 +11,7 @@ describe('View', () => {
   let eMgr: EntityManager;
   let e: number;
   beforeEach(() => {
-    eMgr = new EntityManager([]);
+    eMgr = new EntityManager();
     e = eMgr.createEntity();
     eMgr.addCmpt(e, new TestCmpt());
   });

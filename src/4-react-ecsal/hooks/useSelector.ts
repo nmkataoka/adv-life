@@ -8,7 +8,6 @@ import {
   useRef,
 } from 'react';
 import { EntityManager } from '0-engine';
-import { GameManager } from '0-engine/GameManager';
 import { DeepReadonly } from 'ts-essentials';
 import { useEcsalContext } from './useEcsalContext';
 import { Subscription } from '../utils/Subscription';
@@ -20,7 +19,7 @@ type Comparator = (a: any, b: any) => boolean;
 const useSelectorWithStoreAndSubscription = <Data>(
   selector: Selector<Data>,
   equalityFn: Comparator,
-  store: GameManager,
+  store: EntityManager,
   contextSub: Subscription,
 ) => {
   const [, forceRender] = useReducer((s: number) => s + 1, 0);
@@ -32,7 +31,9 @@ const useSelectorWithStoreAndSubscription = <Data>(
   const latestStoreState: MutableRefObject<EntityManager | undefined> = useRef();
   const latestSelectedState: MutableRefObject<Data | undefined> = useRef();
 
-  const storeState = store.eMgr;
+  // In redux, this looks like storeState = store.getState().
+  // Root cause of difference is that eMgr is mutable whereas redux state is not
+  const storeState = store;
   let selectedState: Data;
 
   try {

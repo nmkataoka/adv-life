@@ -18,7 +18,7 @@ const ItemStack = ({
 }: ItemStackProps): JSX.Element => {
   const { name } = useSelector(getItemClass(itemClassId));
   return (
-    <ItemContainer onDoubleClick={onDoubleClick}>
+    <ItemContainer onDoubleClick={onDoubleClick} role="button">
       <h4>{name || 'Unknown'}</h4>
       <h4>{`${publicSalePrice}g`}</h4>
     </ItemContainer>

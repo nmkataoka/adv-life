@@ -1,4 +1,4 @@
-import { GameManager } from '0-engine/GameManager';
+import { EntityManager } from '0-engine';
 import { getBatch } from './batch';
 
 // encapsulates the subscription logic for connecting a component to the ecsal store, as
@@ -96,7 +96,7 @@ function createListenerCollection(): ListenerCollection {
 
 /* eslint-disable @typescript-eslint/unbound-method */
 export class Subscription {
-  public store: GameManager;
+  public store: EntityManager;
 
   public parentSub?: Subscription;
 
@@ -106,7 +106,7 @@ export class Subscription {
 
   public onStateChange: (() => void) | undefined | null;
 
-  constructor(store: GameManager, parentSub?: Subscription) {
+  constructor(store: EntityManager, parentSub?: Subscription) {
     this.store = store;
     this.parentSub = parentSub;
     this.unsubscribe = null;

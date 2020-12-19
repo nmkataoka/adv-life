@@ -1,9 +1,9 @@
-import { GameManager } from '0-engine/GameManager';
+import { EntityManager } from '0-engine';
 import { Subscription } from '4-react-ecsal/utils/Subscription';
 import React from 'react';
 
 export type ContextValue = {
-  store: GameManager;
+  store: EntityManager;
   subscription: Subscription;
 };
 

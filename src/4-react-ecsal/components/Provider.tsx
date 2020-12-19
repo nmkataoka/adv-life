@@ -1,10 +1,10 @@
-import { GameManager } from '0-engine/GameManager';
+import { EntityManager } from '0-engine';
 import { Subscription } from '4-react-ecsal/utils/Subscription';
 import React, { useEffect, useMemo } from 'react';
 import ReactEcsalContext, { ContextValue } from './Context';
 
 type ProviderProps = {
-  store: GameManager;
+  store: EntityManager;
   context?: React.Context<ContextValue>;
   children: React.ReactNode;
 };
@@ -20,7 +20,7 @@ const Provider = ({ store, context, children }: ProviderProps): JSX.Element => {
     };
   }, [store]);
 
-  const previousState = useMemo(() => store.eMgr, [store]);
+  const previousState = useMemo(() => store, [store]);
 
   useEffect(() => {
     const { subscription } = contextValue;

@@ -1,10 +1,9 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from '4-react-ecsal';
+import { useDispatch, useSelector } from '4-react-ecsal';
 import styled from '@emotion/styled';
 import { getInventory, getPlayerInventory } from '3-frontend-api';
+import { buyItemFromShop } from '2-backend-api/Shop/buyItemFromShop';
 import CharacterInventory from '../CharacterInfo/CharacterInventory';
-import { buyItemFromShop } from './townLocationsSlice';
 import ItemStack from './ItemStack';
 
 type ShopInventoryProps = {
@@ -21,7 +20,7 @@ const ShopInventory = ({ townLocationId }: ShopInventoryProps): JSX.Element => {
     if (item) {
       const { publicSalePrice } = item;
       if (publicSalePrice < playerGold) {
-        dispatch(buyItemFromShop({ itemIndex, sellerId: townLocationId, price: publicSalePrice }));
+        void dispatch(buyItemFromShop({ itemIndex, sellerId: townLocationId }));
       }
     }
   };

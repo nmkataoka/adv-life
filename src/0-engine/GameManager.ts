@@ -2,12 +2,6 @@ import { createUnit } from '1-game-code/Unit/createUnit';
 import { createTown } from '1-game-code/Town/createTown';
 import eventListeners from '1-game-code/eventListeners';
 import { EntityManager } from './ECS/EntityManager';
-import ControllerList from './ControllerList';
-import SystemList from './SystemList';
-import { RequestData, Router } from './API/Router';
-import { EventSys } from './ECS/event-system/EventSys';
-
-export type StoreSubscriber = (eMgr: EntityManager) => void;
 
 export class GameManager {
   public static readonly FPS = 3;
@@ -18,8 +12,6 @@ export class GameManager {
 
   public eMgr: EntityManager;
 
-  public router: Router;
-
   public isPaused = false;
 
   constructor() {
@@ -29,17 +21,14 @@ export class GameManager {
       // @ts-ignore
       window.gameManager = this;
     }
-    this.eMgr = new EntityManager(SystemList);
-    this.router = new Router(ControllerList);
-    this.storeSubscribers = new Set();
+    this.eMgr = new EntityManager();
     eventListeners.forEach((listener) => {
-      this.eMgr.getSys(EventSys).RegisterListener(listener.eventType, listener);
+      this.eMgr.registerEventListener(listener.eventType, listener);
     });
   }
 
-  public Start(): void {
-    this.eMgr.Start();
-    this.router.Start(this.eMgr.getSys(EventSys));
+  public async Start(): Promise<void> {
+    await this.eMgr.Start();
 
     // This is game logic that should be separated from the engine stuff like the game loop
     this.createMap();
@@ -47,30 +36,11 @@ export class GameManager {
     this.enterGameLoop();
   }
 
-  /** Dispatch an event.
-   * Don't confuse this with the lower-level DispatchEvent on EntityManager.
-   */
-  public dispatch = async <Data>(routeName: string, data: RequestData<Data>): Promise<void> => {
-    await this.router.handleRequest(routeName, data);
-  };
-
   public setPaused(nextState: boolean): void {
     this.isPaused = nextState;
   }
 
-  /** Register a callback to be called at the end of each tick
-   * @returns A callback used to unsubscribe
-   */
-  public subscribe(callback: StoreSubscriber): () => void {
-    this.storeSubscribers.add(callback);
-    return () => {
-      this.storeSubscribers.delete(callback);
-    };
-  }
-
   private gameLoopHandle?: NodeJS.Timeout;
-
-  private storeSubscribers: Set<StoreSubscriber>;
 
   private createUnits(): void {
     for (let i = 0; i < 3; ++i) {
@@ -86,12 +56,6 @@ export class GameManager {
     createTown('Wandermere');
   }
 
-  private notifySubscribers = (): void => {
-    this.storeSubscribers.forEach((subscriber) => {
-      subscriber(this.eMgr);
-    });
-  };
-
   private enterGameLoop(): void {
     if (this.gameLoopHandle) {
       clearTimeout(this.gameLoopHandle);
@@ -99,11 +63,13 @@ export class GameManager {
 
     this.gameLoopHandle = setTimeout(() => {
       if (!this.isPaused) {
-        this.eMgr.OnUpdate(GameManager.dt);
-        this.notifySubscribers();
+        void this.eMgr.OnUpdate(GameManager.dt).then(() => {
+          this.enterGameLoop();
+          this.eMgr.notifySubscribers();
+        });
+      } else {
+        this.enterGameLoop();
       }
-
-      this.enterGameLoop();
     }, 1000 / GameManager.FPS);
   }
 }
