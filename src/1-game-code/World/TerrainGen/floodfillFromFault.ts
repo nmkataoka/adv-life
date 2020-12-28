@@ -37,6 +37,9 @@ export function floodfillFromFault(
   /** Marks tiles already added to the queue */
   const alreadyProcessed: boolean[] = initializeArrayWithValue(height * width, false);
 
+  /** The only reason this is separate from the later toProcessQueue is because
+   * I haven't implemented shuffle() on RingQueue.
+   */
   const toProcessStartingArray: TilePropagator[] = [];
 
   // Fill the queue with starting points
