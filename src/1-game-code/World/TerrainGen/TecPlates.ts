@@ -1,6 +1,6 @@
 import { Vector2, rotate } from '8-helpers/math/Vector2';
-import { Fault } from './Fault';
-import { getBaseElevation, TecPlate } from './TecPlate';
+import { createFaultFromEdge, Fault } from './Fault';
+import { TecPlate } from './TecPlate';
 import { generateVoronoi, Edge, Polygon, VoronoiDiagram } from './Voronoi';
 
 export type TecPlates = {
@@ -97,21 +97,7 @@ function createPlatesAndFaults(
     const edgeHash = hashEdge(edge, xSize, ySize);
     const adjacentTecPlates = edgesToTecPlates[edgeHash];
     const [plateA, plateB] = adjacentTecPlates;
-    let tecPlateHigher: TecPlate;
-    let tecPlateLower: TecPlate;
-
-    if (getBaseElevation(plateA) < getBaseElevation(plateB)) {
-      tecPlateHigher = plateB;
-      tecPlateLower = plateA;
-    } else {
-      tecPlateHigher = plateA;
-      tecPlateLower = plateB;
-    }
-
-    const fault: Fault = {
-      tecPlateHigher,
-      tecPlateLower,
-    };
+    const fault = createFaultFromEdge(edge, plateA, plateB);
     hashedEdgesToFaults[edgeHash] = fault;
     return fault;
   });

@@ -1,18 +1,67 @@
 import { Vector2 } from '8-helpers/math';
-import { dot } from '8-helpers/math/Vector2';
-import { TecPlate } from './TecPlate';
+import { dot, multiply, norm, subtract } from '8-helpers/math/Vector2';
+import { getBaseElevation, TecPlate } from './TecPlate';
+import { Edge } from './Voronoi';
 
 export type Fault = {
-  // length: number;
-  // normalDir: Vector2;
-  // originalStart: Vector2;
+  /** Original length of the fault before perturbation.
+   * After perturbation, it's the length of the fault in its unitVec direction.
+   */
+  length: number;
+
+  /** Unit vector normal */
+  normalDir: Vector2;
+
+  /** Original starting point of the fault before perturbation */
+  originalStart: Vector2;
+
+  /** Reference to the adjacent tec plate with higher elevation */
   tecPlateHigher: TecPlate;
+
+  /** Reference to the adjacent tec plate with lower elevation */
   tecPlateLower: TecPlate;
-  // unitVec: Vector2;
-  // vertices: Vector2[];
+
+  /** Original direction of the fault before perturbation */
+  unitVec: Vector2;
+
+  /** Vertices that make up the fault, minimum 2 */
+  vertices: Vector2[];
+
   /** For cylindrical worlds, y-value where & if the fault crosses the world seam */
   // yCrossVal: number;
 };
+
+/** Basically a constructor. Order of plates doesn't matter (this function will sort them). */
+export function createFaultFromEdge(edge: Edge, plateA: TecPlate, plateB: TecPlate): Fault {
+  let tecPlateHigher: TecPlate;
+  let tecPlateLower: TecPlate;
+
+  if (getBaseElevation(plateA) < getBaseElevation(plateB)) {
+    tecPlateHigher = plateB;
+    tecPlateLower = plateA;
+  } else {
+    tecPlateHigher = plateA;
+    tecPlateLower = plateB;
+  }
+
+  const [start, end] = edge;
+  // TODO: Do these points need to be sorted via the comparator in Difclone?
+  // If everything works without sorting, then let's not sort and remove lessThan module
+  const vec = subtract(end, start);
+  const length = norm(vec);
+  const unitVec = multiply(vec, 1 / length);
+  const normalDir: Vector2 = [-unitVec[1], unitVec[0]];
+
+  return {
+    length,
+    normalDir,
+    originalStart: start,
+    tecPlateHigher,
+    tecPlateLower,
+    unitVec,
+    vertices: edge,
+  };
+}
 
 /** Returns true if the plates on either side of the fault are both ocean or both land */
 export function hasSamePlateTypes(fault: Fault): boolean {

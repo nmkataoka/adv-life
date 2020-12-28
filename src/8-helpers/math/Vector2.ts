@@ -31,6 +31,11 @@ export function dot(a: Vector2, b: Vector2): number {
   return ax * bx + ay * by;
 }
 
+/** Returns the magnitude of the vector */
+export function norm(a: Vector2): number {
+  return dot(a, a);
+}
+
 /** Rotates a vector by `theta` radians */
 export function rotate(a: Vector2, theta: number): Vector2 {
   const [x, y] = a;
