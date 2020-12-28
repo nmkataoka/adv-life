@@ -1,5 +1,5 @@
 import SimplexNoise from '10-simplex-noise';
-import { DataLayer } from './DataLayer';
+import { DataLayer } from '../DataLayer';
 
 export function createRandomTerrain(): DataLayer {
   const elevations = new DataLayer(400, 300);

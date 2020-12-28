@@ -57,7 +57,9 @@ export function createEventSlice<
   };
 }
 
-/** For letting an event listener respond to multiple events */
+/** For letting an event listener respond to multiple events
+ * Not sure if this is the best api. Might be better to let createEventSlice take an array of event names.
+ */
 export function copyEventSlice<
   EventName extends string,
   Payload,

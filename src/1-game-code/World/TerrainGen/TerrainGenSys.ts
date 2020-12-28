@@ -1,6 +1,6 @@
 import { copyEventSlice, createEventSlice, DefaultEvent } from '0-engine';
-import { WorldMapCmpt } from './WorldMapCmpt';
-import { WorldMap } from './WorldMap';
+import { WorldMapCmpt } from '../WorldMapCmpt';
+import { WorldMap } from '../WorldMap';
 import { createRandomTerrain } from './createRandomTerrain';
 
 const createNoisedWorldMapSlice = createEventSlice('createNoisedWorldMap', {

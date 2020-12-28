@@ -1,60 +1,49 @@
-import { Vector2 } from './Vector2';
+import { add, addMut, dist, multiply, subtract, subtractMut, Vector2 } from './Vector2';
 
 describe('Vector2', () => {
   let a: Vector2;
   let b: Vector2;
 
   beforeEach(() => {
-    a = new Vector2(1, 2);
-    b = new Vector2(3, 5);
+    a = [1, 2];
+    b = [3, 5];
   });
 
   it('add returns correct Vector2 and does not mutate', () => {
-    const r = a.add(b);
-    const s = b.add(a);
-    expect(r.x).toBe(4);
-    expect(s.x).toBe(4);
-    expect(r.y).toBe(7);
-    expect(s.y).toBe(7);
-
-    expect(a.x).toBe(1);
-    expect(a.y).toBe(2);
+    const r = add(a, b);
+    const s = add(b, a);
+    expect(r).toEqual([4, 7]);
+    expect(s).toEqual([4, 7]);
+    expect(a).toEqual([1, 2]);
   });
 
   it('addMut returns correct Vector2, mutates, and returns own reference', () => {
-    const r = a.addMut(b);
-    expect(r).toBe(a);
-    expect(r.x).toBe(4);
-    expect(r.y).toBe(7);
+    const r = addMut(a, b);
+    expect(r).toEqual([4, 7]);
   });
 
   it('dist returns correct number', () => {
-    const r = a.dist(b);
-    const s = b.dist(a);
+    const r = dist(a, b);
+    const s = dist(b, a);
     expect(r).toBe(s);
     expect(r).toBe(Math.sqrt(13));
   });
 
   it('multiply returns correct Vector2 and does not mutate', () => {
-    const r = a.multiply(3);
-    expect(r.x).toBe(3);
-    expect(r.y).toBe(6);
-    expect(a.x).toBe(1);
-    expect(a.y).toBe(2);
+    const r = multiply(a, 3);
+    expect(r).toEqual([3, 6]);
+    expect(a).toEqual([1, 2]);
   });
 
   it('subtract returns correct Vector2', () => {
-    const r = a.subtract(b);
-    expect(r.x).toBe(-2);
-    expect(r.y).toBe(-3);
-    expect(a.x).toBe(1);
-    expect(a.y).toBe(2);
+    const r = subtract(a, b);
+    expect(r).toEqual([-2, -3]);
+    expect(a).toEqual([1, 2]);
   });
 
   it('subtractMut returns correct Vector2, mutates, and returns own reference', () => {
-    const r = a.subtractMut(b);
+    const r = subtractMut(a, b);
     expect(r).toBe(a);
-    expect(r.x).toBe(-2);
-    expect(r.y).toBe(-3);
+    expect(r).toEqual([-2, -3]);
   });
 });
