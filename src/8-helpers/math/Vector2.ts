@@ -1,6 +1,12 @@
 const { cos, sin } = Math;
 export type Vector2 = [number, number];
 
+/** Returns the integer version of the vector using Math.floor */
+export function toVec2i(a: Vector2): Vector2 {
+  const [x, y] = a;
+  return [Math.floor(x), Math.floor(y)];
+}
+
 /** Adds two Vector2 */
 export function add(a: Vector2, b: Vector2): Vector2 {
   const [ax, ay] = a;

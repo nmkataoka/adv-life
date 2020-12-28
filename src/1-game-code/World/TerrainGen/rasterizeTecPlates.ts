@@ -2,13 +2,20 @@ import assert from 'assert';
 import { multiply, subtract } from '8-helpers/math/Vector2';
 import { fillInHoles } from './fillInHoles';
 import { DataLayer } from '../DataLayer';
-import { getBaseElevation } from './TecPlate';
+import { getBaseElevation, TecPlate } from './TecPlate';
 import { simpleBresenham } from './simpleBresenham';
 import { Fault } from './Fault';
+import { shapeCoasts } from './shapeCoasts';
 
-export function rasterizeTecPlates(elevLayer: DataLayer, numPlates: number, faults: Fault[]): void {
-  fillInHoles(elevLayer, numPlates);
+export function rasterizeTecPlates(
+  elevLayer: DataLayer,
+  numPlates: number,
+  faults: Fault[],
+  tecPlates: TecPlate[],
+): void {
   rasterizeFaults(elevLayer, faults);
+  fillInHoles(elevLayer, numPlates);
+  shapeCoasts(elevLayer, faults, tecPlates);
 }
 
 /** Start rasterizing from vector representation of TecPlates to a grid.

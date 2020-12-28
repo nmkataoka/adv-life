@@ -15,3 +15,22 @@ export function initializeArrayWithValue<T>(size: number, value: T): T[] {
   }
   return arr;
 }
+
+/** Shuffles array via Fisher-Yates Shuffle */
+export function shuffle<T>(array: T[]): T[] {
+  let currentIdx = array.length;
+
+  // While there remain elements to shuffle...
+  while (currentIdx > 0) {
+    // Pick a remaining element...
+    const randomIdx = Math.floor(Math.random() * currentIdx);
+    --currentIdx;
+
+    // and swap it with the current element
+    const temp = array[currentIdx];
+    array[currentIdx] = array[randomIdx];
+    array[randomIdx] = temp;
+  }
+
+  return array;
+}

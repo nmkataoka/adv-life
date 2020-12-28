@@ -59,6 +59,13 @@ export class RingQueue<T> {
     this.count = 0;
   }
 
+  /** Constructs a ring queue from an array */
+  static fromArray<C>(arr: C[]): RingQueue<C> {
+    const ringQueue = new RingQueue<C>();
+    arr.forEach((el) => ringQueue.push(el));
+    return ringQueue;
+  }
+
   /** Resizes the underlying array to hold more elements */
   private resize = (newCapacity: number): void => {
     if (newCapacity <= this.capacity()) {
