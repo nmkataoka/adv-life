@@ -5,10 +5,13 @@ export class DataLayer {
 
   width: number;
 
-  constructor(width: number, height: number) {
+  metersPerCoord: number;
+
+  constructor(width: number, height: number, metersPerCoord = 25000) {
     this.height = height;
     this.width = width;
     this.data = new Float32Array(width * height);
+    this.metersPerCoord = metersPerCoord;
   }
 
   /** TODO: add cylindrical world wraparound logic */
