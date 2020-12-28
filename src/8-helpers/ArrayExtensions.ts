@@ -6,3 +6,12 @@ export function swapRemoveAt(arr: any[], idx: number): void {
   arr[idx] = arr[length - 1];
   arr.pop();
 }
+
+/** Creates an array with length `size` and all elements with value `value` */
+export function initializeArrayWithValue<T>(size: number, value: T): T[] {
+  const arr: T[] = new Array(size);
+  for (let i = 0; i < size; ++i) {
+    arr[i] = value;
+  }
+  return arr;
+}
