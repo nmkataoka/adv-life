@@ -18,7 +18,7 @@ const createNoisedWorldMapSlice = createEventSlice('createNoisedWorldMap', {
     const worldMapCmpt = new WorldMapCmpt();
     const worldMap = worldMapCmpt.data;
     // worldMapCmpt.data.dataLayers[WorldMap.Layer.Elevation] = createRandomTerrain();
-    worldMap.tectonics = generateTectonics(10, 400, 200);
+    worldMap.tectonics = generateTectonics(18, 800, 400);
     worldMap.dataLayers[WorldMap.Layer.Elevation] = rasterizeTectonics(worldMap.tectonics);
     worldMapMgr.add(worldMapEntity, worldMapCmpt);
   },
