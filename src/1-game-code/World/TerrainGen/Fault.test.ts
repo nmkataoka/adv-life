@@ -1,7 +1,7 @@
 import { add, dist } from '8-helpers/math/Vector2';
 import { createFaultFromEdge } from './Fault';
 import { TecPlate } from './TecPlate';
-import { createEdge, VorEdge } from './VorEdge';
+import { createEdge, VorEdge } from './Voronoi/VorEdge';
 
 describe('Fault', () => {
   it('fault normalDir points toward the higher tec plate', () => {

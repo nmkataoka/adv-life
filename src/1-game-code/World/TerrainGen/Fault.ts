@@ -1,7 +1,7 @@
 import { Vector2 } from '8-helpers/math';
 import { add, dist, dot, multiply, norm, subtract } from '8-helpers/math/Vector2';
 import { getBaseElevation, TecPlate } from './TecPlate';
-import { VorEdge } from './VorEdge';
+import { VorEdge } from './Voronoi/VorEdge';
 
 export type Fault = {
   /** Original length of the fault before perturbation.

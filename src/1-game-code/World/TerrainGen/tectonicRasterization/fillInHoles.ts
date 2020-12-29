@@ -1,7 +1,7 @@
 import { initializeArrayWithValue } from '8-helpers/ArrayExtensions';
 import { RingQueue } from '8-helpers/containers/RingQueue';
 import { Vector2 } from '8-helpers/math';
-import { DataLayer } from '../DataLayer';
+import { DataLayer } from '../../DataLayer';
 
 export function fillInHoles(elevLayer: DataLayer, numPlates: number): void {
   let allFilled = true;

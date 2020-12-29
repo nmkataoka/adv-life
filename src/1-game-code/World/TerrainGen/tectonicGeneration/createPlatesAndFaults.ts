@@ -1,27 +1,13 @@
 import { rotate } from '8-helpers/math/Vector2';
-import { createFaultFromEdge, Fault } from './Fault';
-import { TecPlate } from './TecPlate';
-import { generateVoronoi, VoronoiDiagram } from './Voronoi';
-import { Tectonics } from './Tectonics';
-
-export function generateTectonics(numPlates: number, xSize: number, ySize: number): Tectonics {
-  const voronoi = generateVoronoi(numPlates, xSize, ySize);
-  const { tecPlates, faults } = createPlatesAndFaults(voronoi);
-  perturbPlateEdges();
-  return {
-    faults,
-    numPlates,
-    tecPlates,
-    width: xSize,
-    height: ySize,
-  };
-}
+import { createFaultFromEdge, Fault } from '../Fault';
+import { TecPlate } from '../TecPlate';
+import { VoronoiDiagram } from '../Voronoi/Voronoi';
 
 const oceanFrac = 0.7;
 const PI = 2.1415926535;
 
 /** Creates tectonic plates (with placeholder properties) and faults and links them */
-function createPlatesAndFaults(
+export function createPlatesAndFaults(
   voronoi: VoronoiDiagram,
 ): { tecPlates: TecPlate[]; faults: Fault[] } {
   const { points, edges, xSize, isCylindrical } = voronoi;
@@ -61,8 +47,4 @@ function randomizePlateProperties(): Omit<TecPlate, 'center' | 'faults'> {
     isOceanic: Math.random() < oceanFrac,
     velocity: rotate([Math.random() * 10, 0], Math.random() * 2 * PI),
   };
-}
-
-function perturbPlateEdges() {
-  // skip this for now
 }

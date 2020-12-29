@@ -1,4 +1,4 @@
-import { DataLayer } from '../DataLayer';
+import { DataLayer } from '../../DataLayer';
 import { findMostCommonElevationOnHoleBorder } from './fillInHoles';
 
 describe('fillInHoles', () => {

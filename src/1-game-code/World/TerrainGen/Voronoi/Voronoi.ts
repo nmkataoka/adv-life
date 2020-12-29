@@ -2,7 +2,7 @@ import { Vector2 } from '8-helpers/math';
 import { Delaunay, Voronoi } from 'd3-delaunay';
 import { subtract } from '8-helpers/math/Vector2';
 import { createEdge, VorEdge } from './VorEdge';
-import { compareEdges, lessThan } from './lessThan';
+import { compareEdges, lessThan } from '../lessThan';
 
 /** Generates numPoints random 2D points in the range (0, xSize) and (y, ySize) */
 function generateRandomPoints(numPoints: number, xSize: number, ySize: number): Vector2[] {
