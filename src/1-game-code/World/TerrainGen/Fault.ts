@@ -1,7 +1,7 @@
 import { Vector2 } from '8-helpers/math';
 import { add, dist, dot, multiply, norm, subtract } from '8-helpers/math/Vector2';
 import { getBaseElevation, TecPlate } from './TecPlate';
-import { Edge } from './Voronoi';
+import { VorEdge } from './VorEdge';
 
 export type Fault = {
   /** Original length of the fault before perturbation.
@@ -27,12 +27,20 @@ export type Fault = {
   /** Vertices that make up the fault, minimum 2 */
   vertices: Vector2[];
 
+  spansWorldSeam: boolean;
+
   /** For cylindrical worlds, y-value where & if the fault crosses the world seam */
   // yCrossVal: number;
 };
 
 /** Basically a constructor. Order of plates doesn't matter (this function will sort them). */
-export function createFaultFromEdge(edge: Edge, plateA: TecPlate, plateB: TecPlate): Fault {
+export function createFaultFromEdge(
+  edge: VorEdge,
+  plateA: TecPlate,
+  plateB: TecPlate,
+  worldXSize: number,
+  isCylindrical: boolean,
+): Fault {
   let tecPlateHigher: TecPlate;
   let tecPlateLower: TecPlate;
 
@@ -44,18 +52,24 @@ export function createFaultFromEdge(edge: Edge, plateA: TecPlate, plateB: TecPla
     tecPlateLower = plateB;
   }
 
-  const [start, end] = edge;
-  // TODO: Do these points need to be sorted via the comparator in Difclone?
-  // If everything works without sorting, then let's not sort and remove lessThan module
+  const { start, end, spansWorldSeam } = edge;
+
   const vec = subtract(end, start);
   const length = norm(vec);
   const unitVec = multiply(vec, 1 / length);
   let normalDir: Vector2 = [-unitVec[1], unitVec[0]];
 
-  // normalDir must point toward the higher tec plate (other methods rely on this)
-  const midpoint = add(start, multiply(vec, 0.5));
-  const towardNormalDir = add(midpoint, normalDir);
-  if (dist(towardNormalDir, tecPlateHigher.center) > dist(towardNormalDir, tecPlateLower.center)) {
+  if (
+    normalDirIsPointingWrongWay(
+      start,
+      vec,
+      normalDir,
+      tecPlateHigher,
+      tecPlateLower,
+      worldXSize,
+      isCylindrical,
+    )
+  ) {
     normalDir = multiply(normalDir, -1);
   }
 
@@ -63,11 +77,49 @@ export function createFaultFromEdge(edge: Edge, plateA: TecPlate, plateB: TecPla
     length,
     normalDir,
     originalStart: start,
+    spansWorldSeam,
     tecPlateHigher,
     tecPlateLower,
     unitVec,
-    vertices: edge,
+    vertices: [start, end],
   };
+}
+
+/** Returns true if normalDir is pointing toward lower tec plate instead of higher */
+function normalDirIsPointingWrongWay(
+  start: Vector2,
+  vec: Vector2,
+  normalDir: Vector2,
+  tecPlateHigher: TecPlate,
+  tecPlateLower: TecPlate,
+  worldXSize: number,
+  isCylindrical: boolean,
+): boolean {
+  // normalDir must point toward the higher tec plate (other methods rely on this)
+  const midpoint = add(start, multiply(vec, 0.5));
+  const towardNormalDir = add(midpoint, normalDir);
+  const higher = tecPlateHigher.center;
+  const lower = tecPlateLower.center;
+
+  let distToHigher: number;
+  let distToLower: number;
+  if (isCylindrical) {
+    // WARNING: this may break down if there are very few tec plates, so that the tec plates near the
+    // world seam span past the center of the map
+    distToHigher = Math.min(
+      dist(towardNormalDir, higher),
+      dist(towardNormalDir, add(higher, [worldXSize, 0])),
+    );
+    distToLower = Math.min(
+      dist(towardNormalDir, lower),
+      dist(towardNormalDir, add(lower, [worldXSize, 0])),
+    );
+  } else {
+    distToHigher = dist(towardNormalDir, higher);
+    distToLower = dist(towardNormalDir, lower);
+  }
+
+  return distToHigher > distToLower;
 }
 
 /** Returns true if the plates on either side of the fault are both ocean or both land */
