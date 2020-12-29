@@ -1,5 +1,5 @@
 import { Vector2 } from '8-helpers/math';
-import { dot, multiply, norm, subtract } from '8-helpers/math/Vector2';
+import { add, dist, dot, multiply, norm, subtract } from '8-helpers/math/Vector2';
 import { getBaseElevation, TecPlate } from './TecPlate';
 import { Edge } from './Voronoi';
 
@@ -50,7 +50,14 @@ export function createFaultFromEdge(edge: Edge, plateA: TecPlate, plateB: TecPla
   const vec = subtract(end, start);
   const length = norm(vec);
   const unitVec = multiply(vec, 1 / length);
-  const normalDir: Vector2 = [-unitVec[1], unitVec[0]];
+  let normalDir: Vector2 = [-unitVec[1], unitVec[0]];
+
+  // normalDir must point toward the higher tec plate (other methods rely on this)
+  const midpoint = add(start, multiply(vec, 0.5));
+  const towardNormalDir = add(midpoint, normalDir);
+  if (dist(towardNormalDir, tecPlateHigher.center) > dist(towardNormalDir, tecPlateLower.center)) {
+    normalDir = multiply(normalDir, -1);
+  }
 
   return {
     length,

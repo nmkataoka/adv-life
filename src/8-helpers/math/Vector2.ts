@@ -39,7 +39,7 @@ export function dot(a: Vector2, b: Vector2): number {
 
 /** Returns the magnitude of the vector */
 export function norm(a: Vector2): number {
-  return dot(a, a);
+  return Math.sqrt(dot(a, a));
 }
 
 /** Rotates a vector by `theta` radians */

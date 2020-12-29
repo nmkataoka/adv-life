@@ -14,11 +14,19 @@ export class DataLayer {
     this.metersPerCoord = metersPerCoord;
   }
 
-  /** TODO: add cylindrical world wraparound logic */
-  at = (x: number, y: number): number => this.data[this.width * y + x];
+  at = (x: number, y: number): number => {
+    x = ((x % this.width) + this.width) % this.width;
+    return this.data[this.width * y + x];
+  };
 
-  /** TODO: add cylindrical world wraparound logic */
   set = (x: number, y: number, val: number): void => {
+    x = ((x % this.width) + this.width) % this.width;
     this.data[this.width * y + x] = val;
+  };
+
+  setAll = (val: number): void => {
+    for (let i = 0; i < this.height * this.width; ++i) {
+      this.data[i] = val;
+    }
   };
 }
