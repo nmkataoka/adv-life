@@ -1,6 +1,6 @@
 import { Vector2 } from '8-helpers/math';
 import { multiply, norm, subtract } from '8-helpers/math/Vector2';
-import { lessThan } from './lessThan';
+import { lessThan } from '../lessThan';
 
 export type VorEdge = {
   start: Vector2;

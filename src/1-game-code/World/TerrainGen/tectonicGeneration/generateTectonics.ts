@@ -1,8 +1,8 @@
 import { rotate } from '8-helpers/math/Vector2';
-import { createFaultFromEdge, Fault } from './Fault';
-import { TecPlate } from './TecPlate';
-import { generateVoronoi, VoronoiDiagram } from './Voronoi';
-import { Tectonics } from './Tectonics';
+import { createFaultFromEdge, Fault } from '../Fault';
+import { TecPlate } from '../TecPlate';
+import { generateVoronoi, VoronoiDiagram } from '../Voronoi/Voronoi';
+import { Tectonics } from '../Tectonics';
 
 export function generateTectonics(numPlates: number, xSize: number, ySize: number): Tectonics {
   const voronoi = generateVoronoi(numPlates, xSize, ySize);

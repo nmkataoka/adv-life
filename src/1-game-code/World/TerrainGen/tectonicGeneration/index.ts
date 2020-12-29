@@ -1,0 +1,1 @@
+export { generateTectonics } from './generateTectonics';
