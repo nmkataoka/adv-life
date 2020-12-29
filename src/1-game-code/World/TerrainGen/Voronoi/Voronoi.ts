@@ -3,6 +3,7 @@ import { Delaunay, Voronoi } from 'd3-delaunay';
 import { subtract } from '8-helpers/math/Vector2';
 import { createEdge, VorEdge } from './VorEdge';
 import { compareEdges, lessThan } from '../lessThan';
+import { relax } from './relax';
 
 /** Generates numPoints random 2D points in the range (0, xSize) and (y, ySize) */
 function generateRandomPoints(numPoints: number, xSize: number, ySize: number): Vector2[] {
@@ -54,6 +55,7 @@ export function generateVoronoi(
   numPoints: number,
   xSize: number,
   ySize: number,
+  numRelaxations: number,
   isCylindrical = true,
 ): VoronoiDiagram {
   let points = generateRandomPoints(numPoints, xSize, ySize);
@@ -62,15 +64,19 @@ export function generateVoronoi(
   // At the end, the middle third will be used as the map
   // with edges wrapped around the sides
   if (isCylindrical) {
-    const tmpPoints: Vector2[] = [...points];
-    points.forEach(([x, y]) => tmpPoints.push([x + xSize, y]));
-    points.forEach(([x, y]) => tmpPoints.push([x + 2 * xSize, y]));
-    points = tmpPoints;
+    points = triplicatePoints(points, xSize);
     xSize *= 3;
   }
 
-  const delaunay = Delaunay.from(points);
-  const voronoi = delaunay.voronoi([0, 0, xSize, ySize]);
+  let delaunay = Delaunay.from(points);
+  let voronoi = delaunay.voronoi([0, 0, xSize, ySize]);
+
+  for (let i = 0; i < numRelaxations; ++i) {
+    points = relax(points, voronoi, isCylindrical, xSize / 3);
+    points = triplicatePoints(points, xSize / 3);
+    delaunay = Delaunay.from(points);
+    voronoi = delaunay.voronoi([0, 0, xSize, ySize]);
+  }
 
   const { edges } = linkPointsToEdges(voronoi, points, xSize, ySize);
 
@@ -80,6 +86,13 @@ export function generateVoronoi(
   }
 
   return vor;
+}
+
+function triplicatePoints(points: Vector2[], xSize: number): Vector2[] {
+  const tmpPoints: Vector2[] = [...points];
+  points.forEach(([x, y]) => tmpPoints.push([x + xSize, y]));
+  points.forEach(([x, y]) => tmpPoints.push([x + 2 * xSize, y]));
+  return tmpPoints;
 }
 
 /** Converts d3-delaunay's cellPolygon format to a more convenient format for us. */
