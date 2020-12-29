@@ -12,7 +12,7 @@ export default class PixelMap {
 
   private pixels: Uint8ClampedArray;
 
-  private data: DataLayer;
+  data: DataLayer;
 
   height: number;
 
@@ -54,7 +54,6 @@ export default class PixelMap {
     for (let i = 0; i < floatMap.length; ++i) {
       const datum = floatMap[i];
       const [r, g, b, a] = this.coloringFunc(datum);
-
       const renderIdx = i * 4;
       this.setPixelColor(renderIdx, [r, g, b, a]);
     }
@@ -92,10 +91,13 @@ export default class PixelMap {
   };
 }
 
-/** Shears map in the y-direction based on elevations so
- * it looks 2.5D */
+/** Shears map in the y-direction based on elevations so it looks 2.5D.
+ *
+ * Uses interpolation, so there is loss of data at map edges.
+ */
 function shearElevs(map: DataLayer, shearFrac = 0.004): DataLayer {
   const output = new DataLayer(map.width, map.height);
+  output.setAll(-1000000);
   /**
    *
    * For each column, start at the bottom of the map. In the output map, stretch
@@ -114,7 +116,7 @@ function shearElevs(map: DataLayer, shearFrac = 0.004): DataLayer {
     /** Tracks our y-position on the output map */
     let outputY = map.height - 1;
 
-    /** Elevation at @see yi */
+    /** Elevation at inputY */
     let inputElev = map.at(x, inputY);
 
     /** Tracks where inputY should map to on the output map

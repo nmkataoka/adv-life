@@ -17,7 +17,7 @@ export function shapeCoasts(elevLayer: DataLayer, faults: Fault[], tecPlates: Te
       return;
     }
 
-    // Floodfill continent
+    // Floodfill continent to build out the distance to coast map
     floodfillFromFault(
       elevLayer,
       fault,
@@ -59,6 +59,8 @@ export function shapeCoasts(elevLayer: DataLayer, faults: Fault[], tecPlates: Te
       const oldElev = elevLayer.at(x, y);
 
       // Why does this work? Don't we initialize elevations to -1,000,000?
+      // I think at this point the continents are already filled and now we are shaving them
+      // down towards the oceans.
       if (newElev < oldElev) {
         elevLayer.set(x, y, newElev);
       }

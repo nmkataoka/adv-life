@@ -1,8 +1,22 @@
 import { initializeArrayWithValue } from '8-helpers/ArrayExtensions';
 import { RingQueue } from '8-helpers/containers/RingQueue';
 import { Vector2 } from '8-helpers/math';
-import assert from 'assert';
 import { DataLayer } from '../DataLayer';
+
+export function fillInHoles(elevLayer: DataLayer, numPlates: number): void {
+  let allFilled = true;
+  do {
+    allFilled = true;
+    for (let xIdx = 0; xIdx < elevLayer.width; ++xIdx) {
+      for (let yIdx = 0; yIdx < elevLayer.height; ++yIdx) {
+        if (elevLayer.at(xIdx, yIdx) < -1000000) {
+          allFilled = false;
+          fillHole(elevLayer, xIdx, yIdx, numPlates);
+        }
+      }
+    }
+  } while (!allFilled);
+}
 
 function fillHole(elevLayer: DataLayer, xStart: number, yStart: number, numPlates: number) {
   const elevation = findMostCommonElevationOnHoleBorder(
@@ -10,7 +24,10 @@ function fillHole(elevLayer: DataLayer, xStart: number, yStart: number, numPlate
     { x: xStart, y: yStart },
     numPlates,
   );
-  assert(elevation > -1000000);
+
+  if (elevation < -1000000) {
+    throw new Error('Most common elevation on hole border was the `uninitialized` value.');
+  }
 
   // const defaultHilliness = 0.25;
 
@@ -39,26 +56,11 @@ function fillHole(elevLayer: DataLayer, xStart: number, yStart: number, numPlate
 
   function fillTileAndAddToQueueIfBlank(x: number, y: number): void {
     const elev = elevLayer.at(x, y);
-    if (elev < -10000000) {
+    if (elev < -2000000) {
       elevLayer.set(x, y, elevation);
       blank.push([x, y]);
     }
   }
-}
-
-export function fillInHoles(elevLayer: DataLayer, numPlates: number): void {
-  let allFilled = true;
-  do {
-    allFilled = true;
-    for (let xIdx = 0; xIdx < elevLayer.width; ++xIdx) {
-      for (let yIdx = 0; yIdx < elevLayer.height; ++yIdx) {
-        if (elevLayer.at(xIdx, yIdx) < -1000000) {
-          allFilled = false;
-          fillHole(elevLayer, xIdx, yIdx, numPlates);
-        }
-      }
-    }
-  } while (!allFilled);
 }
 
 /** Goes directly west until the hole border is reached.
@@ -86,6 +88,8 @@ function getNextIdx(neighbors: number[], startIdx: number) {
     if (idx === 8) {
       idx = 0;
     }
+
+    // Note that this check differentiates between neighbors that don't exist (-1 mil) and neighbors with uninitialized elevations (-11 mil)
     if (neighbors[idx] < -1500000) {
       return idx;
     }
@@ -100,11 +104,12 @@ function getNextIdx(neighbors: number[], startIdx: number) {
  * Track all border tile elevations found with a counter for frequency.
  * When you return to the initial tile, choose the elevation with the highest counter.
  *
- * @param coords integer coordinates of any tile inside the hole
+ * @param coords Integer coordinates of any tile inside the hole.
+ * @param numPlates Number of tectonic plates. Not super important, just used for a heuristic.
  *
  * WARNING: will infinite loop on some maps if the hard numEncountered limit is removed
  */
-function findMostCommonElevationOnHoleBorder(
+export function findMostCommonElevationOnHoleBorder(
   elevLayer: DataLayer,
   coords: { x: number; y: number },
   numPlates: number,
@@ -131,7 +136,7 @@ function findMostCommonElevationOnHoleBorder(
    * Neighbors array is in clockwise order starting with NW:
    *     [NW, N, NE, E, SE, S, SW, W]
    */
-  const neighbors = initializeArrayWithValue(8, -1000000);
+  const neighbors = initializeArrayWithValue(8, -2000000);
 
   /** Sticky block is the filled-in block we're "sticking" to in order to remaiun on the border */
   let stickyIdx = 7;
@@ -160,8 +165,9 @@ function findMostCommonElevationOnHoleBorder(
     if (y < height - 1) {
       neighbors[0] = elevLayer.at(x - 1, y + 1);
       neighbors[1] = elevLayer.at(x, y + 1);
-      neighbors[2] = elevLayer.at(x + 1, (y = 1));
+      neighbors[2] = elevLayer.at(x + 1, y + 1);
     } else {
+      // Note that this is -1 mil
       neighbors[0] = -1000000;
       neighbors[1] = -1000000;
       neighbors[2] = -1000000;

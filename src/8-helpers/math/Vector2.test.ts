@@ -1,4 +1,4 @@
-import { add, addMut, dist, multiply, subtract, subtractMut, Vector2 } from './Vector2';
+import { add, addMut, dist, dot, multiply, norm, subtract, subtractMut, Vector2 } from './Vector2';
 
 describe('Vector2', () => {
   let a: Vector2;
@@ -22,6 +22,11 @@ describe('Vector2', () => {
     expect(r).toEqual([4, 7]);
   });
 
+  it('dot product', () => {
+    const product = dot(a, b);
+    expect(product).toEqual(13);
+  });
+
   it('dist returns correct number', () => {
     const r = dist(a, b);
     const s = dist(b, a);
@@ -33,6 +38,11 @@ describe('Vector2', () => {
     const r = multiply(a, 3);
     expect(r).toEqual([3, 6]);
     expect(a).toEqual([1, 2]);
+  });
+
+  it('norm (magnitude)', () => {
+    const mag = norm([3, 4]);
+    expect(mag).toBeCloseTo(5);
   });
 
   it('subtract returns correct Vector2', () => {

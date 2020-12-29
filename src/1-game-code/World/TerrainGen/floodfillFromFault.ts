@@ -1,7 +1,7 @@
 import { initializeArrayWithValue, shuffle } from '8-helpers/ArrayExtensions';
 import { RingQueue } from '8-helpers/containers/RingQueue';
 import { Vector2 } from '8-helpers/math';
-import { add, dist, multiply, subtract } from '8-helpers/math/Vector2';
+import { add, dist, multiply } from '8-helpers/math/Vector2';
 import { DataLayer } from '../DataLayer';
 import { Fault } from './Fault';
 import { simpleBresenham } from './simpleBresenham';
@@ -37,6 +37,9 @@ export function floodfillFromFault(
   /** Marks tiles already added to the queue */
   const alreadyProcessed: boolean[] = initializeArrayWithValue(height * width, false);
 
+  /** The only reason this is separate from the later toProcessQueue is because
+   * I haven't implemented shuffle() on RingQueue.
+   */
   const toProcessStartingArray: TilePropagator[] = [];
 
   // Fill the queue with starting points
@@ -46,19 +49,10 @@ export function floodfillFromFault(
   for (let curIdx = 1; curIdx < vertices.length - skipSegments; ++curIdx) {
     const cur = vertices[curIdx];
     const prev = vertices[curIdx - 1];
-    const fSegSlope = subtract(cur, prev);
+    simpleBresenham(add(prev, shift), add(cur, shift), normalDir, 3, addTileToStartingQueue);
     simpleBresenham(
       add(prev, shift),
       add(cur, shift),
-      fSegSlope,
-      normalDir,
-      3,
-      addTileToStartingQueue,
-    );
-    simpleBresenham(
-      add(prev, shift),
-      add(cur, shift),
-      fSegSlope,
       multiply(normalDir, -1),
       3,
       addTileToStartingQueue,
@@ -71,7 +65,7 @@ export function floodfillFromFault(
     if (!alreadyProcessed[idx]) {
       alreadyProcessed[idx] = true;
       if (!checkFunc || checkFunc(x, y)) {
-        toProcessQueue.push({ coord: [x, y], origin: [x, y] });
+        toProcessStartingArray.push({ coord: [x, y], origin: [x, y] });
       }
     }
   }

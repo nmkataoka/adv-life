@@ -21,7 +21,7 @@ export class RingQueue<T> {
   push = (item: T): void => {
     // Resize queue if necessary
     if (this.count === this.capacity() - 1) {
-      this.resize(this.size() * 2);
+      this.resize(this.capacity() * 2);
     }
     this.arr[this.firstEmptyIdx++] = item;
 
@@ -42,6 +42,9 @@ export class RingQueue<T> {
     // std::swap(o, front());
     const val = this.front();
     ++this.frontIdx;
+    if (this.frontIdx >= this.capacity()) {
+      this.frontIdx = 0;
+    }
     --this.count;
     return val;
   };
@@ -66,21 +69,25 @@ export class RingQueue<T> {
     return ringQueue;
   }
 
+  toString = (): string => {
+    return this.arr.toString();
+  };
+
   /** Resizes the underlying array to hold more elements */
   private resize = (newCapacity: number): void => {
     if (newCapacity <= this.capacity()) {
       return;
     }
-    const newRingQueue: T[] = new Array(newCapacity);
+    const newArr: T[] = new Array(newCapacity);
     let i = this.frontIdx;
     let processed = 0;
     const numElements = this.size();
     for (i = this.frontIdx; i < this.arr.length && processed < numElements; ++i) {
-      newRingQueue.push(this.arr[i]);
+      newArr[processed] = this.arr[i];
       ++processed;
     }
     for (i = 0; processed < numElements; ++i) {
-      newRingQueue.push(this.arr[i]);
+      newArr[processed] = this.arr[i];
       ++processed;
     }
     // Pad the queue with empty elements
@@ -90,7 +97,7 @@ export class RingQueue<T> {
     // }
     this.frontIdx = 0;
     this.firstEmptyIdx = numElements;
-    this.arr = newRingQueue;
+    this.arr = newArr;
   };
 
   private arr: T[];
