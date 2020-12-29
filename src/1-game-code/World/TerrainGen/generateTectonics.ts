@@ -24,10 +24,8 @@ const PI = 2.1415926535;
 function createPlatesAndFaults(
   voronoi: VoronoiDiagram,
 ): { tecPlates: TecPlate[]; faults: Fault[] } {
-  const { points, edges, pointsToEdges, edgesToPoints } = voronoi;
+  const { points, edges, xSize, isCylindrical } = voronoi;
 
-  // Linking up TecPlates to Faults is tricky, so we'll create skeletons of each
-  // and then use a hashmap to look up which faults border which tec plates
   const tecPlates: TecPlate[] = points.map((point) => ({
     ...randomizePlateProperties(),
     center: point,
@@ -35,29 +33,25 @@ function createPlatesAndFaults(
   }));
 
   const faults: Fault[] = [];
-  edges.forEach((edge, edgeIdx) => {
-    const adjacentTecPlateIndices = edgesToPoints[edgeIdx];
-    if (adjacentTecPlateIndices == null) {
+  edges.forEach((edge) => {
+    const { site1Idx, site2Idx } = edge;
+    if (site1Idx < 0 && site2Idx < 0) {
       throw new Error(`Edge ${edge.toString()} not found in edges to tec plates map.`);
     }
-
-    // Filter out the map borders, which show up as edges with only 1 adjacent tec plate
-    if (adjacentTecPlateIndices.length < 2) {
+    if (site1Idx < 0 || site2Idx < 0) {
+      // Filter out the map borders, which show up as edges with only 1 adjacent tec plate
       return;
     }
 
-    const [plateAIdx, plateBIdx] = adjacentTecPlateIndices;
-    const plateA = tecPlates[plateAIdx];
-    const plateB = tecPlates[plateBIdx];
-    const fault = createFaultFromEdge(edge, plateA, plateB);
+    const plateA = tecPlates[site1Idx];
+    const plateB = tecPlates[site2Idx];
+    const fault = createFaultFromEdge(edge, plateA, plateB, xSize, isCylindrical);
     faults.push(fault);
+
+    plateA.faults.push(fault);
+    plateB.faults.push(fault);
   });
 
-  // Finally, fill out the `faults` list on each tecplate
-  tecPlates.forEach((tecPlate, i) => {
-    const plateEdges = pointsToEdges[i];
-    tecPlate.faults = plateEdges.map((edgeIdx) => faults[edgeIdx]);
-  });
   return { faults, tecPlates };
 }
 
