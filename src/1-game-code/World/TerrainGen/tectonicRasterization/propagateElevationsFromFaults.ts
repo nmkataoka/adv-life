@@ -43,9 +43,9 @@ const RidgeSettings = {
  * - If the features have small altitude differentials, shallow slopes can widen fault
  *   features for aethestic reasons in order to
  */
-const ridgeSlope = 0.003;
+const ridgeSlope = 0.01;
 
-const riftSlope = 0.003;
+const riftSlope = 0.01;
 
 /** For each fault, a fault profile is built, which is basically
  * a cross-sectional slice perpendicular to the fault line. The fault profile
@@ -219,7 +219,7 @@ function createSubductionFeatures(
     metersPerCoord,
     faultLength,
     mountainHilliness,
-    multiply(normalDir, 800000 / metersPerCoord),
+    multiply(normalDir, 130000 / metersPerCoord),
   );
   // Create oceanic trench
   const riftFeature = createRiftFeature(
@@ -228,7 +228,7 @@ function createSubductionFeatures(
     metersPerCoord,
     faultLength,
     hillHilliness,
-    multiply(normalDir, -500000 / metersPerCoord),
+    multiply(normalDir, -90000 / metersPerCoord),
   );
   return [ridgeFeature, riftFeature];
 }

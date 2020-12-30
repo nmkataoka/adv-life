@@ -14,7 +14,7 @@ const scaling = 2000;
 export function lowFreqNoise(elevLayer: DataLayer): void {
   const { metersPerCoord, width, height } = elevLayer;
   const noise = new SimplexNoise('test', {
-    frequency: 1.2 * 10 ** -7 * metersPerCoord,
+    frequency: 7.3 * 10 ** -7 * metersPerCoord,
     octaves: 8,
     lacunarity: 2.0,
     gain: 0.5,
