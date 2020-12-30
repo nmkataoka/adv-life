@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '7-app/types';
+import TopBar from '6-ui-features/TopBar';
 import CharacterCreationNavBar from './CharacterCreationNavBar';
 import InfoWindow from './components/InfoWindow';
 import ScreenInfoToScreen from './components/ScreenInfoToScreen';
@@ -25,14 +26,17 @@ export default function CharacterCreationScene(): JSX.Element {
   }, [dispatch]);
 
   return (
-    <Container>
-      <CharacterCreationNavBar />
-      <Content>
-        <ScreenInfoToScreen screenInfo={screenInfo} />
-        <CharacterSummaryColumn />
-        <InfoWindow />
-      </Content>
-    </Container>
+    <>
+      <TopBar />
+      <Container>
+        <CharacterCreationNavBar />
+        <Content>
+          <ScreenInfoToScreen screenInfo={screenInfo} />
+          <CharacterSummaryColumn />
+          <InfoWindow />
+        </Content>
+      </Container>
+    </>
   );
 }
 

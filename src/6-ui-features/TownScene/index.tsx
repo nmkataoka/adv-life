@@ -4,6 +4,7 @@ import { useSelector as useReduxSelector, useDispatch } from 'react-redux';
 import { useSelector } from '4-react-ecsal';
 import { RootState } from '7-app/types';
 import { getTown } from '3-frontend-api';
+import TopBar from '6-ui-features/TopBar';
 import TownLocation from '../TownLocation';
 import PartySummary from './PartySummary';
 import { changedTitle } from '../TopBar/topBarSlice';
@@ -28,16 +29,19 @@ export default function TownScene(): JSX.Element {
   }
 
   return (
-    <Container>
-      <MainContent>
-        <PartySummary />
-        <LocationContainer>
-          {townLocationIds.map((townLocationId) => (
-            <TownLocation key={townLocationId} townLocationId={townLocationId} />
-          ))}
-        </LocationContainer>
-      </MainContent>
-    </Container>
+    <>
+      <TopBar />
+      <Container>
+        <MainContent>
+          <PartySummary />
+          <LocationContainer>
+            {townLocationIds.map((townLocationId) => (
+              <TownLocation key={townLocationId} townLocationId={townLocationId} />
+            ))}
+          </LocationContainer>
+        </MainContent>
+      </Container>
+    </>
   );
 }
 

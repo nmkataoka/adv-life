@@ -5,6 +5,7 @@ import apiClient from '3-frontend-api/ApiClient';
 import { getTowns } from '3-frontend-api/town';
 import { getPlayerId } from '3-frontend-api';
 import { createCharacter } from '1-game-code/CharacterCreation/CharacterCreationSys';
+import { createWorldMap } from '1-game-code/World/TerrainGen/TerrainGenSys';
 import { initialCharacterAttributeGroups } from './characterCreationData';
 import CharacterAttributeGroup, {
   PointAllocation,
@@ -172,6 +173,9 @@ export const {
 export default characterCreationSlice.reducer;
 
 export const createPlayerCharacter = (): AppThunk => async (dispatch, getState) => {
+  // This is temporary, we'll make a world gen area later.
+  await apiClient.emit(createWorldMap());
+
   const {
     characterCreation: { characterAttributeGroups: cags },
   } = getState();
