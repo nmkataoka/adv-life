@@ -1,5 +1,5 @@
 import { fillInHoles } from './fillInHoles';
-import { DataLayer } from '../../DataLayer';
+import { DataLayer } from '../../DataLayer/DataLayer';
 import { TecPlate } from '../TecPlate';
 import { shapeCoasts } from './shapeCoasts';
 import { Tectonics } from '../Tectonics';

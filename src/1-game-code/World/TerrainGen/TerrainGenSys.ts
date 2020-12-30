@@ -5,6 +5,7 @@ import { createRandomTerrain } from './elevationNoise/createRandomTerrain';
 import { generateTectonics } from './tectonicGeneration';
 import { rasterizeTectonics } from './tectonicRasterization';
 import { lowFreqNoise } from './elevationNoise/elevationNoise';
+import { boxBlur } from '../DataLayer/boxBlur';
 
 /** This is mostly just for debugging now, or if the real world map breaks for an extended period of time. */
 const createNoisedWorldMapSlice = createEventSlice('createNoisedWorldMap', {
@@ -48,6 +49,7 @@ const createWorldMapSlice = createEventSlice('createWorldMap', {
     const worldMap = worldMapCmpt.data;
     worldMap.tectonics = generateTectonics(numPlates, xSize, ySize);
     worldMap.dataLayers[WorldMap.Layer.Elevation] = rasterizeTectonics(worldMap.tectonics);
+    boxBlur(worldMap.dataLayers[WorldMap.Layer.Elevation], 2);
     lowFreqNoise(worldMap.dataLayers[WorldMap.Layer.Elevation]);
     worldMapMgr.add(worldMapEntity, worldMapCmpt);
   },

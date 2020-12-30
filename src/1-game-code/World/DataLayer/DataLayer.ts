@@ -7,11 +7,14 @@ export class DataLayer {
 
   metersPerCoord: number;
 
-  constructor(width: number, height: number, metersPerCoord = 25000) {
+  isCylindrical: boolean;
+
+  constructor(width: number, height: number, metersPerCoord = 25000, isCylindridal = true) {
     this.height = height;
     this.width = width;
     this.data = new Float32Array(width * height);
     this.metersPerCoord = metersPerCoord;
+    this.isCylindrical = isCylindridal;
   }
 
   /** Safe access, but slow */

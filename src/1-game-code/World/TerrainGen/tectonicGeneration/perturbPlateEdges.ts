@@ -4,8 +4,8 @@ import { Fault } from '../Fault';
 
 export function perturbPlateEdges(faults: Fault[], metersPerCoord: number): void {
   // Perturb edges into natural-looking faults that scale with world-size
-  const segmentLength = Math.floor(metersPerCoord / 15000);
-  const faultNoiseScaling = 50000000 / metersPerCoord;
+  const segmentLength = Math.floor(metersPerCoord / 10000);
+  const faultNoiseScaling = 10000000 / metersPerCoord;
 
   faults.forEach((fault) => {
     // Calculate edge unit-slope and its perpendicular
@@ -19,8 +19,8 @@ export function perturbPlateEdges(faults: Fault[], metersPerCoord: number): void
 
     // These settings control how the faults look
     const noise = new SimplexNoise('test', {
-      frequency: 9.2 * 10 ** -10 * metersPerCoord,
-      octaves: 4,
+      frequency: 80 * 10 ** -10 * metersPerCoord,
+      octaves: 10,
       lacunarity: 1.85,
       gain: 0.53,
     });

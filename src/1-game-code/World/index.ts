@@ -1,1 +1,1 @@
-export { DataLayer } from './DataLayer';
+export { DataLayer } from './DataLayer/DataLayer';

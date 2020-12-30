@@ -1,7 +1,7 @@
 import { initializeArrayWithValue } from '8-helpers/ArrayExtensions';
 import { RingQueue } from '8-helpers/containers/RingQueue';
 import { toVec2i, Vector2 } from '8-helpers/math/Vector2';
-import { DataLayer } from '../../DataLayer';
+import { DataLayer } from '../../DataLayer/DataLayer';
 import { Fault } from '../Fault';
 import { floodfillFromFault } from './floodfillFromFault';
 import { TecPlate } from '../TecPlate';
