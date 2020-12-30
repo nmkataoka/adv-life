@@ -8,7 +8,6 @@ import { Provider as EcsalProvider } from '4-react-ecsal';
 import MainMenuScene from '6-ui-features/MainMenuScene';
 import ColosseumScene from '6-ui-features/ColosseumScene';
 import WorldGenScene from '6-ui-features/WorldGenScene';
-import TopBar from './6-ui-features/TopBar';
 import { Scene } from './6-ui-features/sceneManager/sceneMetaSlice';
 
 import TownScene from './6-ui-features/TownScene';
@@ -37,7 +36,6 @@ function App(): JSX.Element {
   return (
     <EcsalProvider store={GameManager.instance.eMgr}>
       <Container>
-        <TopBar />
         <SceneComponent />
       </Container>
     </EcsalProvider>

@@ -14,11 +14,13 @@ export class DataLayer {
     this.metersPerCoord = metersPerCoord;
   }
 
+  /** Safe access, but slow */
   at = (x: number, y: number): number => {
     x = ((x % this.width) + this.width) % this.width;
     return this.data[this.width * y + x];
   };
 
+  /** Safe setting, but slow */
   set = (x: number, y: number, val: number): void => {
     x = ((x % this.width) + this.width) % this.width;
     this.data[this.width * y + x] = val;
