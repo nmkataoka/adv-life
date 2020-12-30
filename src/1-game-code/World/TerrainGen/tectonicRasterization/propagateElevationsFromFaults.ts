@@ -39,7 +39,7 @@ const RidgeSettings = {
  *
  * However, this is a very useful parameter to tune non-realistically for two purposes:
  * - If the fault lengths are very short, steep slopes are needed to pack large altitude
- *   differentials into a small space.
+ *   differentials into a small space. This implies there are too many tecplates for the world size.
  * - If the features have small altitude differentials, shallow slopes can widen fault
  *   features for aethestic reasons in order to
  */
