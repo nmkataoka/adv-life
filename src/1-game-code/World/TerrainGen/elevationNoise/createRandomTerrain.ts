@@ -1,6 +1,9 @@
 import SimplexNoise from '10-simplex-noise';
-import { DataLayer } from '../DataLayer';
+import { DataLayer } from '../../DataLayer';
 
+/** Drop in replacement for the entire terrain generation system,
+ * mostly for debugging.
+ */
 export function createRandomTerrain(): DataLayer {
   const elevations = new DataLayer(400, 300);
   const simplex = new SimplexNoise('seed', { frequency: 0.005, octaves: 8 });
