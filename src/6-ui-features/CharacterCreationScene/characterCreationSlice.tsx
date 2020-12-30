@@ -174,7 +174,9 @@ export default characterCreationSlice.reducer;
 
 export const createPlayerCharacter = (): AppThunk => async (dispatch, getState) => {
   // This is temporary, we'll make a world gen area later.
-  await apiClient.emit(createWorldMap());
+  // Recommended settings: numPlates: 18, size: {x: 800, y: 400}
+  // Smaller settings for tests
+  await apiClient.emit(createWorldMap({ numPlates: 10, size: { x: 200, y: 100 } }));
 
   const {
     characterCreation: { characterAttributeGroups: cags },
