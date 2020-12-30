@@ -4,6 +4,7 @@ import { WorldMap } from '../WorldMap';
 // import { createRandomTerrain } from './createRandomTerrain';
 import { generateTectonics } from './tectonicGeneration';
 import { rasterizeTectonics } from './tectonicRasterization';
+import { lowFreqNoise } from './elevationNoise';
 
 const createNoisedWorldMapSlice = createEventSlice('createNoisedWorldMap', {
   writeCmpts: [WorldMapCmpt],
@@ -20,6 +21,7 @@ const createNoisedWorldMapSlice = createEventSlice('createNoisedWorldMap', {
     // worldMapCmpt.data.dataLayers[WorldMap.Layer.Elevation] = createRandomTerrain();
     worldMap.tectonics = generateTectonics(18, 800, 400);
     worldMap.dataLayers[WorldMap.Layer.Elevation] = rasterizeTectonics(worldMap.tectonics);
+    lowFreqNoise(worldMap.dataLayers[WorldMap.Layer.Elevation]);
     worldMapMgr.add(worldMapEntity, worldMapCmpt);
   },
 );

@@ -23,6 +23,7 @@ export default class SimplexNoise {
     }
   }
 
+  /** Returns a number between (-1, 1)...I think */
   noise2D = (x: number, y: number): number => {
     let total = 0;
     let freq = this.frequency;
