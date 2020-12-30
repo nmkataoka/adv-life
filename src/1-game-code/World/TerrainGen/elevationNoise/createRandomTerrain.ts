@@ -1,3 +1,4 @@
+import { WorldMap } from '1-game-code/World/WorldMap';
 import SimplexNoise from '10-simplex-noise';
 import { DataLayer } from '../../DataLayer/DataLayer';
 
@@ -5,7 +6,7 @@ import { DataLayer } from '../../DataLayer/DataLayer';
  * mostly for debugging.
  */
 export function createRandomTerrain(): DataLayer {
-  const elevations = new DataLayer(400, 300);
+  const elevations = new DataLayer(WorldMap.Layer.Elevation, 400, 300);
   const simplex = new SimplexNoise('seed', { frequency: 0.005, octaves: 8 });
   for (let y = 0; y < elevations.height; ++y) {
     for (let x = 0; x < elevations.width; ++x) {

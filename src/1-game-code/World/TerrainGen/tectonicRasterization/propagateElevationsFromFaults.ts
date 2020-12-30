@@ -1,60 +1,63 @@
 import { DataLayer } from '1-game-code/World/DataLayer/DataLayer';
 import { Vector2 } from '8-helpers/math';
 import { multiply } from '8-helpers/math/Vector2';
+import { WorldMap } from '1-game-code/World/WorldMap';
 import { convergence, Fault, hasSamePlateTypes, MAX_CONVERGENCE } from '../Fault';
 import { floodfillFromFault } from './floodfillFromFault';
+import { defaultHilliness, mountainHilliness, hillHilliness } from './constants';
 
 const RiftSettings = {
   divergent: {
     min: -500,
     range: -2000,
-    // widthMin: 200000,
-    // riftWidthRange: 800000,
   },
   subduction: {
     min: -2000,
     range: -4000,
-    // const sRiftWidthMin = 100000;
-    // const sRiftWidthRng = 1000000;
   },
 } as const;
 
 const RidgeSettings = {
   divergent: {
-    min: 1400,
-    range: 1000,
-    widthMin: 100000,
-    widthRange: 4000000,
+    min: 400,
+    range: 2000,
   },
   subduction: {
-    min: 1500,
-    range: 400,
-    widthMin: 200000,
-    widthRange: 2000000,
+    min: 500,
+    range: 2000,
   },
   contConvergent: {
     // Since cont convergent mountains are the tallest points on the map,
     // min + range + highest base continent altitude + max of all elevation noise
     // equals the maximum possible elevation.
-    min: 2000,
-    range: 500,
-    widthMin: 200000,
-    widthRange: 2000000,
+    min: 1500,
+    range: 3500,
   },
 } as const;
 
-// Elevation Noise
-const defaultHilliness = 1; // WARNING: This needs to match "default hilliness" in Elevation.cpp
-const mountainHilliness = 5000;
-const hillHilliness = 2000;
+/** Real mountain ranges have an average width slope of about 0.005 (4mi tall, 50m wide).
+ *
+ * However, this is a very useful parameter to tune non-realistically for two purposes:
+ * - If the fault lengths are very short, steep slopes are needed to pack large altitude
+ *   differentials into a small space.
+ * - If the features have small altitude differentials, shallow slopes can widen fault
+ *   features for aethestic reasons in order to
+ */
+const ridgeSlope = 0.003;
+
+const riftSlope = 0.003;
 
 /** For each fault, a fault profile is built, which is basically
  * a cross-sectional slice perpendicular to the fault line. The fault profile
  * is then applied (with some noising) along the fault..
  */
-export function propagateElevationsFromFaults(elevLayer: DataLayer, faults: Fault[]): void {
+export function propagateElevationsFromFaults(
+  elevLayer: DataLayer,
+  hillinessLayer: DataLayer,
+  faults: Fault[],
+): void {
   const { width, height, metersPerCoord } = elevLayer;
-  const elevChanges = new DataLayer(width, height, metersPerCoord);
+  const elevChanges = new DataLayer('elevChanges', width, height, metersPerCoord);
   elevChanges.setAll(0);
   faults.forEach((fault) => {
     const { vertices } = fault;
@@ -62,7 +65,7 @@ export function propagateElevationsFromFaults(elevLayer: DataLayer, faults: Faul
 
     const faultFeatures = constructFaultProfile(fault, metersPerCoord);
     faultFeatures.forEach((feature) => {
-      applyFaultFeature(elevChanges, fault, feature);
+      applyFaultFeature(elevChanges, hillinessLayer, fault, feature);
     });
   });
 
@@ -101,7 +104,13 @@ function constructFaultProfile(fault: Fault, metersPerCoord: number): FaultFeatu
       if (tecPlateHigher.isOceanic) {
         // Divergent oceanic ridge
         faultFeatures.push(
-          createRidgeFeature('divergent', adjustedConv, metersPerCoord, hillHilliness),
+          createRidgeFeature(
+            'divergent',
+            adjustedConv,
+            metersPerCoord,
+            fault.length,
+            hillHilliness,
+          ),
         );
       } else {
         // Continental rift
@@ -110,7 +119,13 @@ function constructFaultProfile(fault: Fault, metersPerCoord: number): FaultFeatu
         // eslint-disable-next-line no-lonely-if
         if (adjustedConv > 0.5) {
           faultFeatures.push(
-            createRiftFeature('divergent', adjustedConv, metersPerCoord, defaultHilliness),
+            createRiftFeature(
+              'divergent',
+              adjustedConv,
+              metersPerCoord,
+              fault.length,
+              defaultHilliness,
+            ),
           );
         }
       }
@@ -122,18 +137,33 @@ function constructFaultProfile(fault: Fault, metersPerCoord: number): FaultFeatu
   } else if (samePlateType) {
     if (tecPlateHigher.isOceanic) {
       // Convergent oceanic forms a subduction
-      faultFeatures.push(
-        ...createSubductionFeatures(adjustedConv, metersPerCoord, fault.normalDir),
+      const features = createSubductionFeatures(
+        adjustedConv,
+        metersPerCoord,
+        fault.length,
+        fault.normalDir,
       );
+      faultFeatures.push(...features);
     } else {
       // Convergent continents -> huge mountains
-      faultFeatures.push(
-        createRidgeFeature('contConvergent', adjustedConv, metersPerCoord, mountainHilliness),
+      const feature = createRidgeFeature(
+        'contConvergent',
+        adjustedConv,
+        metersPerCoord,
+        fault.length,
+        mountainHilliness,
       );
+      faultFeatures.push(feature);
     }
   } else {
     // Convergence between ocean and continental is subduction
-    faultFeatures.push(...createSubductionFeatures(adjustedConv, metersPerCoord, fault.normalDir));
+    const features = createSubductionFeatures(
+      adjustedConv,
+      metersPerCoord,
+      fault.length,
+      fault.normalDir,
+    );
+    faultFeatures.push(...features);
   }
   return faultFeatures;
 }
@@ -142,15 +172,21 @@ function createRidgeFeature(
   ridgeType: keyof typeof RidgeSettings,
   adjustedConv: number,
   metersPerCoord: number,
+  faultLength: number,
   hilliness: number,
   shift?: Vector2,
 ): FaultFeature {
-  const { min, range, widthMin, widthRange } = RidgeSettings[ridgeType];
-  const ridgeHeight = min + range * adjustedConv;
-  const ridgeHalfWidth = (widthMin + widthRange * adjustedConv) / 2;
+  const { min, range } = RidgeSettings[ridgeType];
+  // The ridge width must be less than 1/2 the fault length in order to minimize
+  // issues around the fault intersections. Since we use a constant ridge slope,
+  // we need to cap the ridge height to a function of the fault length.
+  const maxRidgeWidth = Math.floor(Math.floor(faultLength - 1) / 2) * metersPerCoord;
+  const ridgeHeight = Math.max(
+    min,
+    Math.min(min + range * adjustedConv, maxRidgeWidth * ridgeSlope),
+  );
   const elevProfile: number[] = [];
-  addConstantElevProfileSection(elevProfile, ridgeHeight, ridgeHalfWidth / metersPerCoord);
-  addElevProfileSection(elevProfile, ridgeHeight, 0, -metersPerCoord * 0.002);
+  addElevProfileSection(elevProfile, ridgeHeight, 0, -metersPerCoord * ridgeSlope);
   return { hilliness, shift: shift ?? [0, 0], elevProfile };
 }
 
@@ -158,19 +194,22 @@ function createRiftFeature(
   riftType: keyof typeof RiftSettings,
   adjustedConv: number,
   metersPerCoord: number,
+  faultLength: number,
   hilliness: number,
   shift?: Vector2,
 ): FaultFeature {
   const { min, range } = RiftSettings[riftType];
-  const riftDepth = min + range * adjustedConv;
+  const maxRiftWidth = Math.floor(Math.floor(faultLength - 1) / 2) * metersPerCoord;
+  const riftDepth = Math.min(min, Math.max(min + range * adjustedConv, -maxRiftWidth * riftSlope));
   const elevProfile: number[] = [];
-  addElevProfileSection(elevProfile, riftDepth, 0, metersPerCoord * 0.002);
+  addElevProfileSection(elevProfile, riftDepth, 0, metersPerCoord * riftSlope);
   return { hilliness, shift: shift ?? [0, 0], elevProfile };
 }
 
 function createSubductionFeatures(
   adjustedConv: number,
   metersPerCoord: number,
+  faultLength: number,
   normalDir: Vector2,
 ): FaultFeature[] {
   // Create oceanic ridge or coastal mountain range
@@ -178,6 +217,7 @@ function createSubductionFeatures(
     'subduction',
     adjustedConv,
     metersPerCoord,
+    faultLength,
     mountainHilliness,
     multiply(normalDir, 800000 / metersPerCoord),
   );
@@ -186,6 +226,7 @@ function createSubductionFeatures(
     'subduction',
     adjustedConv,
     metersPerCoord,
+    faultLength,
     hillHilliness,
     multiply(normalDir, -500000 / metersPerCoord),
   );
@@ -217,33 +258,53 @@ function addElevProfileSection(
   }
 }
 
-function addConstantElevProfileSection(profile: number[], elev: number, indices: number): void {
-  for (let i = 0; i < indices; ++i) {
-    profile.push(elev);
-  }
-}
-
 /** Writes fault profile to an 'additive' elevation layer that will be merged with
  * the world map elevation layer at the end. Uses floodFillFromFault to apply fault profiles.
  */
-function applyFaultFeature(elevChanges: DataLayer, fault: Fault, feature: FaultFeature) {
+function applyFaultFeature(
+  elevChanges: DataLayer,
+  hillinessLayer: DataLayer,
+  fault: Fault,
+  feature: FaultFeature,
+) {
   if (feature.elevProfile.length < 2) {
     throw new Error('Fault feature elev profile is missing entries.');
   }
-  const { shift, elevProfile } = feature;
+  if (hillinessLayer.name !== WorldMap.Layer.Hilliness) {
+    throw new Error(`Wrong data layer ${hillinessLayer.name} passed instead of hilliness layer`);
+  }
+
+  const { shift, elevProfile, hilliness } = feature;
 
   /** Calculate skipSegments
    * This clips the ends of the fault for the floodfill algorithm in order
    * to prevent the floodfill from spilling too far past the fault ends.
    *
-   * Basically subtracts the length of the fault profile.
+   * Basically subtracts the length of the fault profile, but caps it at
+   * just under half the fault's length. If skipSegments is greater than half
+   * the fault's length, then the entire fault feature would be skipped,
+   * which is undesirable (although likely reflective of an upstream issue
+   * with the feature profile being too long).
    */
+  const skipSegments = Math.min(
+    elevProfile.length - 1,
+    Math.floor(Math.floor(fault.vertices.length - 1) / 2),
+  );
+  const featureLength = feature.elevProfile.length;
+  if (featureLength > fault.length / 2) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `Feature profile is longer than half the fault length. The entire fault feature is in danger of being skipped.` +
+        `Fault length: ${fault.length.toFixed(2)}, feature length: ${featureLength.toFixed(2)}`,
+    );
+  }
+
   floodfillFromFault(
     elevChanges,
     fault,
     shift,
     elevProfile.length - 1,
-    elevProfile.length - 1, // Skip segments
+    skipSegments,
     (x: number, y: number, t: number) => {
       // Feature is applied in a max fashion.
       // E.g. for ridge areas, only the highest ridge is applied
@@ -255,7 +316,10 @@ function applyFaultFeature(elevChanges: DataLayer, fault: Fault, feature: FaultF
       } else if (elevChange < elevChanges.at(x, y)) {
         elevChanges.set(x, y, elevChange);
       }
-      // TODO: if(hilliness > /* TODO */) {}
+
+      if (hilliness > hillinessLayer.at(x, y)) {
+        hillinessLayer.set(x, y, hilliness);
+      }
     },
   );
 }

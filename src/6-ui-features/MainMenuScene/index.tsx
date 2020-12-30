@@ -3,11 +3,20 @@ import styled from '@emotion/styled';
 import { changedScene, Scene } from '6-ui-features/sceneManager/sceneMetaSlice';
 import { useDispatch } from 'react-redux';
 import { createPlayerCharacter } from '6-ui-features/CharacterCreationScene/characterCreationSlice';
+import { startWorldGen } from '6-ui-features/WorldGenScene/actions';
+import { useIsTest } from '6-ui-features/TestContext';
 
 export default function MainMenuScene(): JSX.Element {
   const dispatch = useDispatch();
+  const isTest = useIsTest();
   const handleSceneSelection = (scene: Scene) => () => {
     if (scene === Scene.Colosseum) {
+      if (isTest) {
+        dispatch(startWorldGen({ numPlates: 10, size: { x: 200, y: 100 } }));
+      } else {
+        dispatch(startWorldGen({ numPlates: 12, size: { x: 800, y: 400 } }));
+      }
+
       dispatch(createPlayerCharacter());
     }
     dispatch(changedScene(scene));

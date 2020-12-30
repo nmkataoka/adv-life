@@ -8,6 +8,7 @@ import { Provider as EcsalProvider } from '4-react-ecsal';
 import MainMenuScene from '6-ui-features/MainMenuScene';
 import ColosseumScene from '6-ui-features/ColosseumScene';
 import WorldGenScene from '6-ui-features/WorldGenScene';
+import { TestProvider } from '6-ui-features/TestContext';
 import { Scene } from './6-ui-features/sceneManager/sceneMetaSlice';
 
 import TownScene from './6-ui-features/TownScene';
@@ -22,7 +23,11 @@ const scenes = {
   [Scene.WorldGen]: WorldGenScene,
 };
 
-function App(): JSX.Element {
+type AppProps = {
+  isTest?: boolean;
+};
+
+function App({ isTest = false }: AppProps): JSX.Element {
   useEffect(() => {
     void GameManager.instance.Start();
 
@@ -34,11 +39,13 @@ function App(): JSX.Element {
   const SceneComponent = scenes[currentScene];
 
   return (
-    <EcsalProvider store={GameManager.instance.eMgr}>
-      <Container>
-        <SceneComponent />
-      </Container>
-    </EcsalProvider>
+    <TestProvider value={isTest}>
+      <EcsalProvider store={GameManager.instance.eMgr}>
+        <Container>
+          <SceneComponent />
+        </Container>
+      </EcsalProvider>
+    </TestProvider>
   );
 }
 
