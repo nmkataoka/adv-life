@@ -27,7 +27,7 @@ export function floodfillFromFault(
   maxTilesFromFault: number,
   skipSegments: number,
   tileFunc: (x: number, y: number, t: number) => void,
-  checkFunc: (x: number, y: number) => boolean,
+  checkFunc?: (x: number, y: number) => boolean,
 ): void {
   const { normalDir, vertices } = fault;
   if (vertices.length < skipSegments * 2 + 1) return;

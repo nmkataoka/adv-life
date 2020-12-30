@@ -4,6 +4,7 @@ import { TecPlate } from '../TecPlate';
 import { shapeCoasts } from './shapeCoasts';
 import { Tectonics } from '../Tectonics';
 import { rasterizeFaults } from './rasterizeFaults';
+import { propagateElevationsFromFaults } from './propagateElevationsFromFaults';
 
 export function rasterizeTectonics(
   { height, width, numPlates, faults, tecPlates }: Tectonics,
@@ -15,6 +16,7 @@ export function rasterizeTectonics(
   rasterizeFaults(elevLayer, faults);
   fillInHoles(elevLayer, numPlates);
   shapeCoasts(elevLayer, faults, tecPlates);
+  propagateElevationsFromFaults(elevLayer, faults);
 
   if (debug) {
     debugTecPlates(elevLayer, tecPlates);

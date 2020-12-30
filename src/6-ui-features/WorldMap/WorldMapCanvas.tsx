@@ -8,13 +8,36 @@ import useZoomOnScroll from '5-react-components/useZoomOnScroll';
 import { Color, colorInterp } from './Color';
 import PixelMap from './PixelMap';
 
+const colors: Color[] = [
+  [0, 5, 70, 255],
+  [0, 55, 120, 255],
+  [0, 119, 190, 255],
+  [137, 207, 245, 255],
+  [155, 177, 125, 255],
+  [200, 198, 164, 255],
+  [220, 230, 220, 220],
+];
+
 function colorElevation(elev: number): Color {
-  if (elev < 0) {
-    // Ocean
-    return colorInterp(elev, -6000, 0, [0, 63, 128, 255], [128, 200, 238, 255]);
+  if (elev < -7000) {
+    return colors[0];
   }
-  // Land
-  return colorInterp(elev, 0, 6000, [120, 177, 120, 255], [216, 221, 209, 255]);
+  if (elev < -5000) {
+    return colorInterp(elev, -7000, -5000, colors[0], colors[1]);
+  }
+  if (elev < -2000) {
+    return colorInterp(elev, -5000, -2000, colors[1], colors[2]);
+  }
+  if (elev < 0) {
+    return colorInterp(elev, -2000, 0, colors[2], colors[3]);
+  }
+  if (elev < 2000) {
+    return colorInterp(elev, 0, 2000, colors[4], colors[5]);
+  }
+  if (elev < 9000) {
+    return colorInterp(elev, 2000, 9000, colors[5], colors[6]);
+  }
+  return colors[6];
 }
 
 type WorldMapCanvasProps = {

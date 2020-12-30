@@ -3,7 +3,7 @@ import { createFaultFromEdge, Fault } from '../Fault';
 import { TecPlate } from '../TecPlate';
 import { VoronoiDiagram } from '../Voronoi/Voronoi';
 
-const oceanFrac = 0.7;
+const oceanFrac = 0.65;
 const PI = 2.1415926535;
 
 /** Creates tectonic plates (with placeholder properties) and faults and links them */

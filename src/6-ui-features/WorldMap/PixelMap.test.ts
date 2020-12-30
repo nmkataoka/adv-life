@@ -2,7 +2,7 @@ import { DataLayer } from '1-game-code/World';
 import { Color } from './Color';
 import PixelMap from './PixelMap';
 
-global.ImageData = class ImageData {
+class ImageData {
   constructor(sw: number, sh: number);
 
   constructor(dataIn: Uint8ClampedArray, sw: number, sh?: number);
@@ -24,12 +24,19 @@ global.ImageData = class ImageData {
   height: number;
 
   width: number;
-};
+}
 
 const black: Color = [0, 0, 0, 255];
 const white: Color = [255, 255, 255, 255];
-
+const originalImageData = global.ImageData;
 describe('PixelMap', () => {
+  beforeEach(() => {
+    global.ImageData = ImageData;
+  });
+
+  afterEach(() => {
+    global.ImageData = originalImageData;
+  });
   it('outputs correct colors for simple map', () => {
     const elevs = new DataLayer(2, 2);
     elevs.set(1, 0, 1);
