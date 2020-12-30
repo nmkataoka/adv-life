@@ -8,7 +8,7 @@ export function ridgeNoise(elevLayer: DataLayer, hillinessLayer: DataLayer): voi
   // TODO: this noise should be shifted to 3D and wrap around for cylindrical maps
   const { height, width, metersPerCoord } = elevLayer;
   const noise = new SimplexNoise('test', {
-    frequency: 5 * 10 ** -7 * metersPerCoord,
+    frequency: 3 * 10 ** -6 * metersPerCoord,
     octaves: 10,
     lacunarity: 2,
     gain: 0.55,

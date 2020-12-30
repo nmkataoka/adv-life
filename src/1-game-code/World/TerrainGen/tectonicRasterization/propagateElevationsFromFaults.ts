@@ -39,13 +39,13 @@ const RidgeSettings = {
  *
  * However, this is a very useful parameter to tune non-realistically for two purposes:
  * - If the fault lengths are very short, steep slopes are needed to pack large altitude
- *   differentials into a small space.
+ *   differentials into a small space. This implies there are too many tecplates for the world size.
  * - If the features have small altitude differentials, shallow slopes can widen fault
  *   features for aethestic reasons in order to
  */
-const ridgeSlope = 0.003;
+const ridgeSlope = 0.01;
 
-const riftSlope = 0.003;
+const riftSlope = 0.01;
 
 /** For each fault, a fault profile is built, which is basically
  * a cross-sectional slice perpendicular to the fault line. The fault profile
@@ -219,7 +219,7 @@ function createSubductionFeatures(
     metersPerCoord,
     faultLength,
     mountainHilliness,
-    multiply(normalDir, 800000 / metersPerCoord),
+    multiply(normalDir, 130000 / metersPerCoord),
   );
   // Create oceanic trench
   const riftFeature = createRiftFeature(
@@ -228,7 +228,7 @@ function createSubductionFeatures(
     metersPerCoord,
     faultLength,
     hillHilliness,
-    multiply(normalDir, -500000 / metersPerCoord),
+    multiply(normalDir, -90000 / metersPerCoord),
   );
   return [ridgeFeature, riftFeature];
 }

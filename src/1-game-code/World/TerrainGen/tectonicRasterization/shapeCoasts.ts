@@ -38,11 +38,11 @@ export function shapeCoasts(elevLayer: DataLayer, faults: Fault[], tecPlates: Te
   /** Apply an elevation function based on distance from coast
    *
    * At t = 0, elevation = coastal shelf at -150m.
-   * Slope up at 25m / 100,000m until reach continent elevation.
+   * Slope up at 50m / 100,000m until reach continent elevation.
    *
    * Floodfill from continent centers.
    */
-  const slope = 25 / 100000;
+  const slope = 50 / 100000;
   tecPlates.forEach((tecPlate) => {
     const { center, isOceanic } = tecPlate;
     if (isOceanic) return;

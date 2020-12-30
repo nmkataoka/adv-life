@@ -1,20 +1,30 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '4-react-ecsal';
+import { useDispatch as useReduxDispatch } from 'react-redux';
+import { useIsTest } from '6-ui-features/TestContext';
+import { createWorldMap } from '1-game-code/World/TerrainGen/TerrainGenSys';
 import CharacterSummary from './components/CharacterSummary';
 import { randomizeAll, finishCharacterCreation } from './characterCreationSlice';
 import { changedScene, Scene } from '../sceneManager/sceneMetaSlice';
 
 const CharacterSummaryColumn = (): JSX.Element => {
+  const reduxDispatch = useReduxDispatch();
   const dispatch = useDispatch();
+  const isTest = useIsTest();
 
   const handleRandomizeAllClick = () => {
-    dispatch(randomizeAll());
+    reduxDispatch(randomizeAll());
   };
 
-  const handleFinish = () => {
-    dispatch(finishCharacterCreation());
-    dispatch(changedScene(Scene.Town));
+  const handleFinish = async () => {
+    if (isTest) {
+      await dispatch(createWorldMap({ numPlates: 8, size: { x: 200, y: 100 } }));
+    } else {
+      await dispatch(createWorldMap({ numPlates: 7, size: { x: 800, y: 400 } }));
+    }
+    reduxDispatch(finishCharacterCreation());
+    reduxDispatch(changedScene(Scene.Town));
   };
 
   return (
