@@ -1,5 +1,5 @@
 import SimplexNoise from '10-simplex-noise';
-import { DataLayer } from '../../DataLayer';
+import { DataLayer } from '../../DataLayer/DataLayer';
 
 /** Drop in replacement for the entire terrain generation system,
  * mostly for debugging.

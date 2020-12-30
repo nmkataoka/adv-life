@@ -1,5 +1,5 @@
 import { multiply } from '8-helpers/math/Vector2';
-import { DataLayer } from '../../DataLayer';
+import { DataLayer } from '../../DataLayer/DataLayer';
 import { getBaseElevation } from '../TecPlate';
 import { simpleBresenham } from './simpleBresenham';
 import { Fault } from '../Fault';

@@ -1,4 +1,4 @@
-import { DataLayer } from './DataLayer';
+import { DataLayer } from './DataLayer/DataLayer';
 import { defaultTectonics, Tectonics } from './TerrainGen/Tectonics';
 
 export class WorldMap {

@@ -1,4 +1,4 @@
-import { DataLayer } from '1-game-code/World/DataLayer';
+import { DataLayer } from '1-game-code/World/DataLayer/DataLayer';
 import { Vector2 } from '8-helpers/math';
 import { multiply } from '8-helpers/math/Vector2';
 import { convergence, Fault, hasSamePlateTypes, MAX_CONVERGENCE } from '../Fault';

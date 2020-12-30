@@ -2,7 +2,7 @@ import { initializeArrayWithValue, shuffle } from '8-helpers/ArrayExtensions';
 import { RingQueue } from '8-helpers/containers/RingQueue';
 import { Vector2 } from '8-helpers/math';
 import { add, dist, multiply } from '8-helpers/math/Vector2';
-import { DataLayer } from '../../DataLayer';
+import { DataLayer } from '../../DataLayer/DataLayer';
 import { Fault } from '../Fault';
 import { simpleBresenham } from './simpleBresenham';
 

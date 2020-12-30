@@ -1,5 +1,5 @@
 import SimplexNoise from '10-simplex-noise';
-import { DataLayer } from '../../DataLayer';
+import { DataLayer } from '../../DataLayer/DataLayer';
 
 /** For some reason, this noise generator seems to have a tendency to eat
  * away at landmasses, so I added this bias to shift the noise up.
