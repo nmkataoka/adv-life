@@ -5,7 +5,7 @@ import App from '../../App';
 
 describe('buy items (integration)', () => {
   it('can create character and buy items', async () => {
-    const { getByText, getByRole } = render(<App />);
+    const { getByText, getByRole } = render(<App isTest />);
 
     const closeModal = () => {
       const closeButton = getByRole('button', { name: 'X' });

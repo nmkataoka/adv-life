@@ -1,4 +1,5 @@
 import { DataLayer } from '1-game-code/World';
+import { WorldMap } from '1-game-code/World/WorldMap';
 import { Color } from './Color';
 import PixelMap from './PixelMap';
 
@@ -38,7 +39,7 @@ describe('PixelMap', () => {
     global.ImageData = originalImageData;
   });
   it('outputs correct colors for simple map', () => {
-    const elevs = new DataLayer(2, 2);
+    const elevs = new DataLayer(WorldMap.Layer.Elevation, 2, 2);
     elevs.set(1, 0, 1);
     elevs.set(0, 1, 2);
     elevs.set(1, 1, 3);

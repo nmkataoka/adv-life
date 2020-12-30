@@ -96,7 +96,7 @@ export default class PixelMap {
  * Uses interpolation, so there is loss of data at map edges.
  */
 function shearElevs(map: DataLayer, shearFrac = 0.004): DataLayer {
-  const output = new DataLayer(map.width, map.height);
+  const output = new DataLayer('shearedElevations', map.width, map.height);
   output.setAll(-1000000);
   /**
    *

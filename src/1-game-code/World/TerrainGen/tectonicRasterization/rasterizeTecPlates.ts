@@ -1,3 +1,4 @@
+import { WorldMap } from '1-game-code/World/WorldMap';
 import { fillInHoles } from './fillInHoles';
 import { DataLayer } from '../../DataLayer/DataLayer';
 import { TecPlate } from '../TecPlate';
@@ -5,23 +6,27 @@ import { shapeCoasts } from './shapeCoasts';
 import { Tectonics } from '../Tectonics';
 import { rasterizeFaults } from './rasterizeFaults';
 import { propagateElevationsFromFaults } from './propagateElevationsFromFaults';
+import { defaultHilliness } from './constants';
 
 export function rasterizeTectonics(
   { height, width, numPlates, faults, tecPlates }: Tectonics,
   debug = false,
-): DataLayer {
-  const elevLayer = new DataLayer(width, height);
+): { elevLayer: DataLayer; hillinessLayer: DataLayer } {
+  const elevLayer = new DataLayer(WorldMap.Layer.Elevation, width, height);
   // Note that default uninitialized value is 11 million
   elevLayer.setAll(-11000000);
   rasterizeFaults(elevLayer, faults);
   fillInHoles(elevLayer, numPlates);
   shapeCoasts(elevLayer, faults, tecPlates);
-  propagateElevationsFromFaults(elevLayer, faults);
+
+  const hillinessLayer = new DataLayer(WorldMap.Layer.Hilliness, width, height);
+  hillinessLayer.setAll(defaultHilliness);
+  propagateElevationsFromFaults(elevLayer, hillinessLayer, faults);
 
   if (debug) {
     debugTecPlates(elevLayer, tecPlates);
   }
-  return elevLayer;
+  return { elevLayer, hillinessLayer };
 }
 
 /** Draws the tec plate centers onto the map */

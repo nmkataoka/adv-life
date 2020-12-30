@@ -5,11 +5,20 @@ export class DataLayer {
 
   width: number;
 
+  name: string;
+
   metersPerCoord: number;
 
   isCylindrical: boolean;
 
-  constructor(width: number, height: number, metersPerCoord = 25000, isCylindridal = true) {
+  constructor(
+    name: string,
+    width: number,
+    height: number,
+    metersPerCoord = 25000,
+    isCylindridal = true,
+  ) {
+    this.name = name;
     this.height = height;
     this.width = width;
     this.data = new Float32Array(width * height);

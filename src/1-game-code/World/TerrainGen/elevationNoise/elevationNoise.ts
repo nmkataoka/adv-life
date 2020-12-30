@@ -4,9 +4,9 @@ import { DataLayer } from '../../DataLayer/DataLayer';
 /** For some reason, this noise generator seems to have a tendency to eat
  * away at landmasses, so I added this bias to shift the noise up.
  */
-const landBias = -0.1;
+const landBias = 0.1;
 
-const scaling = 10000;
+const scaling = 2000;
 
 /** This noise generator is primarily made to break up the artificial fault lines.
  * It is not affected by hilliness.
