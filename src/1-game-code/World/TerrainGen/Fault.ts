@@ -138,3 +138,6 @@ export function convergence(fault: Fault): number {
   const { velocity: velL } = tecPlateLower;
   return dot(velH, velL);
 }
+
+/** No idea if this is accurate or not */
+export const MAX_CONVERGENCE = 100;
