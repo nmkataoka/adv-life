@@ -4,7 +4,7 @@ import { WorldMap } from '../WorldMap';
 // import { createRandomTerrain } from './createRandomTerrain';
 import { generateTectonics } from './tectonicGeneration';
 import { rasterizeTectonics } from './tectonicRasterization';
-import { lowFreqNoise } from './elevationNoise';
+import { lowFreqNoise } from './elevationNoise/elevationNoise';
 
 const createNoisedWorldMapSlice = createEventSlice('createNoisedWorldMap', {
   writeCmpts: [WorldMapCmpt],
