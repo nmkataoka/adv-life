@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { GameManager } from '0-engine/GameManager';
 import { Provider as EcsalProvider } from '4-react-ecsal';
 import { TestProvider } from '6-ui-features/TestContext';
-import { defaultTheme, ThemeProvider } from '6-ui-features/Theme';
+import { defaultTheme } from '6-ui-features/Theme';
+import { ThemeProvider } from '@emotion/react';
 import { SceneRouter } from '7-app/SceneRouter';
 
 type AppProps = {

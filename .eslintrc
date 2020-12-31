@@ -23,6 +23,16 @@
     "implicit-arrow-linebreak": 0,
     "import/prefer-default-export": 0,
     "import/extensions": ["off"],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "**/*.stories.tsx",
+          "**/*.test.ts", 
+          "**/*.test.tsx"
+        ]
+      }
+    ],
     "indent": 0, // using @typescript-eslint/indent
     "max-classes-per-file": 0,
     "max-len": 0, // disabled because we have prettier
@@ -69,9 +79,14 @@
     {
       "files": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
-        "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
         "@typescript-eslint/no-non-null-assertion": 0, // Assertions are useful in tests, especially when they're 1 character
         "@typescript-eslint/no-unsafe-call": 0
+      }
+    },
+    {
+      "files": ["**/*.stories.tsx"],
+      "rules": {
+        "react/jsx-props-no-spreading": 0
       }
     }
   ]

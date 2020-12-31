@@ -1,3 +1,5 @@
+import '@emotion/react';
+
 export const defaultTheme = {
   colors: {
     asuna: '#E8B695',
@@ -12,12 +14,20 @@ export const defaultTheme = {
     grayDarker: '#2B3D51',
     black: '#0C131D',
   },
-} as const;
+};
 
-type Theme = typeof defaultTheme;
+type MyTheme = typeof defaultTheme;
 
 export const getColor = (colorName: keyof typeof defaultTheme['colors']) => ({
   theme,
 }: {
-  theme: Theme;
-}): string => theme.colors[colorName];
+  theme: MyTheme;
+}): string => {
+  return theme.colors[colorName];
+};
+
+declare module '@emotion/react' {
+  export interface Theme {
+    colors: MyTheme['colors'];
+  }
+}
