@@ -139,5 +139,5 @@ export function convergence(fault: Fault): number {
   return dot(velH, velL);
 }
 
-/** No idea if this is accurate or not */
+/** No idea if this is accurate or how much that matters */
 export const MAX_CONVERGENCE = 100;

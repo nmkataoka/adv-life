@@ -1,65 +1,64 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { PrimaryButton } from '6-ui-features/DesignSystem/buttons/PrimaryButton';
+import { SliderOptionProps, SliderOptions } from './SliderOptions';
+import { createNoiseSettings } from './createNoiseSettings';
 
 const terrainOptions: SliderOptionProps[] = [
-  { name: 'Width (tiles)', min: 100, max: 1000, step: 50 },
-  { name: 'Height (tiles)', min: 100, max: 1000, step: 50 },
-  { name: 'Tectonic Plates', min: 5, max: 30, step: 1 },
+  {
+    name: 'Width (tiles)',
+    description: 'Map width in tiles. 1 tile = 4092 m.',
+    defaultVal: 800,
+    min: 100,
+    max: 1000,
+    step: 50,
+  },
+  {
+    name: 'Height (tiles)',
+    description: 'Map height in tiles. 1 tile = 4092 m.',
+    defaultVal: 400,
+    min: 100,
+    max: 1000,
+    step: 50,
+  },
+  {
+    name: 'Tectonic Plates',
+    description: 'Number of tectonic plates.',
+    defaultVal: 7,
+    min: 5,
+    max: 30,
+    step: 1,
+  },
+  {
+    name: 'Percent Ocean',
+    description:
+      'Percent of plates that are oceanic. When set to 0, all plates will be continental.',
+    defaultVal: 0.65,
+    min: 0,
+    max: 100,
+    step: 1,
+  },
+
+  /** Noise settings for fault perturbation */
+  ...createNoiseSettings({
+    scale: 425,
+    frequency: 2 * 10 ** -4,
+    octaves: 10,
+    lacunarity: 1.85,
+    gain: 0.53,
+  }),
 ];
-
-type SliderOptionProps = {
-  name: string;
-  min: number;
-  max: number;
-  step: number;
-};
-
-function SliderOption({ name, min, max, step }: SliderOptionProps): JSX.Element {
-  return (
-    <tr>
-      <td>{name}</td>
-      <MinCell>{min}</MinCell>
-      <td>
-        <input type="range" min={min} max={max} step={step} onChange={() => {}} value={min} />
-      </td>
-      <td>{max}</td>
-    </tr>
-  );
-}
-
-const MinCell = styled.td`
-  text-align: right;
-`;
 
 export function TerrainGenControls(): JSX.Element {
   return (
     <>
-      <Table>
-        <colgroup>
-          <col span={1} style={{ width: '50%' }} />
-          <col span={1} style={{ width: '10%' }} />
-          <col span={1} style={{ width: '30%' }} />
-          <col span={1} style={{ width: '10%' }} />
-        </colgroup>
-        {terrainOptions.map(({ name, min, max, step }) => (
-          <SliderOption key={name} name={name} min={min} max={max} step={step} />
-        ))}
-      </Table>
+      <SliderOptions options={terrainOptions} />
       <LastRow>
         <PrimaryButton>Go!</PrimaryButton>
       </LastRow>
     </>
   );
 }
-
-const Table = styled.table`
-  margin: 0 0.5em;
-
-  & td {
-    padding: 0.25em 0;
-  }
-`;
 
 const LastRow = styled.div`
   display: flex;
