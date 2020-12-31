@@ -19,7 +19,7 @@ const CharacterSummaryColumn = (): JSX.Element => {
 
   const handleFinish = async () => {
     if (isTest) {
-      await dispatch(createWorldMap({ numPlates: 8, size: { x: 200, y: 100 } }));
+      await dispatch(createWorldMap({ numPlates: 6, size: { x: 200, y: 100 } }));
     } else {
       await dispatch(createWorldMap({ numPlates: 7, size: { x: 800, y: 400 } }));
     }

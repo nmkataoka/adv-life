@@ -179,15 +179,13 @@ export class EntityManager {
     cclass: NComponentConstructor<C>,
   ): DeepReadonly<C> => {
     const cMgr = this.tryGetMgr<C>(cclass);
-    const components = cMgr.getAsArray();
-    return components[0];
+    return cMgr.getUnique();
   };
 
   /** Gets a unique component, mutable. Convenenience function for special components like lookup tables. */
   public getUniqueCmptMut = <C extends NComponent>(cclass: NComponentConstructor<C>): C => {
     const cMgr = this.tryGetMgrMut<C>(cclass);
-    const components = cMgr.getAsArrayMut();
-    return components[0];
+    return cMgr.getUniqueMut();
   };
 
   /** Creates a component, adds it to an entity, and returns it. */
