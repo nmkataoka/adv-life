@@ -29,6 +29,7 @@ const Content = styled.div`
   min-height: 20em;
   width: 100%;
   box-sizing: border-box;
+  padding: 0.5em;
 
   display: flex;
   flex-direction: column;

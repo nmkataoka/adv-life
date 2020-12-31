@@ -59,24 +59,24 @@ export function SliderOptions({ options }: SliderOptionsProps): JSX.Element {
         <col span={1} style={{ width: '30%' }} />
         <col span={1} style={{ width: '12%' }} />
       </colgroup>
-      {options.map(({ name, description, defaultVal, min, max, step }) => (
-        <SliderOption
-          key={name}
-          name={name}
-          description={description}
-          defaultVal={defaultVal}
-          min={min}
-          max={max}
-          step={step}
-        />
-      ))}
+      <tbody>
+        {options.map(({ name, description, defaultVal, min, max, step }) => (
+          <SliderOption
+            key={name}
+            name={name}
+            description={description}
+            defaultVal={defaultVal}
+            min={min}
+            max={max}
+            step={step}
+          />
+        ))}
+      </tbody>
     </Table>
   );
 }
 
 const Table = styled.table`
-  margin: 0 0.5em;
-
   & td {
     padding: 0.25em 0;
   }
