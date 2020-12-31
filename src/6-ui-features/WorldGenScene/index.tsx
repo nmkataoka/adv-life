@@ -20,13 +20,12 @@ const Page = styled.div`
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
 
   color: ${getColor('white')};
 
   display: grid;
   grid-template-columns: 500px auto;
-  grid-template-rows: 20em auto;
+  grid-template-rows: 20em calc(100% - 20em);
   grid-template-areas:
     'header header'
     'sidebar map';

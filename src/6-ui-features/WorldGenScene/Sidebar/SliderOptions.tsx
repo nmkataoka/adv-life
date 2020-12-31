@@ -54,10 +54,10 @@ export function SliderOptions({ options }: SliderOptionsProps): JSX.Element {
   return (
     <Table>
       <colgroup>
-        <col span={1} style={{ width: '46%' }} />
-        <col span={1} style={{ width: '12%' }} />
-        <col span={1} style={{ width: '30%' }} />
-        <col span={1} style={{ width: '12%' }} />
+        <col span={1} style={{ width: 'auto' }} />
+        <col span={1} style={{ width: '5em' }} />
+        <col span={1} style={{ width: '10em' }} />
+        <col span={1} style={{ width: '5em' }} />
       </colgroup>
       <tbody>
         {options.map(({ name, description, defaultVal, min, max, step }) => (

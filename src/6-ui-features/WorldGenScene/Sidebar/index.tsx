@@ -21,17 +21,21 @@ const Container = styled.div`
   grid-area: sidebar;
 
   padding: 1em 2em;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 `;
 
 const Content = styled.div`
   border: 1px solid ${getColor('white')};
   border-top: 0;
   min-height: 20em;
-  width: 100%;
   box-sizing: border-box;
   padding: 0.5em;
 
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  overflow-y: auto;
 `;
