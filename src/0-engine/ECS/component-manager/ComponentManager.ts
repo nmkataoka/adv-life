@@ -51,6 +51,27 @@ export class ComponentManager<C extends NComponent> {
     return this.components[e];
   }
 
+  /**
+   * Used when there's only one component in the manager (singleton pattern).
+   */
+  public getUnique(): DeepReadonly<C> {
+    return this.getAsArray()[0];
+  }
+
+  /**
+   * Used when there's only one component in the manager (singleton pattern).
+   */
+  public getUniqueMut(): C {
+    return this.getAsArrayMut()[0];
+  }
+
+  /**
+   * No immutable version since you only need this if you're considering creating it.
+   */
+  public tryGetUniqueMut(): C | undefined {
+    return this.getAsArrayMut()[0];
+  }
+
   /** Destroys a component. */
   public remove(e: number | string): void {
     delete this.components[e];

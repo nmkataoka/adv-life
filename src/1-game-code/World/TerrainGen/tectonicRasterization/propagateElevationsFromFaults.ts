@@ -290,14 +290,16 @@ function applyFaultFeature(
     elevProfile.length - 1,
     Math.floor(Math.floor(fault.vertices.length - 1) / 2),
   );
-  const featureLength = feature.elevProfile.length;
-  if (featureLength > fault.length / 2) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      `Feature profile is longer than half the fault length. The entire fault feature is in danger of being skipped.` +
-        `Fault length: ${fault.length.toFixed(2)}, feature length: ${featureLength.toFixed(2)}`,
-    );
-  }
+
+  // This warning is useful for debugging, but during tests it's too noisy
+  // const featureLength = feature.elevProfile.length;
+  // if (featureLength > fault.length / 2) {
+  //   // eslint-disable-next-line no-console
+  //   console.warn(
+  //     `Feature profile is longer than half the fault length. The entire fault feature is in danger of being skipped.` +
+  //       `Fault length: ${fault.length.toFixed(2)}, feature length: ${featureLength.toFixed(2)}`,
+  //   );
+  // }
 
   floodfillFromFault(
     elevChanges,
