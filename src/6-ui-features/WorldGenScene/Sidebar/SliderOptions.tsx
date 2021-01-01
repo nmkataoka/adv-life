@@ -27,18 +27,13 @@ function SliderOption({ name, value, min, max, step, onChange }: SliderOptionPro
   return (
     <tr>
       <td>{name}</td>
-      <MinCell>{toDisplay(min)}</MinCell>
       <td>
         <input type="range" min={min} max={max} step={step} onChange={onChange} value={value} />
       </td>
-      <td>{toDisplay(max)}</td>
+      <td>{toDisplay(value)}</td>
     </tr>
   );
 }
-
-const MinCell = styled.td`
-  text-align: right;
-`;
 
 export type SliderOptionsProps = {
   options: Omit<SliderOptionProps, 'onChange'>[];
@@ -50,7 +45,6 @@ export function SliderOptions({ options, onChange }: SliderOptionsProps): JSX.El
     <Table>
       <colgroup>
         <col span={1} style={{ width: 'auto' }} />
-        <col span={1} style={{ width: '5em' }} />
         <col span={1} style={{ width: '10em' }} />
         <col span={1} style={{ width: '5em' }} />
       </colgroup>

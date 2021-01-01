@@ -29,7 +29,7 @@ export function createNoiseSettings(args: {
     description: 'More octaves means the noise is computed at higher resolution.',
     value: octaves,
     min: 1,
-    max: 12,
+    max: 16,
     step: 1,
   };
   const lacunaritySettings = {
