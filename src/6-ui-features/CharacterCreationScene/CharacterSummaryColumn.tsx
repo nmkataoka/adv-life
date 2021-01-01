@@ -20,9 +20,9 @@ const CharacterSummaryColumn = (): JSX.Element => {
 
   const handleFinish = async () => {
     if (isTest) {
-      await dispatch(createWorld(WorldGenTabs));
-    } else {
       await dispatch(createWorld(WorldGenTabsTest));
+    } else {
+      await dispatch(createWorld(WorldGenTabs));
     }
     reduxDispatch(finishCharacterCreation());
     reduxDispatch(changedScene(Scene.Town));
