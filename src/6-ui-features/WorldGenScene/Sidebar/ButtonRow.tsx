@@ -2,10 +2,14 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { PrimaryButton } from '6-ui-features/DesignSystem/buttons/PrimaryButton';
 
-export function ButtonRow(): JSX.Element {
+type ButtonRowProps = {
+  onGo: () => void;
+};
+
+export function ButtonRow({ onGo }: ButtonRowProps): JSX.Element {
   return (
     <LastRow>
-      <PrimaryButton>Go!</PrimaryButton>
+      <PrimaryButton onClick={onGo}>Go!</PrimaryButton>
     </LastRow>
   );
 }

@@ -13,7 +13,7 @@ export default function useZoomOnScroll(
       e.preventDefault();
       const { deltaY } = e;
       setScale(([, sc]) => {
-        return [sc, Math.min(max, Math.max(min, sc * (1 + deltaY * 0.0001)))];
+        return [sc, Math.min(max, Math.max(min, sc * (1 - deltaY * 0.0001)))];
       });
     },
     [max, min],

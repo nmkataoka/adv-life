@@ -66,7 +66,14 @@ export class ComponentManager<C extends NComponent> {
   }
 
   /**
-   * No immutable version since you only need this if you're considering creating it.
+   * See getUnique
+   */
+  public tryGetUnique(): DeepReadonly<C> | undefined {
+    return this.getAsArray()[0];
+  }
+
+  /**
+   * See getUniqueMut
    */
   public tryGetUniqueMut(): C | undefined {
     return this.getAsArrayMut()[0];

@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 
 export type SliderOptionProps = {
   name: string;
+  key: string;
   description: string;
   value: number;
   min: number;
@@ -49,9 +50,9 @@ export function SliderOptions({ options, onChange }: SliderOptionsProps): JSX.El
         <col span={1} style={{ width: '5em' }} />
       </colgroup>
       <tbody>
-        {options.map(({ name, description, value, min, max, step }) => (
+        {options.map(({ name, key, description, value, min, max, step }) => (
           <SliderOption
-            key={name}
+            key={key}
             name={name}
             description={description}
             value={value}

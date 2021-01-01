@@ -6,10 +6,18 @@ import { shapeCoasts } from './shapeCoasts';
 import { Tectonics } from '../Tectonics';
 import { rasterizeFaults } from './rasterizeFaults';
 import { propagateElevationsFromFaults } from './propagateElevationsFromFaults';
-import { defaultHilliness } from './constants';
+
+/** Note: this used to be a global constant. After setting hillHilliness and mountainHilliness through
+ * the frontend, haven't figured out what to do with defaultHilliness yet, so just hardcoding as 1.
+ */
+const defaultHilliness = 1;
+
+type Slopes = { coastSlope: number; ridgeSlope: number; riftSlope: number };
 
 export function rasterizeTectonics(
   { height, width, numPlates, faults, tecPlates }: Tectonics,
+  { coastSlope, ridgeSlope, riftSlope }: Slopes,
+  maxHilliness: number,
   debug = false,
 ): { elevLayer: DataLayer; hillinessLayer: DataLayer } {
   const elevLayer = new DataLayer(WorldMap.Layer.Elevation, width, height);
@@ -17,11 +25,17 @@ export function rasterizeTectonics(
   elevLayer.setAll(-11000000);
   rasterizeFaults(elevLayer, faults);
   fillInHoles(elevLayer, numPlates);
-  shapeCoasts(elevLayer, faults, tecPlates);
+  shapeCoasts(elevLayer, faults, tecPlates, coastSlope);
 
   const hillinessLayer = new DataLayer(WorldMap.Layer.Hilliness, width, height);
   hillinessLayer.setAll(defaultHilliness);
-  propagateElevationsFromFaults(elevLayer, hillinessLayer, faults);
+  propagateElevationsFromFaults(
+    elevLayer,
+    hillinessLayer,
+    faults,
+    { ridgeSlope, riftSlope },
+    maxHilliness,
+  );
 
   if (debug) {
     debugTecPlates(elevLayer, tecPlates);

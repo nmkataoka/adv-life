@@ -4,7 +4,6 @@ import { multiply } from '8-helpers/math/Vector2';
 import { WorldMap } from '1-game-code/World/WorldMap';
 import { convergence, Fault, hasSamePlateTypes, MAX_CONVERGENCE } from '../Fault';
 import { floodfillFromFault } from './floodfillFromFault';
-import { defaultHilliness, mountainHilliness, hillHilliness } from './constants';
 
 const RiftSettings = {
   divergent: {
@@ -35,18 +34,6 @@ const RidgeSettings = {
   },
 } as const;
 
-/** Real mountain ranges have an average width slope of about 0.005 (4mi tall, 50m wide).
- *
- * However, this is a very useful parameter to tune non-realistically for two purposes:
- * - If the fault lengths are very short, steep slopes are needed to pack large altitude
- *   differentials into a small space. This implies there are too many tecplates for the world size.
- * - If the features have small altitude differentials, shallow slopes can widen fault
- *   features for aethestic reasons in order to
- */
-const ridgeSlope = 0.01;
-
-const riftSlope = 0.01;
-
 /** For each fault, a fault profile is built, which is basically
  * a cross-sectional slice perpendicular to the fault line. The fault profile
  * is then applied (with some noising) along the fault..
@@ -55,6 +42,19 @@ export function propagateElevationsFromFaults(
   elevLayer: DataLayer,
   hillinessLayer: DataLayer,
   faults: Fault[],
+
+  /** Real mountain ranges have an average width slope of about 0.005 (4mi tall, 50m wide).
+   *
+   * However, this is a very useful parameter to tune non-realistically for two purposes:
+   * - If the fault lengths are very short, steep slopes are needed to pack large altitude
+   *   differentials into a small space. This implies there are too many tecplates for the world size.
+   * - If the features have small altitude differentials, shallow slopes can widen fault
+   *   features for aethestic reasons in order to
+   */
+  slopes: { ridgeSlope: number; riftSlope: number },
+
+  /** Hilliness value of the hilliest mountains */
+  maxHilliness: number,
 ): void {
   const { width, height, metersPerCoord } = elevLayer;
   const elevChanges = new DataLayer('elevChanges', width, height, metersPerCoord);
@@ -63,7 +63,7 @@ export function propagateElevationsFromFaults(
     const { vertices } = fault;
     if (vertices.length < 2) throw new Error('Fault has fewer than 2 vertices.');
 
-    const faultFeatures = constructFaultProfile(fault, metersPerCoord);
+    const faultFeatures = constructFaultProfile(fault, metersPerCoord, slopes, maxHilliness);
     faultFeatures.forEach((feature) => {
       applyFaultFeature(elevChanges, hillinessLayer, fault, feature);
     });
@@ -89,7 +89,13 @@ type FaultFeature = {
   shift: Vector2;
 };
 
-function constructFaultProfile(fault: Fault, metersPerCoord: number): FaultFeature[] {
+function constructFaultProfile(
+  fault: Fault,
+  metersPerCoord: number,
+  slopes: { ridgeSlope: number; riftSlope: number },
+  maxHilliness: number,
+): FaultFeature[] {
+  const { ridgeSlope, riftSlope } = slopes;
   const { tecPlateHigher } = fault;
   const samePlateType = hasSamePlateTypes(fault);
   const conv = convergence(fault);
@@ -97,6 +103,11 @@ function constructFaultProfile(fault: Fault, metersPerCoord: number): FaultFeatu
   // AdjustedConv is like a height intensifier. Greater absval of convergence means
   // a deeper rift or higher mountains.
   const adjustedConv = Math.abs(conv / MAX_CONVERGENCE);
+
+  // Hilliness scales ridge noise, so this is the `scale` for the ridge noise generator
+  const mountainHilliness = maxHilliness;
+  const hillHilliness = maxHilliness / 2;
+  const defaultHilliness = 1;
 
   const faultFeatures: FaultFeature[] = [];
   if (conv < 0) {
@@ -108,6 +119,7 @@ function constructFaultProfile(fault: Fault, metersPerCoord: number): FaultFeatu
             'divergent',
             adjustedConv,
             metersPerCoord,
+            ridgeSlope,
             fault.length,
             hillHilliness,
           ),
@@ -123,6 +135,7 @@ function constructFaultProfile(fault: Fault, metersPerCoord: number): FaultFeatu
               'divergent',
               adjustedConv,
               metersPerCoord,
+              riftSlope,
               fault.length,
               defaultHilliness,
             ),
@@ -140,8 +153,12 @@ function constructFaultProfile(fault: Fault, metersPerCoord: number): FaultFeatu
       const features = createSubductionFeatures(
         adjustedConv,
         metersPerCoord,
+        ridgeSlope,
+        riftSlope,
         fault.length,
         fault.normalDir,
+        hillHilliness,
+        mountainHilliness,
       );
       faultFeatures.push(...features);
     } else {
@@ -150,6 +167,7 @@ function constructFaultProfile(fault: Fault, metersPerCoord: number): FaultFeatu
         'contConvergent',
         adjustedConv,
         metersPerCoord,
+        ridgeSlope,
         fault.length,
         mountainHilliness,
       );
@@ -160,8 +178,12 @@ function constructFaultProfile(fault: Fault, metersPerCoord: number): FaultFeatu
     const features = createSubductionFeatures(
       adjustedConv,
       metersPerCoord,
+      ridgeSlope,
+      riftSlope,
       fault.length,
       fault.normalDir,
+      hillHilliness,
+      mountainHilliness,
     );
     faultFeatures.push(...features);
   }
@@ -172,6 +194,7 @@ function createRidgeFeature(
   ridgeType: keyof typeof RidgeSettings,
   adjustedConv: number,
   metersPerCoord: number,
+  ridgeSlope: number,
   faultLength: number,
   hilliness: number,
   shift?: Vector2,
@@ -194,6 +217,7 @@ function createRiftFeature(
   riftType: keyof typeof RiftSettings,
   adjustedConv: number,
   metersPerCoord: number,
+  riftSlope: number,
   faultLength: number,
   hilliness: number,
   shift?: Vector2,
@@ -209,14 +233,19 @@ function createRiftFeature(
 function createSubductionFeatures(
   adjustedConv: number,
   metersPerCoord: number,
+  ridgeSlope: number,
+  riftSlope: number,
   faultLength: number,
   normalDir: Vector2,
+  hillHilliness: number,
+  mountainHilliness: number,
 ): FaultFeature[] {
   // Create oceanic ridge or coastal mountain range
   const ridgeFeature = createRidgeFeature(
     'subduction',
     adjustedConv,
     metersPerCoord,
+    ridgeSlope,
     faultLength,
     mountainHilliness,
     multiply(normalDir, 130000 / metersPerCoord),
@@ -226,6 +255,7 @@ function createSubductionFeatures(
     'subduction',
     adjustedConv,
     metersPerCoord,
+    riftSlope,
     faultLength,
     hillHilliness,
     multiply(normalDir, -90000 / metersPerCoord),

@@ -3,7 +3,8 @@ import styled from '@emotion/styled';
 import { useDispatch } from '4-react-ecsal';
 import { useDispatch as useReduxDispatch } from 'react-redux';
 import { useIsTest } from '6-ui-features/TestContext';
-import { createWorldMap } from '1-game-code/World/TerrainGen/TerrainGenSys';
+import { createWorld } from '6-ui-features/WorldGenScene/Sidebar/createWorld';
+import { WorldGenTabs, WorldGenTabsTest } from '6-ui-features/WorldGenScene/Sidebar/constants';
 import CharacterSummary from './components/CharacterSummary';
 import { randomizeAll, finishCharacterCreation } from './characterCreationSlice';
 import { changedScene, Scene } from '../sceneManager/sceneMetaSlice';
@@ -19,9 +20,9 @@ const CharacterSummaryColumn = (): JSX.Element => {
 
   const handleFinish = async () => {
     if (isTest) {
-      await dispatch(createWorldMap({ numPlates: 6, size: { x: 200, y: 100 } }));
+      await dispatch(createWorld(WorldGenTabsTest));
     } else {
-      await dispatch(createWorldMap({ numPlates: 7, size: { x: 800, y: 400 } }));
+      await dispatch(createWorld(WorldGenTabs));
     }
     reduxDispatch(finishCharacterCreation());
     reduxDispatch(changedScene(Scene.Town));

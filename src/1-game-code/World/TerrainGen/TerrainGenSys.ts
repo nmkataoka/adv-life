@@ -1,4 +1,5 @@
 import { createEventSlice } from '0-engine';
+import { NoiseParams } from '1-game-code/Noise';
 import { WorldMapCmpt } from '../WorldMapCmpt';
 import { WorldMap } from '../WorldMap';
 import { createRandomTerrain } from './elevationNoise/createRandomTerrain';
@@ -29,17 +30,38 @@ const createNoisedWorldMapSlice = createEventSlice('createNoisedWorldMap', {
   },
 );
 
+export type TerrainGenParams = {
+  width: number;
+  height: number;
+  numPlates: number;
+  oceanFrac: number;
+  coastSlope: number;
+  ridgeSlope: number;
+  riftSlope: number;
+  faultPerturbationNoise: NoiseParams;
+  lowFreqNoise: NoiseParams;
+  ridgeNoise: NoiseParams;
+};
+
 const createWorldMapSlice = createEventSlice('createWorldMap', {
   writeCmpts: [WorldMapCmpt],
-})<{ size: { x: number; y: number }; numPlates: number }>(
+})<TerrainGenParams>(
   ({
     eMgr,
     componentManagers: {
       writeCMgrs: [worldMapMgr],
     },
     payload: {
-      size: { x: xSize, y: ySize },
+      width,
+      height,
       numPlates,
+      oceanFrac,
+      coastSlope,
+      ridgeSlope,
+      riftSlope,
+      faultPerturbationNoise,
+      lowFreqNoise: lowFreqNoiseParams,
+      ridgeNoise: ridgeNoiseParams,
     },
   }) => {
     if (eMgr.getUniqueCmpt(WorldMapCmpt)) {
@@ -48,16 +70,30 @@ const createWorldMapSlice = createEventSlice('createWorldMap', {
     const worldMapEntity = eMgr.createEntity('worldMap');
     const worldMapCmpt = new WorldMapCmpt();
     const worldMap = worldMapCmpt.data;
-    worldMap.tectonics = generateTectonics(numPlates, xSize, ySize);
-    const { elevLayer, hillinessLayer } = rasterizeTectonics(worldMap.tectonics);
+    worldMap.tectonics = generateTectonics(
+      numPlates,
+      width,
+      height,
+      oceanFrac,
+      faultPerturbationNoise,
+    );
+    const { elevLayer, hillinessLayer } = rasterizeTectonics(
+      worldMap.tectonics,
+      {
+        coastSlope,
+        ridgeSlope,
+        riftSlope,
+      },
+      ridgeNoiseParams.scale,
+    );
     worldMap.dataLayers[WorldMap.Layer.Elevation] = elevLayer;
     worldMap.dataLayers[WorldMap.Layer.Hilliness] = hillinessLayer;
     boxBlur(elevLayer, 2);
-    lowFreqNoise(elevLayer);
+    lowFreqNoise(elevLayer, lowFreqNoiseParams);
     for (let i = 0; i < 3; ++i) {
       boxBlur(hillinessLayer, 10);
     }
-    ridgeNoise(elevLayer, hillinessLayer);
+    ridgeNoise(elevLayer, hillinessLayer, ridgeNoiseParams);
 
     worldMapMgr.add(worldMapEntity, worldMapCmpt);
   },

@@ -19,18 +19,18 @@ describe('useZoomOnScroll', () => {
     const { container, getByTestId } = render(<TestCanvas />);
     expect(container).toHaveTextContent('1.0');
 
-    fireEvent.wheel(getByTestId('canvas'), { deltaY: 10000 });
+    fireEvent.wheel(getByTestId('canvas'), { deltaY: -10000 });
     await waitFor(() => screen.getByText('2.0'));
     expect(container).toHaveTextContent('2.0');
   });
 
   it('does not zoom past default min and max', async () => {
     const { container, getByTestId } = render(<TestCanvas />);
-    fireEvent.wheel(getByTestId('canvas'), { deltaY: 100000 });
+    fireEvent.wheel(getByTestId('canvas'), { deltaY: -100000 });
     await waitFor(() => screen.getByText('2.0'));
     expect(container).toHaveTextContent('2.0');
 
-    fireEvent.wheel(getByTestId('canvas'), { deltaY: -100000 });
+    fireEvent.wheel(getByTestId('canvas'), { deltaY: 100000 });
     await waitFor(() => screen.getByText('1.0'));
     expect(container).toHaveTextContent('1.0');
   });
