@@ -1,23 +1,17 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { getColor } from '6-ui-features/Theme';
+import { WorldGenTabs } from './constants';
 
 type TabsProps = {
   selected: string;
-  onChange: (next: string) => void;
+  onChange: (next: typeof WorldGenTabs[number]['key']) => void;
 };
-
-const tabs = [
-  { text: 'Terrain', key: 'terrain' },
-  { text: 'Weather', key: 'weather' },
-  { text: 'Water', key: 'water' },
-  { text: 'Civilizations', key: 'civilizations' },
-] as const;
 
 export function Tabs({ selected, onChange }: TabsProps): JSX.Element {
   return (
     <Container>
-      {tabs.map(({ text, key }) => (
+      {WorldGenTabs.map(({ text, key }) => (
         <Tab key={key} isSelected={selected === key} onClick={() => onChange(key)}>
           {text}
         </Tab>

@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import styled from '@emotion/styled';
 
 export type SliderOptionProps = {
   name: string;
   description: string;
-  defaultVal: number;
+  value: number;
   min: number;
   max: number;
   step: number;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 /** Formats numbers to fit better on screen. Very large or small numbers are displayed in exponential format. */
@@ -22,20 +23,13 @@ function toDisplay(num: number): string {
   return num.toFixed(2);
 }
 
-function SliderOption({ name, defaultVal, min, max, step }: SliderOptionProps): JSX.Element {
+function SliderOption({ name, value, min, max, step, onChange }: SliderOptionProps): JSX.Element {
   return (
     <tr>
       <td>{name}</td>
       <MinCell>{toDisplay(min)}</MinCell>
       <td>
-        <input
-          type="range"
-          min={min}
-          max={max}
-          step={step}
-          onChange={() => {}}
-          value={defaultVal}
-        />
+        <input type="range" min={min} max={max} step={step} onChange={onChange} value={value} />
       </td>
       <td>{toDisplay(max)}</td>
     </tr>
@@ -46,11 +40,12 @@ const MinCell = styled.td`
   text-align: right;
 `;
 
-type SliderOptionsProps = {
-  options: SliderOptionProps[];
+export type SliderOptionsProps = {
+  options: Omit<SliderOptionProps, 'onChange'>[];
+  onChange: (name: string) => SliderOptionProps['onChange'];
 };
 
-export function SliderOptions({ options }: SliderOptionsProps): JSX.Element {
+export function SliderOptions({ options, onChange }: SliderOptionsProps): JSX.Element {
   return (
     <Table>
       <colgroup>
@@ -60,15 +55,16 @@ export function SliderOptions({ options }: SliderOptionsProps): JSX.Element {
         <col span={1} style={{ width: '5em' }} />
       </colgroup>
       <tbody>
-        {options.map(({ name, description, defaultVal, min, max, step }) => (
+        {options.map(({ name, description, value, min, max, step }) => (
           <SliderOption
             key={name}
             name={name}
             description={description}
-            defaultVal={defaultVal}
+            value={value}
             min={min}
             max={max}
             step={step}
+            onChange={onChange(name)}
           />
         ))}
       </tbody>
