@@ -22,6 +22,10 @@ export class GameManager {
       window.gameManager = this;
     }
     this.eMgr = new EntityManager();
+    this.registerListeners();
+  }
+
+  private registerListeners(): void {
     eventListeners.forEach((listener) => {
       this.eMgr.registerEventListener(listener.eventType, listener);
     });

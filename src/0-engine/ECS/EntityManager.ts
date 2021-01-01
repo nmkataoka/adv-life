@@ -47,6 +47,13 @@ export class EntityManager {
     this.destroyQueuedEntities();
   }
 
+  // TODO: This should be coded as a dispatch default event
+  /** Warning! All unsaved anything will be lost */
+  public async restart(): Promise<void> {
+    this.cMgrs = {};
+    await this.Start();
+  }
+
   public registerEventListener<Payload, ComponentDependencies extends AbstractComponentClasses>(
     eventName: string,
     listener: EventListener<Payload, ComponentDependencies>,
@@ -186,6 +193,21 @@ export class EntityManager {
   public getUniqueCmptMut = <C extends NComponent>(cclass: NComponentConstructor<C>): C => {
     const cMgr = this.tryGetMgrMut<C>(cclass);
     return cMgr.getUniqueMut();
+  };
+
+  public tryGetUniqueCmpt = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
+  ): DeepReadonly<C> | undefined => {
+    const cMgr = this.tryGetMgr<C>(cclass);
+    return cMgr.tryGetUnique();
+  };
+
+  /** Gets a unique component if exists, mutable. */
+  public tryGetUniqueCmptMut = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
+  ): C | undefined => {
+    const cMgr = this.tryGetMgr<C>(cclass);
+    return cMgr.tryGetUniqueMut();
   };
 
   /** Creates a component, adds it to an entity, and returns it. */

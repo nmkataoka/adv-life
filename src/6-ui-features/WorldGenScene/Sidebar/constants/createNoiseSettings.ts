@@ -1,5 +1,6 @@
 import { SliderOptionsProps } from '../SliderOptions';
 
+/** Generates props for an array of SliderOption components for a noise generator */
 export function createNoiseSettings(
   keyPrefix: string,
   args: {

@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { getColor } from '6-ui-features/Theme';
 import produce from 'immer';
 import { useDispatch } from '4-react-ecsal';
+import { GameManager } from '0-engine/GameManager';
 import { Tabs } from './Tabs';
 import { WorldGenTabs } from './constants';
 import { TabContent } from './TabContent';
@@ -37,8 +38,9 @@ export function Sidebar(): JSX.Element {
     setContentState(nextState);
   };
 
-  const generateWorld = () => {
-    void dispatch(createWorld(contentState));
+  const generateWorld = async () => {
+    await GameManager.instance.eMgr.restart();
+    await dispatch(createWorld(contentState));
   };
 
   return (

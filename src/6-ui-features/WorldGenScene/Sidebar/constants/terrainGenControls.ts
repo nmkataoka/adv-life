@@ -1,3 +1,4 @@
+import produce from 'immer';
 import { createNoiseSettings } from './createNoiseSettings';
 import { TabContentProps } from '../TabContent';
 
@@ -111,3 +112,20 @@ export const terrainGenControls: TabContentProps['content'] = [
     }),
   },
 ];
+
+/** Smaller map for tests */
+export const terrainGenControlsTest = produce(terrainGenControls, (draft) => {
+  const generalOptions = draft[0].options;
+  const widthOption = generalOptions.find(({ key }) => key === 'width');
+  if (widthOption) {
+    widthOption.value = 200;
+  }
+  const heightOption = generalOptions.find(({ key }) => key === 'height');
+  if (heightOption) {
+    heightOption.value = 100;
+  }
+  const numPlates = generalOptions.find(({ key }) => key === 'numPlates');
+  if (numPlates) {
+    numPlates.value = 5;
+  }
+});

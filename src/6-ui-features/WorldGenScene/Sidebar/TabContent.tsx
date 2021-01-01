@@ -13,10 +13,10 @@ export function TabContent({ content, onChange, onGo }: TabContentProps): JSX.El
   return (
     <>
       {content.map(({ heading, options }) => (
-        <>
+        <React.Fragment key={heading}>
           <SettingsHeading>{heading}</SettingsHeading>
           <SliderOptions options={options} onChange={onChange(heading)} />
-        </>
+        </React.Fragment>
       ))}
       <ButtonRow onGo={onGo} />
     </>

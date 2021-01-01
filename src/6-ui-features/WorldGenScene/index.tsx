@@ -2,6 +2,7 @@ import { getColor } from '6-ui-features/Theme';
 import styled from '@emotion/styled';
 import React from 'react';
 import { Sidebar } from './Sidebar';
+import { Map } from './Map';
 
 export default function WorldGenScene(): JSX.Element {
   return (
@@ -10,7 +11,7 @@ export default function WorldGenScene(): JSX.Element {
         <h1>World Generation</h1>
       </Header>
       <Sidebar />
-      <Map>Map</Map>
+      <Map />
     </Page>
   );
 }
@@ -33,12 +34,6 @@ const Page = styled.div`
 
 const Header = styled.div`
   grid-area: header;
-
-  padding: 1em 2em;
-`;
-
-const Map = styled.div`
-  grid-area: map;
 
   padding: 1em 2em;
 `;

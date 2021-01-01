@@ -13,6 +13,7 @@ export const createWorld = (settings: typeof WorldGenTabs): Thunk => async (disp
   return dispatch(createWorldMap(terrainGenParams));
 };
 
+/** Parses the UI settings data format into the payload expected by the backend */
 function parseTerrainGenParams(content: typeof terrainGenControls): TerrainGenParams {
   const generalOptions = parseContentSectionIntoDict(content, 'General');
   const { width, height, numPlates, oceanFrac: oceanPercent } = generalOptions;
