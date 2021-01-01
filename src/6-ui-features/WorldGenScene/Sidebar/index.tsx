@@ -2,11 +2,14 @@ import React, { ChangeEvent, useState } from 'react';
 import styled from '@emotion/styled';
 import { getColor } from '6-ui-features/Theme';
 import produce from 'immer';
+import { useDispatch } from '4-react-ecsal';
 import { Tabs } from './Tabs';
 import { WorldGenTabs } from './constants';
 import { TabContent } from './TabContent';
+import { createWorld } from './createWorld';
 
 export function Sidebar(): JSX.Element {
+  const dispatch = useDispatch();
   const [selectedTab, setSelectedTab] = useState(Object.values(WorldGenTabs)[0].key);
   const [contentState, setContentState] = useState(WorldGenTabs);
 
@@ -34,12 +37,16 @@ export function Sidebar(): JSX.Element {
     setContentState(nextState);
   };
 
+  const generateWorld = () => {
+    void dispatch(createWorld(contentState));
+  };
+
   return (
     <Container>
       <Tabs selected={selectedTab} onChange={setSelectedTab} />
       <Content>
         {content ? (
-          <TabContent content={content} onChange={onChange} />
+          <TabContent content={content} onChange={onChange} onGo={generateWorld} />
         ) : (
           'There was an error finding the settings.'
         )}

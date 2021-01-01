@@ -6,9 +6,10 @@ import { ButtonRow } from './ButtonRow';
 export type TabContentProps = {
   content: { heading: string; options: SliderOptionsProps['options'] }[];
   onChange: (heading: string) => SliderOptionsProps['onChange'];
+  onGo: () => void;
 };
 
-export function TabContent({ content, onChange }: TabContentProps): JSX.Element {
+export function TabContent({ content, onChange, onGo }: TabContentProps): JSX.Element {
   return (
     <>
       {content.map(({ heading, options }) => (
@@ -17,7 +18,7 @@ export function TabContent({ content, onChange }: TabContentProps): JSX.Element 
           <SliderOptions options={options} onChange={onChange(heading)} />
         </>
       ))}
-      <ButtonRow />
+      <ButtonRow onGo={onGo} />
     </>
   );
 }

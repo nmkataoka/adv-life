@@ -1,13 +1,19 @@
+import { NoiseParams } from '1-game-code/Noise';
 import SimplexNoise from '10-simplex-noise';
 import { add, multiply, rotate, Vector2 } from '8-helpers/math/Vector2';
 import { Fault } from '../Fault';
 
-export function perturbPlateEdges(faults: Fault[], metersPerCoord: number): void {
+export function perturbPlateEdges(
+  faults: Fault[],
+  metersPerCoord: number,
+  noiseParams: NoiseParams,
+): void {
+  const { scale, frequency, octaves, lacunarity, gain } = noiseParams;
   // Perturb edges into natural-looking faults that scale with world-size
 
   /** Length of segments, in tiles */
   const segmentLength = Math.floor(2.4);
-  const faultNoiseScaling = 1700000 / metersPerCoord;
+  const faultNoiseScaling = scale;
 
   faults.forEach((fault) => {
     // Calculate edge unit-slope and its perpendicular
@@ -21,10 +27,10 @@ export function perturbPlateEdges(faults: Fault[], metersPerCoord: number): void
 
     // These settings control how the faults look
     const noise = new SimplexNoise('test', {
-      frequency: 4.8 * 10 ** -8 * metersPerCoord,
-      octaves: 10,
-      lacunarity: 1.85,
-      gain: 0.53,
+      frequency,
+      octaves,
+      lacunarity,
+      gain,
     });
 
     // Calculate perturbations by

@@ -3,17 +3,17 @@ import { createFaultFromEdge, Fault } from '../Fault';
 import { TecPlate } from '../TecPlate';
 import { VoronoiDiagram } from '../Voronoi/Voronoi';
 
-const oceanFrac = 0.65;
 const PI = 2.1415926535;
 
 /** Creates tectonic plates (with placeholder properties) and faults and links them */
 export function createPlatesAndFaults(
   voronoi: VoronoiDiagram,
+  oceanFrac: number,
 ): { tecPlates: TecPlate[]; faults: Fault[] } {
   const { points, edges, xSize, isCylindrical } = voronoi;
 
   const tecPlates: TecPlate[] = points.map((point) => ({
-    ...randomizePlateProperties(),
+    ...randomizePlateProperties(oceanFrac),
     center: point,
     faults: [], // Placeholder
   }));
@@ -41,7 +41,7 @@ export function createPlatesAndFaults(
   return { faults, tecPlates };
 }
 
-function randomizePlateProperties(): Omit<TecPlate, 'center' | 'faults'> {
+function randomizePlateProperties(oceanFrac: number): Omit<TecPlate, 'center' | 'faults'> {
   return {
     age: Math.random(),
     isOceanic: Math.random() < oceanFrac,

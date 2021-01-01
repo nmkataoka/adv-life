@@ -7,6 +7,7 @@ export const terrainGenControls: TabContentProps['content'] = [
     options: [
       {
         name: 'Width (tiles)',
+        key: 'width',
         description: 'Map width in tiles. 1 tile = 4092 m.',
         value: 800,
         min: 100,
@@ -15,6 +16,7 @@ export const terrainGenControls: TabContentProps['content'] = [
       },
       {
         name: 'Height (tiles)',
+        key: 'height',
         description: 'Map height in tiles. 1 tile = 4092 m.',
         value: 400,
         min: 50,
@@ -23,6 +25,7 @@ export const terrainGenControls: TabContentProps['content'] = [
       },
       {
         name: 'Tectonic Plates',
+        key: 'numPlates',
         description: 'Number of tectonic plates.',
         value: 7,
         min: 5,
@@ -31,6 +34,7 @@ export const terrainGenControls: TabContentProps['content'] = [
       },
       {
         name: 'Percent Ocean',
+        key: 'oceanFrac',
         description:
           'Percent of plates that are oceanic. When set to 0, all plates will be continental.',
         value: 65,
@@ -43,7 +47,7 @@ export const terrainGenControls: TabContentProps['content'] = [
   // Noise settings for fault perturbation
   {
     heading: 'Fault Shape',
-    options: createNoiseSettings({
+    options: createNoiseSettings('faultPerturbation', {
       scale: 425,
       frequency: 2 * 10 ** -4,
       octaves: 10,
@@ -56,6 +60,7 @@ export const terrainGenControls: TabContentProps['content'] = [
     options: [
       {
         name: 'Coast Slope',
+        key: 'coastSlope',
         description:
           'Average slope of coastal areas. A low value means large coastal areas, beaches, and continental shelves.',
         value: 50 / 100000,
@@ -65,6 +70,7 @@ export const terrainGenControls: TabContentProps['content'] = [
       },
       {
         name: 'Mountain Slope',
+        key: 'ridgeSlope',
         description:
           'Average slope of mountains. A low value leads to large mountainous regions, but the generator may have difficulty fitting them in.',
         value: 0.01,
@@ -74,6 +80,7 @@ export const terrainGenControls: TabContentProps['content'] = [
       },
       {
         name: 'Rift Slope',
+        key: 'riftSlope',
         description:
           "Average slope of rifts. You won't interact with this much since most rifts are underwater.",
         value: 0.01,
@@ -85,7 +92,7 @@ export const terrainGenControls: TabContentProps['content'] = [
   },
   {
     heading: 'Low Frequency Noise',
-    options: createNoiseSettings({
+    options: createNoiseSettings('lowFreqNoise', {
       scale: 2000,
       frequency: 0.003,
       octaves: 8,
@@ -95,7 +102,7 @@ export const terrainGenControls: TabContentProps['content'] = [
   },
   {
     heading: 'Ridge Noise',
-    options: createNoiseSettings({
+    options: createNoiseSettings('ridgeNoise', {
       scale: 5000, // Corresponds to maximum `hilliness`
       frequency: 0.012,
       octaves: 10,

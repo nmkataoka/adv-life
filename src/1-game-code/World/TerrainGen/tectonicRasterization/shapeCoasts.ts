@@ -6,7 +6,12 @@ import { Fault } from '../Fault';
 import { floodfillFromFault } from './floodfillFromFault';
 import { TecPlate } from '../TecPlate';
 
-export function shapeCoasts(elevLayer: DataLayer, faults: Fault[], tecPlates: TecPlate[]): void {
+export function shapeCoasts(
+  elevLayer: DataLayer,
+  faults: Fault[],
+  tecPlates: TecPlate[],
+  coastSlope: number,
+): void {
   const { height, width } = elevLayer;
   const coastDistanceMap: number[] = initializeArrayWithValue(height * width, 1000000);
   const processed: boolean[] = initializeArrayWithValue(height * width, false);
@@ -38,11 +43,11 @@ export function shapeCoasts(elevLayer: DataLayer, faults: Fault[], tecPlates: Te
   /** Apply an elevation function based on distance from coast
    *
    * At t = 0, elevation = coastal shelf at -150m.
-   * Slope up at 50m / 100,000m until reach continent elevation.
+   * Slope up at 25m / 100,000m until reach continent elevation.
    *
    * Floodfill from continent centers.
    */
-  const slope = 50 / 100000;
+
   tecPlates.forEach((tecPlate) => {
     const { center, isOceanic } = tecPlate;
     if (isOceanic) return;
@@ -55,7 +60,7 @@ export function shapeCoasts(elevLayer: DataLayer, faults: Fault[], tecPlates: Te
       const cur = floodQueue.pop();
       const [x, y] = cur;
       const t = coastDistanceMap[x + y * width];
-      const newElev = elevLayer.metersPerCoord * slope * t - 150;
+      const newElev = elevLayer.metersPerCoord * coastSlope * t - 150;
       const oldElev = elevLayer.at(x, y);
 
       // Why does this work? Don't we initialize elevations to -1,000,000?
