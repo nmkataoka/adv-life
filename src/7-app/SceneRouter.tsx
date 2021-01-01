@@ -31,5 +31,9 @@ export function SceneRouter(): JSX.Element {
 
 const Container = styled.div`
   position: relative;
-  width: 80vw;
+  min-width: 1200px;
+  width: 100vw;
+  height: 90vh;
+  box-sizing: border-box;
+  overflow: hidden;
 `;

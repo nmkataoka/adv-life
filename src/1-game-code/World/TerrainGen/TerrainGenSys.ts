@@ -11,7 +11,7 @@ import { ridgeNoise } from './elevationNoise/ridgeNoise';
 /** This is mostly just for debugging now, or if the real world map breaks for an extended period of time. */
 const createNoisedWorldMapSlice = createEventSlice('createNoisedWorldMap', {
   writeCmpts: [WorldMapCmpt],
-})<undefined>(
+})<void>(
   ({
     eMgr,
     componentManagers: {

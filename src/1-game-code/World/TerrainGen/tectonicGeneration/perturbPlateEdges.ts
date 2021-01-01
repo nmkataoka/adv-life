@@ -4,7 +4,9 @@ import { Fault } from '../Fault';
 
 export function perturbPlateEdges(faults: Fault[], metersPerCoord: number): void {
   // Perturb edges into natural-looking faults that scale with world-size
-  const segmentLength = Math.floor(metersPerCoord / 1700);
+
+  /** Length of segments, in tiles */
+  const segmentLength = Math.floor(2.4);
   const faultNoiseScaling = 1700000 / metersPerCoord;
 
   faults.forEach((fault) => {

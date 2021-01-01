@@ -12,8 +12,8 @@ const RiftSettings = {
     range: -2000,
   },
   subduction: {
-    min: -2000,
-    range: -4000,
+    min: -500,
+    range: -4500,
   },
 } as const;
 
@@ -30,8 +30,8 @@ const RidgeSettings = {
     // Since cont convergent mountains are the tallest points on the map,
     // min + range + highest base continent altitude + max of all elevation noise
     // equals the maximum possible elevation.
-    min: 1500,
-    range: 3500,
+    min: 500,
+    range: 4500,
   },
 } as const;
 
