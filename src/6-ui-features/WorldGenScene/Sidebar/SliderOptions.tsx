@@ -19,7 +19,7 @@ type SliderInputProps = {
 function toDisplay(num: number): string {
   if (num === 0) return num.toString();
 
-  if (num < 0.01 || num > 9999) return num.toExponential(2);
+  if (num < 0.1 || num > 9999) return num.toExponential(2);
 
   // Check if integer
   if (Math.floor(num) === num) return num.toString();
@@ -67,7 +67,7 @@ function SliderInput({
   if (isLogarithmic) {
     inputMin = Math.log(min);
     inputMax = Math.log(max);
-    inputStep = (inputMax - inputMin) / 10;
+    inputStep = (inputMax - inputMin) / 20;
     inputVal = Math.log(value);
   } else {
     inputMin = min;

@@ -43,7 +43,7 @@ export function shapeCoasts(
   /** Apply an elevation function based on distance from coast
    *
    * At t = 0, elevation = coastal shelf at -150m.
-   * Slope up at 25m / 100,000m until reach continent elevation.
+   * Slope up at `coastalSlope` m/m until reach continent elevation.
    *
    * Floodfill from continent centers.
    */
