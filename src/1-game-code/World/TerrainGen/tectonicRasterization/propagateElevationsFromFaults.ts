@@ -1,6 +1,5 @@
 import { DataLayer } from '1-game-code/World/DataLayer/DataLayer';
 import { Vector2 } from '8-helpers/math';
-import { multiply } from '8-helpers/math/Vector2';
 import { WorldMap } from '1-game-code/World/WorldMap';
 import { convergence, Fault, hasSamePlateTypes, MAX_CONVERGENCE } from '../Fault';
 import { floodfillFromFault } from './floodfillFromFault';
@@ -210,7 +209,7 @@ function createRidgeFeature(
   );
   const elevProfile: number[] = [];
   addElevProfileSection(elevProfile, ridgeHeight, 0, -metersPerCoord * ridgeSlope);
-  return { hilliness, shift: shift ?? [0, 0], elevProfile };
+  return { hilliness, shift: shift ?? new Vector2(0, 0), elevProfile };
 }
 
 function createRiftFeature(
@@ -227,7 +226,7 @@ function createRiftFeature(
   const riftDepth = Math.min(min, Math.max(min + range * adjustedConv, -maxRiftWidth * riftSlope));
   const elevProfile: number[] = [];
   addElevProfileSection(elevProfile, riftDepth, 0, metersPerCoord * riftSlope);
-  return { hilliness, shift: shift ?? [0, 0], elevProfile };
+  return { hilliness, shift: shift ?? new Vector2(0, 0), elevProfile };
 }
 
 function createSubductionFeatures(
@@ -248,7 +247,7 @@ function createSubductionFeatures(
     ridgeSlope,
     faultLength,
     mountainHilliness,
-    multiply(normalDir, 130000 / metersPerCoord),
+    normalDir.multScalar(130000 / metersPerCoord),
   );
   // Create oceanic trench
   const riftFeature = createRiftFeature(
@@ -258,7 +257,7 @@ function createSubductionFeatures(
     riftSlope,
     faultLength,
     hillHilliness,
-    multiply(normalDir, -90000 / metersPerCoord),
+    normalDir.multScalar(-90000 / metersPerCoord),
   );
   return [ridgeFeature, riftFeature];
 }

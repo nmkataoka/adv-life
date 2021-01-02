@@ -1,5 +1,4 @@
 import { Vector2 } from '8-helpers/math';
-import { multiply, norm, subtract } from '8-helpers/math/Vector2';
 import { lessThan } from '../lessThan';
 
 export type VorEdge = {
@@ -34,10 +33,10 @@ export function createEdge(a: Vector2, b: Vector2): VorEdge {
     end = a;
   }
 
-  const vec = subtract(end, start);
-  const length = norm(vec);
-  const unitVec = multiply(vec, 1 / length);
-  const normalDir: Vector2 = [-unitVec[1], unitVec[0]];
+  const vec = end.sub(start);
+  const length = vec.length();
+  const unitVec = vec.multScalar(1 / length);
+  const normalDir: Vector2 = new Vector2(-unitVec.y, unitVec.x);
 
   return {
     start,

@@ -47,8 +47,8 @@ export function rasterizeTectonics(
 function debugTecPlates(elevLayer: DataLayer, tecPlates: TecPlate[]) {
   tecPlates.forEach((tecPlate) => {
     const { center } = tecPlate;
-    const xStart = Math.floor(center[0]) - 5;
-    const yStart = Math.floor(center[1]) - 5;
+    const xStart = Math.floor(center.x) - 5;
+    const yStart = Math.floor(center.y) - 5;
     for (let x = xStart; x < xStart + 10; ++x) {
       for (let y = yStart; y < yStart + 10; ++y) {
         elevLayer.set(x, y, 3000);

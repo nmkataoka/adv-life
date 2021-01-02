@@ -7,5 +7,5 @@ import { Vector2 } from '8-helpers/math';
 export class CombatPositionCmpt implements NComponent {
   public position = -1;
 
-  public pos: Vector2 = [0, 0];
+  public pos: Vector2 = new Vector2(0, 0);
 }

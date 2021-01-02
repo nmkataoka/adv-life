@@ -1,7 +1,6 @@
 import { initializeArrayWithValue, shuffle } from '8-helpers/ArrayExtensions';
 import { RingQueue } from '8-helpers/containers/RingQueue';
 import { Vector2 } from '8-helpers/math';
-import { add, dist, multiply } from '8-helpers/math/Vector2';
 import { DataLayer } from '../../DataLayer/DataLayer';
 import { Fault } from '../Fault';
 import { simpleBresenham } from './simpleBresenham';
@@ -49,11 +48,11 @@ export function floodfillFromFault(
   for (let curIdx = 1; curIdx < vertices.length - skipSegments; ++curIdx) {
     const cur = vertices[curIdx];
     const prev = vertices[curIdx - 1];
-    simpleBresenham(add(prev, shift), add(cur, shift), normalDir, 3, addTileToStartingQueue);
+    simpleBresenham(prev.add(shift), cur.add(shift), normalDir, 3, addTileToStartingQueue);
     simpleBresenham(
-      add(prev, shift),
-      add(cur, shift),
-      multiply(normalDir, -1),
+      prev.add(shift),
+      cur.add(shift),
+      normalDir.multScalar(-1),
       3,
       addTileToStartingQueue,
     );
@@ -65,7 +64,7 @@ export function floodfillFromFault(
     if (!alreadyProcessed[idx]) {
       alreadyProcessed[idx] = true;
       if (!checkFunc || checkFunc(x, y)) {
-        toProcessStartingArray.push({ coord: [x, y], origin: [x, y] });
+        toProcessStartingArray.push({ coord: new Vector2(x, y), origin: new Vector2(x, y) });
       }
     }
   }
@@ -81,8 +80,8 @@ export function floodfillFromFault(
   while (!toProcessQueue.isEmpty()) {
     // Pop next queue member and retrieve info
     const { coord, origin } = toProcessQueue.pop();
-    const [x, y] = coord;
-    const t = dist(coord, origin);
+    const { x, y } = coord;
+    const t = coord.dist(origin);
 
     // TODO: Noise t
     // ...
@@ -105,7 +104,7 @@ export function floodfillFromFault(
       if (!alreadyProcessed[idx]) {
         alreadyProcessed[idx] = true;
         if (!checkFunc || checkFunc(newX, newY)) {
-          toProcessQueue.push({ coord: [newX, newY], origin });
+          toProcessQueue.push({ coord: new Vector2(newX, newY), origin });
         }
       }
     };

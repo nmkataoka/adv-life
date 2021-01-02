@@ -1,69 +1,93 @@
 const { cos, sin } = Math;
-export type Vector2 = [number, number];
 
-/** Returns the integer version of the vector using Math.floor */
-export function toVec2i(a: Vector2): Vector2 {
-  const [x, y] = a;
-  return [Math.floor(x), Math.floor(y)];
-}
+export class Vector2 {
+  x: number;
 
-/** Adds two Vector2 */
-export function add(a: Vector2, b: Vector2): Vector2 {
-  const [ax, ay] = a;
-  const [bx, by] = b;
-  return [ax + bx, ay + by];
-}
+  y: number;
 
-/** Adds `b` to `a` Vector2 (mutates). Returns a reference to self. */
-export function addMut(a: Vector2, b: Vector2): Vector2 {
-  a[0] += b[0];
-  a[1] += b[1];
-  return a;
-}
+  constructor(x = 0, y = 0) {
+    this.x = x;
+    this.y = y;
+  }
 
-/** Calculates the distance to another Vector2 */
-export function dist(a: Vector2, b: Vector2): number {
-  const [ax, ay] = a;
-  const [bx, by] = b;
-  const xDiff = ax - bx;
-  const yDiff = ay - by;
-  return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-}
+  /** Adds another Vector2 immutably */
+  add(a: Vector2): Vector2 {
+    return new Vector2(this.x + a.x, this.y + a.y);
+  }
 
-/** Returns the dot product */
-export function dot(a: Vector2, b: Vector2): number {
-  const [ax, ay] = a;
-  const [bx, by] = b;
-  return ax * bx + ay * by;
-}
+  /** Adds another vector in place. Returns itself for convenience. */
+  addMut(a: Vector2): Vector2 {
+    this.x += a.x;
+    this.y += a.y;
+    return this;
+  }
 
-/** Returns the magnitude of the vector */
-export function norm(a: Vector2): number {
-  return Math.sqrt(dot(a, a));
-}
+  /** Subtracts another Vector2 immutably */
+  sub(a: Vector2): Vector2 {
+    return new Vector2(this.x - a.x, this.y - a.y);
+  }
 
-/** Rotates a vector by `theta` radians */
-export function rotate(a: Vector2, theta: number): Vector2 {
-  const [x, y] = a;
-  const cosT = cos(theta);
-  const sinT = sin(theta);
-  return [x * cosT - y * sinT, x * sinT + y * cosT];
-}
+  /** Subtracts another vector in place. Returns itself for convenience. */
+  subMut(a: Vector2): Vector2 {
+    this.x -= a.x;
+    this.y -= a.y;
+    return this;
+  }
 
-/** Subtracts `b` from `a` and returns the result as a new Vector2 */
-export function subtract(a: Vector2, b: Vector2): Vector2 {
-  const [ax, ay] = a;
-  const [bx, by] = b;
-  return [ax - bx, ay - by];
-}
+  /** Multiplies by a scalar immutably */
+  multScalar(c: number): Vector2 {
+    return new Vector2(this.x * c, this.y * c);
+  }
 
-/** Subtracts `b` from `a` in place (mutates). Returns reference to self. */
-export function subtractMut(a: Vector2, b: Vector2): Vector2 {
-  a[0] -= b[0];
-  a[1] -= b[1];
-  return a;
-}
+  /** Multiplies by a scalar in place. Returns itself for convenience. */
+  multScalarMut(c: number): Vector2 {
+    this.x *= c;
+    this.y *= c;
+    return this;
+  }
 
-export function multiply(a: Vector2, c: number): Vector2 {
-  return [a[0] * c, a[1] * c];
+  /** Mimics casting to a integer Vector2 by calling Math.floor */
+  toVec2i(): Vector2 {
+    return new Vector2(Math.floor(this.x), Math.floor(this.y));
+  }
+
+  /** Calculates the distance to another Vector2 */
+  dist(a: Vector2): number {
+    const xDiff = this.x - a.x;
+    const yDiff = this.y - a.y;
+    return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+  }
+
+  /** Returns the dot product */
+  dot(a: Vector2): number {
+    return this.x * a.x + this.y * a.y;
+  }
+
+  /** Returns the magnitude of the vector */
+  length(): number {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  }
+
+  /** Rotates a vector by `theta` radians immutably */
+  rotate(theta: number): Vector2 {
+    const cosT = cos(theta);
+    const sinT = sin(theta);
+    const { x, y } = this;
+    return new Vector2(x * cosT - y * sinT, x * sinT + y * cosT);
+  }
+
+  /** Rotates in place. Returns itself for convenience. */
+  rotateMut(theta: number): Vector2 {
+    const cosT = cos(theta);
+    const sinT = sin(theta);
+    const { x, y } = this;
+    this.x = x * cosT - y * sinT;
+    this.y = x * sinT + y * cosT;
+    return this;
+  }
+
+  /** Strict equality of members */
+  equals(b: Vector2): boolean {
+    return this.x === b.x && this.y === b.y;
+  }
 }

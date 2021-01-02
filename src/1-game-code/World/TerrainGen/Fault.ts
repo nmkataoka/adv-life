@@ -1,5 +1,4 @@
 import { Vector2 } from '8-helpers/math';
-import { add, dist, dot, multiply, norm, subtract } from '8-helpers/math/Vector2';
 import { getBaseElevation, TecPlate } from './TecPlate';
 import { VorEdge } from './Voronoi/VorEdge';
 
@@ -54,10 +53,10 @@ export function createFaultFromEdge(
 
   const { start, end, spansWorldSeam } = edge;
 
-  const vec = subtract(end, start);
-  const length = norm(vec);
-  const unitVec = multiply(vec, 1 / length);
-  let normalDir: Vector2 = [-unitVec[1], unitVec[0]];
+  const vec = end.sub(start);
+  const length = vec.length();
+  const unitVec = vec.multScalar(1 / length);
+  const normalDir: Vector2 = new Vector2(-unitVec.y, unitVec.x);
 
   if (
     normalDirIsPointingWrongWay(
@@ -70,7 +69,7 @@ export function createFaultFromEdge(
       isCylindrical,
     )
   ) {
-    normalDir = multiply(normalDir, -1);
+    normalDir.multScalarMut(-1);
   }
 
   return {
@@ -96,8 +95,8 @@ function normalDirIsPointingWrongWay(
   isCylindrical: boolean,
 ): boolean {
   // normalDir must point toward the higher tec plate (other methods rely on this)
-  const midpoint = add(start, multiply(vec, 0.5));
-  const towardNormalDir = add(midpoint, normalDir);
+  const midpoint = start.add(vec.multScalar(0.5));
+  const towardNormalDir = midpoint.add(normalDir);
   const higher = tecPlateHigher.center;
   const lower = tecPlateLower.center;
 
@@ -107,16 +106,16 @@ function normalDirIsPointingWrongWay(
     // WARNING: this may break down if there are very few tec plates, so that the tec plates near the
     // world seam span past the center of the map
     distToHigher = Math.min(
-      dist(towardNormalDir, higher),
-      dist(towardNormalDir, add(higher, [worldXSize, 0])),
+      towardNormalDir.dist(higher),
+      towardNormalDir.dist(higher.add(new Vector2(worldXSize, 0))),
     );
     distToLower = Math.min(
-      dist(towardNormalDir, lower),
-      dist(towardNormalDir, add(lower, [worldXSize, 0])),
+      towardNormalDir.dist(lower),
+      towardNormalDir.dist(lower.add(new Vector2(worldXSize, 0))),
     );
   } else {
-    distToHigher = dist(towardNormalDir, higher);
-    distToLower = dist(towardNormalDir, lower);
+    distToHigher = towardNormalDir.dist(higher);
+    distToLower = towardNormalDir.dist(lower);
   }
 
   return distToHigher > distToLower;
@@ -136,7 +135,7 @@ export function convergence(fault: Fault): number {
   const { tecPlateHigher, tecPlateLower } = fault;
   const { velocity: velH } = tecPlateHigher;
   const { velocity: velL } = tecPlateLower;
-  return dot(velH, velL);
+  return velH.dot(velL);
 }
 
 /** No idea if this is accurate or how much that matters */

@@ -23,7 +23,7 @@ export default function Ground(props: MeshProps): JSX.Element {
     const pos = e.intersections[0]?.point;
     pos.setZ(0);
     setXposition(pos);
-    const destination: Vector2 = [pos.x, pos.y];
+    const destination: Vector2 = new Vector2(pos.x, pos.y);
     void apiClient.emit(setPlayerDestination({ destination }));
   };
 

@@ -1,5 +1,4 @@
 import { Vector2 } from '8-helpers/math';
-import { add, multiply, norm } from '8-helpers/math/Vector2';
 import { DataLayer } from '../DataLayer/DataLayer';
 import { surfaceNormal } from './surfaceNormal';
 
@@ -32,7 +31,7 @@ export type Drop = {
 export function createDrop(pos: Vector2): Drop {
   return {
     pos,
-    velocity: [0, 0],
+    velocity: new Vector2(0, 0),
     volume: 1.0,
     sediment: 0.0,
     dt: 1.2,
@@ -51,7 +50,7 @@ export function descend(drop: Drop, elevLayer: DataLayer, dt: number): void {
   while (drop.volume > drop.minVol || count > 10000) {
     // console.log('drop debug', drop);
     const initialPos = drop.pos;
-    const [iposx, iposy] = initialPos;
+    const { x: iposx, y: iposy } = initialPos;
 
     // TODO: add track
 
@@ -60,16 +59,18 @@ export function descend(drop: Drop, elevLayer: DataLayer, dt: number): void {
     // TODO: set effective params
 
     // Accelerate particle using classical mechanics
-    drop.velocity = add(drop.velocity, multiply([n[0], n[2]], dt / (drop.volume * drop.density)));
-    drop.pos = add(drop.pos, multiply(drop.velocity, dt));
+    // TODO: this z maybe should be a y since he used different coordinate system? unclear
+    const something = new Vector2(n.x, n.z);
+    drop.velocity.addMut(something.multScalar(dt / (drop.volume * drop.density)));
+    drop.pos.addMut(drop.velocity.multScalar(dt));
     // Friction
-    drop.velocity = multiply(drop.velocity, 1 - dt * drop.friction);
+    drop.velocity.multScalarMut(1 - dt * drop.friction);
 
     // Compute equilibrium sediment content
     let c_eq =
       drop.volume *
-      norm(drop.velocity) *
-      (elevLayer.at(iposx, iposy) - elevLayer.at(Math.floor(drop.pos[0]), Math.floor(drop.pos[1])));
+      drop.velocity.length() *
+      (elevLayer.at(iposx, iposy) - elevLayer.at(Math.floor(drop.pos.x), Math.floor(drop.pos.y)));
 
     if (c_eq < 0) c_eq = 0;
 

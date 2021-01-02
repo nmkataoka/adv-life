@@ -1,6 +1,5 @@
 import { Vector2 } from '8-helpers/math';
 import { Delaunay, Voronoi } from 'd3-delaunay';
-import { subtract } from '8-helpers/math/Vector2';
 import { createEdge, VorEdge } from './VorEdge';
 import { compareEdges, lessThan } from '../lessThan';
 import { relax } from './relax';
@@ -9,7 +8,7 @@ import { relax } from './relax';
 function generateRandomPoints(numPoints: number, xSize: number, ySize: number): Vector2[] {
   const points: Vector2[] = [];
   for (let i = 0; i < numPoints; ++i) {
-    points.push([Math.random() * xSize, Math.random() * ySize]);
+    points.push(new Vector2(Math.random() * xSize, Math.random() * ySize));
   }
   return points;
 }
@@ -29,7 +28,7 @@ export type VoronoiDiagram = {
  * If points are too close together, hashes will collide.
  */
 function hashPoint(point: Vector2, xMax: number, yMax: number): string {
-  const [x, y] = point;
+  const { x, y } = point;
   const max = Math.max(xMax, yMax);
   const resolution = 1000000 / max;
   return Math.round((y * xMax + x) * resolution).toString();
@@ -68,13 +67,13 @@ export function generateVoronoi(
     xSize *= 3;
   }
 
-  let delaunay = Delaunay.from(points);
+  let delaunay = Delaunay.from(convertPointsToArrays(points));
   let voronoi = delaunay.voronoi([0, 0, xSize, ySize]);
 
   for (let i = 0; i < numRelaxations; ++i) {
     points = relax(points, voronoi, isCylindrical, xSize / 3);
     points = triplicatePoints(points, xSize / 3);
-    delaunay = Delaunay.from(points);
+    delaunay = Delaunay.from(convertPointsToArrays(points));
     voronoi = delaunay.voronoi([0, 0, xSize, ySize]);
   }
 
@@ -88,10 +87,15 @@ export function generateVoronoi(
   return vor;
 }
 
+/** Converts our representation of points to voronoi library's */
+function convertPointsToArrays(points: Vector2[]): [number, number][] {
+  return points.map(({ x, y }) => [x, y]);
+}
+
 function triplicatePoints(points: Vector2[], xSize: number): Vector2[] {
   const tmpPoints: Vector2[] = [...points];
-  points.forEach(([x, y]) => tmpPoints.push([x + xSize, y]));
-  points.forEach(([x, y]) => tmpPoints.push([x + 2 * xSize, y]));
+  points.forEach(({ x, y }) => tmpPoints.push(new Vector2(x + xSize, y)));
+  points.forEach(({ x, y }) => tmpPoints.push(new Vector2(x + 2 * xSize, y)));
   return tmpPoints;
 }
 
@@ -118,10 +122,9 @@ function linkPointsToEdges(
     // We want to convert it to [Edge, Edge, Edge] which is [[Point1, Point2], [Point2, Point3]]
     const cellEdges: number[] = [];
     for (let j = 1; j < cellPolygon.length; ++j) {
-      const edge: VorEdge = createEdge(
-        (cellPolygon[j - 1] as unknown) as Vector2,
-        (cellPolygon[j] as unknown) as Vector2,
-      );
+      const p1 = cellPolygon[j - 1];
+      const p2 = cellPolygon[j];
+      const edge: VorEdge = createEdge(new Vector2(p1[0], p1[1]), new Vector2(p2[0], p2[1]));
       const hash = hashEdge(edge, xSize, ySize);
       let edgeIdx = hashedEdgesToEdgeIdx[hash];
       if (!edgeIdx) {
@@ -156,7 +159,7 @@ function wrapSides(voronoi: VoronoiDiagram): VoronoiDiagram {
 
   // Skip first third (by x-axis) of points
   let eIdx = 0;
-  while (edges[eIdx].start[0] < xStartBound) {
+  while (edges[eIdx].start.x < xStartBound) {
     ++eIdx;
     if (eIdx >= edges.length) {
       throw new Error('There was an issue in `wrapSides`');
@@ -165,7 +168,7 @@ function wrapSides(voronoi: VoronoiDiagram): VoronoiDiagram {
 
   // Copy the second third
   const newEdges: VorEdge[] = [];
-  while (eIdx < edges.length && edges[eIdx].start[0] < xEndBound) {
+  while (eIdx < edges.length && edges[eIdx].start.x < xEndBound) {
     if (spansXValue(edges[eIdx], xEndBound)) {
       edges[eIdx].spansWorldSeam = true;
     }
@@ -175,8 +178,8 @@ function wrapSides(voronoi: VoronoiDiagram): VoronoiDiagram {
 
   // Move middle third into the original coordinate space
   newEdges.forEach((edge) => {
-    edge.start = subtract(edge.start, [xStartBound, 0]);
-    edge.end = subtract(edge.end, [xStartBound, 0]);
+    edge.start = edge.start.sub(new Vector2(xStartBound, 0));
+    edge.end = edge.end.sub(new Vector2(xStartBound, 0));
 
     // Make sure the site index is in bounds
     edge.site1Idx %= newPoints.length;
@@ -188,8 +191,8 @@ function wrapSides(voronoi: VoronoiDiagram): VoronoiDiagram {
 
 function spansXValue(e: VorEdge, xValue: number): boolean {
   const {
-    start: [startX],
-    end: [endX],
+    start: { x: startX },
+    end: { x: endX },
   } = e;
   if (startX < xValue && endX > xValue) {
     // yCrossVal = (static_cast<double>(end.y) - start.y) / (end.x - start.x) * (xVal - start.x) + start.y;
