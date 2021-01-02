@@ -3,7 +3,7 @@ import { DataLayer } from '1-game-code/World/DataLayer/DataLayer';
 import SimplexNoise from '10-simplex-noise';
 
 // Full upward bias, we're only interested in adding mountains not subtracing them
-const landBias = 0.95;
+const landBias = 0.98;
 
 export function ridgeNoise(
   elevLayer: DataLayer,

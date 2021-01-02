@@ -1,3 +1,4 @@
+import SimplexNoise from '10-simplex-noise';
 import { initializeArrayWithValue, shuffle } from '8-helpers/ArrayExtensions';
 import { RingQueue } from '8-helpers/containers/RingQueue';
 import { Vector2 } from '8-helpers/math';
@@ -27,6 +28,7 @@ export function floodfillFromFault(
   skipSegments: number,
   tileFunc: (x: number, y: number, t: number) => void,
   checkFunc?: (x: number, y: number) => boolean,
+  noise?: SimplexNoise,
 ): void {
   const { normalDir, vertices } = fault;
   if (vertices.length < skipSegments * 2 + 1) return;
@@ -81,10 +83,15 @@ export function floodfillFromFault(
     // Pop next queue member and retrieve info
     const { coord, origin } = toProcessQueue.pop();
     const { x, y } = coord;
-    const t = coord.dist(origin);
+    let t = coord.dist(origin);
 
-    // TODO: Noise t
-    // ...
+    // Noise t
+    if (noise) {
+      // Note: I don't think this needs to be cylindrical noise because on each fault
+      // we continue over the world seam, utilizing the over-bounds safety of the map data access methods
+      // Note: This seems too clever for its own good.
+      t *= noise.noise2D(x, y) * 0.75 + 1.25;
+    }
 
     // If we have reached the end of the profile, stop
     // Note: when relevant, maxTilesFromFault MUST map to the end of the profile.

@@ -19,5 +19,5 @@ export function getBaseElevation(tecPlate: TecPlate): number {
   if (isOceanic) {
     return -(age * 1500 + 3000);
   }
-  return age * -500 + 750;
+  return age * -500 + 1000;
 }

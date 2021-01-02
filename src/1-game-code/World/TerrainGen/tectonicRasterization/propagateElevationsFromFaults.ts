@@ -1,6 +1,7 @@
 import { DataLayer } from '1-game-code/World/DataLayer/DataLayer';
 import { Vector2 } from '8-helpers/math';
 import { WorldMap } from '1-game-code/World/WorldMap';
+import SimplexNoise from '10-simplex-noise';
 import { convergence, Fault, hasSamePlateTypes, MAX_CONVERGENCE } from '../Fault';
 import { floodfillFromFault } from './floodfillFromFault';
 
@@ -330,6 +331,14 @@ function applyFaultFeature(
   //   );
   // }
 
+  // This noise generator varies the width of the fault features
+  const noise = new SimplexNoise('test', {
+    frequency: 0.1,
+    octaves: 1,
+    lacunarity: 1.85,
+    gain: 0.5,
+  });
+
   floodfillFromFault(
     elevChanges,
     fault,
@@ -352,5 +361,7 @@ function applyFaultFeature(
         hillinessLayer.set(x, y, hilliness);
       }
     },
+    undefined,
+    noise,
   );
 }
