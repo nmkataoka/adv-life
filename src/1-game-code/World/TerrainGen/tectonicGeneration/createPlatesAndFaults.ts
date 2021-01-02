@@ -1,4 +1,4 @@
-import { rotate } from '8-helpers/math/Vector2';
+import { Vector2 } from '8-helpers/math';
 import { createFaultFromEdge, Fault } from '../Fault';
 import { TecPlate } from '../TecPlate';
 import { VoronoiDiagram } from '../Voronoi/Voronoi';
@@ -45,6 +45,6 @@ function randomizePlateProperties(oceanFrac: number): Omit<TecPlate, 'center' | 
   return {
     age: Math.random(),
     isOceanic: Math.random() < oceanFrac,
-    velocity: rotate([Math.random() * 10, 0], Math.random() * 2 * PI),
+    velocity: new Vector2(Math.random() * 10, 0).rotate(Math.random() * 2 * PI),
   };
 }

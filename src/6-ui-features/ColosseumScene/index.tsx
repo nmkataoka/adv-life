@@ -13,7 +13,7 @@ import ActionBar from './ActionBar';
 export default function ColosseumScene(): JSX.Element {
   const playerId = useReduxSelector((state: RootState) => state.player.playerId);
   const playerPos = useSelector(getUnitPosition(playerId));
-  const [x, y] = playerPos;
+  const { x, y } = playerPos;
   const playerPosition: [number, number, number] = [x, y, 0];
 
   return (

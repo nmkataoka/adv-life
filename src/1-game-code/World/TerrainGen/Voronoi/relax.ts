@@ -46,11 +46,11 @@ function getCentroidOfPolygon(polygon: Delaunay.Polygon): Vector2 {
     yTotal += y;
   }
   const num = polygon.length - 1;
-  return [xTotal / num, yTotal / num];
+  return new Vector2(xTotal / num, yTotal / num);
 }
 
 /** shifts a point so its x-value is between [0, xSize) */
 function shiftPointIntoRange(point: Vector2, xSize: number): Vector2 {
-  const [x, y] = point;
-  return [((x % xSize) + xSize) % xSize, y];
+  const { x, y } = point;
+  return new Vector2(((x % xSize) + xSize) % xSize, y);
 }

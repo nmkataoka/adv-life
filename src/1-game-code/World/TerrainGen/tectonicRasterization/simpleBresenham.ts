@@ -1,5 +1,4 @@
 import { Vector2 } from '8-helpers/math';
-import { add, multiply, norm, subtract } from '8-helpers/math/Vector2';
 
 /** Slightly less than sqrt(2)/2, ensures no tiles are skipped */
 const bresenSpacing = 0.7;
@@ -19,12 +18,12 @@ export function simpleBresenham(
   width: number,
   func: (a: number, b: number) => void,
 ): void {
-  const segmentSlope = subtract(end, start);
-  const segLength = norm(segmentSlope);
+  const segmentSlope = end.sub(start);
+  const segLength = segmentSlope.length();
   /** How much we'll step from the fault */
-  const stepFromFault = multiply(stepDir, bresenSpacing);
+  const stepFromFault = stepDir.multScalar(bresenSpacing);
   /** How much we'll step along the Bresenham Line */
-  const stepToCur = multiply(segmentSlope, bresenSpacing / segLength);
+  const stepToCur = segmentSlope.multScalar(bresenSpacing / segLength);
   const fSteps = Math.floor(segLength / bresenSpacing) + 1;
 
   let curStart = start;
@@ -34,12 +33,12 @@ export function simpleBresenham(
     // Walk along Bresenham line
     for (let j = 0; j < fSteps; ++j) {
       // Apply function (such as assigning an elevation to a point)
-      const [x, y] = ver;
+      const { x, y } = ver;
       const intifiedX = Math.floor(x);
       const intifiedY = Math.floor(y);
       func(intifiedX, intifiedY);
-      ver = add(ver, stepToCur);
+      ver = ver.add(stepToCur);
     }
-    curStart = add(curStart, stepFromFault);
+    curStart = curStart.add(stepFromFault);
   }
 }

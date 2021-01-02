@@ -1,6 +1,6 @@
 import { initializeArrayWithValue } from '8-helpers/ArrayExtensions';
 import { RingQueue } from '8-helpers/containers/RingQueue';
-import { toVec2i, Vector2 } from '8-helpers/math/Vector2';
+import { Vector2 } from '8-helpers/math';
 import { DataLayer } from '../../DataLayer/DataLayer';
 import { Fault } from '../Fault';
 import { floodfillFromFault } from './floodfillFromFault';
@@ -26,7 +26,7 @@ export function shapeCoasts(
     floodfillFromFault(
       elevLayer,
       fault,
-      [0, 0],
+      new Vector2(0, 0),
       1000000, // Effectively infinite. Floodfill till you run into something
       0,
       (x: number, y: number, t: number) => {
@@ -53,12 +53,12 @@ export function shapeCoasts(
     if (isOceanic) return;
 
     const floodQueue = new RingQueue<Vector2>();
-    floodQueue.push(toVec2i(center));
-    processed[center[0] + center[1] * width] = true;
+    floodQueue.push(center.toVec2i());
+    processed[center.x + center.y * width] = true;
 
     while (!floodQueue.isEmpty()) {
       const cur = floodQueue.pop();
-      const [x, y] = cur;
+      const { x, y } = cur;
       const t = coastDistanceMap[x + y * width];
       const newElev = elevLayer.metersPerCoord * coastSlope * t - 150;
       const oldElev = elevLayer.at(x, y);
@@ -78,7 +78,7 @@ export function shapeCoasts(
         // Not sure why this check was added and then commented out
         // const newT = coastDistanceMap[idx];
         if (!processed[idx] /* && newT <= t */) {
-          floodQueue.push([newX, newY]);
+          floodQueue.push(new Vector2(newX, newY));
           processed[idx] = true;
         }
       };

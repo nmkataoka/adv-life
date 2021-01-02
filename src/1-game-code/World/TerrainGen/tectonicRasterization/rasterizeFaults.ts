@@ -1,4 +1,3 @@
-import { multiply } from '8-helpers/math/Vector2';
 import { DataLayer } from '../../DataLayer/DataLayer';
 import { getBaseElevation } from '../TecPlate';
 import { simpleBresenham } from './simpleBresenham';
@@ -34,7 +33,7 @@ export function rasterizeFaults(elevLayer: DataLayer, faults: Fault[]): void {
           elevLayer.set(x, y, higherElev);
         }
       });
-      simpleBresenham(prev, cur, multiply(normalDir, -1), 5, (x: number, y: number) => {
+      simpleBresenham(prev, cur, normalDir.multScalar(-1), 5, (x: number, y: number) => {
         if (y < height && y >= 0) {
           elevLayer.set(x, y, lowerElev);
         }

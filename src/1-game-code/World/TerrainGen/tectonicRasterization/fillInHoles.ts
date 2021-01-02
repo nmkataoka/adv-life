@@ -33,7 +33,7 @@ function fillHole(elevLayer: DataLayer, xStart: number, yStart: number, numPlate
 
   /** Queue for floodfill */
   const blank = new RingQueue<Vector2>();
-  blank.push([xStart, yStart]);
+  blank.push(new Vector2(xStart, yStart));
 
   // Fill in starting tile
   elevLayer.set(xStart, yStart, elevation);
@@ -41,7 +41,7 @@ function fillHole(elevLayer: DataLayer, xStart: number, yStart: number, numPlate
 
   // Floodfill hole
   while (!blank.isEmpty()) {
-    const [x, y] = blank.pop();
+    const { x, y } = blank.pop();
 
     // Add neighboring tiles if blank
     fillTileAndAddToQueueIfBlank(x + 1, y);
@@ -58,7 +58,7 @@ function fillHole(elevLayer: DataLayer, xStart: number, yStart: number, numPlate
     const elev = elevLayer.at(x, y);
     if (elev < -2000000) {
       elevLayer.set(x, y, elevation);
-      blank.push([x, y]);
+      blank.push(new Vector2(x, y));
     }
   }
 }
