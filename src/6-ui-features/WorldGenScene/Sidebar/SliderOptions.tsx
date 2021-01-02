@@ -1,9 +1,9 @@
-import React, { ChangeEvent, useMemo } from 'react';
+import React, { ChangeEvent, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
+import { getColor } from '6-ui-features/Theme';
 
 type SliderInputProps = {
   name: string;
-  // eslint-disable-next-line react/no-unused-prop-types
   description: string;
   value: number;
   min: number;
@@ -34,6 +34,7 @@ function isInt(n: number): boolean {
 /** isLogarithmic causes the slider to use a log scale and overwrite `step` with a calculated step */
 function SliderInput({
   name,
+  description,
   value,
   min,
   max,
@@ -78,7 +79,7 @@ function SliderInput({
 
   return (
     <tr>
-      <td>{name}</td>
+      <NameCell description={description}>{name}</NameCell>
       <td>
         <input
           type="range"
@@ -93,6 +94,40 @@ function SliderInput({
     </tr>
   );
 }
+
+type NameCellProps = {
+  description: string;
+  children: string;
+};
+
+function NameCell({ description, children }: NameCellProps): JSX.Element {
+  const [tooltipIsShown, setTooltipIsShown] = useState(false);
+  return (
+    <NameCellStyled
+      onMouseOver={() => setTooltipIsShown(true)}
+      onMouseLeave={() => setTooltipIsShown(false)}
+    >
+      {children}
+      {tooltipIsShown && <Tooltip>{description}</Tooltip>}
+    </NameCellStyled>
+  );
+}
+
+const NameCellStyled = styled.td`
+  position: relative;
+  &:hover {
+    cursor: default;
+  }
+`;
+
+const Tooltip = styled.div`
+  position: absolute;
+  top: 0;
+  background-color: ${getColor('black')};
+  border: 1px solid ${getColor('white')};
+  z-index: 1;
+  padding: 0.5em;
+`;
 
 export type SliderOptionsProps = {
   options: (Omit<SliderInputProps, 'onChange'> & { key: string })[];
