@@ -15,7 +15,7 @@ export function createNoiseSettings(
   const scaleSettings = {
     name: 'Scale',
     key: `${keyPrefix}Scale`,
-    description: 'Altitude of the noise: [-scale, scale)',
+    description: 'Altitude of the noise: [-scale, scale).',
     value: scale,
     min: scale / 10,
     max: scale * 10,
@@ -25,7 +25,7 @@ export function createNoiseSettings(
   const freqSettings = {
     name: 'Frequency',
     key: `${keyPrefix}Frequency`,
-    description: 'Frequency of the noise',
+    description: 'Frequency of the noise.',
     value: frequency,
     min: frequency / 10,
     max: frequency * 10,
