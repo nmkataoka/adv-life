@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { getColor } from '6-ui-features/Theme';
 import produce from 'immer';
@@ -17,22 +17,14 @@ export function Sidebar(): JSX.Element {
   const content = contentState.find(({ key }) => key === selectedTab)?.content;
   if (!content) throw new Error('Impossible. This is to make TypeScript happy.');
 
-  const onChange = (heading: string) => (name: string) => (
-    e: ChangeEvent<HTMLInputElement>,
-  ): void => {
+  const onChange = (heading: string) => (name: string) => (num: number): void => {
     const nextState = produce(contentState, (draft) => {
       const option = draft
         .find(({ key }) => selectedTab === key)
         ?.content.find(({ heading: h }) => h === heading)
         ?.options.find(({ name: n }) => n === name);
       if (option) {
-        if (Math.floor(option.step) === option.step) {
-          // Is integer
-          option.value = parseInt(e.target.value, 10);
-        } else {
-          // Is float
-          option.value = parseFloat(e.target.value);
-        }
+        option.value = num;
       }
     });
     setContentState(nextState);

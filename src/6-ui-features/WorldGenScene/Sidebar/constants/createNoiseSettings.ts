@@ -20,6 +20,7 @@ export function createNoiseSettings(
     min: scale / 10,
     max: scale * 10,
     step: scale / 10,
+    isLogarithmic: true,
   };
   const freqSettings = {
     name: 'Frequency',
@@ -29,6 +30,7 @@ export function createNoiseSettings(
     min: frequency / 10,
     max: frequency * 10,
     step: frequency / 10,
+    isLogarithmic: true,
   };
   const octaveSettings = {
     name: 'Octaves',
