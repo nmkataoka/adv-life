@@ -1,6 +1,7 @@
 import { initializeArrayWithValue } from '8-helpers/ArrayExtensions';
 import { RingQueue } from '8-helpers/containers/RingQueue';
 import { Vector2 } from '8-helpers/math';
+import { Random } from '1-game-code/prng';
 import { DataLayer } from '../../DataLayer/DataLayer';
 import { Fault } from '../Fault';
 import { floodfillFromFault } from './floodfillFromFault';
@@ -11,6 +12,7 @@ export function shapeCoasts(
   faults: Fault[],
   tecPlates: TecPlate[],
   coastSlope: number,
+  rng: Random,
 ): void {
   const { height, width } = elevLayer;
   const coastDistanceMap: number[] = initializeArrayWithValue(height * width, 1000000);
@@ -29,6 +31,7 @@ export function shapeCoasts(
       new Vector2(0, 0),
       1000000, // Effectively infinite. Floodfill till you run into something
       0,
+      rng,
       (x: number, y: number, t: number) => {
         const idx = x + y * width;
         if (coastDistanceMap[idx] > t) {

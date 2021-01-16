@@ -1,3 +1,4 @@
+import { Random } from '1-game-code/prng/Random';
 import SimplexNoise from '10-simplex-noise';
 import { initializeArrayWithValue, shuffle } from '8-helpers/ArrayExtensions';
 import { RingQueue } from '8-helpers/containers/RingQueue';
@@ -26,6 +27,7 @@ export function floodfillFromFault(
   shift: Vector2,
   maxTilesFromFault: number,
   skipSegments: number,
+  rng: Random,
   tileFunc: (x: number, y: number, t: number) => void,
   checkFunc?: (x: number, y: number) => boolean,
   noise?: SimplexNoise,
@@ -72,7 +74,7 @@ export function floodfillFromFault(
   }
 
   // Scramble the starting queue to prevent artifacts/patterns arising from the starting order
-  shuffle(toProcessStartingArray);
+  shuffle(toProcessStartingArray, rng);
 
   /** Breadth-first search with a profile function.
    * Queue holds the profile vector, tiles, how far away from the fault they are. */

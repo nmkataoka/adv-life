@@ -1,4 +1,5 @@
 import { WorldMap } from '1-game-code/World/WorldMap';
+import { Random } from '1-game-code/prng';
 import { fillInHoles } from './fillInHoles';
 import { DataLayer } from '../../DataLayer/DataLayer';
 import { TecPlate } from '../TecPlate';
@@ -18,6 +19,7 @@ export function rasterizeTectonics(
   { height, width, numPlates, faults, tecPlates }: Tectonics,
   { coastSlope, ridgeSlope, riftSlope }: Slopes,
   maxHilliness: number,
+  rng: Random,
   debug = false,
 ): { elevLayer: DataLayer; hillinessLayer: DataLayer } {
   const elevLayer = new DataLayer(WorldMap.Layer.Elevation, width, height);
@@ -25,7 +27,7 @@ export function rasterizeTectonics(
   elevLayer.setAll(-11000000);
   rasterizeFaults(elevLayer, faults);
   fillInHoles(elevLayer, numPlates);
-  shapeCoasts(elevLayer, faults, tecPlates, coastSlope);
+  shapeCoasts(elevLayer, faults, tecPlates, coastSlope, rng);
 
   const hillinessLayer = new DataLayer(WorldMap.Layer.Hilliness, width, height);
   hillinessLayer.setAll(defaultHilliness);
@@ -35,6 +37,7 @@ export function rasterizeTectonics(
     faults,
     { ridgeSlope, riftSlope },
     maxHilliness,
+    rng,
   );
 
   if (debug) {

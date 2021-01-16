@@ -9,7 +9,11 @@ import { WorldGenTabs } from './constants';
 import { TabContent } from './TabContent';
 import { createWorld } from './createWorld';
 
-export function Sidebar(): JSX.Element {
+type SidebarProps = {
+  seed: string;
+};
+
+export function Sidebar({ seed }: SidebarProps): JSX.Element {
   const dispatch = useDispatch();
   const [selectedTab, setSelectedTab] = useState(Object.values(WorldGenTabs)[0].key);
   const [contentState, setContentState] = useState(WorldGenTabs);
@@ -32,7 +36,7 @@ export function Sidebar(): JSX.Element {
 
   const generateWorld = async () => {
     await GameManager.instance.eMgr.restart();
-    await dispatch(createWorld(contentState));
+    await dispatch(createWorld(seed, contentState));
   };
 
   return (

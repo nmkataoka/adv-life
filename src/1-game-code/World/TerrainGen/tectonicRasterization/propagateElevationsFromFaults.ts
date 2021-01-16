@@ -2,6 +2,7 @@ import { DataLayer } from '1-game-code/World/DataLayer/DataLayer';
 import { Vector2 } from '8-helpers/math';
 import { WorldMap } from '1-game-code/World/WorldMap';
 import SimplexNoise from '10-simplex-noise';
+import { Random } from '1-game-code/prng';
 import { convergence, Fault, hasSamePlateTypes, MAX_CONVERGENCE } from '../Fault';
 import { floodfillFromFault } from './floodfillFromFault';
 
@@ -55,6 +56,7 @@ export function propagateElevationsFromFaults(
 
   /** Hilliness value of the hilliest mountains */
   maxHilliness: number,
+  rng: Random,
 ): void {
   const { width, height, metersPerCoord } = elevLayer;
   const elevChanges = new DataLayer('elevChanges', width, height, metersPerCoord);
@@ -65,7 +67,7 @@ export function propagateElevationsFromFaults(
 
     const faultFeatures = constructFaultProfile(fault, metersPerCoord, slopes, maxHilliness);
     faultFeatures.forEach((feature) => {
-      applyFaultFeature(elevChanges, hillinessLayer, fault, feature);
+      applyFaultFeature(elevChanges, hillinessLayer, fault, feature, rng);
     });
   });
 
@@ -296,6 +298,7 @@ function applyFaultFeature(
   hillinessLayer: DataLayer,
   fault: Fault,
   feature: FaultFeature,
+  rng: Random,
 ) {
   if (feature.elevProfile.length < 2) {
     throw new Error('Fault feature elev profile is missing entries.');
@@ -345,6 +348,7 @@ function applyFaultFeature(
     shift,
     elevProfile.length - 1,
     skipSegments,
+    rng,
     (x: number, y: number, t: number) => {
       // Feature is applied in a max fashion.
       // E.g. for ridge areas, only the highest ridge is applied
