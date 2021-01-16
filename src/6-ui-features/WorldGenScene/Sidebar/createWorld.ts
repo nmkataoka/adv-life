@@ -6,15 +6,17 @@ import { terrainGenControls } from './constants/terrainGenControls';
 import { TabContentProps } from './TabContent';
 
 /** Single function to create a new world. Covers entirety of world gen. */
-export const createWorld = (settings: typeof WorldGenTabs): Thunk => async (dispatch) => {
+export const createWorld = (seed: string, settings: typeof WorldGenTabs): Thunk => async (
+  dispatch,
+) => {
   const [terrainSettings] = settings;
   const { content } = terrainSettings;
-  const terrainGenParams = parseTerrainGenParams(content);
+  const terrainGenParams = parseTerrainGenParams(seed, content);
   return dispatch(createWorldMap(terrainGenParams));
 };
 
 /** Parses the UI settings data format into the payload expected by the backend */
-function parseTerrainGenParams(content: typeof terrainGenControls): TerrainGenParams {
+function parseTerrainGenParams(seed: string, content: typeof terrainGenControls): TerrainGenParams {
   const generalOptions = parseContentSectionIntoDict(content, 'General');
   const { width, height, numPlates, oceanFrac: oceanPercent } = generalOptions;
   const oceanFrac = oceanPercent / 100;
@@ -31,6 +33,7 @@ function parseTerrainGenParams(content: typeof terrainGenControls): TerrainGenPa
   const ridgeNoise = parseNoiseSection(content, 'Ridge Noise');
 
   const terrainGenParams: TerrainGenParams = {
+    seed,
     width,
     height,
     numPlates,

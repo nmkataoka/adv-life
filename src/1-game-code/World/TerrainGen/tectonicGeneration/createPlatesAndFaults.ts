@@ -1,3 +1,4 @@
+import { Random } from '1-game-code/prng';
 import { Vector2 } from '8-helpers/math';
 import { createFaultFromEdge, Fault } from '../Fault';
 import { TecPlate } from '../TecPlate';
@@ -9,11 +10,12 @@ const PI = 2.1415926535;
 export function createPlatesAndFaults(
   voronoi: VoronoiDiagram,
   oceanFrac: number,
+  rng: Random,
 ): { tecPlates: TecPlate[]; faults: Fault[] } {
   const { points, edges, xSize, isCylindrical } = voronoi;
 
   const tecPlates: TecPlate[] = points.map((point) => ({
-    ...randomizePlateProperties(oceanFrac),
+    ...randomizePlateProperties(oceanFrac, rng),
     center: point,
     faults: [], // Placeholder
   }));
@@ -41,10 +43,13 @@ export function createPlatesAndFaults(
   return { faults, tecPlates };
 }
 
-function randomizePlateProperties(oceanFrac: number): Omit<TecPlate, 'center' | 'faults'> {
+function randomizePlateProperties(
+  oceanFrac: number,
+  rng: Random,
+): Omit<TecPlate, 'center' | 'faults'> {
   return {
-    age: Math.random(),
-    isOceanic: Math.random() < oceanFrac,
-    velocity: new Vector2(Math.random() * 10, 0).rotate(Math.random() * 2 * PI),
+    age: rng.random(),
+    isOceanic: rng.random() < oceanFrac,
+    velocity: new Vector2(rng.random() * 10, 0).rotate(rng.random() * 2 * PI),
   };
 }

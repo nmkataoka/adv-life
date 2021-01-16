@@ -1,14 +1,20 @@
 import { Vector2 } from '8-helpers/math';
 import { Delaunay, Voronoi } from 'd3-delaunay';
+import { Random } from '1-game-code/prng';
 import { createEdge, VorEdge } from './VorEdge';
 import { compareEdges, lessThan } from '../lessThan';
 import { relax } from './relax';
 
 /** Generates numPoints random 2D points in the range (0, xSize) and (y, ySize) */
-function generateRandomPoints(numPoints: number, xSize: number, ySize: number): Vector2[] {
+function generateRandomPoints(
+  numPoints: number,
+  xSize: number,
+  ySize: number,
+  rng: Random,
+): Vector2[] {
   const points: Vector2[] = [];
   for (let i = 0; i < numPoints; ++i) {
-    points.push(new Vector2(Math.random() * xSize, Math.random() * ySize));
+    points.push(new Vector2(rng.random() * xSize, rng.random() * ySize));
   }
   return points;
 }
@@ -55,9 +61,10 @@ export function generateVoronoi(
   xSize: number,
   ySize: number,
   numRelaxations: number,
+  rng: Random,
   isCylindrical = true,
 ): VoronoiDiagram {
-  let points = generateRandomPoints(numPoints, xSize, ySize);
+  let points = generateRandomPoints(numPoints, xSize, ySize, rng);
 
   // For isCylindrical maps, triplicate points (along x axis) and run graphing functions
   // At the end, the middle third will be used as the map

@@ -1,16 +1,21 @@
 import { getColor } from '6-ui-features/Theme';
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { Map } from './Map';
 
 export default function WorldGenScene(): JSX.Element {
+  const [seed, setSeed] = useState('a wonderful life');
   return (
     <Page>
       <Header>
         <h1>World Generation</h1>
+        <label htmlFor="seed">
+          Seed
+          <input id="seed" type="text" value={seed} onChange={(e) => setSeed(e.target.value)} />
+        </label>
       </Header>
-      <Sidebar />
+      <Sidebar seed={seed} />
       <Map />
     </Page>
   );

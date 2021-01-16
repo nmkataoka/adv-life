@@ -1,5 +1,6 @@
 import { createEventSlice } from '0-engine';
 import { NoiseParams } from '1-game-code/Noise';
+import { RngCmpt } from '1-game-code/prng/RngCmpt';
 import { WorldMapCmpt } from '../WorldMapCmpt';
 import { WorldMap } from '../WorldMap';
 import { createRandomTerrain } from './elevationNoise/createRandomTerrain';
@@ -31,6 +32,7 @@ const createNoisedWorldMapSlice = createEventSlice('createNoisedWorldMap', {
 );
 
 export type TerrainGenParams = {
+  seed: string;
   width: number;
   height: number;
   numPlates: number;
@@ -52,6 +54,7 @@ const createWorldMapSlice = createEventSlice('createWorldMap', {
       writeCMgrs: [worldMapMgr],
     },
     payload: {
+      seed,
       width,
       height,
       numPlates,
@@ -64,6 +67,11 @@ const createWorldMapSlice = createEventSlice('createWorldMap', {
       ridgeNoise: ridgeNoiseParams,
     },
   }) => {
+    const rngEntity = eMgr.createEntity('rng');
+    const rngCmpt = new RngCmpt(seed);
+    eMgr.addCmpt(rngEntity, rngCmpt);
+    const worldRng = rngCmpt.getRng('WorldGen');
+
     if (eMgr.getUniqueCmpt(WorldMapCmpt)) {
       throw new Error('Attempted to create world map when world map already exists.');
     }
@@ -76,6 +84,7 @@ const createWorldMapSlice = createEventSlice('createWorldMap', {
       height,
       oceanFrac,
       faultPerturbationNoise,
+      worldRng,
     );
     const { elevLayer, hillinessLayer } = rasterizeTectonics(
       worldMap.tectonics,
@@ -85,6 +94,7 @@ const createWorldMapSlice = createEventSlice('createWorldMap', {
         riftSlope,
       },
       ridgeNoiseParams.scale,
+      worldRng,
     );
     worldMap.dataLayers[WorldMap.Layer.Elevation] = elevLayer;
     worldMap.dataLayers[WorldMap.Layer.Hilliness] = hillinessLayer;
