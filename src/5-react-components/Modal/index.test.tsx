@@ -1,4 +1,3 @@
-import React from 'react';
 import { stub } from 'sinon';
 import { render, fireEvent, screen, waitFor } from '8-helpers/test-utils';
 

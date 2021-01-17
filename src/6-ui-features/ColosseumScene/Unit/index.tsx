@@ -1,5 +1,5 @@
 import { MeshProps } from '9-three-helpers';
-import React, { useRef, useState } from 'react';
+import { MouseEvent, useRef, useState } from 'react';
 import { Mesh } from 'three';
 
 type UnitProps = MeshProps & {
@@ -15,7 +15,7 @@ export default function Unit(props: UnitProps): JSX.Element {
   const [hovered, setHover] = useState(false);
   const [active, setActive] = useState(false);
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
     setActive(!active);
   };

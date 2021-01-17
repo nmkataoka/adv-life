@@ -1,12 +1,12 @@
 import { EntityManager } from '0-engine';
 import { Subscription } from '4-react-ecsal/utils/Subscription';
-import React, { useEffect, useMemo } from 'react';
+import { Context as ReactContext, useEffect, useMemo, ReactNode } from 'react';
 import ReactEcsalContext, { ContextValue } from './Context';
 
 type ProviderProps = {
   store: EntityManager;
-  context?: React.Context<ContextValue>;
-  children: React.ReactNode;
+  context?: ReactContext<ContextValue>;
+  children: ReactNode;
 };
 
 const Provider = ({ store, context, children }: ProviderProps): JSX.Element => {

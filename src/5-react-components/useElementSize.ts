@@ -1,6 +1,6 @@
-import React, { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState, RefObject } from 'react';
 
-export function useElementSize(ref: React.RefObject<HTMLElement>): [number, number] {
+export function useElementSize(ref: RefObject<HTMLElement>): [number, number] {
   const [size, setSize] = useState<[number, number]>([0, 0]);
   useLayoutEffect(() => {
     const el = ref.current;

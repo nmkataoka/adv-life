@@ -1,4 +1,4 @@
-import React from 'react';
+import { ChangeEvent } from 'react';
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
 import { updateInfoWindow, changedSlider } from '../../characterCreationSlice';
@@ -28,7 +28,7 @@ export default function SliderRow({
     dispatch(updateInfoWindow({ infoWindowTitle: maxLabel, infoWindowText: info }));
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch(changedSlider({ label: maxLabel, value: parseInt(e.target.value, 10) }));
   };
 

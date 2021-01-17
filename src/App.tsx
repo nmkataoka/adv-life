@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { GameManager } from '0-engine/GameManager';
 import { Provider as EcsalProvider } from '4-react-ecsal';
 import { TestProvider } from '6-ui-features/TestContext';

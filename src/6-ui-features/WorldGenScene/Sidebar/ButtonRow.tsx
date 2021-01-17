@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { PrimaryButton } from '6-ui-features/DesignSystem/buttons/PrimaryButton';
 

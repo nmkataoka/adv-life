@@ -1,11 +1,11 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect, ReactNode } from 'react';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '7-app/types';
 import { usedModalZIndex } from './modalMetaSlice';
 
 type ModalProps = {
-  children?: React.ReactNode;
+  children?: ReactNode;
   isShowing?: boolean;
   onClose?: () => void;
 };

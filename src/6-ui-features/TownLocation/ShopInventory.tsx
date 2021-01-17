@@ -1,4 +1,3 @@
-import React from 'react';
 import { useDispatch, useSelector } from '4-react-ecsal';
 import styled from '@emotion/styled';
 import { getInventory, getPlayerInventory } from '3-frontend-api';

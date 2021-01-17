@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import Window from '../../components/Window';
 import AttributeRow, { AttributeRowProps } from './AttributeRow';

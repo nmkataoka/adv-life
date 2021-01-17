@@ -1,4 +1,4 @@
-import React from 'react';
+import { Fragment } from 'react';
 import { SettingsHeading } from './SettingsHeading';
 import { SliderOptions, SliderOptionsProps } from './SliderOptions';
 import { ButtonRow } from './ButtonRow';
@@ -13,10 +13,10 @@ export function TabContent({ content, onChange, onGo }: TabContentProps): JSX.El
   return (
     <>
       {content.map(({ heading, options }) => (
-        <React.Fragment key={heading}>
+        <Fragment key={heading}>
           <SettingsHeading>{heading}</SettingsHeading>
           <SliderOptions options={options} onChange={onChange(heading)} />
-        </React.Fragment>
+        </Fragment>
       ))}
       <ButtonRow onGo={onGo} />
     </>
