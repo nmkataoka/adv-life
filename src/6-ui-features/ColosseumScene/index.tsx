@@ -1,5 +1,4 @@
 import { RootState } from '7-app/types';
-import React from 'react';
 import styled from '@emotion/styled';
 import { useSelector as useReduxSelector } from 'react-redux';
 import { useSelector } from '4-react-ecsal';

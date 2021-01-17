@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { InventorySlotInfo } from '3-frontend-api/inventory/InventoryInfo';
 import ItemStack from './ItemStack';

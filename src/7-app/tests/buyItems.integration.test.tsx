@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, waitFor, waitForElementToBeRemoved } from '8-helpers/test-utils';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';

@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { useSelector } from '4-react-ecsal';
 import { getItemClass } from '3-frontend-api/items/getItemClass';

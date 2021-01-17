@@ -1,4 +1,4 @@
-import React from 'react';
+import { ChangeEvent } from 'react';
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
 import Window from '../../components/Window';
@@ -18,7 +18,7 @@ type FreeformInputWindowProps = {
 const FreeformInputWindow = ({ header, options }: FreeformInputWindowProps): JSX.Element => {
   const dispatch = useDispatch();
 
-  const handleChange = (label: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (label: string) => (e: ChangeEvent<HTMLInputElement>) => {
     dispatch(changedFreeformInputValue({ label, value: e.target.value }));
   };
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { getColor } from '6-ui-features/Theme';
 import { ButtonProps } from './ButtonProps';

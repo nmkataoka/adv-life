@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, RefObject } from 'react';
 import { DataLayer } from '1-game-code/World';
 import { Color } from './Color';
 import PixelMap from './PixelMap';
 
 /** Renders a DataLayer onto a canvas via PixelMap and ImageBitmap */
 export function useDataLayerRenderer(
-  canvasRef: React.RefObject<HTMLCanvasElement>,
+  canvasRef: RefObject<HTMLCanvasElement>,
   colorFunc: (num: number) => Color,
   dataLayer?: DataLayer,
 

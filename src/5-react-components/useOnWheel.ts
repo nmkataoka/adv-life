@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, RefObject } from 'react';
 
 /** Registers an active listener for the `wheel` event
  *
@@ -6,7 +6,7 @@ import { useEffect } from 'react';
  * Most logic handling requires onWheel to be registered as an active event listener.
  */
 export function useOnWheel(
-  ref: React.RefObject<HTMLCanvasElement | null>,
+  ref: RefObject<HTMLCanvasElement | null>,
   handler: (e: WheelEvent) => void,
 ): void {
   useEffect(() => {

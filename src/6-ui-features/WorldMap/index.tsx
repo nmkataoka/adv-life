@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { useDispatch, useSelector as useReduxSelector } from 'react-redux';
 import { useSelector } from '4-react-ecsal';

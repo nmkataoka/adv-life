@@ -1,4 +1,3 @@
-import React from 'react';
 import SelectionWindow from '../CharacterAttributeGroup/OneOf/SelectionWindow';
 import AttributeWindow from '../CharacterAttributeGroup/PointAllocation/AttributeWindow';
 import SliderWindow from '../CharacterAttributeGroup/Ranges/SliderWindow';

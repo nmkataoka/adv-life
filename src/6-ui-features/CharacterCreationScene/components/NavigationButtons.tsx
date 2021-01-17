@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
 import { clickedNext, clickedPrevious } from '../characterCreationSlice';

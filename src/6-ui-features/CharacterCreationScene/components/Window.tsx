@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactNode } from 'react';
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
 import NavigationButtons from './NavigationButtons';
@@ -6,7 +6,7 @@ import Header from './Header';
 import { randomizeCurrentWindow } from '../characterCreationSlice';
 
 type WindowProps = {
-  children?: React.ReactNode;
+  children?: ReactNode;
   header: string;
   randomize?: boolean;
   showNavigation?: boolean;

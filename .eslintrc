@@ -47,9 +47,11 @@
     "react/jsx-filename-extension": 0,
     "react/jsx-indent": 0, // disabled because we have prettier
     "react/jsx-one-expression-per-line": 0, // disabled because we have prettier
+    "react/jsx-uses-react": 0, // no longer necessary with React 17 JSX transform
     "react/no-array-index-key": "warn",
     "react/no-unused-prop-types": "warn",
     "react/prop-types": 0,
+    "react/react-in-jsx-scope": 0, // no longer necessary with React 17 JSX transform
     "react/require-default-props": 0,
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",

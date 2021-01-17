@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { changedScene, Scene } from '6-ui-features/sceneManager/sceneMetaSlice';
 import { useDispatch as useReduxDispatch } from 'react-redux';
