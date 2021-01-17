@@ -1,6 +1,7 @@
 import { getColor } from '6-ui-features/Theme';
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
+import { Input } from '6-ui-features/DesignSystem';
 import { Sidebar } from './Sidebar';
 import { Map } from './Map';
 
@@ -10,10 +11,8 @@ export default function WorldGenScene(): JSX.Element {
     <Page>
       <Header>
         <h1>World Generation</h1>
-        <label htmlFor="seed">
-          Seed
-          <input id="seed" type="text" value={seed} onChange={(e) => setSeed(e.target.value)} />
-        </label>
+        <SeedLabel htmlFor="seed">Seed</SeedLabel>
+        <Input id="seed" type="text" value={seed} onChange={(e) => setSeed(e.target.value)} />
       </Header>
       <Sidebar seed={seed} />
       <Map />
@@ -41,4 +40,8 @@ const Header = styled.div`
   grid-area: header;
 
   padding: 1em 2em;
+`;
+
+const SeedLabel = styled.label`
+  margin-right: 1em;
 `;
