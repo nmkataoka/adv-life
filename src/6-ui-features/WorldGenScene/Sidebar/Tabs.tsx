@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import { getColor } from '6-ui-features/Theme';
-import { useDispatch as useReduxDispatch, useSelector } from 'react-redux';
+import { useDispatch as useReduxDispatch, useSelector as useReduxSelector } from 'react-redux';
 import { WorldGenModules } from '../constants';
 import { selectedModule, getActiveModule } from '../worldGenSceneSlice';
 
 export function Tabs(): JSX.Element {
   const reduxDispatch = useReduxDispatch();
-  const activeModule = useSelector(getActiveModule);
+  const activeModule = useReduxSelector(getActiveModule);
 
   return (
     <Container>
