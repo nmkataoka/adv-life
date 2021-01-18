@@ -4,10 +4,12 @@ import { getColor } from '6-ui-features/Theme';
 import produce from 'immer';
 import { useDispatch } from '4-react-ecsal';
 import { GameManager } from '0-engine/GameManager';
+import { useSelector } from 'react-redux';
 import { Tabs } from './Tabs';
-import { WorldGenTabs } from './constants';
+import { WorldGenModules } from '../constants';
 import { TabContent } from './TabContent';
 import { createWorld } from './createWorld';
+import { getActiveModule } from '../worldGenSceneSlice';
 
 type SidebarProps = {
   seed: string;
@@ -15,16 +17,16 @@ type SidebarProps = {
 
 export function Sidebar({ seed }: SidebarProps): JSX.Element {
   const dispatch = useDispatch();
-  const [selectedTab, setSelectedTab] = useState(Object.values(WorldGenTabs)[0].key);
-  const [contentState, setContentState] = useState(WorldGenTabs);
+  const activeModule = useSelector(getActiveModule);
+  const [contentState, setContentState] = useState(WorldGenModules);
 
-  const content = contentState.find(({ key }) => key === selectedTab)?.content;
+  const content = contentState.find(({ key }) => key === activeModule)?.content;
   if (!content) throw new Error('Impossible. This is to make TypeScript happy.');
 
   const onChange = (heading: string) => (name: string) => (num: number): void => {
     const nextState = produce(contentState, (draft) => {
       const option = draft
-        .find(({ key }) => selectedTab === key)
+        .find(({ key }) => activeModule === key)
         ?.content.find(({ heading: h }) => h === heading)
         ?.options.find(({ name: n }) => n === name);
       if (option) {
@@ -41,7 +43,7 @@ export function Sidebar({ seed }: SidebarProps): JSX.Element {
 
   return (
     <Container>
-      <Tabs selected={selectedTab} onChange={setSelectedTab} />
+      <Tabs />
       <Content>
         {content ? (
           <TabContent content={content} onChange={onChange} onGo={generateWorld} />

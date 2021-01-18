@@ -1,12 +1,12 @@
 import { Thunk } from '0-engine/ECS/Thunk';
 import { NoiseParams } from '1-game-code/Noise';
 import { createWorldMap, TerrainGenParams } from '1-game-code/World/TerrainGen/TerrainGenSys';
-import { WorldGenTabs } from './constants';
-import { terrainGenControls } from './constants/terrainGenControls';
+import { WorldGenModules } from '../constants';
+import { terrainGenControls } from '../constants/terrainGenControls';
 import { TabContentProps } from './TabContent';
 
 /** Single function to create a new world. Covers entirety of world gen. */
-export const createWorld = (seed: string, settings: typeof WorldGenTabs): Thunk => async (
+export const createWorld = (seed: string, settings: typeof WorldGenModules): Thunk => async (
   dispatch,
 ) => {
   const [terrainSettings] = settings;

@@ -3,7 +3,7 @@ import { useDispatch } from '4-react-ecsal';
 import { useDispatch as useReduxDispatch } from 'react-redux';
 import { useIsTest } from '6-ui-features/TestContext';
 import { createWorld } from '6-ui-features/WorldGenScene/Sidebar/createWorld';
-import { WorldGenTabs, WorldGenTabsTest } from '6-ui-features/WorldGenScene/Sidebar/constants';
+import { WorldGenModules, WorldGenModulesTest } from '6-ui-features/WorldGenScene/constants';
 import CharacterSummary from './components/CharacterSummary';
 import { randomizeAll, finishCharacterCreation } from './characterCreationSlice';
 import { changedScene, Scene } from '../sceneManager/sceneMetaSlice';
@@ -19,9 +19,9 @@ const CharacterSummaryColumn = (): JSX.Element => {
 
   const handleFinish = async () => {
     if (isTest) {
-      await dispatch(createWorld('a wonderful life', WorldGenTabsTest));
+      await dispatch(createWorld('a wonderful life', WorldGenModulesTest));
     } else {
-      await dispatch(createWorld('a wonderful life', WorldGenTabs));
+      await dispatch(createWorld('a wonderful life', WorldGenModules));
     }
     reduxDispatch(finishCharacterCreation());
     reduxDispatch(changedScene(Scene.Town));
