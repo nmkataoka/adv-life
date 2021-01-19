@@ -9,6 +9,7 @@ import { rasterizeTectonics } from './tectonicRasterization';
 import { lowFreqNoise } from './elevationNoise/elevationNoise';
 import { boxBlur } from '../DataLayer/boxBlur';
 import { ridgeNoise } from './elevationNoise/ridgeNoise';
+import { calculateElevationMetadata } from './metadata';
 
 /** This is mostly just for debugging now, or if the real world map breaks for an extended period of time. */
 const createNoisedWorldMapSlice = createEventSlice('createNoisedWorldMap', {
@@ -104,6 +105,8 @@ const createWorldMapSlice = createEventSlice('createWorldMap', {
       boxBlur(hillinessLayer, 10);
     }
     ridgeNoise(elevLayer, hillinessLayer, ridgeNoiseParams);
+
+    worldMap.metadata[WorldMap.Layer.Elevation] = calculateElevationMetadata(elevLayer);
 
     worldMapMgr.add(worldMapEntity, worldMapCmpt);
   },

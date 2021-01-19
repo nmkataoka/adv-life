@@ -34,6 +34,7 @@
       }
     ],
     "indent": 0, // using @typescript-eslint/indent
+    "jsx-a11y/label-has-associated-control": 0, // this rule can only lint label/form inputs in the same file
     "max-classes-per-file": 0,
     "max-len": 0, // disabled because we have prettier
     "no-mixed-operators": 0,

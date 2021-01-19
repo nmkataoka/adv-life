@@ -1,6 +1,6 @@
 import produce from 'immer';
 import { createNoiseSettings } from './createNoiseSettings';
-import { TabContentProps } from '../TabContent';
+import { TabContentProps } from '../Sidebar/TabContent';
 
 export const terrainGenControls: TabContentProps['content'] = [
   {

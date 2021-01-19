@@ -7,6 +7,7 @@ import { getWorldMapLayer } from '3-frontend-api/worldMap';
 import { useSelector } from '4-react-ecsal';
 import useZoomOnScroll from '5-react-components/useZoomOnScroll';
 import { useElementSize } from '5-react-components/useElementSize';
+import { MapOverlay } from './MapOverlay';
 
 export function Map(): JSX.Element {
   const elevations = useSelector(getWorldMapLayer(WorldMap.Layer.Elevation));
@@ -23,6 +24,7 @@ export function Map(): JSX.Element {
       {!elevations && 'No map generated yet.'}
       <FullDiv ref={containerRef}>
         <canvas style={{ position: 'absolute' }} ref={canvasRef} height={height} width={width} />
+        {elevations && <MapOverlay />}
       </FullDiv>
     </Container>
   );
@@ -38,6 +40,7 @@ const Container = styled.div`
 `;
 
 const FullDiv = styled.div`
+  position: relative;
   height: 100%;
   width: 100%;
 `;

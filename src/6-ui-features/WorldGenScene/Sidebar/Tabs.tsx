@@ -1,17 +1,21 @@
 import styled from '@emotion/styled';
 import { getColor } from '6-ui-features/Theme';
-import { WorldGenTabs } from './constants';
+import { useDispatch as useReduxDispatch, useSelector as useReduxSelector } from 'react-redux';
+import { WorldGenModules } from '../constants';
+import { selectedModule, getActiveModule } from '../worldGenSceneSlice';
 
-type TabsProps = {
-  selected: string;
-  onChange: (next: typeof WorldGenTabs[number]['key']) => void;
-};
+export function Tabs(): JSX.Element {
+  const reduxDispatch = useReduxDispatch();
+  const activeModule = useReduxSelector(getActiveModule);
 
-export function Tabs({ selected, onChange }: TabsProps): JSX.Element {
   return (
     <Container>
-      {WorldGenTabs.map(({ text, key }) => (
-        <Tab key={key} isSelected={selected === key} onClick={() => onChange(key)}>
+      {WorldGenModules.map(({ text, key }) => (
+        <Tab
+          key={key}
+          isSelected={activeModule === key}
+          onClick={() => reduxDispatch(selectedModule(key))}
+        >
           {text}
         </Tab>
       ))}

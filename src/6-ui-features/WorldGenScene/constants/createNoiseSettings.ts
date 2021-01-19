@@ -1,4 +1,4 @@
-import { SliderOptionsProps } from '../SliderOptions';
+import { SliderOptionsProps } from '../Sidebar/SliderOptions';
 
 /** Generates props for an array of SliderOption components for a noise generator */
 export function createNoiseSettings(
