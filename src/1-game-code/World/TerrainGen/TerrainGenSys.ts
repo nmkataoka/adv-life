@@ -101,7 +101,7 @@ const createWorldMapSlice = createEventSlice('createWorldMap', {
     worldMap.dataLayers[WorldMap.Layer.Hilliness] = hillinessLayer;
     boxBlur(elevLayer, 2);
     lowFreqNoise(elevLayer, lowFreqNoiseParams);
-    for (let i = 0; i < 3; ++i) {
+    for (let i = 0; i < 10; ++i) {
       boxBlur(hillinessLayer, 10);
     }
     ridgeNoise(elevLayer, hillinessLayer, ridgeNoiseParams);
