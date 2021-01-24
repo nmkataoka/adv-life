@@ -74,9 +74,9 @@ export const terrainGenControls: TabContentProps['content'] = [
         key: 'ridgeSlope',
         description:
           'Average slope of mountains. A low value leads to large mountainous regions, but the generator may have difficulty fitting them in.',
-        value: 0.01,
+        value: 0.016,
         min: 0.002,
-        max: 0.02,
+        max: 0.03,
         step: 0.002,
       },
       {
@@ -104,8 +104,8 @@ export const terrainGenControls: TabContentProps['content'] = [
   {
     heading: 'Ridge Noise',
     options: createNoiseSettings('ridgeNoise', {
-      scale: 5000, // Corresponds to maximum `hilliness`
-      frequency: 0.012,
+      scale: 4000, // Corresponds to maximum `hilliness`
+      frequency: 0.024,
       octaves: 10,
       lacunarity: 2,
       gain: 0.55,

@@ -1,38 +1,49 @@
+import { defaultTheme, getColor } from '6-ui-features/Theme';
 import { Color, colorInterp } from './Color';
 
+/**
+ * Converts a hex string to an [R, G, B] array of ints
+ */
+function getRgbFromHex(hex: string): readonly [number, number, number] {
+  if (hex.length !== 7) throw new Error('Expected hex string to be 7 chars long.');
+
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return [r, g, b] as const;
+}
+
+function getRgbColorFromTheme(
+  color: keyof typeof defaultTheme['colors'],
+): [number, number, number, number] {
+  const [r, g, b] = getRgbFromHex(getColor(color)({ theme: defaultTheme }));
+  return [r, g, b, 255];
+}
+
 const colors: Color[] = [
-  [0, 5, 70, 255],
-  [0, 55, 120, 255],
-  [0, 119, 190, 255],
-  [137, 207, 245, 255],
+  getRgbColorFromTheme('blueDarker'),
+  getRgbColorFromTheme('blueLighter'),
   [200, 198, 164, 255],
-  [155, 177, 125, 255],
-  // [220, 230, 220, 220],
-  [119, 119, 119, 255],
-  [238, 238, 238, 238],
+  [61, 171, 80, 255],
+  getRgbColorFromTheme('gray'),
+  getRgbColorFromTheme('white'),
 ];
 
 export function colorElevation(elev: number): Color {
-  if (elev < -7000) {
+  if (elev < -5000) {
     return colors[0];
   }
-  if (elev < -5000) {
-    return colorInterp(elev, -7000, -5000, colors[0], colors[1]);
-  }
-  if (elev < -2000) {
-    return colorInterp(elev, -5000, -2000, colors[1], colors[2]);
-  }
   if (elev < 0) {
-    return colorInterp(elev, -2000, 0, colors[2], colors[3]);
+    return colorInterp(elev, -5000, 0, colors[0], colors[1]);
   }
-  if (elev < 2000) {
-    return colorInterp(elev, 0, 2000, colors[4], colors[5]);
+  if (elev < 1500) {
+    return colorInterp(elev, 0, 2000, colors[2], colors[3]);
   }
-  if (elev < 4000) {
-    return colorInterp(elev, 2000, 4000, colors[5], colors[6]);
+  if (elev < 3000) {
+    return colorInterp(elev, 2000, 4000, colors[3], colors[4]);
   }
-  if (elev < 8000) {
-    return colorInterp(elev, 4000, 8000, colors[6], colors[7]);
+  if (elev < 5000) {
+    return colorInterp(elev, 4000, 8000, colors[4], colors[5]);
   }
-  return colors[7];
+  return colors[5];
 }

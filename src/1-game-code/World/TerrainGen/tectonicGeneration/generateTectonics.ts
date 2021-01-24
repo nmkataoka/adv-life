@@ -13,7 +13,7 @@ export function generateTectonics(
   faultPerturbationNoise: NoiseParams,
   rng: Random,
 ): Tectonics {
-  const voronoi = generateVoronoi(numPlates, xSize, ySize, 3, rng);
+  const voronoi = generateVoronoi(numPlates, xSize, ySize, 2, rng);
   const { tecPlates, faults } = createPlatesAndFaults(voronoi, oceanFrac, rng);
   perturbPlateEdges(faults, 25000, faultPerturbationNoise);
   return {

@@ -108,7 +108,7 @@ function constructFaultProfile(
 
   // Hilliness scales ridge noise, so this is the `scale` for the ridge noise generator
   const mountainHilliness = maxHilliness;
-  const hillHilliness = maxHilliness / 2;
+  const hillHilliness = maxHilliness / 3;
   const defaultHilliness = 1;
 
   const faultFeatures: FaultFeature[] = [];
