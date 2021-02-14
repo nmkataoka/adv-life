@@ -1,6 +1,9 @@
 import { createEventSlice } from '0-engine';
+import { RngCmpt } from '1-game-code/prng/RngCmpt';
+import { Vector2 } from '8-helpers/math';
 import { WorldMap } from '../WorldMap';
 import { WorldMapCmpt } from '../WorldMapCmpt';
+import { createDrop, descend, Drop } from './Drop';
 import { createConstantRainLayer } from './rainLayer';
 
 const startHydrologySlice = createEventSlice('startHydrology', {
@@ -25,20 +28,45 @@ const startHydrologySlice = createEventSlice('startHydrology', {
   },
 );
 
-// const rainSlice = createEventSlice('rain', {
-//   writeCmpts: [WorldMapCmpt],
-// })<void>(
-//   ({
-//     componentManagers: {
-//       writeCMgrs: [worldMapMgr],
-//     },
-//   }) => {
-//     const worldMapCmpt = worldMapMgr.getUniqueMut();
-//     const rainLayer = worldMapCmpt.data.dataLayers[WorldMap.Layer.Rain];
-//   },
-// );
+export type WaterParams = {
+  dropParams: Omit<Partial<Drop>, 'pos'>;
+  dt: number;
+  numDrops: number;
+};
+
+const rainSlice = createEventSlice('rain', {
+  writeCmpts: [RngCmpt, WorldMapCmpt],
+})<WaterParams>(
+  ({
+    componentManagers: {
+      writeCMgrs: [rngMgr, worldMapMgr],
+    },
+    payload: { dropParams, dt, numDrops },
+  }) => {
+    const worldMapCmpt = worldMapMgr.tryGetUniqueMut();
+
+    if (!worldMapCmpt) throw new Error("Tried to rain but world map doesn't exist yet.");
+
+    // Future work, we could link in a true rain map/water cycle here
+    // const rainLayer = worldMapCmpt.data.dataLayers[WorldMap.Layer.Rain];
+
+    // Randomly "rain" a droplet of water on the map
+    const elevLayer = worldMapCmpt.data.dataLayers[WorldMap.Layer.Elevation];
+    const { height, width } = elevLayer;
+    const rngCmpt = rngMgr.getUniqueMut();
+    const rng = rngCmpt.getRng('WorldGen');
+
+    for (let i = 0; i < numDrops; ++i) {
+      // console.log(`dropping number ${i}/${numDrops}`);
+      const x = Math.floor(width * rng.random());
+      const y = Math.floor(height * rng.random());
+      const drop = createDrop({ ...dropParams, pos: new Vector2(x, y) });
+      descend(drop, elevLayer, dt);
+    }
+  },
+);
 
 export const { startHydrology } = startHydrologySlice;
-// export const { rain } = rainSlice;
+export const { rain } = rainSlice;
 
-export default [startHydrologySlice.eventListener /* , rainSlice.eventListener */];
+export default [startHydrologySlice.eventListener, rainSlice.eventListener];

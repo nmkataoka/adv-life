@@ -1,9 +1,14 @@
 import { DeepReadonly } from 'ts-essentials';
 import { NComponent, NComponentConstructor } from '../NComponent';
 
+/**
+ * Currently 'immutability' works as follows:
+ * -
+ */
 export class ComponentManager<C extends NComponent> {
   constructor(c: NComponentConstructor<C>) {
     this.components = {};
+    this.componentIsChanged = {};
     this.MyClass = c;
   }
 
@@ -19,9 +24,19 @@ export class ComponentManager<C extends NComponent> {
     return Object.values(this.components).length;
   }
 
+  /** Clears the isChanged tracker for all components, should be called every UI frame. */
+  public clearIsChanged(): void {
+    this.componentIsChanged = {};
+  }
+
   /** Returns an immutable reference to a component, which must exist. */
   public get(e: number | string): DeepReadonly<C> {
-    return this.getMut(e) as DeepReadonly<C>;
+    const c = this.components[e];
+    if (c == null) {
+      throw new Error(`Unexpected missing component ${this.MyClass.name} for entity ${e}`);
+    }
+
+    return c as DeepReadonly<C>;
   }
 
   /**
@@ -29,10 +44,11 @@ export class ComponentManager<C extends NComponent> {
    * Mutable references may have performance implications, so use the immutable version whenever possible.
    */
   public getMut(e: number | string): C {
-    const c = this.components[e];
+    const c = this.tryGetMut(e);
     if (c == null) {
       throw new Error(`Unexpected missing component ${this.MyClass.name} for entity ${e}`);
     }
+
     return c;
   }
 
@@ -40,7 +56,7 @@ export class ComponentManager<C extends NComponent> {
    * Returns an immutable reference to a component, or undefined if it doesn't exist.
    */
   public tryGet(e: number | string): DeepReadonly<C> | undefined {
-    return this.tryGetMut(e) as DeepReadonly<C> | undefined;
+    return this.components[e] as DeepReadonly<C> | undefined;
   }
 
   /**
@@ -48,6 +64,15 @@ export class ComponentManager<C extends NComponent> {
    * Mutable references may have performance implications, so use the immutable version whenever possible.
    * */
   public tryGetMut(e: number | string): C | undefined {
+    let c = this.components[e];
+
+    // If this is the first mutable access this frame, copy the object for immutability
+    if (c && !this.componentIsChanged[e]) {
+      c = this.MyClass.from(c);
+      this.components[e] = c;
+      this.componentIsChanged[e] = true;
+    }
+
     return this.components[e];
   }
 
@@ -62,7 +87,8 @@ export class ComponentManager<C extends NComponent> {
    * Used when there's only one component in the manager (singleton pattern).
    */
   public getUniqueMut(): C {
-    return this.getAsArrayMut()[0];
+    const e = this.entities()[0];
+    return this.getMut(e);
   }
 
   /**
@@ -76,7 +102,8 @@ export class ComponentManager<C extends NComponent> {
    * See getUniqueMut
    */
   public tryGetUniqueMut(): C | undefined {
-    return this.getAsArrayMut()[0];
+    const e = this.entities()[0];
+    return this.tryGetMut(e);
   }
 
   /** Destroys a component. */
@@ -119,6 +146,11 @@ export class ComponentManager<C extends NComponent> {
    * Exposed for debugging reasons.
    * */
   protected components: { [key: string]: C };
+
+  /**
+   * Tracks when components may have been changed.
+   */
+  protected componentIsChanged: { [key: string]: boolean | undefined };
 }
 
 const mutationErrorMessage = 'Tried to use a mutating method on a readonly ComponentManager!';

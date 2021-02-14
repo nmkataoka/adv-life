@@ -1,18 +1,9 @@
 import { DataDbCmpt } from './DataDbCmpt';
-import { Datum, PartialDataType } from './Datum';
+
 import testData from './Datum.test.json';
+import { TestDatum } from './TestDatum';
 
 const [firstDatum, secondDatum] = testData;
-
-class TestDatum extends Datum {
-  public value = '';
-
-  constructor(data: PartialDataType<TestDatum>) {
-    super();
-    Object.assign(this, data);
-    this.init(data);
-  }
-}
 
 describe('DataDbCmpt', () => {
   let dataDbCmpt: DataDbCmpt<TestDatum>;

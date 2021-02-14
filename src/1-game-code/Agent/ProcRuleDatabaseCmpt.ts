@@ -2,12 +2,13 @@ import { NComponent } from '0-engine';
 import { ProcRule } from './ProcRule';
 import { ProcRuleData } from './ProcRuleData';
 
-export class ProcRuleDbCmpt implements NComponent {
+export class ProcRuleDbCmpt extends NComponent {
   public procRules: ProcRule<any>[];
 
   public procRuleMap: { [key: string]: number };
 
   constructor() {
+    super();
     this.procRules = [];
     this.procRuleMap = {};
     this.loadProcRules();

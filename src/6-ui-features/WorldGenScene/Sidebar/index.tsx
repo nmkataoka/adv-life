@@ -10,6 +10,7 @@ import { WorldGenModules } from '../constants';
 import { TabContent } from './TabContent';
 import { createWorld } from './createWorld';
 import { getActiveModule } from '../worldGenSceneSlice';
+import { doRain } from './doRain';
 
 type SidebarProps = {
   seed: string;
@@ -37,8 +38,12 @@ export function Sidebar({ seed }: SidebarProps): JSX.Element {
   };
 
   const generateWorld = async () => {
-    await GameManager.instance.eMgr.restart();
-    await dispatch(createWorld(seed, contentState));
+    if (activeModule === 'water') {
+      await dispatch(doRain(contentState));
+    } else {
+      await GameManager.instance.eMgr.restart();
+      await dispatch(createWorld(seed, contentState));
+    }
   };
 
   return (

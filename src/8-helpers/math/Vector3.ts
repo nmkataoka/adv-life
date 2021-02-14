@@ -49,4 +49,8 @@ export class Vector3 {
     const { x, y, z } = this;
     return Math.sqrt(x * x + y * y + z * z);
   }
+
+  toString(): string {
+    return `{x:${this.x},y:${this.y},z:${this.z}}`;
+  }
 }

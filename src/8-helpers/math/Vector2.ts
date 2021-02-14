@@ -90,4 +90,8 @@ export class Vector2 {
   equals(b: Vector2): boolean {
     return this.x === b.x && this.y === b.y;
   }
+
+  toString(): string {
+    return `{x:${this.x}, y:${this.y}}`;
+  }
 }

@@ -3,7 +3,7 @@ import { EntityManager } from '../EntityManager';
 import { NComponent } from '../NComponent';
 import { View } from './View';
 
-class TestCmpt implements NComponent {
+class TestCmpt extends NComponent {
   num = 0;
 }
 

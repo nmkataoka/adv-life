@@ -1,5 +1,5 @@
 import { NComponent } from '0-engine';
 
-export class RaceCmpt implements NComponent {
+export class RaceCmpt extends NComponent {
   public race = 'Human';
 }

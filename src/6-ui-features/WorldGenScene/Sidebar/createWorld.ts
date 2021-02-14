@@ -1,5 +1,6 @@
 import { Thunk } from '0-engine/ECS/Thunk';
 import { NoiseParams } from '1-game-code/Noise';
+import { startHydrology } from '1-game-code/World/Hydrology/RainSys';
 import { createWorldMap, TerrainGenParams } from '1-game-code/World/TerrainGen/TerrainGenSys';
 import { WorldGenModules } from '../constants';
 import { terrainGenControls } from '../constants/terrainGenControls';
@@ -10,9 +11,12 @@ export const createWorld = (seed: string, settings: typeof WorldGenModules): Thu
   dispatch,
 ) => {
   const [terrainSettings] = settings;
-  const { content } = terrainSettings;
-  const terrainGenParams = parseTerrainGenParams(seed, content);
-  return dispatch(createWorldMap(terrainGenParams));
+  const { content: terrainContent } = terrainSettings;
+  const terrainGenParams = parseTerrainGenParams(seed, terrainContent);
+  await dispatch(createWorldMap(terrainGenParams));
+
+  const { width, height } = terrainGenParams;
+  await dispatch(startHydrology({ size: { x: width, y: height } }));
 };
 
 /** Parses the UI settings data format into the payload expected by the backend */
@@ -48,7 +52,7 @@ function parseTerrainGenParams(seed: string, content: typeof terrainGenControls)
   return terrainGenParams;
 }
 
-function parseContentSectionIntoDict(
+export function parseContentSectionIntoDict(
   content: TabContentProps['content'],
   heading: string,
 ): { [key: string]: any } {

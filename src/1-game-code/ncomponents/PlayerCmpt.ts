@@ -1,3 +1,3 @@
 import { NComponent } from '0-engine';
 
-export class PlayerCmpt implements NComponent {}
+export class PlayerCmpt extends NComponent {}

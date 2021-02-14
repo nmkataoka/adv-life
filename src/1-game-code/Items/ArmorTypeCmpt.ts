@@ -7,6 +7,6 @@ export enum ArmorType {
   Greaves = 'greaves',
 }
 
-export class ArmorTypeCmpt implements NComponent {
+export class ArmorTypeCmpt extends NComponent {
   public armorType: ArmorType = ArmorType.Helm;
 }

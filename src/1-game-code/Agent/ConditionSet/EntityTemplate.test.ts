@@ -3,10 +3,10 @@ import { NComponent, EntityManager } from '0-engine';
 import { createEmptyEntityManager } from '0-engine/ECS/test-helpers/CreateEntityManager';
 import EntityTemplate from './EntityTemplate';
 
-class Component1 implements NComponent {}
-class Component2 implements NComponent {}
-class Component3 implements NComponent {}
-class Component4 implements NComponent {}
+class Component1 extends NComponent {}
+class Component2 extends NComponent {}
+class Component3 extends NComponent {}
+class Component4 extends NComponent {}
 
 describe('EntityTemplate', () => {
   let eMgr: EntityManager;

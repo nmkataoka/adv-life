@@ -71,7 +71,7 @@ describe('ConditionSet', () => {
     });
 
     describe('checkEntityRelationshipsAndComponentComparisonTemplates', () => {
-      class TestComponent1 implements NComponent, IEntityRelationship {
+      class TestComponent1 extends NComponent implements IEntityRelationship {
         public children: number[] = [];
 
         public myNumber = 0;
@@ -87,13 +87,8 @@ describe('ConditionSet', () => {
       let entityRelsByChildIdx: [number, EntityRelationshipTemplateBase][];
       let componentComps: [number, ComponentComparisonTemplateBase][];
       let componentCompsByChildIdx: [number, ComponentComparisonTemplateBase][];
-      let entityRel1: EntityRelationshipTemplate<TestComponent1, typeof TestComponent1>;
-      let componentComp1: ComponentComparisonTemplate<
-        TestComponent1,
-        typeof TestComponent1,
-        TestComponent1,
-        typeof TestComponent1
-      >;
+      let entityRel1: EntityRelationshipTemplate<TestComponent1>;
+      let componentComp1: ComponentComparisonTemplate<TestComponent1, TestComponent1>;
       let parent: number;
       let child: number;
 

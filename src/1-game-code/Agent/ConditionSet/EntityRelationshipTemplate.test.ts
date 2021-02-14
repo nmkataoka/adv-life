@@ -2,7 +2,7 @@ import { createEmptyEntityManager } from '0-engine/ECS/test-helpers/CreateEntity
 import { EntityManager, NComponent } from '0-engine';
 import EntityRelationshipTemplate, { IEntityRelationship } from './EntityRelationshipTemplate';
 
-class HasA implements NComponent, IEntityRelationship {
+class HasA extends NComponent implements IEntityRelationship {
   public ownedObjectEntity = -1;
 
   public getChildren(): number[] {

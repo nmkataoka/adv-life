@@ -43,4 +43,9 @@ export class DataLayer {
       this.data[i] = val;
     }
   };
+
+  /** Returns true if y-coordinate is in bounds */
+  yIsInBounds = (y: number): boolean => {
+    return y > 0 && y < this.height;
+  };
 }
