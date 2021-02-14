@@ -1,6 +1,6 @@
 import { NComponent } from '0-engine';
 
-export class CombatStatsCmpt implements NComponent {
+export class CombatStatsCmpt extends NComponent {
   public attackSpeed = 0.2;
 
   public dexterity = 10;

@@ -1,8 +1,9 @@
 import { NComponent } from '0-engine';
 import { Datum, DatumConstructor, PartialDataType } from './Datum';
 
-export class DataDbCmpt<DataType extends Datum> implements NComponent {
+export class DataDbCmpt<DataType extends Datum> extends NComponent {
   constructor(datumClass: DatumConstructor<DataType>) {
+    super();
     this.DatumClass = datumClass;
   }
 
@@ -67,7 +68,7 @@ export class DataDbCmpt<DataType extends Datum> implements NComponent {
     dataArr.forEach((datum) => this.addDatum(datum));
   };
 
-  private DatumClass: DatumConstructor<DataType>;
+  protected DatumClass: DatumConstructor<DataType>;
 
   private data: DataType[] = [];
 

@@ -1,14 +1,15 @@
 import { NComponent } from '0-engine';
 import { ItemStackCmpt } from '../Items';
 
-export class InventoryCmpt implements NComponent {
+export class InventoryCmpt extends NComponent {
   public gold = 0;
 
   public inventorySlots: (ItemStackCmpt | undefined)[];
 
   public isPlayerInventory: boolean;
 
-  constructor(inventorySize: number, isPlayerInventory = false) {
+  constructor(inventorySize = 20, isPlayerInventory = false) {
+    super();
     this.isPlayerInventory = isPlayerInventory;
     this.inventorySlots = Array(inventorySize).fill(undefined);
   }

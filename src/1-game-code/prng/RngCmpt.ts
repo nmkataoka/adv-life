@@ -3,8 +3,9 @@ import { Rng } from './Rng';
 
 const RngNames = ['WorldGen'] as const;
 
-export class RngCmpt implements NComponent {
+export class RngCmpt extends NComponent {
   constructor(seed?: string) {
+    super();
     const firstRng = new Rng(seed);
     this.unusedRngs = [firstRng];
     for (let i = 1; i < 100; ++i) {

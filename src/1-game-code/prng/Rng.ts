@@ -46,7 +46,7 @@ export class Rng {
     }
   }
 
-  /** Returns float with 32 bits of randomness between -1 and 1 */
+  /** Returns float with 32 bits of randomness between 0 and 1 */
   random(): number {
     return (this.next() >>> 0) / 4294967296;
   }

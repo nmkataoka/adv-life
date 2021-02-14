@@ -4,10 +4,10 @@ import { createEventSlice } from './event-system';
 import { NComponent } from './NComponent';
 import { Thunk } from './Thunk';
 
-class TestCmpt1 implements NComponent {
+class TestCmpt1 extends NComponent {
   public name = 'TestCmpt1';
 }
-class TestCmpt2 implements NComponent {
+class TestCmpt2 extends NComponent {
   public name = 'TestCmpt2';
 }
 

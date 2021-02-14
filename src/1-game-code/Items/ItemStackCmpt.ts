@@ -1,6 +1,6 @@
 import { NComponent } from '0-engine';
 
-export class ItemStackCmpt implements NComponent {
+export class ItemStackCmpt extends NComponent {
   public health = 1;
 
   /** Indexes into the ItemClassDbCmpt */

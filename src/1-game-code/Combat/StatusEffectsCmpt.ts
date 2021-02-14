@@ -1,8 +1,9 @@
 import { NComponent } from '0-engine';
 import { StatusEffect, StatusAbility, StatusAbilityToStatusEffects } from './StatusEffectConstants';
 
-export class StatusEffectsCmpt implements NComponent {
+export class StatusEffectsCmpt extends NComponent {
   constructor() {
+    super();
     this.activeStatusEffects = Object.keys(StatusEffect).reduce(
       (record: Partial<ActiveStatusEffectsRecord>, key) => {
         record[key as keyof typeof StatusEffect] = [];

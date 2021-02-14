@@ -2,7 +2,7 @@ import { createEmptyEntityManager } from '0-engine/ECS/test-helpers/CreateEntity
 import { NComponent, EntityManager } from '0-engine';
 import ComponentComparisonTemplate from './ComponentComparisonTemplate';
 
-class TestComponent implements NComponent {
+class TestComponent extends NComponent {
   public info = '';
 }
 

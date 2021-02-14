@@ -6,6 +6,6 @@ export enum WeaponType {
   Bow = 'bow',
 }
 
-export class WeaponTypeCmpt implements NComponent {
+export class WeaponTypeCmpt extends NComponent {
   public weaponType: WeaponType = WeaponType.Sword;
 }

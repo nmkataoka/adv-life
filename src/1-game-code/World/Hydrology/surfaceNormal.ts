@@ -8,6 +8,11 @@ export function surfaceNormal(e: DataLayer, coord: Vector2, scale: number): Vect
     throw new Error(`Wrong layer ${e.name} passed to surface normal function.`);
   }
   const { x, y } = coord;
+
+  if (y >= e.height - 1 || y < 1) {
+    throw new Error(`Can't calculate surface normal for tile on map's top or bottom edge.`);
+  }
+
   const e0 = e.at(x, y);
 
   const dir1 = new Vector3(0, 1, scale * (e.at(x, y + 1) - e0));

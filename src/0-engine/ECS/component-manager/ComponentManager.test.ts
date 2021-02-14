@@ -1,8 +1,9 @@
 import { ComponentManager } from './ComponentManager';
 import { NComponent } from '../NComponent';
 
-class TestCmpt implements NComponent {
+class TestCmpt extends NComponent {
   constructor(health = 100) {
+    super();
     this.health = health;
   }
 

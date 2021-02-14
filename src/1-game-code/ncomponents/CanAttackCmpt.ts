@@ -1,5 +1,5 @@
 import { NComponent } from '0-engine';
 
-export class CanAttackCmpt implements NComponent {
+export class CanAttackCmpt extends NComponent {
   public skillName = '';
 }
