@@ -10,6 +10,7 @@ import {
 import { Dispatch, EventAction, EventSys } from './event-system';
 import { Thunk } from './Thunk';
 import { EventListener } from './event-system/EventListener';
+import { Entity } from './Entity';
 
 export type StoreSubscriber = (eMgr: EntityManager) => void;
 
@@ -26,7 +27,7 @@ export class EntityManager {
 
   private cMgrs: { [key: string]: ComponentManager<NComponent> };
 
-  private entitiesToDestroy: (number | string)[] = [];
+  private entitiesToDestroy: Entity[] = [];
 
   private storeSubscribers: Set<StoreSubscriber>;
 
@@ -148,7 +149,7 @@ export class EntityManager {
   /** Returns a readonly reference to a component, which must exist. */
   public getCmpt = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-    e: number | string,
+    e: Entity,
   ): DeepReadonly<C> => {
     const cMgr = this.tryGetMgr(cclass);
     return cMgr.get(e);
@@ -157,28 +158,28 @@ export class EntityManager {
   /** Returns a mutable reference to a component, which must exist. */
   public getCmptMut = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-    entityHandle: number | string,
+    entity: Entity,
   ): C => {
     const cMgr = this.tryGetMgrMut<C>(cclass);
-    return cMgr.getMut(entityHandle);
+    return cMgr.getMut(entity);
   };
 
   /** Returns a readonly reference to a component, or undefined if it doesn't exist. */
   public tryGetCmpt = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-    entityHandle: number | string,
+    entity: Entity,
   ): DeepReadonly<C> | undefined => {
     const cMgr = this.tryGetMgr<C>(cclass);
-    return cMgr.tryGet(entityHandle);
+    return cMgr.tryGet(entity);
   };
 
   /** Returns a mutable reference to a component, or undefined if it doesn't exist. */
   public tryGetCmptMut = <C extends NComponent>(
     cclass: NComponentConstructor<C>,
-    entityHandle: number | string,
+    entity: Entity,
   ): C | undefined => {
     const cMgr = this.tryGetMgrMut<C>(cclass);
-    return cMgr.tryGetMut(entityHandle);
+    return cMgr.tryGetMut(entity);
   };
 
   /** Gets a unique component, readonly. Convenenience function for special components like lookup tables. */
@@ -224,7 +225,7 @@ export class EntityManager {
     return view;
   };
 
-  public queueEntityDestruction(e: number | string): void {
+  public queueEntityDestruction(e: Entity): void {
     this.entitiesToDestroy.push(e);
   }
 
@@ -235,7 +236,7 @@ export class EntityManager {
     this.entitiesToDestroy = [];
   }
 
-  private destroyEntity(e: number | string) {
+  private destroyEntity(e: Entity) {
     // Multiple destroy requests for an entity may occur in one frame -- is this an issue?
     // We could at least optimizely when we add tracking for deleted entities.
     Object.values(this.cMgrs).forEach((cMgr) => cMgr.remove(e));
@@ -248,7 +249,7 @@ export class EntityManager {
 
 type GetComponentFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
-  entityHandle: number,
+  entity: Entity,
 ) => C | undefined;
 
 type GetComponentManagerFuncType = <C extends NComponent>(
@@ -263,5 +264,5 @@ export const GetComponentManager: GetComponentManagerFuncType = <C extends NComp
 /** @deprecated Avoid global accessor functions */
 export const GetComponent: GetComponentFuncType = <C extends NComponent>(
   cclass: NComponentConstructor<C>,
-  entity: number,
+  entity: Entity,
 ): C | undefined => EntityManager.instance.tryGetMgrMut<C>(cclass).tryGetMut(entity);

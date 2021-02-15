@@ -94,7 +94,7 @@ function FindEntitiesWithComponents(cMgrs: ComponentManager<any>[], without: num
       }
 
       if (hasAllComponents) {
-        viewEntities.push(parseInt(e, 10));
+        viewEntities.push(e);
       }
     }
   }
