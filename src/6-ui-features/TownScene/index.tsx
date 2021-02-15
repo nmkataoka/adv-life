@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { useSelector as useReduxSelector, useDispatch } from 'react-redux';
-import { useSelector } from '4-react-ecsal';
+import { useReduxSelector, useReduxDispatch } from '11-redux-wrapper';
+import { useSelector2 } from '4-react-ecsal';
 import { RootState } from '7-app/types';
 import { getTown } from '3-frontend-api';
 import TopBar from '6-ui-features/TopBar';
@@ -12,9 +12,12 @@ import { changedTitle } from '../TopBar/topBarSlice';
 const selectCurTownId = (state: RootState) => state.townScene.currentTownId;
 
 export default function TownScene(): JSX.Element {
-  const dispatch = useDispatch();
+  const dispatch = useReduxDispatch();
   const townId = useReduxSelector(selectCurTownId);
-  const { locationIds: townLocationIds, name: townName } = useSelector(getTown(townId));
+  const { locationIds: townLocationIds, name: townName } = useSelector2(getTown(townId)) ?? {
+    locationIds: [],
+    name: 'Unnamed',
+  };
 
   useEffect(() => {
     dispatch(changedTitle(townName));
@@ -35,7 +38,8 @@ export default function TownScene(): JSX.Element {
         <MainContent>
           <PartySummary />
           <LocationContainer>
-            {townLocationIds.map((townLocationId) => (
+            {/* $FIXME - `as any[]` can be removed in TypeScript 4.2 */}
+            {(townLocationIds as any[]).map((townLocationId) => (
               <TownLocation key={townLocationId} townLocationId={townLocationId} />
             ))}
           </LocationContainer>

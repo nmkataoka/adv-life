@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, RefObject } from 'react';
 import { DataLayer } from '1-game-code/World';
+import { DeepReadonly } from 'ts-essentials';
 import { Color } from './Color';
 import PixelMap from './PixelMap';
 
@@ -7,7 +8,7 @@ import PixelMap from './PixelMap';
 export function useDataLayerRenderer(
   canvasRef: RefObject<HTMLCanvasElement>,
   colorFunc: (num: number) => Color,
-  dataLayer?: DataLayer,
+  dataLayer?: DeepReadonly<DataLayer>,
 
   /** This argument should come from `useZoomOnScroll` */
   scale = 1,

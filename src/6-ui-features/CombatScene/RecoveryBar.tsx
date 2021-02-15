@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
+import { useReduxSelector } from '11-redux-wrapper';
 import { RootState } from '7-app/types';
 
 export type RecoveryBarProps = {
@@ -14,7 +14,7 @@ export default function RecoveryBar({ handle }: RecoveryBarProps): JSX.Element {
     isChanneling,
     channelRemaining,
     channelTotalDuration,
-  } = useSelector((state: RootState) => state.combatScene.units[handle]);
+  } = useReduxSelector((state: RootState) => state.combatScene.units[handle]);
 
   let widthFrac = 0;
   if (isChanneling) {

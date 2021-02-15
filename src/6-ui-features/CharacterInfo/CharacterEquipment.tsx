@@ -1,18 +1,16 @@
 import styled from '@emotion/styled';
-import { useSelector } from '4-react-ecsal';
-import { Entity, EntityManager } from '0-engine';
-import { InventoryCmpt } from '1-game-code/ncomponents';
-import { getPlayerId } from '3-frontend-api';
+import { selectorNode, useSelector2 } from '4-react-ecsal';
+import { getPlayerInventory } from '3-frontend-api';
 
-const selectPlayerGold = (player: Entity) => (eMgr: EntityManager) => {
-  const { gold } = eMgr.getCmpt(InventoryCmpt, player);
-  return gold;
-};
+const playerGold = selectorNode({
+  get: ({ get }) => {
+    const [inventory] = get(getPlayerInventory);
+    return inventory?.gold ?? 0;
+  },
+});
 
 const CharacterEquipment = (): JSX.Element => {
-  const playerGold = useSelector((eMgr: EntityManager) =>
-    selectPlayerGold(getPlayerId(eMgr))(eMgr),
-  );
+  const gold = useSelector2(playerGold);
   return (
     <LeftHalf>
       <h3>Player Name</h3>
@@ -30,7 +28,7 @@ const CharacterEquipment = (): JSX.Element => {
       <ItemRow>
         <ItemBox>Boots</ItemBox>
       </ItemRow>
-      <BottomRow>Gold: {playerGold}g</BottomRow>
+      <BottomRow>Gold: {gold}g</BottomRow>
     </LeftHalf>
   );
 };

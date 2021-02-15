@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import { useSelector } from '4-react-ecsal';
-import { getCombatLog } from '3-frontend-api/combatLog/getCombatLog';
+import { useSelector2 } from '4-react-ecsal';
+import { getCombatLog } from '3-frontend-api';
 
 const CombatLog = (): JSX.Element => {
-  const combatLogEntries = useSelector(getCombatLog);
+  const combatLogEntries = useSelector2(getCombatLog) ?? [];
   return (
     <ReverserWrapper>
       <InnerWrapper>

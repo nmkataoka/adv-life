@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect, ReactNode } from 'react';
 import styled from '@emotion/styled';
-import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '7-app/types';
+import { useReduxDispatch, useReduxSelector } from '11-redux-wrapper';
 import { usedModalZIndex } from './modalMetaSlice';
 
 type ModalProps = {
@@ -11,8 +11,8 @@ type ModalProps = {
 };
 
 export default function Modal({ children, isShowing, onClose }: ModalProps): JSX.Element | null {
-  const dispatch = useDispatch();
-  const nextZIndex = useSelector((state: RootState) => state.modalMeta.nextZIndex);
+  const dispatch = useReduxDispatch();
+  const nextZIndex = useReduxSelector((state: RootState) => state.modalMeta.nextZIndex);
   const [zIndex, setZIndex] = useState(-1);
   const [offset] = useState({ x: 5 * (Math.random() + 1), y: 5 * (Math.random() + 1) });
 

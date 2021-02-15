@@ -1,4 +1,4 @@
-import { componentHasntChanged, ComponentManager } from './ComponentManager';
+import { isEqual, ComponentManager } from './ComponentManager';
 import { NComponent } from '../NComponent';
 
 class TestCmpt extends NComponent {
@@ -41,7 +41,7 @@ describe('component manager', () => {
     cMgr.add(0, new TestCmpt());
     const ref1 = cMgr.getWithVersion(0);
     const ref2 = cMgr.getWithVersion(0);
-    expect(componentHasntChanged(ref1, ref2)).toBe(true);
+    expect(isEqual(ref1, ref2)).toBe(true);
   });
 
   it('when component is mutated, mutation tracking detects a change', () => {
@@ -51,6 +51,6 @@ describe('component manager', () => {
     const cmpt = cMgr.getMut(0);
     cmpt.health -= 1;
     const ref2 = cMgr.getWithVersion(0);
-    expect(componentHasntChanged(ref1, ref2)).toBe(false);
+    expect(isEqual(ref1, ref2)).toBe(false);
   });
 });

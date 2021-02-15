@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from '4-react-ecsal';
+import { useDispatch, useSelector2 } from '4-react-ecsal';
 import styled from '@emotion/styled';
 import { getInventory, getPlayerInventory } from '3-frontend-api';
 import { buyItemFromShop } from '2-backend-api/Shop/buyItemFromShop';
@@ -11,8 +11,11 @@ type ShopInventoryProps = {
 
 const ShopInventory = ({ townLocationId }: ShopInventoryProps): JSX.Element => {
   const dispatch = useDispatch();
-  const inventory = useSelector(getInventory(townLocationId));
-  const { inventorySlots, gold: playerGold } = useSelector(getPlayerInventory);
+  const inventory = useSelector2(getInventory(townLocationId)) ?? { gold: 0, inventorySlots: [] };
+  const { inventorySlots, gold: playerGold } = useSelector2(getPlayerInventory) ?? {
+    inventorySlots: [],
+    gold: 0,
+  };
 
   const handleBuyItem = (itemIndex: number) => () => {
     const item = inventory.inventorySlots[itemIndex];

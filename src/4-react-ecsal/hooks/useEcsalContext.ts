@@ -13,7 +13,7 @@ import ReactEcsalContext, { ContextValue } from '../components/Context';
  * import { useEcsalContext } from 'react-ecsal'
  *
  * export const CounterComponent = ({ value }) => {
- *   const { store } = useEcsalContext() // TODO: update this to whatever the context really is
+ *   const { store, cacheState } = useEcsalContext()
  *   return <div>{store}</div>
  * }
  */

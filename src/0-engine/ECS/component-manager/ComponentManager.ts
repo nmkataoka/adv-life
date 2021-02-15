@@ -2,14 +2,16 @@ import { DeepReadonly } from 'ts-essentials';
 import { Entity } from '../Entity';
 import { NComponent, NComponentConstructor } from '../NComponent';
 
-type Version = number;
+export type Version = number;
+
+export type VersionedData<Data> = [DeepReadonly<Data>, Version];
 
 /**
  * Returns true if two components are the same version.
  * Used for detecting mutations.
  */
-export function componentHasntChanged<C>(old: [C, Version], cur: [C, Version]): boolean {
-  return old[1] === cur[1];
+export function isEqual(old: VersionedData<any>, cur: VersionedData<any>): boolean {
+  return old[0] === cur[0] && old[1] === cur[1];
 }
 
 export class ComponentManager<C extends NComponent> {
@@ -111,6 +113,11 @@ export class ComponentManager<C extends NComponent> {
   public getWithVersion(e: Entity): [DeepReadonly<C> | undefined, Version] {
     const c = this.tryGet(e);
     return [c, this.versions.get(e) ?? -1];
+  }
+
+  public getUniqueWithVersion(): [DeepReadonly<C> | undefined, Version] {
+    const c = this.tryGetUnique();
+    return [c, [...this.versions.values()][0] ?? -1];
   }
 
   /** Destroys a component. */

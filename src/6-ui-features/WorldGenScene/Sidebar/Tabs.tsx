@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { getColor } from '6-ui-features/Theme';
-import { useDispatch as useReduxDispatch, useSelector as useReduxSelector } from 'react-redux';
+import { useReduxDispatch, useReduxSelector } from '11-redux-wrapper';
 import { WorldGenModules } from '../constants';
 import { selectedModule, getActiveModule } from '../worldGenSceneSlice';
 

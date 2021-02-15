@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { useDispatch, useSelector as useReduxSelector } from 'react-redux';
-import { useSelector } from '4-react-ecsal';
+import { useReduxDispatch, useReduxSelector } from '11-redux-wrapper';
+import { useSelector2 } from '4-react-ecsal';
 import { RootState } from '7-app/types';
 import { getAllTowns } from '3-frontend-api';
 import MapLocation from './MapLocation';
@@ -14,9 +14,9 @@ const mapPaddingSides = 10;
 const mapPaddingBottom = 10;
 
 export default function WorldMap(): JSX.Element {
-  const dispatch = useDispatch();
+  const dispatch = useReduxDispatch();
   const isInCombat = useReduxSelector((state: RootState) => state.combatScene.isInCombat);
-  const towns = useSelector(getAllTowns);
+  const towns = useSelector2(getAllTowns) ?? [];
 
   const handleCombatClick = () => {
     if (!isInCombat) {

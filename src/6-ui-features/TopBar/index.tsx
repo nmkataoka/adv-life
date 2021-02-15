@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
+import { useReduxSelector } from '11-redux-wrapper';
 import { RootState } from '7-app/types';
 import WorldMapButton from './WorldMapButton';
 
 const actions = ['Menu'];
 
 export default function TopBar(): JSX.Element {
-  const title = useSelector((state: RootState) => state.topBar.title);
+  const title = useReduxSelector((state: RootState) => state.topBar.title);
   return (
     <Container>
       <LeftGroup>

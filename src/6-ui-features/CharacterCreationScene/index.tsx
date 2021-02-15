@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { useSelector, useDispatch } from 'react-redux';
+import { useReduxSelector, useReduxDispatch } from '11-redux-wrapper';
 import { RootState } from '7-app/types';
 import TopBar from '6-ui-features/TopBar';
 import CharacterCreationNavBar from './CharacterCreationNavBar';
@@ -18,8 +18,8 @@ const screenSelector = (state: RootState) => {
 };
 
 export default function CharacterCreationScene(): JSX.Element {
-  const dispatch = useDispatch();
-  const screenInfo = useSelector(screenSelector);
+  const dispatch = useReduxDispatch();
+  const screenInfo = useReduxSelector(screenSelector);
 
   useEffect(() => {
     dispatch(changedTitle('Character Creation'));

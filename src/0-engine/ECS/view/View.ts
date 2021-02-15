@@ -12,6 +12,8 @@ export class View<ComponentDependencies extends AbstractComponentClasses> {
     eMgr?: EntityManager,
     cMgrs?: ComponentManagersFromClasses<ComponentDependencies>,
   ) {
+    this.componentDependencies = componentDependencies;
+
     if (!cMgrs) {
       if (!eMgr) {
         throw new Error('View creation requires either `eMgr` or `cMgrs` must be supplied.');
@@ -30,6 +32,8 @@ export class View<ComponentDependencies extends AbstractComponentClasses> {
   }
 
   private cMgrs: ComponentManagersFromClasses<ComponentDependencies>;
+
+  componentDependencies: ComponentDependencies;
 
   public entities: number[];
 
@@ -101,3 +105,7 @@ function FindEntitiesWithComponents(cMgrs: ComponentManager<any>[], without: num
 
   return viewEntities;
 }
+
+export type ComponentDependenciesFromView<
+  V extends View<AbstractComponentClasses>
+> = V['componentDependencies'];
