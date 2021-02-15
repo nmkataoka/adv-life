@@ -2,6 +2,7 @@ export { DefaultEvent, NameCmpt } from './ECS/built-in-components';
 export { EventCallbackError } from './ECS/event-system';
 export { copyEventSlice, createEventSlice, createEventSliceWithView } from './ECS/event-system';
 export { GetComponent, GetComponentManager, EntityManager } from './ECS/EntityManager';
+export { componentHasntChanged } from './ECS/component-manager/ComponentManager';
 export { NComponent } from './ECS/NComponent';
 export type { NComponentConstructor } from './ECS/NComponent';
 export type { Thunk } from './ECS/Thunk';

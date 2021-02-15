@@ -2,13 +2,20 @@ import { DeepReadonly } from 'ts-essentials';
 import { Entity } from '../Entity';
 import { NComponent, NComponentConstructor } from '../NComponent';
 
+type Version = number;
+
 /**
- * Currently 'immutability' works as follows:
- * -
+ * Returns true if two components are the same version.
+ * Used for detecting mutations.
  */
+export function componentHasntChanged<C>(old: [C, Version], cur: [C, Version]): boolean {
+  return old[1] === cur[1];
+}
+
 export class ComponentManager<C extends NComponent> {
   constructor(c: NComponentConstructor<C>) {
     this.components = new Map();
+    this.versions = new Map();
     this.MyClass = c;
   }
 
@@ -17,6 +24,7 @@ export class ComponentManager<C extends NComponent> {
    */
   public add(e: Entity, cmpt: C): void {
     this.components.set(e, cmpt);
+    this.versions.set(e, 0);
   }
 
   /** Returns the number of components. */
@@ -60,6 +68,10 @@ export class ComponentManager<C extends NComponent> {
    * */
   public tryGetMut(e: Entity): C | undefined {
     const c = this.components.get(e);
+    const version = this.versions.get(e);
+    if (version != null) {
+      this.versions.set(e, version + 1);
+    }
     return c;
   }
 
@@ -93,9 +105,18 @@ export class ComponentManager<C extends NComponent> {
     return this.tryGetMut(e);
   }
 
+  /**
+   * For consumers who want to detect mutations, returns a version that can be compared.
+   */
+  public getWithVersion(e: Entity): [DeepReadonly<C> | undefined, Version] {
+    const c = this.tryGet(e);
+    return [c, this.versions.get(e) ?? -1];
+  }
+
   /** Destroys a component. */
   public remove(e: Entity): void {
     this.components.delete(e);
+    this.versions.delete(e);
   }
 
   /** Returns `true` if a component exists for this entity. */
@@ -116,11 +137,6 @@ export class ComponentManager<C extends NComponent> {
     return [...this.components.values()] as DeepReadonly<C>[];
   }
 
-  /** Returns all components mutably as an array */
-  public getAsArrayMut(): C[] {
-    return [...this.components.values()];
-  }
-
   /** For debugging only! */
   public getAsDict(): { [key: string]: C } {
     return Object.fromEntries(this.components);
@@ -133,6 +149,12 @@ export class ComponentManager<C extends NComponent> {
    * Exposed for debugging reasons.
    * */
   protected components: Map<Entity, C>;
+
+  /**
+   * Internal version tracker. May change in the future.
+   * Exposed for debugging reasons.
+   */
+  protected versions: Map<Entity, Version>;
 }
 
 const mutationErrorMessage = 'Tried to use a mutating method on a readonly ComponentManager!';

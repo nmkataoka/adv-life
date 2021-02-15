@@ -1,4 +1,4 @@
-import { ComponentManager } from './ComponentManager';
+import { componentHasntChanged, ComponentManager } from './ComponentManager';
 import { NComponent } from '../NComponent';
 
 class TestCmpt extends NComponent {
@@ -33,5 +33,24 @@ describe('component manager', () => {
       const cmpt = cMgr.getMut(i);
       expect(cmpt?.health).toBe(i * 10);
     }
+  });
+
+  it('when component is accessed via immutable ref, mutation tracking detects no change', () => {
+    const cMgr = new ComponentManager<TestCmpt>(TestCmpt);
+
+    cMgr.add(0, new TestCmpt());
+    const ref1 = cMgr.getWithVersion(0);
+    const ref2 = cMgr.getWithVersion(0);
+    expect(componentHasntChanged(ref1, ref2)).toBe(true);
+  });
+
+  it('when component is mutated, mutation tracking detects a change', () => {
+    const cMgr = new ComponentManager<TestCmpt>(TestCmpt);
+    cMgr.add(0, new TestCmpt());
+    const ref1 = cMgr.getWithVersion(0);
+    const cmpt = cMgr.getMut(0);
+    cmpt.health -= 1;
+    const ref2 = cMgr.getWithVersion(0);
+    expect(componentHasntChanged(ref1, ref2)).toBe(false);
   });
 });
