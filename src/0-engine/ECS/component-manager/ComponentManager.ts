@@ -1,4 +1,5 @@
 import { DeepReadonly } from 'ts-essentials';
+import { Entity } from '../Entity';
 import { NComponent, NComponentConstructor } from '../NComponent';
 
 /**
@@ -7,31 +8,25 @@ import { NComponent, NComponentConstructor } from '../NComponent';
  */
 export class ComponentManager<C extends NComponent> {
   constructor(c: NComponentConstructor<C>) {
-    this.components = {};
-    this.componentIsChanged = {};
+    this.components = new Map();
     this.MyClass = c;
   }
 
   /** Constructs a new component and attaches it to the given entity.
    * @returns A mutable reference to the new component.
    */
-  public add(e: number, cmpt: C): void {
-    this.components[e] = cmpt;
+  public add(e: Entity, cmpt: C): void {
+    this.components.set(e, cmpt);
   }
 
   /** Returns the number of components. */
   public get length(): number {
-    return Object.values(this.components).length;
-  }
-
-  /** Clears the isChanged tracker for all components, should be called every UI frame. */
-  public clearIsChanged(): void {
-    this.componentIsChanged = {};
+    return this.components.size;
   }
 
   /** Returns an immutable reference to a component, which must exist. */
-  public get(e: number | string): DeepReadonly<C> {
-    const c = this.components[e];
+  public get(e: Entity): DeepReadonly<C> {
+    const c = this.components.get(e);
     if (c == null) {
       throw new Error(`Unexpected missing component ${this.MyClass.name} for entity ${e}`);
     }
@@ -43,7 +38,7 @@ export class ComponentManager<C extends NComponent> {
    * Returns a mutable reference to a component, which must exist.
    * Mutable references may have performance implications, so use the immutable version whenever possible.
    */
-  public getMut(e: number | string): C {
+  public getMut(e: Entity): C {
     const c = this.tryGetMut(e);
     if (c == null) {
       throw new Error(`Unexpected missing component ${this.MyClass.name} for entity ${e}`);
@@ -55,25 +50,17 @@ export class ComponentManager<C extends NComponent> {
   /**
    * Returns an immutable reference to a component, or undefined if it doesn't exist.
    */
-  public tryGet(e: number | string): DeepReadonly<C> | undefined {
-    return this.components[e] as DeepReadonly<C> | undefined;
+  public tryGet(e: Entity): DeepReadonly<C> | undefined {
+    return this.components.get(e) as DeepReadonly<C> | undefined;
   }
 
   /**
    * Returns a mutable reference to a component, or undefined if it doesn't exist.
    * Mutable references may have performance implications, so use the immutable version whenever possible.
    * */
-  public tryGetMut(e: number | string): C | undefined {
-    let c = this.components[e];
-
-    // If this is the first mutable access this frame, copy the object for immutability
-    if (c && !this.componentIsChanged[e]) {
-      c = this.MyClass.from(c);
-      this.components[e] = c;
-      this.componentIsChanged[e] = true;
-    }
-
-    return this.components[e];
+  public tryGetMut(e: Entity): C | undefined {
+    const c = this.components.get(e);
+    return c;
   }
 
   /**
@@ -107,36 +94,36 @@ export class ComponentManager<C extends NComponent> {
   }
 
   /** Destroys a component. */
-  public remove(e: number | string): void {
-    delete this.components[e];
+  public remove(e: Entity): void {
+    this.components.delete(e);
   }
 
   /** Returns `true` if a component exists for this entity. */
-  public has(e: number | string): boolean {
-    return !!this.components[e];
+  public has(e: Entity): boolean {
+    return this.components.has(e);
   }
 
-  public entries(): [string, C][] {
-    return Object.entries(this.components);
+  public entries(): [Entity, C][] {
+    return [...this.components.entries()];
   }
 
-  public entities(): string[] {
-    return Object.keys(this.components);
+  public entities(): Entity[] {
+    return [...this.components.keys()];
   }
 
   /** Returns all components as an array */
   public getAsArray(): DeepReadonly<C>[] {
-    return Object.values(this.components) as DeepReadonly<C>[];
+    return [...this.components.values()] as DeepReadonly<C>[];
   }
 
   /** Returns all components mutably as an array */
   public getAsArrayMut(): C[] {
-    return Object.values(this.components);
+    return [...this.components.values()];
   }
 
   /** For debugging only! */
   public getAsDict(): { [key: string]: C } {
-    return this.components;
+    return Object.fromEntries(this.components);
   }
 
   public MyClass: NComponentConstructor<C>;
@@ -145,12 +132,7 @@ export class ComponentManager<C extends NComponent> {
    * The current internal component container. May change in the future.
    * Exposed for debugging reasons.
    * */
-  protected components: { [key: string]: C };
-
-  /**
-   * Tracks when components may have been changed.
-   */
-  protected componentIsChanged: { [key: string]: boolean | undefined };
+  protected components: Map<Entity, C>;
 }
 
 const mutationErrorMessage = 'Tried to use a mutating method on a readonly ComponentManager!';

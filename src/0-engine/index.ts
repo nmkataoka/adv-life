@@ -6,3 +6,4 @@ export { NComponent } from './ECS/NComponent';
 export type { NComponentConstructor } from './ECS/NComponent';
 export type { Thunk } from './ECS/Thunk';
 export { View } from './ECS/view/View';
+export type { Entity } from './ECS/Entity';

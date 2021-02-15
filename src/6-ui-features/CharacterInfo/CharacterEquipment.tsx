@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 import { useSelector } from '4-react-ecsal';
-import { EntityManager } from '0-engine';
+import { Entity, EntityManager } from '0-engine';
 import { InventoryCmpt } from '1-game-code/ncomponents';
 import { getPlayerId } from '3-frontend-api';
 
-const selectPlayerGold = (player: number | string) => (eMgr: EntityManager) => {
+const selectPlayerGold = (player: Entity) => (eMgr: EntityManager) => {
   const { gold } = eMgr.getCmpt(InventoryCmpt, player);
   return gold;
 };

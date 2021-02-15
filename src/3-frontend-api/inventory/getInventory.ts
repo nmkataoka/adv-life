@@ -1,11 +1,9 @@
-import { EntityManager } from '0-engine';
+import { Entity, EntityManager } from '0-engine';
 import { InventoryCmpt } from '1-game-code/Inventory';
 import { Selector } from '4-react-ecsal';
 import { defaultInventorySlotInfo, InventoryInfo } from './InventoryInfo';
 
-export const getInventory = (e: number | string): Selector<InventoryInfo> => (
-  eMgr: EntityManager,
-) => {
+export const getInventory = (e: Entity): Selector<InventoryInfo> => (eMgr: EntityManager) => {
   const { gold = 0, inventorySlots = [] } = eMgr.tryGetCmpt(InventoryCmpt, e) ?? {};
   return {
     gold,

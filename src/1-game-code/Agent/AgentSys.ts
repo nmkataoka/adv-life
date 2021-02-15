@@ -34,8 +34,8 @@ const agentUpdateSlice = createEventSlice(DefaultEvent.Update, {
     },
     payload: { dt },
   }) => {
-    const promises = agentMgr.entries().map(async ([entityString, agentCmpt]) => {
-      const self = parseInt(entityString, 10);
+    const promises = agentMgr.entries().map(async ([e, agentCmpt]) => {
+      const self = e;
       let { baction } = agentCmpt;
 
       // Get new action if necessary
@@ -113,11 +113,9 @@ function attackRandomEnemy(
 }
 
 function getEnemies(factionMgr: ComponentManager<FactionCmpt>, isEnemy: boolean): number[] {
-  const enemies = Object.entries(factionMgr.getAsArray()).filter(
-    ([, factionCmpt]) => factionCmpt.isEnemy !== isEnemy,
-  );
+  const enemies = factionMgr.entries().filter(([, factionCmpt]) => factionCmpt.isEnemy !== isEnemy);
 
-  return enemies.map(([entityStr]) => parseInt(entityStr, 10));
+  return enemies.map(([e]) => e);
 }
 
 export default [agentStartSlice.eventListener, agentUpdateSlice.eventListener];
