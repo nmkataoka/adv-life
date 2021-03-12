@@ -2,10 +2,10 @@ import styled from '@emotion/styled';
 import { useReduxDispatch, useReduxSelector } from '11-redux-wrapper';
 import { useSelector2 } from '4-react-ecsal';
 import { RootState } from '7-app/types';
-import { getAllTowns } from '3-frontend-api';
+import { getAllTowns, getPlayerId } from '3-frontend-api';
+import { travelToTown } from '1-game-code/Unit/TravelToLocationSys';
 import MapLocation from './MapLocation';
 import { changedScene, Scene } from '../sceneManager/sceneMetaSlice';
-import { travelToLocation } from './actions';
 import WorldMapCanvas from './WorldMapCanvas';
 
 const mapHeight = 400;
@@ -17,17 +17,19 @@ export default function WorldMap(): JSX.Element {
   const dispatch = useReduxDispatch();
   const isInCombat = useReduxSelector((state: RootState) => state.combatScene.isInCombat);
   const towns = useSelector2(getAllTowns) ?? [];
+  const playerId = useSelector2(getPlayerId) ?? -1;
 
   const handleCombatClick = () => {
     if (!isInCombat) {
-      dispatch(travelToLocation({ id: -1, locationType: 'Combat' }));
+      // Need to update travelToTown to accomodate combat locations
+      // dispatch(travelToLocation({ id: -1, locationType: 'Combat' }));
       dispatch(changedScene(Scene.Colosseum));
     }
   };
 
   const handleTownClick = (townId: number) => () => {
     if (!isInCombat) {
-      dispatch(travelToLocation({ id: townId, locationType: 'Town' }));
+      dispatch(travelToTown({ entityId: playerId, townId }));
       dispatch(changedScene(Scene.Town));
     }
   };

@@ -2,13 +2,13 @@ import { createEventSlice } from '0-engine';
 import { EventCallbackError } from '0-engine/ECS/event-system';
 import { InventoryCmpt } from '../ncomponents';
 
-const entityBuysItemFromMerchantSlice = createEventSlice('entityBuysItemFromMerchant', {
+const buyItemFromMerchantSlice = createEventSlice('buyItemFromMerchant', {
   writeCmpts: [InventoryCmpt],
 })<{
   buyerId: number;
   itemIndex: number;
   sellerId: number;
-}>(function entityBuysItemFromMerchant({
+}>(function buyItemFromMerchant({
   componentManagers: {
     writeCMgrs: [inventoryMgr],
   },
@@ -36,6 +36,6 @@ const entityBuysItemFromMerchantSlice = createEventSlice('entityBuysItemFromMerc
   }
 });
 
-export const { entityBuysItemFromMerchant } = entityBuysItemFromMerchantSlice;
+export const { buyItemFromMerchant } = buyItemFromMerchantSlice;
 
-export default [entityBuysItemFromMerchantSlice.eventListener];
+export default [buyItemFromMerchantSlice.eventListener];

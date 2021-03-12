@@ -2,8 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk } from '7-app/types';
 import { PersonalityArray } from '1-game-code/ncomponents/PersonalityCmpt';
 import apiClient from '3-frontend-api/ApiClient';
-import { getTowns } from '3-frontend-api/town';
-import { getPlayerId } from '3-frontend-api';
 import { createCharacter } from '1-game-code/CharacterCreation/CharacterCreationSys';
 import { initialCharacterAttributeGroups } from './characterCreationData';
 import CharacterAttributeGroup, {
@@ -13,9 +11,6 @@ import CharacterAttributeGroup, {
   OneOf,
 } from './CharacterAttributeGroup';
 import { Freeform } from './CharacterAttributeGroup/Freeform';
-import { setPlayerEntity } from '../Player/playerSlice';
-import { changedScene, Scene } from '../sceneManager/sceneMetaSlice';
-import { travelToLocation } from '../WorldMap/actions';
 
 /* eslint-disable no-console */
 
@@ -228,15 +223,4 @@ export const createPlayerCharacter = (): AppThunk => async (dispatch, getState) 
       stats,
     }),
   );
-
-  const playerId = apiClient.get(getPlayerId);
-  apiClient.setHeader('userId', playerId);
-  dispatch(setPlayerEntity(playerId));
-};
-
-export const finishCharacterCreation = (): AppThunk => (dispatch) => {
-  dispatch(createPlayerCharacter());
-  const firstTown = Object.values(getTowns())[0];
-  dispatch(travelToLocation({ id: firstTown.townId, locationType: 'Town' }));
-  dispatch(changedScene(Scene.Town));
 };

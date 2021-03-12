@@ -102,6 +102,29 @@ export function selectorNode<T>({ get }: { get: SelectorGet<T> }): SelectorNode<
   return { key, get };
 }
 
+/**
+ * Returns selector nodes that are cached based on a key provided by computeKey.
+ */
+export function selectorNodeFamily<T, Args extends any[]>({
+  computeKey,
+  get,
+}: {
+  computeKey: (...args: Args) => string;
+  get: (...args: Args) => SelectorGet<T>;
+}): (...args: Args) => SelectorNode<T> {
+  const selectors: Map<string, SelectorNode<T>> = new Map();
+  return function selectorNodeFromFamily(...args: Args) {
+    const key = computeKey(...args);
+    const existing = selectors.get(key);
+    if (existing) {
+      return existing;
+    }
+    const selector = selectorNode({ get: get(...args) });
+    selectors.set(key, selector);
+    return selector;
+  };
+}
+
 // TODO: change to take an array of ReadCmpts instead of the full ComponentClasses object
 export function viewNode<ComponentDependencies extends AbstractComponentClasses>(
   componentDependencies: ComponentDependencies,
@@ -117,7 +140,7 @@ function isSelectorNode<T>(node: Node<T>): node is SelectorNode<T> {
 function isViewNode<T>(
   node: Node<T>,
 ): node is ViewNode<T extends View<AbstractComponentClasses> ? T : never> {
-  return typeof (node as any).dependencies === 'object';
+  return typeof (node as any).componentDependencies === 'object';
 }
 
 function isUniqueComponentNode<T>(node: Node<T>): node is UniqueComponentNode<T> {

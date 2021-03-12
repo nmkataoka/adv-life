@@ -1,6 +1,7 @@
 import { EventCallbackError, createEventSlice } from '0-engine';
 import { MovementCmpt } from '1-game-code/Combat/MovementCmpt';
 import { ComponentClasses } from '0-engine/ECS/component-dependencies/ComponentDependencies';
+import { UnitLocationCmpt } from '1-game-code/Unit/UnitLocationCmpt';
 import {
   ClassCmpt,
   CombatPositionCmpt,
@@ -73,6 +74,9 @@ const characterCreationSlice = createEventSlice('createCharacter', {
   eMgr.addCmpt(player, movementCmpt);
   const combatPosCmpt = new CombatPositionCmpt();
   eMgr.addCmpt(player, combatPosCmpt);
+
+  const unitLocationCmpt = new UnitLocationCmpt();
+  eMgr.addCmpt(player, unitLocationCmpt);
 }, 'createCharacter');
 
 export const { createCharacter } = characterCreationSlice;

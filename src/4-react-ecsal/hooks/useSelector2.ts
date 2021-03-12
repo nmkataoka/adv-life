@@ -1,4 +1,4 @@
-import { MutableRefObject, useDebugValue, useLayoutEffect, useReducer, useRef } from 'react';
+import { MutableRefObject, useCallback, useDebugValue, useEffect, useReducer, useRef } from 'react';
 import { isEqual, VersionedData } from '0-engine';
 import { DeepReadonly } from 'ts-essentials';
 
@@ -15,7 +15,7 @@ export const useSelector2 = <Data>(node: Node<Data>): DeepReadonly<Data | undefi
     throw new Error(`You must pass a selector to useSelector`);
   }
 
-  useLayoutEffect(() => {
+  const update = useCallback(() => {
     const newState = read(cacheState, store, node);
     if (latestNodeState.current && isEqual(newState, latestNodeState.current)) {
       return;
@@ -23,6 +23,12 @@ export const useSelector2 = <Data>(node: Node<Data>): DeepReadonly<Data | undefi
     latestNodeState.current = newState;
     forceRender();
   }, [cacheState, node, store]);
+
+  // Subscribe to updates
+  useEffect(() => {
+    const unsubscribe = store.subscribe(update);
+    return () => unsubscribe();
+  }, [store, update]);
 
   useDebugValue(latestNodeState.current?.[0]);
 

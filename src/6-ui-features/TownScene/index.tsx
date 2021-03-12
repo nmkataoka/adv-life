@@ -1,19 +1,16 @@
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { useReduxSelector, useReduxDispatch } from '11-redux-wrapper';
+import { useReduxDispatch } from '11-redux-wrapper';
 import { useSelector2 } from '4-react-ecsal';
-import { RootState } from '7-app/types';
-import { getTown } from '3-frontend-api';
+import { getPlayerCurrentTown, getTown } from '3-frontend-api';
 import TopBar from '6-ui-features/TopBar';
 import TownLocation from '../TownLocation';
 import PartySummary from './PartySummary';
 import { changedTitle } from '../TopBar/topBarSlice';
 
-const selectCurTownId = (state: RootState) => state.townScene.currentTownId;
-
 export default function TownScene(): JSX.Element {
   const dispatch = useReduxDispatch();
-  const townId = useReduxSelector(selectCurTownId);
+  const townId = useSelector2(getPlayerCurrentTown) ?? -1;
   const { locationIds: townLocationIds, name: townName } = useSelector2(getTown(townId)) ?? {
     locationIds: [],
     name: 'Unnamed',

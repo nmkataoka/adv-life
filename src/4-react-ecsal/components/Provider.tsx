@@ -1,7 +1,7 @@
 import { EntityManager } from '0-engine';
-import { Context as ReactContext, useMemo, ReactNode } from 'react';
+import { Context as ReactContext, useMemo, ReactNode, useEffect, useCallback } from 'react';
 import ReactEcsalContext, { ContextValue } from './Context';
-import { createCacheState } from '../utils/node';
+import { commit, createCacheState } from '../utils/node';
 
 type ProviderProps = {
   store: EntityManager;
@@ -17,6 +17,16 @@ const Provider = ({ store, context, children }: ProviderProps): JSX.Element => {
       cacheState,
     };
   }, [store]);
+
+  const handleTickEnd = useCallback(() => {
+    commit(contextValue.cacheState);
+  }, [contextValue]);
+
+  // Clear the cache whenever the store updates
+  useEffect(() => {
+    const unsubscribe = contextValue.store.subscribe(handleTickEnd);
+    return () => unsubscribe();
+  }, [handleTickEnd, contextValue]);
 
   const Context = context || ReactEcsalContext;
 

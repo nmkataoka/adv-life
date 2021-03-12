@@ -1,5 +1,6 @@
 import { DataLayer } from '1-game-code/World';
 import assert from 'assert';
+import { DeepReadonly } from 'ts-essentials';
 import { Color } from './Color';
 
 type ColoringFunc = (v: number) => Color;
@@ -18,11 +19,11 @@ export default class PixelMap {
 
   width: number;
 
-  constructor(data: DataLayer, coloringFunc: ColoringFunc) {
+  constructor(data: DataLayer | DeepReadonly<DataLayer>, coloringFunc: ColoringFunc) {
     this.height = data.height;
     this.width = data.width;
     this.coloringFunc = coloringFunc;
-    this.data = data;
+    this.data = data as DataLayer;
     this.pixels = new Uint8ClampedArray(4 * data.data.length);
   }
 
@@ -43,12 +44,18 @@ export default class PixelMap {
     this.pixels[firstIdx + 3] = a;
   };
 
-  updateFromDataLayer = (data: DataLayer, useShearedElev: boolean): void => {
+  updateFromDataLayer = (
+    data: DataLayer | DeepReadonly<DataLayer>,
+    useShearedElev: boolean,
+  ): void => {
     if (this.height !== data.height || this.width !== data.width) {
       throw new Error('DataLayer height/width does not match WorldBitmap');
     }
 
-    this.data = useShearedElev ? shearElevs(data) : data;
+    // De-readonlyify since it's not that helpful
+    const d = data as DataLayer;
+
+    this.data = useShearedElev ? shearElevs(d) : d;
 
     const floatMap = this.data.data;
     for (let i = 0; i < floatMap.length; ++i) {
