@@ -1,5 +1,6 @@
 import { Entity } from '0-engine';
 import { InventoryCmpt } from '1-game-code/Inventory';
+import { ItemStackCmpt } from '1-game-code/Items';
 import { componentNode, ComponentNode, selectorNodeFamily } from '4-react-ecsal';
 import { defaultInventorySlotInfo } from './InventoryInfo';
 
@@ -12,8 +13,7 @@ export const getInventory = selectorNodeFamily({
     const { gold, inventorySlots } = inventoryCmpt ?? { gold: 0, inventorySlots: [] };
     return {
       gold,
-      // $FIXME: Can remove `as any[]` in typescript 4.2
-      inventorySlots: (inventorySlots as any[]).map((slot) => {
+      inventorySlots: inventorySlots.map((slot: ItemStackCmpt | undefined) => {
         if (!slot) {
           return { ...defaultInventorySlotInfo };
         }

@@ -33,7 +33,7 @@ const CharacterSummaryColumn = (): JSX.Element => {
 
   // Once the player is created, automatically go to a town
   useEffect(() => {
-    if (typeof playerId === 'number' && playerId > -1 && townIds) {
+    if (typeof playerId === 'number' && playerId > -1 && townIds && townIds.length > 0) {
       void dispatch(travelToTown({ entityId: playerId, townId: townIds[0].townId })).then(() => {
         reduxDispatch(changedScene(Scene.Town));
       });
