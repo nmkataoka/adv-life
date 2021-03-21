@@ -1,7 +1,7 @@
 import { EntityManager } from '0-engine';
-import { Subscription } from '4-react-ecsal/utils/Subscription';
-import { Context as ReactContext, useEffect, useMemo, ReactNode } from 'react';
+import { Context as ReactContext, useMemo, ReactNode, useEffect, useCallback } from 'react';
 import ReactEcsalContext, { ContextValue } from './Context';
+import { commit, createCacheState } from '../utils/node';
 
 type ProviderProps = {
   store: EntityManager;
@@ -10,31 +10,23 @@ type ProviderProps = {
 };
 
 const Provider = ({ store, context, children }: ProviderProps): JSX.Element => {
-  const contextValue = useMemo(() => {
-    const subscription = new Subscription(store);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    subscription.onStateChange = subscription.notifyNestedSubs;
+  const contextValue: ContextValue = useMemo(() => {
+    const cacheState = createCacheState();
     return {
       store,
-      subscription,
+      cacheState,
     };
   }, [store]);
 
-  const previousState = useMemo(() => store, [store]);
+  const handleTickEnd = useCallback(() => {
+    commit(contextValue.cacheState);
+  }, [contextValue]);
 
+  // Clear the cache whenever the store updates
   useEffect(() => {
-    const { subscription } = contextValue;
-    subscription.trySubscribe();
-
-    // Opportunity to optimize here if pseudo-immutability is implemented
-    // if(previousState !== store.eMgr) {
-    subscription.notifyNestedSubs();
-    // }
-    return () => {
-      subscription.tryUnsubscribe();
-      subscription.onStateChange = null;
-    };
-  }, [contextValue, previousState]);
+    const unsubscribe = contextValue.store.subscribe(handleTickEnd);
+    return () => unsubscribe();
+  }, [handleTickEnd, contextValue]);
 
   const Context = context || ReactEcsalContext;
 

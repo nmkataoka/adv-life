@@ -1,10 +1,10 @@
 import { EntityManager } from '0-engine';
-import { Subscription } from '4-react-ecsal/utils/Subscription';
 import { Context, createContext } from 'react';
+import { CacheState } from '../utils/node';
 
 export type ContextValue = {
   store: EntityManager;
-  subscription: Subscription;
+  cacheState: CacheState;
 };
 
 // eslint-disable-next-line

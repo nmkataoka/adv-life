@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { useSelector } from '4-react-ecsal';
+import { useSelector2 } from '4-react-ecsal';
 import Modal from '5-react-components/Modal';
 import { getTownLocation } from '3-frontend-api';
 import ShopInventory from './ShopInventory';
@@ -11,7 +11,7 @@ type TownLocationProps = {
 
 export default function TownLocation({ townLocationId }: TownLocationProps): JSX.Element {
   const [isShowing, setIsShowing] = useState(false);
-  const { name } = useSelector(getTownLocation(townLocationId));
+  const { name } = useSelector2(getTownLocation(townLocationId)) ?? { name: 'Unnamed' };
 
   return (
     <div>

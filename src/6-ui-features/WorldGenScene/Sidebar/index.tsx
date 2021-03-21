@@ -4,7 +4,7 @@ import { getColor } from '6-ui-features/Theme';
 import produce from 'immer';
 import { useDispatch } from '4-react-ecsal';
 import { GameManager } from '0-engine/GameManager';
-import { useSelector } from 'react-redux';
+import { useReduxSelector } from '11-redux-wrapper';
 import { Tabs } from './Tabs';
 import { WorldGenModules } from '../constants';
 import { TabContent } from './TabContent';
@@ -18,7 +18,7 @@ type SidebarProps = {
 
 export function Sidebar({ seed }: SidebarProps): JSX.Element {
   const dispatch = useDispatch();
-  const activeModule = useSelector(getActiveModule);
+  const activeModule = useReduxSelector(getActiveModule);
   const [contentState, setContentState] = useState(WorldGenModules);
 
   const content = contentState.find(({ key }) => key === activeModule)?.content;

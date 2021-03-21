@@ -11,6 +11,7 @@ import {
 import { StatusEffectsCmpt } from '../Combat/StatusEffectsCmpt';
 
 import { GoalQueueCmpt } from '../Agent/GoalQueueCmpt';
+import { UnitLocationCmpt } from './UnitLocationCmpt';
 
 export const createUnit = (position: number, isEnemy = false): number => {
   const eMgr = EntityManager.instance;
@@ -33,6 +34,9 @@ export const createUnit = (position: number, isEnemy = false): number => {
   const faction = new FactionCmpt();
   faction.isEnemy = isEnemy;
   eMgr.addCmpt(e, faction);
+
+  const unitLocationCmpt = new UnitLocationCmpt();
+  eMgr.addCmpt(e, unitLocationCmpt);
 
   return e;
 };

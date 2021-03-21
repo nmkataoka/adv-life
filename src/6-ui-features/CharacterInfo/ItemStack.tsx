@@ -1,13 +1,12 @@
 import styled from '@emotion/styled';
-import { useSelector } from '4-react-ecsal';
-import { getItemClass } from '3-frontend-api/items/getItemClass';
+import { useItemClass } from '3-frontend-api';
 
 type ItemStackProps = {
   itemClassId: number;
 };
 
 const ItemStack = ({ itemClassId }: ItemStackProps): JSX.Element => {
-  const { name } = useSelector(getItemClass(itemClassId));
+  const { name } = useItemClass(itemClassId);
   return <ItemBox>{name}</ItemBox>;
 };
 

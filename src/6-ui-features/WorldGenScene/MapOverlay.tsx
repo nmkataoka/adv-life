@@ -1,9 +1,9 @@
 import { getElevationMetadata } from '3-frontend-api/worldMap/getTerrainInfo';
-import { useSelector } from '4-react-ecsal';
+import { useSelector2 } from '4-react-ecsal';
 import styled from '@emotion/styled';
 
 export function MapOverlay(): JSX.Element {
-  const elevMeta = useSelector(getElevationMetadata);
+  const elevMeta = useSelector2(getElevationMetadata);
 
   return (
     <OverlayContainer>

@@ -1,17 +1,22 @@
 import styled from '@emotion/styled';
 import { InventorySlotInfo } from '3-frontend-api/inventory/InventoryInfo';
+import { DeepReadonly } from 'ts-essentials';
 import ItemStack from './ItemStack';
 
 type CharacterInventoryProps = {
-  inventorySlots: InventorySlotInfo[];
+  inventorySlots: DeepReadonly<(InventorySlotInfo | undefined)[]>;
 };
 
 const CharacterInventory = ({ inventorySlots }: CharacterInventoryProps): JSX.Element => {
+  const filledInventorySlots = inventorySlots.filter(
+    (slot) => typeof slot !== 'undefined',
+  ) as DeepReadonly<InventorySlotInfo[]>;
+
   return (
     <RightHalf>
       <h3>Character Inventory</h3>
       <ItemRow>
-        {inventorySlots.map(({ itemClassId }, idx) => {
+        {filledInventorySlots.map(({ itemClassId }, idx) => {
           // eslint-disable-next-line react/no-array-index-key
           return <ItemStack itemClassId={itemClassId} key={`itemClass_${itemClassId}_${idx}`} />;
         })}

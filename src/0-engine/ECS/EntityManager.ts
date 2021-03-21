@@ -1,6 +1,10 @@
 import { DeepReadonly } from 'ts-essentials';
 import { NComponent, NComponentConstructor } from './NComponent';
-import { ComponentManager, ReadonlyComponentManager } from './component-manager/ComponentManager';
+import {
+  ComponentManager,
+  ReadonlyComponentManager,
+  Version,
+} from './component-manager/ComponentManager';
 import { NameCmpt } from './built-in-components';
 import { View } from './view/View';
 import {
@@ -209,6 +213,21 @@ export class EntityManager {
   ): C | undefined => {
     const cMgr = this.tryGetMgr<C>(cclass);
     return cMgr.tryGetUniqueMut();
+  };
+
+  public getWithVersion = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
+    entity: Entity,
+  ): [DeepReadonly<C> | undefined, Version] => {
+    const cMgr = this.tryGetMgr<C>(cclass);
+    return cMgr.getWithVersion(entity);
+  };
+
+  public getUniqueWithVersion = <C extends NComponent>(
+    cclass: NComponentConstructor<C>,
+  ): [DeepReadonly<C> | undefined, Version] => {
+    const cMgr = this.tryGetMgr<C>(cclass);
+    return cMgr.getUniqueWithVersion();
   };
 
   /** Creates a component, adds it to an entity, and returns it. */

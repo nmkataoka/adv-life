@@ -11,6 +11,7 @@ import EquipmentSys from './Inventory/EquipmentSys';
 import ItemClassDbSys from './Items/ItemClass/ItemClassDbSys';
 import MaterialDbSys from './Items/Material/MaterialDbSys';
 import MerchantSys from './Merchant/MerchantSys';
+import TravelToLocationSys from './Unit/TravelToLocationSys';
 import RainSys from './World/Hydrology/RainSys';
 import TerrainGenSys from './World/TerrainGen/TerrainGenSys';
 
@@ -28,6 +29,7 @@ const eventListeners: EventListener<any, any>[] = [
   ...SetPlayerDestinationSys,
   ...StatusEffectsSys,
   ...TerrainGenSys,
+  ...TravelToLocationSys,
   ...MerchantSys,
 ];
 

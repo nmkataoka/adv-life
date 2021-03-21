@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
+import { useReduxSelector } from '11-redux-wrapper';
 
 import { Scene } from '6-ui-features/sceneManager/sceneMetaSlice';
 import { RootState } from '7-app/types';
@@ -19,7 +19,7 @@ const scenes = {
 };
 
 export function SceneRouter(): JSX.Element {
-  const currentScene = useSelector((state: RootState) => state.sceneMeta.currentScene);
+  const currentScene = useReduxSelector((state: RootState) => state.sceneMeta.currentScene);
   const SceneComponent = scenes[currentScene];
   return (
     <Container>
