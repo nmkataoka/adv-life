@@ -160,16 +160,25 @@ export function descend(drop: Drop, elevLayer: DataLayer, dt: number): void {
 
     // Evaporate
     // Real evaporation is annoying to deal with so we just evaporate a set fraction per timestep
-    drop.height *= 1 - drop.evapRate;
+    const volChangeFrac = 1 - drop.evapRate;
+    drop.height *= volChangeFrac;
 
-    // TODO: the sediment fraction needs to be adjusted after evaporation
+    // Total sediment remains constant, so sediment fraction needs to increase if water volume decreases
+    drop.sediment /= volChangeFrac;
 
     // Infinite loop check
     ++count;
   }
 
+  // There are three reasons a drop stops descending. Handle the cases
   if (count >= maxCount) {
     throw new Error('drop.descend got stuck in an infinite loop');
+  } else if (drop.height <= drop.minHeight) {
+    // Drop evaporated, deposit remaining sediment
+    const elevChange = drop.height * drop.sediment;
+    const { x, y } = drop.pos.toVec2i();
+    const newElev = elevLayer.at(x, y) + elevChange;
+    elevLayer.set(x, y, newElev);
   }
 }
 

@@ -154,7 +154,7 @@ function depsHaveChanged<T>(
   cached: VersionedData<T>,
   deps?: DependencySet,
 ): boolean {
-  const { nodes } = cacheState;
+  const { nodes, valueCache } = cacheState;
   if (!deps) {
     throw new Error(
       'Selector node was run in previous tick but has no dependency map. Either your selector has no dependencies or a bug has occurred.',
@@ -167,8 +167,9 @@ function depsHaveChanged<T>(
     if (!depNode) {
       throw new Error('Cached selector dependency does not have node in cache.');
     }
+    const cachedDep = valueCache.get(depNode.key);
     const wipDepState = read(cacheState, eMgr, depNode);
-    if (!isEqual(cached, wipDepState)) return true;
+    if (typeof cachedDep === 'undefined' || !isEqual(cachedDep, wipDepState)) return true;
   }
   return false;
 }
