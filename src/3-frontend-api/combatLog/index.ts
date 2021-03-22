@@ -3,6 +3,6 @@ import { selectorNode } from '4-react-ecsal';
 
 export const getCombatLog = selectorNode({
   get: () => {
-    return combatLog;
+    return [...combatLog];
   },
 });

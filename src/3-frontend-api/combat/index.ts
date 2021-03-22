@@ -10,7 +10,8 @@ const getUnitCombatPos = (unitId: Entity): ComponentNode<CombatPositionCmpt> =>
 export const getUnitPosition = selectorNodeFamily({
   get: (unitId: Entity) => ({ get }) => {
     const [combatPos] = get(getUnitCombatPos(unitId));
-    return combatPos?.pos;
+    if (!combatPos) return undefined;
+    return { ...combatPos.pos };
   },
   computeKey: (unitId: Entity) => `${unitId}`,
 });
