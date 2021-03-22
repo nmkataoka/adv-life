@@ -26,6 +26,21 @@ export class DataLayer {
     this.isCylindrical = isCylindridal;
   }
 
+  /**
+   * Useful for:
+   *   1. deserialization
+   *   2. creating a new reference to a DataLayer object
+   * This is not a deep copy -- assumes the source data will no longer be referenced.
+   */
+  public static constructFrom(data: Partial<DataLayer> = {}): DataLayer {
+    const { name = 'Unknown', width = 0, height = 0, metersPerCoord, isCylindrical } = data;
+    const newDataLayer = new DataLayer(name, width, height, metersPerCoord, isCylindrical);
+    if (data.data) {
+      newDataLayer.data = data.data;
+    }
+    return newDataLayer;
+  }
+
   /** Safe access, but slow */
   at = (x: number, y: number): number => {
     x = ((x % this.width) + this.width) % this.width;
