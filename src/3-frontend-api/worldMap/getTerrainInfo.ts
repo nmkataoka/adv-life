@@ -7,6 +7,6 @@ export const getElevationMetadata = selectorNode({
     const [worldMapCmpt] = get(getWorldMap);
     if (!worldMapCmpt) return undefined;
     const result = worldMapCmpt.data.metadata[WorldMap.Layer.Elevation];
-    return result;
+    return result ? { ...result } : undefined;
   },
 });
