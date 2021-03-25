@@ -2,7 +2,6 @@ import { createEventSlice } from '0-engine';
 import { NoiseParams } from '1-game-code/Noise';
 import { RngCmpt } from '1-game-code/prng/RngCmpt';
 import { WorldMapCmpt } from '../WorldMapCmpt';
-import { WorldMap } from '../WorldMap';
 import { createRandomTerrain } from './elevationNoise/createRandomTerrain';
 import { generateTectonics } from './tectonicGeneration';
 import { rasterizeTectonics } from './tectonicRasterization';
@@ -26,7 +25,7 @@ const createNoisedWorldMapSlice = createEventSlice('createNoisedWorldMap', {
     }
     const worldMapEntity = eMgr.createEntity('worldMap');
     const worldMapCmpt = new WorldMapCmpt();
-    worldMapCmpt.data.dataLayers[WorldMap.Layer.Elevation] = createRandomTerrain();
+    worldMapCmpt.data.dataLayers.elevation = createRandomTerrain();
 
     worldMapMgr.add(worldMapEntity, worldMapCmpt);
   },
@@ -97,8 +96,8 @@ const createWorldMapSlice = createEventSlice('createWorldMap', {
       ridgeNoiseParams.scale,
       worldRng,
     );
-    worldMap.dataLayers[WorldMap.Layer.Elevation] = elevLayer;
-    worldMap.dataLayers[WorldMap.Layer.Hilliness] = hillinessLayer;
+    worldMap.dataLayers.elevation = elevLayer;
+    worldMap.dataLayers.hilliness = hillinessLayer;
     boxBlur(elevLayer, 2);
     lowFreqNoise(elevLayer, lowFreqNoiseParams);
     for (let i = 0; i < 10; ++i) {
@@ -106,7 +105,7 @@ const createWorldMapSlice = createEventSlice('createWorldMap', {
     }
     ridgeNoise(elevLayer, hillinessLayer, ridgeNoiseParams);
 
-    worldMap.metadata[WorldMap.Layer.Elevation] = calculateElevationMetadata(elevLayer);
+    worldMap.metadata.elevation = calculateElevationMetadata(elevLayer);
 
     worldMapMgr.add(worldMapEntity, worldMapCmpt);
   },

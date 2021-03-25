@@ -1,4 +1,3 @@
-import { WorldMap } from '1-game-code/World/WorldMap';
 import { Random } from '1-game-code/prng';
 import { fillInHoles } from './fillInHoles';
 import { DataLayer } from '../../DataLayer/DataLayer';
@@ -22,14 +21,14 @@ export function rasterizeTectonics(
   rng: Random,
   debug = false,
 ): { elevLayer: DataLayer; hillinessLayer: DataLayer } {
-  const elevLayer = new DataLayer(WorldMap.Layer.Elevation, width, height);
+  const elevLayer = new DataLayer('elevation', width, height);
   // Note that default uninitialized value is 11 million
   elevLayer.setAll(-11000000);
   rasterizeFaults(elevLayer, faults);
   fillInHoles(elevLayer, numPlates);
   shapeCoasts(elevLayer, faults, tecPlates, coastSlope, rng);
 
-  const hillinessLayer = new DataLayer(WorldMap.Layer.Hilliness, width, height);
+  const hillinessLayer = new DataLayer('hilliness', width, height);
   hillinessLayer.setAll(defaultHilliness);
   propagateElevationsFromFaults(
     elevLayer,

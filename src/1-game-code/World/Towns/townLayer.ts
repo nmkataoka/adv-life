@@ -1,5 +1,4 @@
 import { Entity } from '0-engine';
-import { WorldMap } from '1-game-code/World/WorldMap';
 /**
  * Since town data is much sparser than the world map grid resolution (4 km x 4 km),
  * the townLayer uses a lower resolution DataLayer.
@@ -44,5 +43,5 @@ export const createTownLayer = (width: number, height: number): SparseDataLayer<
   if (sparseWidth !== width / 16 || sparseHeight !== height / 16) {
     throw new Error('Map height and width must be divisible by 16!');
   }
-  return new SparseDataLayer(WorldMap.Layer.Town, width / 16, height / 16, () => -1);
+  return new SparseDataLayer('town', width / 16, height / 16, () => -1);
 };

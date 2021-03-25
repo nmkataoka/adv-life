@@ -1,8 +1,15 @@
+import { WorldMapLayer } from '1-game-code/World/DataLayer/WorldMapLayers';
 import { getElevationMetadata } from '3-frontend-api/worldMap/getTerrainInfo';
 import { useSelector2 } from '4-react-ecsal';
 import styled from '@emotion/styled';
+import { LayerButtons } from './LayerButtons';
 
-export function MapOverlay(): JSX.Element {
+type MapOverlayProps = {
+  currentLayer: WorldMapLayer;
+  onLayerChange: (newLayer: WorldMapLayer) => void;
+};
+
+export function MapOverlay({ currentLayer, onLayerChange }: MapOverlayProps): JSX.Element {
   const elevMeta = useSelector2(getElevationMetadata);
 
   return (
@@ -24,6 +31,7 @@ export function MapOverlay(): JSX.Element {
           </>
         )}
       </OverallStatsContainer>
+      <LayerButtons currentLayer={currentLayer} onLayerChange={onLayerChange} />
     </OverlayContainer>
   );
 }
@@ -36,6 +44,8 @@ const OverlayContainer = styled.div`
   position: absolute;
   height: 100%;
   width: 100%;
+
+  display: flex;
 `;
 
 const OverallStatsContainer = styled.div`

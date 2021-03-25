@@ -1,11 +1,10 @@
 import { Vector2 } from '8-helpers/math';
 import { DataLayer } from '../DataLayer/DataLayer';
-import { WorldMap } from '../WorldMap';
 import { surfaceNormal } from './surfaceNormal';
 
 describe('surfaceNormal', () => {
   it('returns correct norm for flat ground', () => {
-    const elevs = new DataLayer(WorldMap.Layer.Elevation, 3, 3, 1, false);
+    const elevs = new DataLayer('elevation', 3, 3, 1, false);
     elevs.setAll(0);
     const norm = surfaceNormal(elevs, new Vector2(1, 1), 1);
     const { x, y, z } = norm;

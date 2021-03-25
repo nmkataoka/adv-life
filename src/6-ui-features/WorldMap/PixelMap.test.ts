@@ -39,7 +39,7 @@ describe('PixelMap', () => {
     global.ImageData = originalImageData;
   });
   it('outputs correct colors for simple map', () => {
-    const elevs = new DataLayer(WorldMap.Layer.Elevation, 2, 2);
+    const elevs = new DataLayer('elevation', 2, 2);
     elevs.set(1, 0, 1);
     elevs.set(0, 1, 2);
     elevs.set(1, 1, 3);
