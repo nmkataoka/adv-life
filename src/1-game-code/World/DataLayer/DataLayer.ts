@@ -1,3 +1,5 @@
+import { WorldMapLayer } from './WorldMapLayers';
+
 export class DataLayer {
   data: Float32Array;
 
@@ -5,14 +7,14 @@ export class DataLayer {
 
   width: number;
 
-  name: string;
+  name: WorldMapLayer;
 
   metersPerCoord: number;
 
   isCylindrical: boolean;
 
   constructor(
-    name: string,
+    name: WorldMapLayer,
     width: number,
     height: number,
     metersPerCoord = 4096,
@@ -33,7 +35,7 @@ export class DataLayer {
    * This is not a deep copy -- assumes the source data will no longer be referenced.
    */
   public static constructFrom(data: Partial<DataLayer> = {}): DataLayer {
-    const { name = 'Unknown', width = 0, height = 0, metersPerCoord, isCylindrical } = data;
+    const { name = 'temp', width = 0, height = 0, metersPerCoord, isCylindrical } = data;
     const newDataLayer = new DataLayer(name, width, height, metersPerCoord, isCylindrical);
     if (data.data) {
       newDataLayer.data = data.data;

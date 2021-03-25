@@ -1,6 +1,5 @@
 import { DataLayer } from '1-game-code/World/DataLayer/DataLayer';
 import { Vector2 } from '8-helpers/math';
-import { WorldMap } from '1-game-code/World/WorldMap';
 import SimplexNoise from '10-simplex-noise';
 import { Random } from '1-game-code/prng';
 import { convergence, Fault, hasSamePlateTypes, MAX_CONVERGENCE } from '../Fault';
@@ -59,7 +58,9 @@ export function propagateElevationsFromFaults(
   rng: Random,
 ): void {
   const { width, height, metersPerCoord } = elevLayer;
-  const elevChanges = new DataLayer('elevChanges', width, height, metersPerCoord);
+
+  // Temporary elevation layer to hold changes in elevation
+  const elevChanges = new DataLayer('temp', width, height, metersPerCoord);
   elevChanges.setAll(0);
   faults.forEach((fault) => {
     const { vertices } = fault;
@@ -303,7 +304,7 @@ function applyFaultFeature(
   if (feature.elevProfile.length < 2) {
     throw new Error('Fault feature elev profile is missing entries.');
   }
-  if (hillinessLayer.name !== WorldMap.Layer.Hilliness) {
+  if (hillinessLayer.name !== 'hilliness') {
     throw new Error(`Wrong data layer ${hillinessLayer.name} passed instead of hilliness layer`);
   }
 

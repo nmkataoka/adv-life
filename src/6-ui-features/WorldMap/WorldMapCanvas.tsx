@@ -1,4 +1,3 @@
-import { WorldMap } from '1-game-code/World/WorldMap';
 import { getWorldMapLayer } from '3-frontend-api/worldMap';
 import { useSelector2 } from '4-react-ecsal';
 import { useReduxSelector } from '11-redux-wrapper';
@@ -19,7 +18,7 @@ type WorldMapCanvasProps = {
 // There is significant code overlap with the Map component
 export default function WorldMapCanvas({ height, width }: WorldMapCanvasProps): JSX.Element {
   const useShearedElev = useReduxSelector((state: RootState) => state.worldMap.useShearedElev);
-  const elevations = useSelector2(getWorldMapLayer(WorldMap.Layer.Elevation));
+  const elevations = useSelector2(getWorldMapLayer('elevation'));
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const scale = useZoomOnScroll(canvasRef);
 

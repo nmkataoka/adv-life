@@ -1,19 +1,13 @@
 import { DataLayer } from './DataLayer/DataLayer';
 import { defaultTectonics, Tectonics } from './TerrainGen/Tectonics';
 import { ElevationMetadata } from './TerrainGen/metadata';
+import { WorldMapLayer } from './DataLayer/WorldMapLayers';
 
 export class WorldMap {
-  static Layer = {
-    Elevation: 'elevation',
-    Hilliness: 'hilliness',
-    Rain: 'rain',
-    Town: 'town',
-  } as const;
-
-  dataLayers: { [key: string]: DataLayer } = {};
+  dataLayers: Partial<Record<WorldMapLayer, DataLayer>> = {};
 
   metadata: {
-    [WorldMap.Layer.Elevation]?: ElevationMetadata;
+    elevation?: ElevationMetadata;
   } = {};
 
   tectonics: Tectonics = { ...defaultTectonics };

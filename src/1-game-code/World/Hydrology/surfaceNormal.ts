@@ -1,10 +1,9 @@
 import { Vector2, Vector3 } from '8-helpers/math';
 import { DataLayer } from '../DataLayer/DataLayer';
-import { WorldMap } from '../WorldMap';
 
 /** Approximates the surface normal at a grid point by averaging 4 cross products. */
 export function surfaceNormal(e: DataLayer, coord: Vector2, scale: number): Vector3 {
-  if (e.name !== WorldMap.Layer.Elevation) {
+  if (e.name !== 'elevation') {
     throw new Error(`Wrong layer ${e.name} passed to surface normal function.`);
   }
   const { x, y } = coord;
