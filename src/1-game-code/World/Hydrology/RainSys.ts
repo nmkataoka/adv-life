@@ -1,20 +1,22 @@
 import { createEventSlice } from '0-engine';
 import { RngCmpt } from '1-game-code/prng/RngCmpt';
 import { Vector2 } from '8-helpers/math';
+import { DataLayer } from '../DataLayer/DataLayer';
 import { WorldMap } from '../WorldMap';
 import { WorldMapCmpt } from '../WorldMapCmpt';
 import { createDrop, descend, Drop } from './Drop';
-import { createConstantRainLayer } from './rainLayer';
+import { createConstantRainLayer, createRandomRainLayer } from './rainLayer';
 
 const startHydrologySlice = createEventSlice('startHydrology', {
   writeCmpts: [WorldMapCmpt],
-})<{ size: { x: number; y: number } }>(
+})<{ mode?: 'constant' | 'random' | 'real'; size: { x: number; y: number } }>(
   ({
     componentManagers: {
       writeCMgrs: [worldMapMgr],
     },
     payload: {
       size: { x, y },
+      mode = 'random',
     },
   }) => {
     const worldMapCmpt = worldMapMgr.getUniqueMut();
@@ -24,7 +26,16 @@ const startHydrologySlice = createEventSlice('startHydrology', {
     if (worldMapCmpt.data.dataLayers[WorldMap.Layer.Rain]) {
       throw new Error('Tried to create a hydrology layer when it already exists');
     }
-    worldMapCmpt.data.dataLayers[WorldMap.Layer.Rain] = createConstantRainLayer(x, y);
+
+    let rainLayer: DataLayer;
+    if (mode === 'constant') {
+      rainLayer = createConstantRainLayer(x, y);
+    } else if (mode === 'random') {
+      rainLayer = createRandomRainLayer(x, y);
+    } else {
+      throw new Error('Not implemented');
+    }
+    worldMapCmpt.data.dataLayers[WorldMap.Layer.Rain] = rainLayer;
   },
 );
 

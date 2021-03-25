@@ -16,7 +16,7 @@ export const createWorld = (seed: string, settings: typeof WorldGenModules): Thu
   await dispatch(createWorldMap(terrainGenParams));
 
   const { width, height } = terrainGenParams;
-  await dispatch(startHydrology({ size: { x: width, y: height } }));
+  await dispatch(startHydrology({ mode: 'random', size: { x: width, y: height } }));
 };
 
 /** Parses the UI settings data format into the payload expected by the backend */
