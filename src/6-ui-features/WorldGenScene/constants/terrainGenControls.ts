@@ -9,7 +9,7 @@ export const terrainGenControls: TabContentProps['content'] = [
       {
         name: 'Width (tiles)',
         key: 'width',
-        description: 'Map width in tiles. 1 tile = 4092 m.',
+        description: 'Map width in tiles. 1 tile = 4096 m.',
         value: 800,
         min: 100,
         max: 1600,
@@ -18,7 +18,7 @@ export const terrainGenControls: TabContentProps['content'] = [
       {
         name: 'Height (tiles)',
         key: 'height',
-        description: 'Map height in tiles. 1 tile = 4092 m.',
+        description: 'Map height in tiles. 1 tile = 4096 m.',
         value: 400,
         min: 50,
         max: 800,

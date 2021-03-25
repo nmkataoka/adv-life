@@ -15,7 +15,7 @@ export class DataLayer {
     name: string,
     width: number,
     height: number,
-    metersPerCoord = 4092,
+    metersPerCoord = 4096,
     isCylindridal = true,
   ) {
     this.name = name;

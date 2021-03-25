@@ -7,6 +7,7 @@ export class WorldMap {
     Elevation: 'elevation',
     Hilliness: 'hilliness',
     Rain: 'rain',
+    Town: 'town',
   } as const;
 
   dataLayers: { [key: string]: DataLayer } = {};
