@@ -1,3 +1,4 @@
+import { consoleLog } from '8-helpers/console';
 import { DataLayer } from '../DataLayer/DataLayer';
 
 export function reproduce({
@@ -47,8 +48,8 @@ export function reproduce({
   }
 
   const { metersPerCoord } = elevLayer;
-  console.log('people born:', (peopleBorn * metersPerCoord * metersPerCoord) / 1_000_000);
-  console.log(
+  consoleLog('people born:', (peopleBorn * metersPerCoord * metersPerCoord) / 1_000_000);
+  consoleLog(
     'people died of starvation:',
     (peopleDied * metersPerCoord * metersPerCoord) / 1_000_000,
   );
