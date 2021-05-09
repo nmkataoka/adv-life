@@ -46,6 +46,7 @@ const OverlayContainer = styled.div`
   width: 100%;
 
   display: flex;
+  pointer-events: none;
 `;
 
 const OverallStatsContainer = styled.div`
@@ -54,4 +55,5 @@ const OverallStatsContainer = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
 
   display: inline-block;
+  pointer-events: none;
 `;

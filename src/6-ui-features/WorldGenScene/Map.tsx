@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { useDataLayerRenderer } from '6-ui-features/WorldMap/useDataLayerRenderer';
-import { colorElevation } from '6-ui-features/WorldMap/coloringFuncs';
 import { getWorldMapLayer } from '3-frontend-api/worldMap';
 import { useSelector2 } from '4-react-ecsal';
 import useZoomOnScroll from '5-react-components/useZoomOnScroll';
 import { useElementSize } from '5-react-components/useElementSize';
 import { WorldMapLayer } from '1-game-code/World/DataLayer/WorldMapLayers';
+import { layersUiData } from './MapOverlay/layers';
 import { MapOverlay } from './MapOverlay';
 
 export function Map(): JSX.Element {
@@ -18,7 +18,10 @@ export function Map(): JSX.Element {
 
   const [width, height] = useElementSize(containerRef);
 
-  useDataLayerRenderer(canvasRef, colorElevation, elevations, scale);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const { coloringFunc } = layersUiData.find((el) => el.key === currentLayer)!;
+
+  useDataLayerRenderer(canvasRef, coloringFunc, elevations, scale);
 
   return (
     <Container>

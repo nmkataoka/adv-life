@@ -1,10 +1,11 @@
 import { WorldMapLayer } from '1-game-code/World/DataLayer/WorldMapLayers';
 import styled from '@emotion/styled';
+import { layersUiData } from './layers';
 
-const buttons: { text: string; value: WorldMapLayer }[] = [
-  { text: 'Elevation', value: 'elevation' },
-  { text: 'Rainfall', value: 'rain' },
-];
+const buttons: { text: string; value: WorldMapLayer }[] = layersUiData.map(({ text, key }) => ({
+  text,
+  value: key,
+}));
 
 type LayerButtonsProps = {
   currentLayer: WorldMapLayer;
@@ -43,4 +44,6 @@ const LayerButton = styled.button<LayerButtonProps>`
   margin-bottom: 0;
   padding: 0.5em 1em;
   width: 8em;
+
+  pointer-events: auto;
 `;

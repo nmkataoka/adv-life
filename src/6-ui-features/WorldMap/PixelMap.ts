@@ -1,4 +1,5 @@
 import { DataLayer } from '1-game-code/World';
+import { consoleWarn } from '8-helpers/console';
 import assert from 'assert';
 import { DeepReadonly } from 'ts-essentials';
 import { Color } from './Color';
@@ -20,6 +21,9 @@ export default class PixelMap {
   width: number;
 
   constructor(data: DataLayer | DeepReadonly<DataLayer>, coloringFunc: ColoringFunc) {
+    if (data.height === 0 || data.width === 0) {
+      consoleWarn('DataLayer should not have 0 width or height.');
+    }
     this.height = data.height;
     this.width = data.width;
     this.coloringFunc = coloringFunc;
