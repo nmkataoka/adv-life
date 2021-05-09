@@ -1,7 +1,7 @@
 import { Thunk } from '0-engine/ECS/Thunk';
 import { NoiseParams } from '1-game-code/Noise';
 import { startHydrology } from '1-game-code/World/Hydrology/RainSys';
-import { createPopulation } from '1-game-code/World/Population/PopulationSys';
+import { createPopulation } from '1-game-code/World/Population/PopSys';
 import { createWorldMap, TerrainGenParams } from '1-game-code/World/TerrainGen/TerrainGenSys';
 import { WorldGenModules } from '../constants';
 import { terrainGenControls } from '../constants/terrainGenControls';

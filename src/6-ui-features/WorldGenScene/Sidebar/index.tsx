@@ -5,6 +5,7 @@ import produce from 'immer';
 import { useDispatch } from '4-react-ecsal';
 import { GameManager } from '0-engine/GameManager';
 import { useReduxSelector } from '11-redux-wrapper';
+import { reproducePopulation } from '1-game-code/World/Population/PopSys';
 import { Tabs } from './Tabs';
 import { WorldGenModules } from '../constants';
 import { TabContent } from './TabContent';
@@ -40,6 +41,8 @@ export function Sidebar({ seed }: SidebarProps): JSX.Element {
   const generateWorld = async () => {
     if (activeModule === 'water') {
       await dispatch(doRain(contentState));
+    } else if (activeModule === 'civilizations') {
+      await dispatch(reproducePopulation());
     } else {
       await GameManager.instance.eMgr.restart();
       await dispatch(createWorld(seed, contentState));

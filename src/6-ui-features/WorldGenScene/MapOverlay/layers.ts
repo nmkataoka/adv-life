@@ -1,7 +1,7 @@
 import { WorldMapLayer } from '1-game-code/World/DataLayer/WorldMapLayers';
 import { Color, colorInterp, getRgbColorFromTheme } from '6-ui-features/WorldMap/Color';
 
-const colors: Color[] = [
+const elevColors: Color[] = [
   getRgbColorFromTheme('blueDarker'),
   getRgbColorFromTheme('blueLighter'),
   [200, 198, 164, 255],
@@ -12,28 +12,39 @@ const colors: Color[] = [
 
 function colorElevation(elev: number): Color {
   if (elev < -5000) {
-    return colors[0];
+    return elevColors[0];
   }
   if (elev < 0) {
-    return colorInterp(elev, -5000, 0, colors[0], colors[1]);
+    return colorInterp(elev, -5000, 0, elevColors[0], elevColors[1]);
   }
-  if (elev < 1500) {
-    return colorInterp(elev, 0, 2000, colors[2], colors[3]);
+  if (elev < 2000) {
+    return colorInterp(elev, 0, 2000, elevColors[2], elevColors[3]);
   }
-  if (elev < 3000) {
-    return colorInterp(elev, 2000, 4000, colors[3], colors[4]);
+  if (elev < 4000) {
+    return colorInterp(elev, 2000, 4000, elevColors[3], elevColors[4]);
   }
-  if (elev < 5000) {
-    return colorInterp(elev, 4000, 8000, colors[4], colors[5]);
+  if (elev < 8000) {
+    return colorInterp(elev, 4000, 8000, elevColors[4], elevColors[5]);
   }
-  return colors[5];
+  return elevColors[5];
 }
+
+const rainColors: Color[] = [getRgbColorFromTheme('white'), getRgbColorFromTheme('blueDarker')];
+
+function colorRain(rain: number): Color {
+  if (rain < 100) {
+    return colorInterp(rain, 0, 100, rainColors[0], rainColors[1]);
+  }
+  return rainColors[1];
+}
+
+const popColors: Color[] = [getRgbColorFromTheme('white'), getRgbColorFromTheme('grayDarker')];
 
 function colorPop(pop: number): Color {
   if (pop < 60) {
-    return colorInterp(pop, 0, 60, colors[0], colors[2]);
+    return colorInterp(pop, 0, 60, popColors[0], popColors[1]);
   }
-  return colors[2];
+  return popColors[1];
 }
 
 export const layersUiData: Readonly<
@@ -44,6 +55,6 @@ export const layersUiData: Readonly<
   }>[]
 > = [
   { text: 'Elevation', key: 'elevation', coloringFunc: colorElevation },
-  { text: 'Rainfall', key: 'rain', coloringFunc: colorElevation },
+  { text: 'Rainfall', key: 'rain', coloringFunc: colorRain },
   { text: 'Population', key: 'population', coloringFunc: colorPop },
 ] as const;
