@@ -8,9 +8,17 @@ describe('createTownName', () => {
 
   it('generates different names on subsequent calls', () => {
     const name1 = createTownName(Math);
-    const name2 = createTownName(Math);
     expect(name1.length).toBeGreaterThan(0);
-    expect(name2.length).toBeGreaterThan(0);
+
+    // Since it's random, it's rarely possible for the same name to generate twice.
+    // Just in case, we'll give it a few tries.
+    let name2 = createTownName(Math);
+    let tries = 1;
+    while (name1 === name2 && tries < 10) {
+      name2 = createTownName(Math);
+      ++tries;
+    }
+
     expect(name1).not.toBe(name2);
   });
 });
