@@ -4,8 +4,8 @@ import { useReduxSelector } from '11-redux-wrapper';
 import { useRef } from 'react';
 import { RootState } from '7-app/types';
 import useZoomOnScroll from '5-react-components/useZoomOnScroll';
+import { layersUiData } from '6-ui-features/WorldGenScene/MapOverlay/layers';
 import { useDataLayerRenderer } from './useDataLayerRenderer';
-import { colorElevation } from './coloringFuncs';
 
 type WorldMapCanvasProps = {
   height: number;
@@ -21,6 +21,7 @@ export default function WorldMapCanvas({ height, width }: WorldMapCanvasProps): 
   const elevations = useSelector2(getWorldMapLayer('elevation'));
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const scale = useZoomOnScroll(canvasRef);
+  const colorElevation = layersUiData[0].coloringFunc;
 
   useDataLayerRenderer(canvasRef, colorElevation, elevations, scale, useShearedElev);
 

@@ -74,6 +74,8 @@ export function copyEventSlice<
   )(eventSlice.eventListener.callback) as EventSlice<Payload, EventName, ComponentDependencies>;
 }
 
+// TODO: for views to be useful, we probably have to add WriteUniqueCmpts and ReadUniqueCmpts
+// since we often need access to these singletone classes to operate properly on stuff
 export function createEventSliceWithView<
   EventName extends string,
   ReadCmpts extends NComponent[] = [],
