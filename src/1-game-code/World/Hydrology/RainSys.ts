@@ -68,7 +68,6 @@ const rainSlice = createEventSlice('rain', {
     const rng = rngCmpt.getRng('WorldGen');
 
     for (let i = 0; i < numDrops; ++i) {
-      // console.log(`dropping number ${i}/${numDrops}`);
       const x = Math.floor(width * rng.random());
       const y = Math.floor(height * rng.random());
       const drop = createDrop({ ...dropParams, pos: new Vector2(x, y) });

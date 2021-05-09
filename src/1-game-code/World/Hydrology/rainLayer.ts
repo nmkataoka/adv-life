@@ -15,7 +15,8 @@ export function createRandomRainLayer(width: number, height: number): DataLayer 
   });
   for (let y = 0; y < height; ++y) {
     for (let x = 0; x < width; ++x) {
-      rainLayer.set(x, y, n.noise2D(x, y));
+      // Average rainfall on Earth is 100cm
+      rainLayer.set(x, y, n.noise2D(x, y) * 100);
     }
   }
   return rainLayer;
