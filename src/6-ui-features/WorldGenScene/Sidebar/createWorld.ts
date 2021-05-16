@@ -1,7 +1,7 @@
 import { Thunk } from '0-engine/ECS/Thunk';
 import { NoiseParams } from '1-game-code/Noise';
 import { startHydrology } from '1-game-code/World/Hydrology/RainSys';
-import { createPopulation } from '1-game-code/World/Population/PopSys';
+import { createFood } from '1-game-code/World/Food/FoodSys';
 import { createWorldMap, TerrainGenParams } from '1-game-code/World/TerrainGen/TerrainGenSys';
 import { WorldGenModules } from '../constants';
 import { terrainGenControls } from '../constants/terrainGenControls';
@@ -19,7 +19,7 @@ export const createWorld = (seed: string, settings: typeof WorldGenModules): Thu
   const { width, height } = terrainGenParams;
   await dispatch(startHydrology({ mode: 'random', size: { x: width, y: height } }));
 
-  await dispatch(createPopulation({ width, height }));
+  await dispatch(createFood({ width, height }));
 };
 
 /** Parses the UI settings data format into the payload expected by the backend */
