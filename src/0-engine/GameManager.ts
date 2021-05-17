@@ -56,8 +56,8 @@ export class GameManager {
   }
 
   private createMap(): void {
-    createTown('Quietwater');
-    createTown('Wandermere');
+    createTown([0, 0], 'Quietwater');
+    createTown([0, 0], 'Wandermere');
   }
 
   private enterGameLoop(): void {

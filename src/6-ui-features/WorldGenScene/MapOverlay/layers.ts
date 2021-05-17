@@ -38,13 +38,13 @@ function colorRain(rain: number): Color {
   return rainColors[1];
 }
 
-const popColors: Color[] = [getRgbColorFromTheme('white'), getRgbColorFromTheme('grayDarker')];
+const foodColors: Color[] = [getRgbColorFromTheme('white'), getRgbColorFromTheme('grayDarker')];
 
-function colorPop(pop: number): Color {
+function colorFood(pop: number): Color {
   if (pop < 60) {
-    return colorInterp(pop, 0, 60, popColors[0], popColors[1]);
+    return colorInterp(pop, 0, 60, foodColors[0], foodColors[1]);
   }
-  return popColors[1];
+  return foodColors[1];
 }
 
 export const layersUiData: Readonly<
@@ -56,5 +56,5 @@ export const layersUiData: Readonly<
 > = [
   { text: 'Elevation', key: 'elevation', coloringFunc: colorElevation },
   { text: 'Rainfall', key: 'rain', coloringFunc: colorRain },
-  { text: 'Population', key: 'population', coloringFunc: colorPop },
+  { text: 'Food', key: 'food', coloringFunc: colorFood },
 ] as const;
