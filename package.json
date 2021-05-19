@@ -27,9 +27,6 @@
     "ts-essentials": "~7.0.1",
     "typescript": "~4.2.3"
   },
-  "jest": {
-    "setupFilesAfterEnv": "<rootDir>/src/setupTests.ts"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
