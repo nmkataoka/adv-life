@@ -9,7 +9,7 @@ import { getAllTowns, getPlayerId } from '3-frontend-api';
 import { travelToTown } from '1-game-code/Unit/TravelToLocationSys';
 import CharacterSummary from './components/CharacterSummary';
 import { randomizeAll, createPlayerCharacter } from './characterCreationSlice';
-import { changedScene, Scene } from '../sceneManager/sceneMetaSlice';
+import { changedScene } from '../sceneManager/sceneMetaSlice';
 
 const CharacterSummaryColumn = (): JSX.Element => {
   const reduxDispatch = useReduxDispatch();
@@ -35,7 +35,7 @@ const CharacterSummaryColumn = (): JSX.Element => {
   useEffect(() => {
     if (typeof playerId === 'number' && playerId > -1 && townIds && townIds.length > 0) {
       void dispatch(travelToTown({ entityId: playerId, townId: townIds[0].townId })).then(() => {
-        reduxDispatch(changedScene(Scene.Town));
+        reduxDispatch(changedScene('town'));
       });
     }
   }, [dispatch, reduxDispatch, playerId, townIds]);

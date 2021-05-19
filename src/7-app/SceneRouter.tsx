@@ -10,12 +10,12 @@ import MainMenuScene from '6-ui-features/MainMenuScene';
 import TownScene from '6-ui-features/TownScene';
 import WorldGenScene from '6-ui-features/WorldGenScene';
 
-const scenes = {
-  [Scene.CharacterCreation]: CharacterCreationScene,
-  [Scene.Colosseum]: ColosseumScene,
-  [Scene.MainMenu]: MainMenuScene,
-  [Scene.Town]: TownScene,
-  [Scene.WorldGen]: WorldGenScene,
+const scenes: Record<Scene, () => JSX.Element> = {
+  characterCreation: CharacterCreationScene,
+  colosseum: ColosseumScene,
+  mainMenu: MainMenuScene,
+  town: TownScene,
+  worldGen: WorldGenScene,
 };
 
 export function SceneRouter(): JSX.Element {

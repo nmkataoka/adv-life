@@ -1,5 +1,7 @@
 import { createEventSlice } from '0-engine';
 import { RngCmpt } from '1-game-code/prng/RngCmpt';
+import { reproduce } from '1-game-code/Town/reproduce';
+import { TownCmpt } from '1-game-code/Town/TownCmpt';
 import { WorldMapCmpt } from '../WorldMapCmpt';
 import { createCiv } from './createCiv';
 
@@ -30,23 +32,25 @@ const createCivsSlice = createEventSlice('createCivs', {
 
 export const { createCivs } = createCivsSlice;
 
-const updateTowns = createEventSlice('updateTowns', {
-  writeCmpts: [WorldMapCmpt],
+const updateTownsSlice = createEventSlice('updateTowns', {
+  writeCmpts: [WorldMapCmpt, TownCmpt],
 })<void>(
   ({
     componentManagers: {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      writeCMgrs: [worldMapMgr],
+      writeCMgrs: [worldMapMgr, townMgr],
     },
   }) => {
     // Allow population to reproduce based on food
-    // Civs with excess population can create new towns.
-    // Towns can be placed at borders (usually preferred) or internally if
-    // food production in the area can support the higher population density.
-    // New towns automatically get a footpath road to them from the nearest town.
-    // Need to track civ border to prevent overlapping civ territories and to
-    // choose locations for new towns.
+    const townCmpts: TownCmpt[] = [];
+    townMgr.forEach((town) => townCmpts.push(town));
+    const foodLayer = worldMapMgr.getUniqueMut().data.dataLayers.food;
+    if (!foodLayer) {
+      throw new Error('Food layer must be created before population sim can begin.');
+    }
+    reproduce(townCmpts, foodLayer);
   },
 );
 
-export default [createCivsSlice.eventListener, updateTowns.eventListener];
+export const { updateTowns } = updateTownsSlice;
+
+export default [createCivsSlice.eventListener, updateTownsSlice.eventListener];

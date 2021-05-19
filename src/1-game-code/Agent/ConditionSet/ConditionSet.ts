@@ -1,4 +1,4 @@
-import { EntityManager } from '0-engine';
+import { EntityManager, NULL_ENTITY } from '0-engine';
 import { swapRemoveAt } from '8-helpers/ArrayExtensions';
 import { ComponentTemplateBase } from './ComponentTemplate';
 import { EntityTemplateBase } from './EntityTemplate';
@@ -99,7 +99,7 @@ export default class ConditionSet {
 
   /// Returns a list of all the valid entity bindings for this condition set.
   /// By default, self may not be one of the targets except for entity[0].
-  public bindEntities(eMgr: EntityManager, self = -1, canTargetSelf = false): number[][] {
+  public bindEntities(eMgr: EntityManager, self = NULL_ENTITY, canTargetSelf = false): number[][] {
     const candidateEntities: number[][] = [];
 
     let firstEntityToBind = 0;

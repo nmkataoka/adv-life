@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import Modal from '5-react-components/Modal';
-import WorldMap from '../WorldMap';
+import { WorldMap } from '../WorldMap';
 
 export default function WorldMapButton(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);

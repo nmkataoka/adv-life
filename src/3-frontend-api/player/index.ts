@@ -1,3 +1,4 @@
+import { NULL_ENTITY } from '0-engine';
 import { ComponentClasses } from '0-engine/ECS/component-dependencies/ComponentDependencies';
 import { InventoryCmpt, PlayerCmpt } from '1-game-code/ncomponents';
 import { UnitLocationCmpt } from '1-game-code/Unit/UnitLocationCmpt';
@@ -15,7 +16,7 @@ export const getPlayerId = selectorNode({
 
 export const getPlayerInventory = selectorNode({
   get: ({ get }) => {
-    const [playerEntityId = -1] = get(getPlayerId);
+    const [playerEntityId = NULL_ENTITY] = get(getPlayerId);
     const inventoryNode = componentNode(InventoryCmpt, playerEntityId);
     const inventory = get(inventoryNode);
     return inventory[0];
@@ -24,7 +25,7 @@ export const getPlayerInventory = selectorNode({
 
 export const getPlayerCurrentTown = selectorNode({
   get: ({ get }) => {
-    const [playerEntityId = -1] = get(getPlayerId);
+    const [playerEntityId = NULL_ENTITY] = get(getPlayerId);
     const unitLocationNode = componentNode(UnitLocationCmpt, playerEntityId);
     const [unitLocationCmpt] = get(unitLocationNode);
     return unitLocationCmpt?.townId;

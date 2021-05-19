@@ -1,10 +1,10 @@
-import { Entity, NComponent } from '0-engine';
+import { Entity, NComponent, NULL_ENTITY } from '0-engine';
 
 /** Routes connect two towns */
 export class RouteCmpt extends NComponent {
-  townA: Entity = -1;
+  townA: Entity = NULL_ENTITY;
 
-  townB: Entity = -1;
+  townB: Entity = NULL_ENTITY;
 
   paving: RoutePaving = RoutePaving.Untread;
 }

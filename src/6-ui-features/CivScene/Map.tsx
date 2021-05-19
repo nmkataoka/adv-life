@@ -6,7 +6,7 @@ import { useSelector2 } from '4-react-ecsal';
 import useZoomOnScroll from '5-react-components/useZoomOnScroll';
 import { useElementSize } from '5-react-components/useElementSize';
 import { WorldMapLayer } from '1-game-code/World/DataLayer/WorldMapLayers';
-import { layersUiData } from '../WorldMap/layers';
+import { layersUiData } from '6-ui-features/WorldMap/layers';
 import { MapOverlay } from './MapOverlay';
 
 export function Map(): JSX.Element {
@@ -28,7 +28,7 @@ export function Map(): JSX.Element {
       {!dataLayer && 'No map generated yet.'}
       <FullDiv ref={containerRef}>
         <canvas style={{ position: 'absolute' }} ref={canvasRef} height={height} width={width} />
-        {dataLayer && <MapOverlay currentLayer={currentLayer} onLayerChange={setCurrentLayer} />}
+        {dataLayer && <MapOverlay />}
       </FullDiv>
     </Container>
   );

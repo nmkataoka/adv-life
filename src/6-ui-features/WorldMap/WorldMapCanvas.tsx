@@ -4,7 +4,7 @@ import { useReduxSelector } from '11-redux-wrapper';
 import { useRef } from 'react';
 import { RootState } from '7-app/types';
 import useZoomOnScroll from '5-react-components/useZoomOnScroll';
-import { layersUiData } from '6-ui-features/WorldGenScene/MapOverlay/layers';
+import { layersUiData } from '6-ui-features/WorldMap/layers';
 import { useDataLayerRenderer } from './useDataLayerRenderer';
 
 type WorldMapCanvasProps = {

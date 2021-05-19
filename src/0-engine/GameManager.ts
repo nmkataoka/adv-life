@@ -56,8 +56,8 @@ export class GameManager {
   }
 
   private createMap(): void {
-    createTown([0, 0], 'Quietwater');
-    createTown([0, 0], 'Wandermere');
+    createTown(this.eMgr, -1, [0, 0], 'Quietwater');
+    createTown(this.eMgr, -1, [0, 0], 'Wandermere');
   }
 
   private enterGameLoop(): void {

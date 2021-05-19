@@ -7,12 +7,14 @@ import { forEachTown } from './civGraphHelpers';
 const setUpTowns = async () => {
   const eMgr = await createMockEntityManager();
 
-  const firstTown = createTown([0, 0], 'town-0');
-  const secondTown = createTown([0, 1], 'town-1', firstTown);
-  const thirdTown = createTown([0, 2], 'town-2', secondTown);
+  const civ = eMgr.createEntity();
+
+  const firstTown = createTown(eMgr, civ, [0, 0], 'town-0');
+  const secondTown = createTown(eMgr, civ, [0, 1], 'town-1', firstTown);
+  const thirdTown = createTown(eMgr, civ, [0, 2], 'town-2', secondTown);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const fourthTown = createTown([0, -1], 'town-4', firstTown);
-  const fifthTown = createTown([0, 3], 'town-5', thirdTown);
+  const fourthTown = createTown(eMgr, civ, [0, -1], 'town-4', firstTown);
+  const fifthTown = createTown(eMgr, civ, [0, 3], 'town-5', thirdTown);
 
   const route = eMgr.createEntity();
   const routeCmpt = createRouteCmpt(firstTown, fifthTown);
@@ -21,7 +23,7 @@ const setUpTowns = async () => {
   const routeMgr = eMgr.getMgr(RouteCmpt);
   const nameMgr = eMgr.getMgr(NameCmpt);
 
-  return { firstTown, nameMgr, routeMgr };
+  return { civ, eMgr, firstTown, nameMgr, routeMgr };
 };
 
 describe('civGraphHelpers', () => {
@@ -38,8 +40,8 @@ describe('civGraphHelpers', () => {
     });
 
     it('does not visit unreachable towns', async () => {
-      const { firstTown, routeMgr, nameMgr } = await setUpTowns();
-      createTown([0, 10], 'town-unreachable');
+      const { civ, eMgr, firstTown, routeMgr, nameMgr } = await setUpTowns();
+      createTown(eMgr, civ, [0, 10], 'town-unreachable');
       const visitedTowns: string[] = [];
       forEachTown(firstTown, routeMgr, (townId) => {
         const name = nameMgr.get(townId);

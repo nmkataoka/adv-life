@@ -4,7 +4,8 @@ import { getColor } from '6-ui-features/Theme';
 import produce from 'immer';
 import { useDispatch } from '4-react-ecsal';
 import { GameManager } from '0-engine/GameManager';
-import { useReduxSelector } from '11-redux-wrapper';
+import { useReduxDispatch, useReduxSelector } from '11-redux-wrapper';
+import { changedScene } from '6-ui-features/sceneManager/sceneMetaSlice';
 import { Tabs } from './Tabs';
 import { WorldGenModules } from '../constants';
 import { TabContent } from './TabContent';
@@ -17,6 +18,7 @@ type SidebarProps = {
 };
 
 export function Sidebar({ seed }: SidebarProps): JSX.Element {
+  const reduxDispatch = useReduxDispatch();
   const dispatch = useDispatch();
   const activeModule = useReduxSelector(getActiveModule);
   const [contentState, setContentState] = useState(WorldGenModules);
@@ -41,7 +43,11 @@ export function Sidebar({ seed }: SidebarProps): JSX.Element {
     if (activeModule === 'water') {
       await dispatch(doRain(contentState));
     } else if (activeModule === 'civilizations') {
-      // TODO
+      // TODO this is clearly a problem, this whole sidebar should be reworked to use composition
+    } else if (activeModule === 'finish') {
+      // Return to the main menu with the world now created.
+      // User is expected to start a new game.
+      reduxDispatch(changedScene('mainMenu'));
     } else {
       await GameManager.instance.eMgr.restart();
       await dispatch(createWorld(seed, contentState));

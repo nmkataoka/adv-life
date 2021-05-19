@@ -12,7 +12,7 @@ export function createCiv(
 ): Entity {
   const civEntity = eMgr.createEntity(civName);
   const firstTownCoords = placeCivFirstTown(elevLayer, rng);
-  createTown(firstTownCoords);
+  createTown(eMgr, civEntity, firstTownCoords);
   const civCmpt = new CivCmpt();
   eMgr.addCmpt(civEntity, civCmpt);
   return civEntity;

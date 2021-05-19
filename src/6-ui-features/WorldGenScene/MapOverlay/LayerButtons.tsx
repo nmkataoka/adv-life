@@ -1,6 +1,6 @@
 import { WorldMapLayer } from '1-game-code/World/DataLayer/WorldMapLayers';
 import styled from '@emotion/styled';
-import { layersUiData } from './layers';
+import { layersUiData } from '6-ui-features/WorldMap';
 
 const buttons: { text: string; value: WorldMapLayer }[] = layersUiData.map(({ text, key }) => ({
   text,
