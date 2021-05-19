@@ -1,10 +1,16 @@
-import { render, screen, waitFor, waitForElementToBeRemoved } from '8-helpers/test-utils';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '8-helpers/test-utils';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
 
 describe('buy items (integration)', () => {
   it('can create character and buy items', async () => {
-    const { getByText, getByRole } = render(<App isTest />);
+    const { getByText, getByTestId, getByRole } = render(<App isTest />);
 
     const closeModal = () => {
       const closeButton = getByRole('button', { name: 'X' });
@@ -22,6 +28,24 @@ describe('buy items (integration)', () => {
       closeModal();
     };
 
+    // Set up world
+    userEvent.click(screen.getByText('Create World'));
+
+    // Reduce map size for tests
+    fireEvent.change(getByTestId('width-slider'), { target: { value: 200 } });
+    fireEvent.change(getByTestId('height-slider'), { target: { value: 100 } });
+    fireEvent.change(getByTestId('numPlates-slider'), { target: { value: 5 } });
+
+    const goBtn = await waitFor(() => getByText('Go!'));
+
+    userEvent.click(goBtn);
+    const finishTab = await waitFor(() => getByText('Finish'));
+    userEvent.click(finishTab);
+    const lastGoBtn = await waitFor(() => getByText('Go!'));
+
+    userEvent.click(lastGoBtn);
+
+    // Go through character creation
     userEvent.click(screen.getByText('New Game'));
     const doneBtn = await waitFor(() => getByText('Done'));
 

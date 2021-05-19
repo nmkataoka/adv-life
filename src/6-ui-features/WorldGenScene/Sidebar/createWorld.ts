@@ -3,6 +3,7 @@ import { NoiseParams } from '1-game-code/Noise';
 import { startHydrology } from '1-game-code/World/Hydrology/RainSys';
 import { createFood } from '1-game-code/World/Food/FoodSys';
 import { createWorldMap, TerrainGenParams } from '1-game-code/World/TerrainGen/TerrainGenSys';
+import { createTown } from '1-game-code/Town/TownSys';
 import { WorldGenModules } from '../constants';
 import { terrainGenControls } from '../constants/terrainGenControls';
 import { TabContentProps } from './TabContent';
@@ -20,6 +21,9 @@ export const createWorld = (seed: string, settings: typeof WorldGenModules): Thu
   await dispatch(startHydrology({ mode: 'random', size: { x: width, y: height } }));
 
   await dispatch(createFood({ width, height }));
+
+  await dispatch(createTown({ civilizationId: -1, coords: [0, 0], name: 'Quietwater' }));
+  await dispatch(createTown({ civilizationId: -1, coords: [0, 0], name: 'Wandermere' }));
 };
 
 /** Parses the UI settings data format into the payload expected by the backend */

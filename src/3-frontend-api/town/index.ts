@@ -41,6 +41,7 @@ const getAllTownsView = viewNode(
 
 export const getAllTowns = selectorNode({
   get: ({ get }) => {
+    // Note: views currently have no mutation detection optimizations so this is rerun every tick
     const [allTownsView] = get(getAllTownsView);
     if (!allTownsView) return [];
     const towns: TownInfo[] = [];

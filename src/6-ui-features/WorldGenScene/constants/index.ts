@@ -1,6 +1,5 @@
-import produce from 'immer';
 import { rainControls } from './rainControls';
-import { terrainGenControls, terrainGenControlsTest } from './terrainGenControls';
+import { terrainGenControls } from './terrainGenControls';
 
 const blank = [{ heading: 'No configuration options.', options: [] }];
 
@@ -21,7 +20,3 @@ export const WorldGenModules = [
 ] as const;
 
 export type WorldGenModule = typeof WorldGenModules[number]['key'];
-
-export const WorldGenModulesTest = produce(WorldGenModules, (draft) => {
-  draft[0].content = terrainGenControlsTest;
-});

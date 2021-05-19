@@ -1,12 +1,10 @@
 import styled from '@emotion/styled';
 import { useDispatch, useSelector2 } from '4-react-ecsal';
 import { useDispatch as useReduxDispatch } from 'react-redux';
-import { useIsTest } from '6-ui-features/TestContext';
-import { createWorld } from '6-ui-features/WorldGenScene/Sidebar/createWorld';
-import { WorldGenModules, WorldGenModulesTest } from '6-ui-features/WorldGenScene/constants';
 import { useEffect } from 'react';
 import { getAllTowns, getPlayerId } from '3-frontend-api';
 import { travelToTown } from '1-game-code/Unit/TravelToLocationSys';
+import { NULL_ENTITY } from '0-engine';
 import CharacterSummary from './components/CharacterSummary';
 import { randomizeAll, createPlayerCharacter } from './characterCreationSlice';
 import { changedScene } from '../sceneManager/sceneMetaSlice';
@@ -14,7 +12,6 @@ import { changedScene } from '../sceneManager/sceneMetaSlice';
 const CharacterSummaryColumn = (): JSX.Element => {
   const reduxDispatch = useReduxDispatch();
   const dispatch = useDispatch();
-  const isTest = useIsTest();
   const playerId = useSelector2(getPlayerId);
   const townIds = useSelector2(getAllTowns);
 
@@ -22,17 +19,15 @@ const CharacterSummaryColumn = (): JSX.Element => {
     reduxDispatch(randomizeAll());
   };
 
-  const handleFinish = async () => {
-    if (isTest) {
-      await dispatch(createWorld('a wonderful life', WorldGenModulesTest));
-    } else {
-      await dispatch(createWorld('a wonderful life', WorldGenModules));
-    }
+  const handleFinish = () => {
     reduxDispatch(createPlayerCharacter());
   };
 
   // Once the player is created, automatically go to a town
   useEffect(() => {
+    if (playerId !== NULL_ENTITY && playerId !== undefined && townIds?.length === 0) {
+      throw new Error('Player was created but no towns exist.');
+    }
     if (typeof playerId === 'number' && playerId > -1 && townIds && townIds.length > 0) {
       void dispatch(travelToTown({ entityId: playerId, townId: townIds[0].townId })).then(() => {
         reduxDispatch(changedScene('town'));

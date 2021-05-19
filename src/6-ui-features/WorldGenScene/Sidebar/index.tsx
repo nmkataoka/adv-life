@@ -49,7 +49,8 @@ export function Sidebar({ seed }: SidebarProps): JSX.Element {
       // User is expected to start a new game.
       reduxDispatch(changedScene('mainMenu'));
     } else {
-      await GameManager.instance.eMgr.restart();
+      await GameManager.instance.restart();
+
       await dispatch(createWorld(seed, contentState));
     }
   };

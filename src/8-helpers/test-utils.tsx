@@ -39,3 +39,37 @@ export * from '@testing-library/react';
 
 // override render method
 export { render, createRenderer };
+
+const originalImageData = global.ImageData;
+class ImageData {
+  constructor(sw: number, sh: number);
+
+  constructor(dataIn: Uint8ClampedArray, sw: number, sh?: number);
+
+  constructor(arg1: number | Uint8ClampedArray, arg2: number, arg3?: number) {
+    if (typeof arg1 === 'number') {
+      this.data = new Uint8ClampedArray(arg1 * arg2);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.height = arg3!;
+      this.width = arg2;
+    } else {
+      this.data = arg1;
+      this.height = arg3 ?? Math.floor(this.data.length / arg2);
+      this.width = arg2;
+    }
+  }
+
+  data: Uint8ClampedArray;
+
+  height: number;
+
+  width: number;
+}
+
+export function setGlobals(): void {
+  global.ImageData = ImageData;
+}
+
+export function resetGlobals(): void {
+  global.ImageData = originalImageData;
+}

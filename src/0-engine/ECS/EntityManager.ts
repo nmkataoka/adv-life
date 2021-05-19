@@ -54,6 +54,7 @@ export class EntityManager {
 
   // TODO: This should be coded as a dispatch default event
   /** Warning! All unsaved anything will be lost */
+  /** This should not be called directly, call it from GameManager */
   public async restart(): Promise<void> {
     this.cMgrs = {};
     await this.Start();

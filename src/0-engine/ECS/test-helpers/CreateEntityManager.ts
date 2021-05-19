@@ -10,7 +10,7 @@ export function createEmptyEntityManager(): EntityManager {
 
 export async function createMockEntityManager(): Promise<EntityManager> {
   const gameMgr = new GameManager();
+  await gameMgr.Start();
   const { eMgr } = gameMgr;
-  await eMgr.Start();
   return eMgr;
 }

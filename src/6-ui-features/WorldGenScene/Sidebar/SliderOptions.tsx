@@ -4,6 +4,7 @@ import { getColor } from '6-ui-features/Theme';
 
 type SliderInputProps = {
   name: string;
+  dataTestid: string;
   description: string;
   value: number;
   min: number;
@@ -34,6 +35,7 @@ function isInt(n: number): boolean {
 /** isLogarithmic causes the slider to use a log scale and overwrite `step` with a calculated step */
 function SliderInput({
   name,
+  dataTestid,
   description,
   value,
   min,
@@ -82,6 +84,7 @@ function SliderInput({
       <NameCell description={description}>{name}</NameCell>
       <td>
         <input
+          data-testid={dataTestid}
           type="range"
           min={inputMin}
           max={inputMax}
@@ -130,7 +133,7 @@ const Tooltip = styled.div`
 `;
 
 export type SliderOptionsProps = {
-  options: (Omit<SliderInputProps, 'onChange'> & { key: string })[];
+  options: (Omit<SliderInputProps, 'onChange' | 'dataTestid'> & { key: string })[];
   onChange: (name: string) => SliderInputProps['onChange'];
 };
 
@@ -146,6 +149,7 @@ export function SliderOptions({ options, onChange }: SliderOptionsProps): JSX.El
         {options.map(({ name, key, description, value, min, max, step, isLogarithmic }) => (
           <SliderInput
             key={key}
+            dataTestid={`${key}-slider`}
             name={name}
             description={description}
             value={value}

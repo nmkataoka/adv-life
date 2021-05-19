@@ -1,43 +1,11 @@
 import { DataLayer } from '1-game-code/World';
-import { WorldMap } from '1-game-code/World/WorldMap';
 import { Color } from './Color';
 import PixelMap from './PixelMap';
 
-class ImageData {
-  constructor(sw: number, sh: number);
-
-  constructor(dataIn: Uint8ClampedArray, sw: number, sh?: number);
-
-  constructor(arg1: number | Uint8ClampedArray, arg2: number, arg3?: number) {
-    if (typeof arg1 === 'number') {
-      this.data = new Uint8ClampedArray(arg1 * arg2);
-      this.height = arg3!;
-      this.width = arg2;
-    } else {
-      this.data = arg1;
-      this.height = arg3 ?? Math.floor(this.data.length / arg2);
-      this.width = arg2;
-    }
-  }
-
-  data: Uint8ClampedArray;
-
-  height: number;
-
-  width: number;
-}
-
 const black: Color = [0, 0, 0, 255];
 const white: Color = [255, 255, 255, 255];
-const originalImageData = global.ImageData;
-describe('PixelMap', () => {
-  beforeEach(() => {
-    global.ImageData = ImageData;
-  });
 
-  afterEach(() => {
-    global.ImageData = originalImageData;
-  });
+describe('PixelMap', () => {
   it('outputs correct colors for simple map', () => {
     const elevs = new DataLayer('elevation', 2, 2);
     elevs.set(1, 0, 1);

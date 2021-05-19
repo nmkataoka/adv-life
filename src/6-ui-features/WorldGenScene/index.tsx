@@ -7,6 +7,7 @@ import { Map } from './Map';
 
 export default function WorldGenScene(): JSX.Element {
   const [seed, setSeed] = useState('a wonderful life');
+
   return (
     <Page>
       <Header>

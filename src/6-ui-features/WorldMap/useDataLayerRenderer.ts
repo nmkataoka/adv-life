@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, RefObject } from 'react';
 import { DataLayer } from '1-game-code/World';
 import { DeepReadonly } from 'ts-essentials';
+import { useIsTest } from '6-ui-features/TestContext';
 import { Color } from './Color';
 import PixelMap from './PixelMap';
 
@@ -14,6 +15,7 @@ export function useDataLayerRenderer(
   scale = 1,
   useShearedElev = false,
 ): void {
+  const isTest = useIsTest();
   const pixelMap = useRef<PixelMap | undefined>();
   const [imageBitmap, setImageBitmap] = useState(null as ImageBitmap | null);
 
@@ -48,11 +50,14 @@ export function useDataLayerRenderer(
     const canvas = canvasRef.current;
     if (!canvas || !pixelMap.current || !dataLayer) return;
 
+    // All the canvas and drawing stuff doesn't exist in node-env.
+    if (isTest) return;
+
     pixelMap.current.updateFromDataLayer(dataLayer, useShearedElev);
     const img = pixelMap.current.toImageData();
 
     void createImageBitmap(img).then((bitmap) => setImageBitmap(bitmap));
-  }, [canvasRef, drawImage, dataLayer, useShearedElev]);
+  }, [canvasRef, drawImage, dataLayer, useShearedElev, isTest]);
 
   // Redraw the image bitmap whenever it changes or we zoom in/out
   useEffect(() => {
