@@ -18,8 +18,8 @@ export const createTown = (
   civilizationId: number,
   coords: [number, number],
   name = 'unnamed',
-  population = 100,
   fromTown?: Entity,
+  population = 100,
 ): Entity => {
   const town = eMgr.createEntity(name);
 
