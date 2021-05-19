@@ -1,6 +1,7 @@
 export type OneOfData = {
   label: string;
   info: string;
+  value: string;
 };
 
 export type OneOf = {

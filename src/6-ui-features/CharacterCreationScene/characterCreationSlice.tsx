@@ -9,6 +9,7 @@ import CharacterAttributeGroup, {
   Ranges,
   randomize,
   OneOf,
+  isOneOf,
 } from './CharacterAttributeGroup';
 import { Freeform } from './CharacterAttributeGroup/Freeform';
 
@@ -166,6 +167,22 @@ export const {
 
 export default characterCreationSlice.reducer;
 
+/**
+ * Returns the value of a character attribute group, identified by name
+ * @param cags Character attribute group array
+ * @param name Name of the cag
+ */
+function getOneOfValue(cags: CharacterAttributeGroup[], name: string): string {
+  const cag = cags.find((c) => c.name === name);
+  if (!cag) {
+    throw new Error(`Could not find character attribute ${name}`);
+  }
+  if (!isOneOf(cag)) {
+    throw new Error('Character attribute is of different selectType than expected.');
+  }
+  return cag.options[cag.selectedIdx].value;
+}
+
 export const createPlayerCharacter = (): AppThunk => async (dispatch, getState) => {
   const {
     characterCreation: { characterAttributeGroups: cags },
@@ -177,17 +194,9 @@ export const createPlayerCharacter = (): AppThunk => async (dispatch, getState) 
     name = nameCAG.options[0].value;
   }
 
-  const raceCAG = cags.find((cag) => cag.name === 'Race') as OneOf;
-  let race;
-  if (raceCAG) {
-    race = raceCAG.options[raceCAG.selectedIdx].label;
-  }
-
-  const classCAG = cags.find((cag) => cag.name === 'Class') as OneOf;
-  let className;
-  if (classCAG) {
-    className = classCAG.options[classCAG.selectedIdx].label;
-  }
+  const race = getOneOfValue(cags, 'Race');
+  const className = getOneOfValue(cags, 'Class');
+  const civId = parseInt(getOneOfValue(cags, 'Civilization'), 10);
 
   const statsCAG = cags.find((cag) => cag.name === 'Attributes') as PointAllocation;
   let stats;
@@ -216,6 +225,7 @@ export const createPlayerCharacter = (): AppThunk => async (dispatch, getState) 
 
   await apiClient.emit(
     createCharacter({
+      civ: { id: civId, admin: true },
       className,
       name: name ?? 'Unnamed',
       personality,
