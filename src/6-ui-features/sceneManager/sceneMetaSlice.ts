@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export type Scene = 'characterCreation' | 'colosseum' | 'mainMenu' | 'town' | 'worldGen';
+export type Scene = 'characterCreation' | 'civ' | 'colosseum' | 'mainMenu' | 'town' | 'worldGen';
 
 const initialState = {
   currentScene: 'mainMenu' as Scene,

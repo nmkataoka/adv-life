@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import Modal from '5-react-components/Modal';
+import { getColor } from '6-ui-features/Theme';
 import { WorldMap } from '../WorldMap';
 
 export default function WorldMapButton(): JSX.Element {
@@ -16,4 +17,7 @@ export default function WorldMapButton(): JSX.Element {
   );
 }
 
-const Container = styled.button``;
+const Container = styled.button`
+  background-color: ${getColor('asuna')};
+  color: ${getColor('black')};
+`;
