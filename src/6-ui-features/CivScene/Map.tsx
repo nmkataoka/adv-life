@@ -7,6 +7,7 @@ import useZoomOnScroll from '5-react-components/useZoomOnScroll';
 import { useElementSize } from '5-react-components/useElementSize';
 import { WorldMapLayer } from '1-game-code/World/DataLayer/WorldMapLayers';
 import { layersUiData } from '6-ui-features/WorldMap/layers';
+import { PoliticalOverlay } from '6-ui-features/WorldMap/PoliticalOverlay';
 import { MapOverlay } from './MapOverlay';
 
 export function Map(): JSX.Element {
@@ -29,6 +30,7 @@ export function Map(): JSX.Element {
       <FullDiv ref={containerRef}>
         <canvas style={{ position: 'absolute' }} ref={canvasRef} height={height} width={width} />
         {dataLayer && <MapOverlay />}
+        <PoliticalOverlay />
       </FullDiv>
     </Container>
   );
@@ -36,11 +38,8 @@ export function Map(): JSX.Element {
 
 const Container = styled.div`
   grid-area: map;
-
-  padding: 1em 2em;
   height: 100%;
   width: 100%;
-  box-sizing: border-box;
 `;
 
 const FullDiv = styled.div`

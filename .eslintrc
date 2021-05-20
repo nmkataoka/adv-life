@@ -46,6 +46,7 @@
     "prefer-destructuring": ["error", { "object": true, "array": false }],
     "react/jsx-filename-extension": 0,
     "react/jsx-indent": 0, // disabled because we have prettier
+    "react/jsx-props-no-spreading": 0, // useful in upstream libraries
     "react/jsx-one-expression-per-line": 0, // disabled because we have prettier
     "react/jsx-uses-react": 0, // no longer necessary with React 17 JSX transform
     "react/no-array-index-key": "warn",
@@ -83,12 +84,6 @@
       "rules": {
         "@typescript-eslint/no-non-null-assertion": 0, // Assertions are useful in tests, especially when they're 1 character
         "@typescript-eslint/no-unsafe-call": 0
-      }
-    },
-    {
-      "files": ["**/*.stories.tsx"],
-      "rules": {
-        "react/jsx-props-no-spreading": 0
       }
     }
   ]

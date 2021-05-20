@@ -6,6 +6,7 @@ import { updateInfoWindow, selectedOption } from '../../characterCreationSlice';
 export type OptionRowProps = {
   label: string;
   info: string;
+  value: string;
 };
 
 type SelectionWindowProps = {
@@ -30,7 +31,7 @@ export default function SelectionWindow({
     <Window header={header} randomize showNavigation>
       <OptionsContainer>
         {options.map((o, idx) => (
-          <Option key={o.label} onClick={handleClick(o)} selected={selectedIdx === idx}>
+          <Option key={o.value} onClick={handleClick(o)} selected={selectedIdx === idx}>
             {o.label}
           </Option>
         ))}

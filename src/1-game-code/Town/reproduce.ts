@@ -17,7 +17,7 @@ const maxRepro = 2 ** (1 / popDoublesInYears);
  * @returns Statistics on a per-civ basis
  */
 export function reproduce(townCmpts: TownCmpt[], foodLayer: DataLayer): void {
-  // const points = townCmpts.map(({ location: [x, y] }) => new Vector2(x, y));
+  // const points = townCmpts.map(({ coords: [x, y] }) => new Vector2(x, y));
   // const { height, width } = foodLayer;
 
   /**
@@ -30,8 +30,8 @@ export function reproduce(townCmpts: TownCmpt[], foodLayer: DataLayer): void {
   // const vor = generateVoronoi(points, width, height, 0, Math, true);
 
   townCmpts.forEach((townCmpt) => {
-    const { location, population } = townCmpt;
-    const [x, y] = location;
+    const { coords, population } = townCmpt;
+    const [x, y] = coords;
 
     // Temporary approximation, should be replaced by voronoi calculation
     const food = foodLayer.at(x, y) * 16;

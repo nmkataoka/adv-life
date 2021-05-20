@@ -7,7 +7,7 @@ import useZoomOnScroll from '5-react-components/useZoomOnScroll';
 import { useElementSize } from '5-react-components/useElementSize';
 import { WorldMapLayer } from '1-game-code/World/DataLayer/WorldMapLayers';
 import { layersUiData } from '../WorldMap/layers';
-import { MapOverlay } from './MapOverlay';
+import { WorldGenOverlay } from './WorldGenOverlay';
 
 export function Map(): JSX.Element {
   const [currentLayer, setCurrentLayer] = useState<WorldMapLayer>('elevation');
@@ -28,7 +28,9 @@ export function Map(): JSX.Element {
       {!dataLayer && 'No map generated yet.'}
       <FullDiv ref={containerRef}>
         <canvas style={{ position: 'absolute' }} ref={canvasRef} height={height} width={width} />
-        {dataLayer && <MapOverlay currentLayer={currentLayer} onLayerChange={setCurrentLayer} />}
+        {dataLayer && (
+          <WorldGenOverlay currentLayer={currentLayer} onLayerChange={setCurrentLayer} />
+        )}
       </FullDiv>
     </Container>
   );
@@ -37,10 +39,10 @@ export function Map(): JSX.Element {
 const Container = styled.div`
   grid-area: map;
 
-  padding: 1em 2em;
+  // padding: 1em 2em;
   height: 100%;
   width: 100%;
-  box-sizing: border-box;
+  // box-sizing: border-box;
 `;
 
 const FullDiv = styled.div`

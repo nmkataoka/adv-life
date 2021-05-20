@@ -4,7 +4,7 @@ import { Entity, NComponent, NULL_ENTITY } from '0-engine';
  * batching some state for dev speed.
  */
 export class TownCmpt extends NComponent {
-  location: [number, number] = [0, 0];
+  coords: [number, number] = [0, 0];
 
   civilizationId: Entity = NULL_ENTITY;
 

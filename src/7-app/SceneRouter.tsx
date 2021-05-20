@@ -34,7 +34,7 @@ const Container = styled.div`
   position: relative;
   min-width: 1200px;
   width: 100vw;
-  height: 90vh;
+  height: 100vh;
   box-sizing: border-box;
   overflow: hidden;
 `;

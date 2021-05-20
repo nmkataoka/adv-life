@@ -3,6 +3,7 @@ import { InventoryCmpt } from '1-game-code/Inventory';
 import { componentNode, selectorNode, viewNode, selectorNodeFamily } from '4-react-ecsal';
 import { TownLocationsCmpt } from '1-game-code/Town';
 import { ComponentClasses } from '0-engine/ECS/component-dependencies/ComponentDependencies';
+import { TownCmpt } from '1-game-code/Town/TownCmpt';
 import { TownLocationInfo } from './TownLocationInfo';
 
 import { getName } from '../name';
@@ -36,7 +37,7 @@ export const getTownLocation = selectorNodeFamily({
 });
 
 const getAllTownsView = viewNode(
-  new ComponentClasses({ readCmpts: [TownLocationsCmpt, NameCmpt] }),
+  new ComponentClasses({ readCmpts: [TownLocationsCmpt, NameCmpt, TownCmpt] }),
 );
 
 export const getAllTowns = selectorNode({
@@ -45,12 +46,14 @@ export const getAllTowns = selectorNode({
     const [allTownsView] = get(getAllTownsView);
     if (!allTownsView) return [];
     const towns: TownInfo[] = [];
-    allTownsView.forEach((e, { readCmpts: [townLocationsCmpt, nameCmpt] }) => {
+    allTownsView.forEach((e, { readCmpts: [townLocationsCmpt, nameCmpt, townCmpt] }) => {
       const { locationIds } = townLocationsCmpt;
+      const { coords } = townCmpt;
       towns.push({
         townId: e,
         name: nameCmpt.name,
         locationIds,
+        coords,
       });
     });
     return towns;

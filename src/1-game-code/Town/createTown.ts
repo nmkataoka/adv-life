@@ -25,7 +25,7 @@ export const createTown = (
 
   const townCmpt = new TownCmpt();
   townCmpt.civilizationId = civilizationId;
-  townCmpt.location = coords;
+  townCmpt.coords = coords;
   townCmpt.population = population;
   eMgr.addCmpt(town, townCmpt);
 
