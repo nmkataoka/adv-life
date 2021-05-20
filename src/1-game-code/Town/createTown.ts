@@ -17,7 +17,7 @@ export const createTown = (
   eMgr: EntityManager,
   civilizationId: number,
   coords: [number, number],
-  name = 'unnamed',
+  name = 'Unnamed',
   fromTown?: Entity,
   population = 100,
 ): Entity => {

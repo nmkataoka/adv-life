@@ -1,24 +1,36 @@
 import styled from '@emotion/styled';
-import { ReactNode } from 'react';
+import { ReactNode, SVGProps } from 'react';
 
-export interface BaseIconProps {
+export interface BaseIconProps extends SVGProps<SVGSVGElement> {
   children?: ReactNode;
   /** Height of the icon in px */
   height?: number;
   /** Width of the icon in px */
   width?: number;
+
+  viewBox?: string;
 }
 
-export function BaseIcon({ children, height = 16, width = 16 }: BaseIconProps): JSX.Element {
+export function BaseIcon({
+  children,
+  height = 16,
+  viewBox,
+  width = 16,
+  ...props
+}: BaseIconProps): JSX.Element {
   return (
-    <Svg style={{ height: `${height}px`, width: `${width}px` }} viewBox={`0 0 ${width} ${height}`}>
+    <Svg
+      {...props}
+      style={{ height: `${height}px`, width: `${width}px` }}
+      viewBox={viewBox ?? `0 0 ${width} ${height}`}
+    >
       {children}
     </Svg>
   );
 }
 
 export const Svg = styled.svg`
-  path: {
+  path {
     fill: currentColor;
   }
 `;

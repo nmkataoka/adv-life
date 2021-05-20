@@ -16,7 +16,7 @@ export default function TopBar(): JSX.Element {
           <ActionButton key={a}>{a}</ActionButton>
         ))}
       </LeftGroup>
-      <CenterGroup>{title && <h2>{title}</h2>}</CenterGroup>
+      <CenterGroup>{title && <Title>{title}</Title>}</CenterGroup>
       <RightGroup>
         <CivModeButton />
         <WorldMapButton />
@@ -32,6 +32,11 @@ const Container = styled.div`
   width: 100%;
   padding: 0.5em 1em;
   background-color: ${getColor('black')};
+  box-sizing: border-box;
+`;
+
+const Title = styled.h2`
+  font-family: var(--header-font-family);
 `;
 
 const ActionButton = styled.div`
