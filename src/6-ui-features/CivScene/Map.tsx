@@ -10,7 +10,7 @@ import { layersUiData } from '6-ui-features/WorldMap/layers';
 import { MapOverlay } from './MapOverlay';
 
 export function Map(): JSX.Element {
-  const [currentLayer, setCurrentLayer] = useState<WorldMapLayer>('elevation');
+  const [currentLayer /* , setCurrentLayer */] = useState<WorldMapLayer>('elevation');
   const dataLayer = useSelector2(getWorldMapLayer(currentLayer));
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
