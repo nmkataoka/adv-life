@@ -6,6 +6,8 @@ import { useDispatch } from '4-react-ecsal';
 import { GameManager } from '0-engine/GameManager';
 import { useReduxDispatch, useReduxSelector } from '11-redux-wrapper';
 import { changedScene } from '6-ui-features/sceneManager/sceneMetaSlice';
+import { consoleWarn } from '8-helpers/console';
+import { createCiv } from '1-game-code/World/Civs/CivSys';
 import { Tabs } from './Tabs';
 import { WorldGenModules } from '../constants';
 import { TabContent } from './TabContent';
@@ -40,18 +42,27 @@ export function Sidebar({ seed }: SidebarProps): JSX.Element {
   };
 
   const generateWorld = async () => {
-    if (activeModule === 'water') {
+    // TODO this switch case is clearly a problem, this whole sidebar probably needs a rethink
+    // Although keep it tightly coupled to redux. I tried decoupling the character creation scene from
+    // redux and using more composition and it failed due to the need to have all the data in one
+    // place for saving. So let's keep the redux state management.
+    if (activeModule === 'terrain') {
+      await GameManager.instance.restart();
+      await dispatch(createWorld(seed, contentState));
+    } else if (activeModule === 'water') {
       await dispatch(doRain(contentState));
     } else if (activeModule === 'civilizations') {
-      // TODO this is clearly a problem, this whole sidebar should be reworked to use composition
+      await dispatch(
+        createCiv({
+          civName: 'Romylon',
+        }),
+      );
     } else if (activeModule === 'finish') {
       // Return to the main menu with the world now created.
       // User is expected to start a new game.
       reduxDispatch(changedScene('mainMenu'));
     } else {
-      await GameManager.instance.restart();
-
-      await dispatch(createWorld(seed, contentState));
+      consoleWarn(`Go button is not implemented for world gen module ${activeModule}`);
     }
   };
 

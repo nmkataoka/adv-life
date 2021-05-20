@@ -59,6 +59,17 @@ const characterCreationSlice = createSlice({
       state.infoWindowTitle = infoWindowTitle;
       state.infoWindowText = infoWindowText;
     },
+    /** Use to update CAG metadata. Do not use this to update input values! */
+    updateCharacterAttributeGroup(state, action: PayloadAction<CharacterAttributeGroup>) {
+      const cag = action.payload;
+      const cagIdx = state.characterAttributeGroups.findIndex((c) => c.name === cag.name);
+      if (cagIdx < 0) {
+        throw new Error(
+          "Tried to update character attribute group ' + cag.name + ' but it doesn't exist.",
+        );
+      }
+      state.characterAttributeGroups[cagIdx] = cag;
+    },
     clickedNext(state) {
       if (state.screenIdx < state.characterAttributeGroups.length - 1) {
         state.screenIdx += 1;
@@ -163,6 +174,7 @@ export const {
   randomizeCurrentWindow,
   selectedOption,
   updateInfoWindow,
+  updateCharacterAttributeGroup,
 } = characterCreationSlice.actions;
 
 export default characterCreationSlice.reducer;

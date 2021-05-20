@@ -3,14 +3,14 @@ import { RngCmpt } from '1-game-code/prng/RngCmpt';
 import { reproduce } from '1-game-code/Town/reproduce';
 import { TownCmpt } from '1-game-code/Town/TownCmpt';
 import { WorldMapCmpt } from '../WorldMapCmpt';
-import { createCiv } from './createCiv';
+import { createCiv as createCivInternal } from './createCiv';
 
 export interface CivGenParams {
   civName: string;
 }
 
 // Initializes civs and their starting towns
-const createCivsSlice = createEventSlice('createCivs', {
+const createCivsSlice = createEventSlice('createCiv', {
   writeCmpts: [RngCmpt, WorldMapCmpt],
 })<CivGenParams>(
   ({
@@ -26,11 +26,11 @@ const createCivsSlice = createEventSlice('createCivs', {
       throw new Error('Elevation layer must be generated before town generation');
     }
     const rng = rngMgr.getUniqueMut().getRng('WorldGen');
-    createCiv(eMgr, elevLayer, rng, civName);
+    createCivInternal(eMgr, elevLayer, rng, civName);
   },
 );
 
-export const { createCivs } = createCivsSlice;
+export const { createCiv } = createCivsSlice;
 
 const updateTownsSlice = createEventSlice('updateTowns', {
   writeCmpts: [WorldMapCmpt, TownCmpt],

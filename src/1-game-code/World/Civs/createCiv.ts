@@ -4,6 +4,7 @@ import { createTown } from '1-game-code/Town/createTown';
 import { DataLayer } from '../DataLayer/DataLayer';
 import { CivCmpt } from './CivCmpt';
 
+/** Creates a civ entity and places its first town randomly. */
 export function createCiv(
   eMgr: EntityManager,
   elevLayer: DataLayer,
