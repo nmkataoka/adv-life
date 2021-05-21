@@ -17,7 +17,6 @@ const maxRepro = 2 ** (1 / popDoublesInYears);
  * @returns Statistics on a per-civ basis
  */
 export function reproduce(townCmpts: TownCmpt[], foodLayer: DataLayer): void {
-  console.log('reproducing');
   // const points = townCmpts.map(({ coords: [x, y] }) => new Vector2(x, y));
   // const { height, width } = foodLayer;
 
