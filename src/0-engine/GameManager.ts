@@ -1,5 +1,4 @@
 import { createUnit } from '1-game-code/Unit/createUnit';
-import { createTown } from '1-game-code/Town/createTown';
 import eventListeners from '1-game-code/eventListeners';
 import { EntityManager } from './ECS/EntityManager';
 
@@ -35,7 +34,15 @@ export class GameManager {
     await this.eMgr.Start();
 
     // This is game logic that should be separated from the engine stuff like the game loop
-    this.createMap();
+    this.createUnits();
+    this.enterGameLoop();
+  }
+
+  public async restart(): Promise<void> {
+    if (this.gameLoopHandle) {
+      clearTimeout(this.gameLoopHandle);
+    }
+    await this.eMgr.restart();
     this.createUnits();
     this.enterGameLoop();
   }
@@ -53,11 +60,6 @@ export class GameManager {
     for (let i = 0; i < 3; ++i) {
       createUnit(i, true);
     }
-  }
-
-  private createMap(): void {
-    createTown([0, 0], 'Quietwater');
-    createTown([0, 0], 'Wandermere');
   }
 
   private enterGameLoop(): void {

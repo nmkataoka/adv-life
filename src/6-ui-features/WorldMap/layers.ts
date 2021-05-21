@@ -1,5 +1,5 @@
 import { WorldMapLayer } from '1-game-code/World/DataLayer/WorldMapLayers';
-import { Color, colorInterp, getRgbColorFromTheme } from '6-ui-features/WorldMap/Color';
+import { Color, colorInterp, getRgbColorFromTheme } from './Color';
 
 const elevColors: Color[] = [
   getRgbColorFromTheme('blueDarker'),

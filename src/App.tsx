@@ -15,7 +15,6 @@ function App({ isTest = false }: AppProps): JSX.Element {
     void GameManager.instance.Start();
 
     // Only start once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -1,14 +1,16 @@
 import { createEventSlice } from '0-engine';
 import { RngCmpt } from '1-game-code/prng/RngCmpt';
+import { TownCmpt } from '1-game-code/Town/TownCmpt';
+import { reproduce } from './reproduce';
 import { WorldMapCmpt } from '../WorldMapCmpt';
-import { createCiv } from './createCiv';
+import { createCiv as createCivInternal } from './createCiv';
 
 export interface CivGenParams {
   civName: string;
 }
 
 // Initializes civs and their starting towns
-const createCivsSlice = createEventSlice('createCivs', {
+const createCivsSlice = createEventSlice('createCiv', {
   writeCmpts: [RngCmpt, WorldMapCmpt],
 })<CivGenParams>(
   ({
@@ -24,29 +26,31 @@ const createCivsSlice = createEventSlice('createCivs', {
       throw new Error('Elevation layer must be generated before town generation');
     }
     const rng = rngMgr.getUniqueMut().getRng('WorldGen');
-    createCiv(eMgr, elevLayer, rng, civName);
+    createCivInternal(eMgr, elevLayer, rng, civName);
   },
 );
 
-export const { createCivs } = createCivsSlice;
+export const { createCiv } = createCivsSlice;
 
-const updateTowns = createEventSlice('updateTowns', {
-  writeCmpts: [WorldMapCmpt],
+const updateTownsSlice = createEventSlice('updateTowns', {
+  writeCmpts: [WorldMapCmpt, TownCmpt],
 })<void>(
   ({
     componentManagers: {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      writeCMgrs: [worldMapMgr],
+      writeCMgrs: [worldMapMgr, townMgr],
     },
   }) => {
     // Allow population to reproduce based on food
-    // Civs with excess population can create new towns.
-    // Towns can be placed at borders (usually preferred) or internally if
-    // food production in the area can support the higher population density.
-    // New towns automatically get a footpath road to them from the nearest town.
-    // Need to track civ border to prevent overlapping civ territories and to
-    // choose locations for new towns.
+    const townCmpts: TownCmpt[] = [];
+    townMgr.forEach((town) => townCmpts.push(town));
+    const foodLayer = worldMapMgr.getUniqueMut().data.dataLayers.food;
+    if (!foodLayer) {
+      throw new Error('Food layer must be created before population sim can begin.');
+    }
+    reproduce(townCmpts, foodLayer);
   },
 );
 
-export default [createCivsSlice.eventListener, updateTowns.eventListener];
+export const { updateTowns } = updateTownsSlice;
+
+export default [createCivsSlice.eventListener, updateTownsSlice.eventListener];

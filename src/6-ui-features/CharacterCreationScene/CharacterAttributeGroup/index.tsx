@@ -21,3 +21,20 @@ export const randomize = (info: CharacterAttributeGroup): CharacterAttributeGrou
   }
   return randomizeRanges(info);
 };
+
+// Type guards
+export function isOneOf(cag: CharacterAttributeGroup): cag is OneOf {
+  return cag.selectType === 'oneOf';
+}
+
+export function isFreeform(cag: CharacterAttributeGroup): cag is Freeform {
+  return cag.selectType === 'freeform';
+}
+
+export function isPointAllocation(cag: CharacterAttributeGroup): cag is PointAllocation {
+  return cag.selectType === 'pointAllocation';
+}
+
+export function isRanges(cag: CharacterAttributeGroup): cag is Ranges {
+  return cag.selectType === 'ranges';
+}

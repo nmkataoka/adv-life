@@ -3,10 +3,11 @@ import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { Input } from '6-ui-features/DesignSystem';
 import { Sidebar } from './Sidebar';
-import { Map } from './Map';
+import { WorldGenMap } from './WorldGenMap';
 
 export default function WorldGenScene(): JSX.Element {
   const [seed, setSeed] = useState('a wonderful life');
+
   return (
     <Page>
       <Header>
@@ -15,7 +16,7 @@ export default function WorldGenScene(): JSX.Element {
         <Input id="seed" type="text" value={seed} onChange={(e) => setSeed(e.target.value)} />
       </Header>
       <Sidebar seed={seed} />
-      <Map />
+      <WorldGenMap />
     </Page>
   );
 }

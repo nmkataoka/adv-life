@@ -4,13 +4,20 @@
  * Component comparisons are functions which compare two components by value
  */
 
-import { NComponent, NComponentConstructor, EntityManager } from '0-engine';
+import { NComponent, NComponentConstructor, EntityManager, Entity, NULL_ENTITY } from '0-engine';
 
 /// A special type of NComponent that contains a reference to another entity.
 /// Relationships are directional and one-way.
 export interface IEntityRelationship {
   // Returns a list of entities
   getChildren(): number[];
+}
+
+/**
+ * Special type of NComponent that contains a reference to another entity.
+ */
+export class BelongsToEntity extends NComponent {
+  id: Entity = NULL_ENTITY;
 }
 
 export abstract class EntityRelationshipTemplateBase {

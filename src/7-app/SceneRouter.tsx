@@ -9,13 +9,15 @@ import ColosseumScene from '6-ui-features/ColosseumScene';
 import MainMenuScene from '6-ui-features/MainMenuScene';
 import TownScene from '6-ui-features/TownScene';
 import WorldGenScene from '6-ui-features/WorldGenScene';
+import { CivScene } from '6-ui-features/CivScene';
 
-const scenes = {
-  [Scene.CharacterCreation]: CharacterCreationScene,
-  [Scene.Colosseum]: ColosseumScene,
-  [Scene.MainMenu]: MainMenuScene,
-  [Scene.Town]: TownScene,
-  [Scene.WorldGen]: WorldGenScene,
+const scenes: Record<Scene, () => JSX.Element> = {
+  characterCreation: CharacterCreationScene,
+  civ: CivScene,
+  colosseum: ColosseumScene,
+  mainMenu: MainMenuScene,
+  town: TownScene,
+  worldGen: WorldGenScene,
 };
 
 export function SceneRouter(): JSX.Element {
@@ -32,7 +34,7 @@ const Container = styled.div`
   position: relative;
   min-width: 1200px;
   width: 100vw;
-  height: 90vh;
+  height: 100vh;
   box-sizing: border-box;
   overflow: hidden;
 `;

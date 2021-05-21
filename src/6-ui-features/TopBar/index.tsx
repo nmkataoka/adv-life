@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
 import { useReduxSelector } from '11-redux-wrapper';
 import { RootState } from '7-app/types';
+import { getColor } from '6-ui-features/Theme';
 import WorldMapButton from './WorldMapButton';
+import { CivModeButton } from './CivModeButton';
 
 const actions = ['Menu'];
 
@@ -14,8 +16,9 @@ export default function TopBar(): JSX.Element {
           <ActionButton key={a}>{a}</ActionButton>
         ))}
       </LeftGroup>
-      <CenterGroup>{title && <h2>{title}</h2>}</CenterGroup>
+      <CenterGroup>{title && <Title>{title}</Title>}</CenterGroup>
       <RightGroup>
+        <CivModeButton />
         <WorldMapButton />
       </RightGroup>
     </Container>
@@ -23,17 +26,23 @@ export default function TopBar(): JSX.Element {
 }
 
 const Container = styled.div`
+  color: ${getColor('asuna')};
   display: flex;
   justify-content: space-between;
   width: 100%;
   padding: 0.5em 1em;
-  background-color: gold;
+  background-color: ${getColor('black')};
+  box-sizing: border-box;
+  flex: 0 0 auto;
+`;
+
+const Title = styled.h2`
+  font-family: var(--header-font-family);
 `;
 
 const ActionButton = styled.div`
-  border-radius: 4px;
-  background-color: brown;
-  color: white;
+  background-color: ${getColor('asuna')};
+  color: ${getColor('black')};
   margin-right: 0.5em;
   padding: 1em;
 

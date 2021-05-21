@@ -1,0 +1,1 @@
+export { VillageIcon } from './VillageIcon';

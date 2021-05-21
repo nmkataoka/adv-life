@@ -57,14 +57,24 @@ function hashEdge(edge: VorEdge, xMax: number, yMax: number): string {
 
 /** Generates a voronoi diagram for the given number of points */
 export function generateVoronoi(
-  numPoints: number,
+  points: number | Vector2[],
   xSize: number,
   ySize: number,
   numRelaxations: number,
-  rng: Random,
+  rng: Random = Math,
   isCylindrical = true,
 ): VoronoiDiagram {
-  let points = generateRandomPoints(numPoints, xSize, ySize, rng);
+  let numPoints: number;
+
+  if (typeof points === 'number') {
+    if (rng === Math) {
+      throw new Error('When generating random points, rng must be supplied properly.');
+    }
+    numPoints = points;
+    points = generateRandomPoints(numPoints, xSize, ySize, rng);
+  } else {
+    numPoints = points.length;
+  }
 
   // For isCylindrical maps, triplicate points (along x axis) and run graphing functions
   // At the end, the middle third will be used as the map

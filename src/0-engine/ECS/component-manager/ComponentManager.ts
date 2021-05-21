@@ -144,6 +144,11 @@ export class ComponentManager<C extends NComponent> {
     return [...this.components.values()] as DeepReadonly<C>[];
   }
 
+  /** Iterate over mutable */
+  public forEach(func: (component: C) => void): void {
+    this.components.forEach(func);
+  }
+
   /** For debugging only! */
   public getAsDict(): { [key: string]: C } {
     return Object.fromEntries(this.components);

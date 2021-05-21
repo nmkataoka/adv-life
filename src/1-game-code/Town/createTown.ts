@@ -1,29 +1,33 @@
 import { Entity, EntityManager } from '0-engine';
-import { WorldMapLocationCmpt } from '1-game-code/World/WorldMapLocationCmpt';
 import { TownLocationsCmpt } from './TownLocationsCmpt';
 import { createMerchant } from '../Merchant/createMerchant';
 import { RouteCmpt } from './RouteCmpt';
+import { TownCmpt } from './TownCmpt';
 
 /**
  * Creates a town.
+ * @param civilizationId Entity id of the owning civilization.
  * @param coords World map coordinates to place the town at.
  * @param name Name of the town.
+ * @param population The starting population.
  * @param fromTown Will automatically create a footpath road to the founding town.
- * @returns
+ * @returns Entity id of the town.
  */
 export const createTown = (
+  eMgr: EntityManager,
+  civilizationId: number,
   coords: [number, number],
-  name = 'unnamed',
+  name = 'Unnamed',
   fromTown?: Entity,
+  population = 100,
 ): Entity => {
-  const eMgr = EntityManager.instance;
   const town = eMgr.createEntity(name);
 
-  const worldMapLocationCmpt = new WorldMapLocationCmpt();
-  const [x, y] = coords;
-  worldMapLocationCmpt.x = x;
-  worldMapLocationCmpt.y = y;
-  eMgr.addCmpt(town, worldMapLocationCmpt);
+  const townCmpt = new TownCmpt();
+  townCmpt.civilizationId = civilizationId;
+  townCmpt.coords = coords;
+  townCmpt.population = population;
+  eMgr.addCmpt(town, townCmpt);
 
   if (fromTown) {
     const routeCmpt = new RouteCmpt();

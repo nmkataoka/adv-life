@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
+import { getColor } from '6-ui-features/Theme';
 import { changedScreen } from './characterCreationSlice';
 import { CharacterCreationScreens } from './characterCreationData';
 
@@ -29,9 +30,10 @@ const Container = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: lightblue;
+  background-color: ${getColor('white')};
 `;
 
 const NavItem = styled.button`
-  background-color: #c0c0c0;
+  background-color: ${getColor('blueDarker')};
+  color: ${getColor('white')};
 `;

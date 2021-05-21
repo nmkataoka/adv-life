@@ -81,7 +81,7 @@ export function createCacheState(): CacheState {
 }
 
 // $FIXME: this should be memoized so if the same component is accessed from different
-// React components, it should not duplicate the
+// React components, it should not duplicate the node
 export function componentNode<C extends NComponent>(
   cclass: NComponentConstructor<C>,
   entity: Entity,

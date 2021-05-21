@@ -1,15 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export enum Scene {
-  CharacterCreation = 'characterCreation',
-  Colosseum = 'colosseum',
-  MainMenu = 'mainMenu',
-  Town = 'town',
-  WorldGen = 'worldGen',
-}
+export type Scene = 'characterCreation' | 'civ' | 'colosseum' | 'mainMenu' | 'town' | 'worldGen';
 
 const initialState = {
-  currentScene: Scene.MainMenu,
+  currentScene: 'mainMenu' as Scene,
 };
 
 const sceneMetaSlice = createSlice({

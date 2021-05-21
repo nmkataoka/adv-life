@@ -9,7 +9,7 @@ export default function MainMenuScene(): JSX.Element {
   const reduxDispatch = useReduxDispatch();
 
   const handleSceneSelection = (scene: Scene) => () => {
-    if (scene === Scene.Colosseum) {
+    if (scene === 'colosseum') {
       reduxDispatch(createPlayerCharacter());
     }
     reduxDispatch(changedScene(scene));
@@ -20,9 +20,9 @@ export default function MainMenuScene(): JSX.Element {
       <MainMenuBackgroundImage alt="main-menu-background" src="/main-menu-background.png" />
       <Title>Adventurer&apos;s Life</Title>
       <InnerCol>
-        <Button onClick={handleSceneSelection(Scene.CharacterCreation)}>New Game</Button>
-        <Button onClick={handleSceneSelection(Scene.Colosseum)}>Colosseum</Button>
-        <Button onClick={handleSceneSelection(Scene.WorldGen)}>Create World</Button>
+        <Button onClick={handleSceneSelection('characterCreation')}>New Game</Button>
+        <Button onClick={handleSceneSelection('colosseum')}>Colosseum</Button>
+        <Button onClick={handleSceneSelection('worldGen')}>Create World</Button>
       </InnerCol>
     </Col>
   );

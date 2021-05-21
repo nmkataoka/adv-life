@@ -6,7 +6,7 @@ import { useEffect, RefObject } from 'react';
  * Most logic handling requires onWheel to be registered as an active event listener.
  */
 export function useOnWheel(
-  ref: RefObject<HTMLCanvasElement | null>,
+  ref: RefObject<HTMLCanvasElement | undefined>,
   handler: (e: WheelEvent) => void,
 ): void {
   useEffect(() => {

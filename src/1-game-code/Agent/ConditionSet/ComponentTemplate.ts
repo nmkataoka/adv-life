@@ -1,11 +1,11 @@
-import { NComponent, NComponentConstructor, EntityManager } from '0-engine';
+import { NComponent, NComponentConstructor, EntityManager, NULL_ENTITY } from '0-engine';
 
 export abstract class ComponentTemplateBase {
   public abstract checkValid(entity: number, eMgr: EntityManager): boolean;
 
   // References which entity variable this component belongs to
   // E.g. 0 = self (by convention)
-  public entityVarIdx = -1;
+  public entityVarIdx = NULL_ENTITY;
 }
 
 export type ComponentValuePredicate<C> = (component: C) => boolean;
