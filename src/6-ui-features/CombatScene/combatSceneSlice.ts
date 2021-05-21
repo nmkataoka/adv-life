@@ -120,10 +120,14 @@ const updateMousePositionInner = throttle((dispatch: Dispatch, newPos: MousePos)
 }, 100);
 
 // eslint-disable-next-line max-len
-export const setMousePosition = (newPos: MousePos): AppThunk => (dispatch) =>
-  updateMousePositionInner(dispatch, newPos);
+export const setMousePosition =
+  (newPos: MousePos): AppThunk =>
+  (dispatch) =>
+    updateMousePositionInner(dispatch, newPos);
 
-export const setIsPaused = (nextState: boolean): AppThunk => (dispatch) => {
-  GameManager.instance.setPaused(nextState);
-  dispatch(isPausedChanged(nextState));
-};
+export const setIsPaused =
+  (nextState: boolean): AppThunk =>
+  (dispatch) => {
+    GameManager.instance.setPaused(nextState);
+    dispatch(isPausedChanged(nextState));
+  };

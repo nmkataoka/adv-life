@@ -7,7 +7,7 @@ import { EventCallback, EventCallbackArgs, EventCallbackWithView } from './Event
 
 export class EventListener<
   Payload = undefined,
-  ComponentDependencies extends AbstractComponentClasses = ComponentClasses<[], [], []>
+  ComponentDependencies extends AbstractComponentClasses = ComponentClasses<[], [], []>,
 > {
   public callback: EventCallback<Payload, ComponentDependencies>;
 
@@ -35,7 +35,7 @@ export class EventListener<
  */
 export class EventListenerWithView<
   Payload,
-  ComponentDependencies extends AbstractComponentClasses = ComponentClasses<[], [], []>
+  ComponentDependencies extends AbstractComponentClasses = ComponentClasses<[], [], []>,
 > extends EventListener<Payload, ComponentDependencies> {
   constructor(
     eventType: string,

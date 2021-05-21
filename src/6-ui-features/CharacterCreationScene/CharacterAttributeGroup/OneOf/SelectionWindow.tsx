@@ -22,10 +22,12 @@ export default function SelectionWindow({
 }: SelectionWindowProps): JSX.Element {
   const dispatch = useDispatch();
 
-  const handleClick = ({ label, info }: OptionRowProps) => () => {
-    dispatch(updateInfoWindow({ infoWindowTitle: label, infoWindowText: info }));
-    dispatch(selectedOption({ label }));
-  };
+  const handleClick =
+    ({ label, info }: OptionRowProps) =>
+    () => {
+      dispatch(updateInfoWindow({ infoWindowTitle: label, infoWindowText: info }));
+      dispatch(selectedOption({ label }));
+    };
 
   return (
     <Window header={header} randomize showNavigation>

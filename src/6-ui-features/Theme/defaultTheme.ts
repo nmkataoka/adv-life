@@ -18,13 +18,11 @@ export const defaultTheme = {
 
 type MyTheme = typeof defaultTheme;
 
-export const getColor = (colorName: keyof typeof defaultTheme['colors']) => ({
-  theme,
-}: {
-  theme: MyTheme;
-}): string => {
-  return theme.colors[colorName];
-};
+export const getColor =
+  (colorName: keyof typeof defaultTheme['colors']) =>
+  ({ theme }: { theme: MyTheme }): string => {
+    return theme.colors[colorName];
+  };
 
 declare module '@emotion/react' {
   export interface Theme {

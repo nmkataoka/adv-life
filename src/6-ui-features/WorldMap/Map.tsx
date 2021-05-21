@@ -5,15 +5,8 @@ import { useWorldMap, WorldMapProvider } from './WorldMapContext';
 import { layersUiData } from './layers';
 
 function MapInternal({ children }: { children?: ReactNode }) {
-  const {
-    layer,
-    layerData,
-    canvasRef,
-    containerRef,
-    scale,
-    containerWidth,
-    containerHeight,
-  } = useWorldMap();
+  const { layer, layerData, canvasRef, containerRef, scale, containerWidth, containerHeight } =
+    useWorldMap();
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { coloringFunc } = layersUiData.find((el) => el.key === layer)!;

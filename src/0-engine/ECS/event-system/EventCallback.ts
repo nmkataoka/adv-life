@@ -24,7 +24,7 @@ export type EventCallbackArgs<Payload, ComponentDependencies extends AbstractCom
  */
 export type EventCallback<
   Payload = undefined,
-  ComponentDependencies extends AbstractComponentClasses = ComponentClasses<[], [], []>
+  ComponentDependencies extends AbstractComponentClasses = ComponentClasses<[], [], []>,
 > = (args: EventCallbackArgs<Payload, ComponentDependencies>) => Promise<void> | void;
 
 export class EventCallbackError {
@@ -41,7 +41,7 @@ export class EventCallbackError {
 
 export type EventCallbackWithViewArgs<
   Payload,
-  ComponentDependences extends AbstractComponentClasses
+  ComponentDependences extends AbstractComponentClasses,
 > = {
   view: View<ComponentDependences>;
   payload: Payload;
@@ -59,5 +59,5 @@ export type EventCallbackWithViewArgs<
  */
 export type EventCallbackWithView<
   Payload,
-  ComponentDependencies extends AbstractComponentClasses = ComponentClasses<[], [], []>
+  ComponentDependencies extends AbstractComponentClasses = ComponentClasses<[], [], []>,
 > = (args: EventCallbackWithViewArgs<Payload, ComponentDependencies>) => Promise<void> | void;

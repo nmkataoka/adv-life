@@ -9,22 +9,22 @@ import { terrainGenControls } from '../constants/terrainGenControls';
 import { TabContentProps } from './TabContent';
 
 /** Single function to create a new world. Covers entirety of world gen. */
-export const createWorld = (seed: string, settings: typeof WorldGenModules): Thunk => async (
-  dispatch,
-) => {
-  const [terrainSettings] = settings;
-  const { content: terrainContent } = terrainSettings;
-  const terrainGenParams = parseTerrainGenParams(seed, terrainContent);
-  await dispatch(createWorldMap(terrainGenParams));
+export const createWorld =
+  (seed: string, settings: typeof WorldGenModules): Thunk =>
+  async (dispatch) => {
+    const [terrainSettings] = settings;
+    const { content: terrainContent } = terrainSettings;
+    const terrainGenParams = parseTerrainGenParams(seed, terrainContent);
+    await dispatch(createWorldMap(terrainGenParams));
 
-  const { width, height } = terrainGenParams;
-  await dispatch(startHydrology({ mode: 'random', size: { x: width, y: height } }));
+    const { width, height } = terrainGenParams;
+    await dispatch(startHydrology({ mode: 'random', size: { x: width, y: height } }));
 
-  await dispatch(createFood({ width, height }));
+    await dispatch(createFood({ width, height }));
 
-  await dispatch(createTown({ civilizationId: -1, coords: [0, 0], name: 'Quietwater' }));
-  await dispatch(createTown({ civilizationId: -1, coords: [0, 0], name: 'Wandermere' }));
-};
+    await dispatch(createTown({ civilizationId: -1, coords: [0, 0], name: 'Quietwater' }));
+    await dispatch(createTown({ civilizationId: -1, coords: [0, 0], name: 'Wandermere' }));
+  };
 
 /** Parses the UI settings data format into the payload expected by the backend */
 function parseTerrainGenParams(seed: string, content: typeof terrainGenControls): TerrainGenParams {

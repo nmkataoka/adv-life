@@ -28,18 +28,21 @@ export function Sidebar({ seed }: SidebarProps): JSX.Element {
   const content = contentState.find(({ key }) => key === activeModule)?.content;
   if (!content) throw new Error('Impossible. This is to make TypeScript happy.');
 
-  const onChange = (heading: string) => (name: string) => (num: number): void => {
-    const nextState = produce(contentState, (draft) => {
-      const option = draft
-        .find(({ key }) => activeModule === key)
-        ?.content.find(({ heading: h }) => h === heading)
-        ?.options.find(({ name: n }) => n === name);
-      if (option) {
-        option.value = num;
-      }
-    });
-    setContentState(nextState);
-  };
+  const onChange =
+    (heading: string) =>
+    (name: string) =>
+    (num: number): void => {
+      const nextState = produce(contentState, (draft) => {
+        const option = draft
+          .find(({ key }) => activeModule === key)
+          ?.content.find(({ heading: h }) => h === heading)
+          ?.options.find(({ name: n }) => n === name);
+        if (option) {
+          option.value = num;
+        }
+      });
+      setContentState(nextState);
+    };
 
   const generateWorld = async () => {
     // TODO this switch case is clearly a problem, this whole sidebar probably needs a rethink

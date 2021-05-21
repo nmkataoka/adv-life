@@ -13,26 +13,30 @@ export type { TownInfo } from './TownInfo';
 export type { TownLocationInfo } from './TownLocationInfo';
 
 export const getTown = selectorNodeFamily({
-  get: (townId: Entity) => ({ get }) => {
-    if (townId < 0) return defaultTownInfo;
-    const [{ name } = { name: 'Unnamed' }] = get(componentNode(NameCmpt, townId));
-    const [townLocationsCmpt] = get(componentNode(TownLocationsCmpt, townId));
-    const locationIds = townLocationsCmpt?.getChildren() ?? [];
-    return { townId, name, locationIds };
-  },
+  get:
+    (townId: Entity) =>
+    ({ get }) => {
+      if (townId < 0) return defaultTownInfo;
+      const [{ name } = { name: 'Unnamed' }] = get(componentNode(NameCmpt, townId));
+      const [townLocationsCmpt] = get(componentNode(TownLocationsCmpt, townId));
+      const locationIds = townLocationsCmpt?.getChildren() ?? [];
+      return { townId, name, locationIds };
+    },
   computeKey: (townId: Entity) => `${townId}`,
 });
 
 export const getTownLocation = selectorNodeFamily({
-  get: (townLocationId: Entity) => ({ get }) => {
-    const [{ name } = { name: 'Unnamed' }] = get(getName(townLocationId));
-    const [inventory] = get(componentNode(InventoryCmpt, townLocationId));
-    return {
-      inventory,
-      name,
-      townLocationId,
-    } as TownLocationInfo;
-  },
+  get:
+    (townLocationId: Entity) =>
+    ({ get }) => {
+      const [{ name } = { name: 'Unnamed' }] = get(getName(townLocationId));
+      const [inventory] = get(componentNode(InventoryCmpt, townLocationId));
+      return {
+        inventory,
+        name,
+        townLocationId,
+      } as TownLocationInfo;
+    },
   computeKey: (townLocationId: Entity) => `${townLocationId}`,
 });
 

@@ -8,25 +8,27 @@ const getInventoryCmpt = (e: Entity): ComponentNode<InventoryCmpt> =>
   componentNode(InventoryCmpt, e);
 
 export const getInventory = selectorNodeFamily({
-  get: (e: Entity) => ({ get }) => {
-    const [inventoryCmpt] = get(getInventoryCmpt(e));
-    const { gold, inventorySlots } = inventoryCmpt ?? { gold: 0, inventorySlots: [] };
-    return {
-      gold,
-      inventorySlots: inventorySlots.map((slot: ItemStackCmpt | undefined) => {
-        if (!slot) {
-          return { ...defaultInventorySlotInfo };
-        }
-        const { health, itemClassId, materialId, publicSalePrice, stackCount } = slot;
-        return {
-          health,
-          itemClassId,
-          materialId,
-          publicSalePrice,
-          stackCount,
-        };
-      }),
-    };
-  },
+  get:
+    (e: Entity) =>
+    ({ get }) => {
+      const [inventoryCmpt] = get(getInventoryCmpt(e));
+      const { gold, inventorySlots } = inventoryCmpt ?? { gold: 0, inventorySlots: [] };
+      return {
+        gold,
+        inventorySlots: inventorySlots.map((slot: ItemStackCmpt | undefined) => {
+          if (!slot) {
+            return { ...defaultInventorySlotInfo };
+          }
+          const { health, itemClassId, materialId, publicSalePrice, stackCount } = slot;
+          return {
+            health,
+            itemClassId,
+            materialId,
+            publicSalePrice,
+            stackCount,
+          };
+        }),
+      };
+    },
   computeKey: (e: Entity) => `${e}`,
 });

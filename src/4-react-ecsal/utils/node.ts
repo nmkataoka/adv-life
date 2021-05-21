@@ -239,7 +239,7 @@ export function read<Data>(
     // Run the view query
     const { componentDependencies } = node;
     const view = eMgr.getView(componentDependencies);
-    const readonlyView = (view as unknown) as DeepReadonly<Data>;
+    const readonlyView = view as unknown as DeepReadonly<Data>;
     nodes.set(key, node);
 
     // This should be unnecessary since eMgr.getView returns a new object on each call.

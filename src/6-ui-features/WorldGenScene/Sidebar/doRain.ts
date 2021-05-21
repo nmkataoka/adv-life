@@ -9,9 +9,11 @@ function parseWaterParams(content: typeof rainControls): WaterParams {
   return { dropParams, dt, numDrops } as WaterParams;
 }
 
-export const doRain = (settings: typeof WorldGenModules): Thunk => async (dispatch) => {
-  const rainSettings = settings[2];
-  const { content: rainContent } = rainSettings;
-  const waterParams = parseWaterParams(rainContent);
-  await dispatch(rain(waterParams));
-};
+export const doRain =
+  (settings: typeof WorldGenModules): Thunk =>
+  async (dispatch) => {
+    const rainSettings = settings[2];
+    const { content: rainContent } = rainSettings;
+    const waterParams = parseWaterParams(rainContent);
+    await dispatch(rain(waterParams));
+  };

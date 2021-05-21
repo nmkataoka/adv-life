@@ -24,7 +24,7 @@ type ReadonlyManagersFromClasses<T extends unknown[]> = {
 class ComponentManagers<
   ReadCmpts extends NComponent[] = [],
   WriteCmpts extends NComponent[] = [],
-  WithoutCmpts extends NComponent[] = []
+  WithoutCmpts extends NComponent[] = [],
 > {
   // Complicated type on default value because TypeScript can't
   // enforce that correct data is supplied
@@ -65,7 +65,7 @@ class ComponentManagers<
 export class ComponentClasses<
   ReadCmpts extends NComponent[] = [],
   WriteCmpts extends NComponent[] = [],
-  WithoutCmpts extends NComponent[] = []
+  WithoutCmpts extends NComponent[] = [],
 > {
   public readCmpts: ConstructorsFromComponents<[...ReadCmpts]>;
 
@@ -116,16 +116,15 @@ export class ComponentClasses<
 /**
  * Views only need a subset of the component types in ComponentDependencies.
  */
-export type PresentComponents<
-  ComponentDependencies extends AbstractComponentClasses
-> = ComponentDependencies extends ComponentClasses<
-  infer ReadCmpts,
-  infer WriteCmpts,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  infer WithoutCmpts
->
-  ? { readCmpts: ReadCmpts; writeCmpts: WriteCmpts }
-  : never;
+export type PresentComponents<ComponentDependencies extends AbstractComponentClasses> =
+  ComponentDependencies extends ComponentClasses<
+    infer ReadCmpts,
+    infer WriteCmpts,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    infer WithoutCmpts
+  >
+    ? { readCmpts: ReadCmpts; writeCmpts: WriteCmpts }
+    : never;
 
 /** Get ComponentManagers type from ComponentClasses */
 export type ComponentManagersFromClasses<T> = T extends ComponentClasses<
