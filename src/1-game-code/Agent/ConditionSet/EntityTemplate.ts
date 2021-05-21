@@ -15,7 +15,7 @@ type NComponentConstructorArray = NComponentConstructor<any>[];
 
 // Entity templates with variadic templating for entities with variable numbers of components
 export default class EntityTemplate<
-  T extends NComponentConstructorArray
+  T extends NComponentConstructorArray,
 > extends EntityTemplateBase {
   constructor(...cclasses: T) {
     super();

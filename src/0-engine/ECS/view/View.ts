@@ -106,6 +106,5 @@ function FindEntitiesWithComponents(cMgrs: ComponentManager<any>[], without: num
   return viewEntities;
 }
 
-export type ComponentDependenciesFromView<
-  V extends View<AbstractComponentClasses>
-> = V['componentDependencies'];
+export type ComponentDependenciesFromView<V extends View<AbstractComponentClasses>> =
+  V['componentDependencies'];

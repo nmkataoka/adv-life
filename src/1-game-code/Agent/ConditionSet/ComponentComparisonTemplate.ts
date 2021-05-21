@@ -12,7 +12,7 @@ export type ComponentComparisonTemplatePredicate<C1, C2> = (c1: C1, c2: C2) => b
 
 export default class ComponentComparisonTemplate<
   C1 extends NComponent,
-  C2 extends NComponent
+  C2 extends NComponent,
 > extends ComponentComparisonTemplateBase {
   public predicate: ComponentComparisonTemplatePredicate<C1, C2>;
 

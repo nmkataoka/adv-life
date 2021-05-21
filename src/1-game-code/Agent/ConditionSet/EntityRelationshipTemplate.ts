@@ -32,7 +32,7 @@ export abstract class EntityRelationshipTemplateBase {
 }
 
 export default class EntityRelationshipTemplate<
-  C extends NComponent & IEntityRelationship
+  C extends NComponent & IEntityRelationship,
 > extends EntityRelationshipTemplateBase {
   constructor(cclass: NComponentConstructor<C>) {
     super();

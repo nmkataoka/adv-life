@@ -16,7 +16,7 @@ type EventCreator<Payload> = { (payload: Payload): EventAction<Payload>; type: s
 type EventSlice<
   Payload,
   EventName extends string,
-  ComponentDependencies extends AbstractComponentClasses
+  ComponentDependencies extends AbstractComponentClasses,
 > = Record<EventName, EventCreator<Payload>> & {
   eventListener: EventListener<Payload, ComponentDependencies>;
 };
@@ -34,7 +34,7 @@ export function createEventSlice<
   EventName extends string,
   ReadCmpts extends NComponent[] = [],
   WriteCmpts extends NComponent[] = [],
-  WithoutCmpts extends NComponent[] = []
+  WithoutCmpts extends NComponent[] = [],
 >(
   eventName: EventName,
   componentDependencies: Partial<ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>>,
@@ -63,7 +63,7 @@ export function createEventSlice<
 export function copyEventSlice<
   EventName extends string,
   Payload,
-  ComponentDependencies extends AbstractComponentClasses
+  ComponentDependencies extends AbstractComponentClasses,
 >(
   eventName: EventName,
   eventSlice: EventSlice<Payload, any, ComponentDependencies>,
@@ -80,7 +80,7 @@ export function createEventSliceWithView<
   EventName extends string,
   ReadCmpts extends NComponent[] = [],
   WriteCmpts extends NComponent[] = [],
-  WithoutCmpts extends NComponent[] = []
+  WithoutCmpts extends NComponent[] = [],
 >(
   eventName: EventName,
   componentDependencies: Partial<ComponentClasses<ReadCmpts, WriteCmpts, WithoutCmpts>>,
