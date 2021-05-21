@@ -2,7 +2,7 @@ import { useOnWheel } from '5-react-components/useOnWheel';
 import { RefObject, useCallback, useEffect, useState } from 'react';
 
 export default function useZoomOnScroll(
-  canvasRef: RefObject<HTMLCanvasElement | null>,
+  canvasRef: RefObject<HTMLCanvasElement>,
   min = 1,
   max = 2,
 ): number {

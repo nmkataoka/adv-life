@@ -9,7 +9,7 @@ import ColosseumScene from '6-ui-features/ColosseumScene';
 import MainMenuScene from '6-ui-features/MainMenuScene';
 import TownScene from '6-ui-features/TownScene';
 import WorldGenScene from '6-ui-features/WorldGenScene';
-import CivScene from '6-ui-features/CivScene';
+import { CivScene } from '6-ui-features/CivScene';
 
 const scenes: Record<Scene, () => JSX.Element> = {
   characterCreation: CharacterCreationScene,

@@ -4,16 +4,16 @@ import { useSelector2 } from '4-react-ecsal';
 import { RootState } from '7-app/types';
 import { getAllTowns, getPlayerId } from '3-frontend-api';
 import { travelToTown } from '1-game-code/Unit/TravelToLocationSys';
-import MapLocation from './MapLocation';
+import { Map } from '6-ui-features/WorldMap';
+import MapLocation from '../WorldMap/MapLocation';
 import { changedScene } from '../sceneManager/sceneMetaSlice';
-import WorldMapCanvas from './WorldMapCanvas';
 
 const mapHeight = 400;
 const mapWidth = 600;
 const mapPaddingSides = 10;
 const mapPaddingBottom = 10;
 
-export function WorldMap(): JSX.Element {
+export function WorldMapWithCombat(): JSX.Element {
   const dispatch = useReduxDispatch();
   const isInCombat = useReduxSelector((state: RootState) => state.combatScene.isInCombat);
   const towns = useSelector2(getAllTowns) ?? [];
@@ -38,16 +38,17 @@ export function WorldMap(): JSX.Element {
     <Container>
       <h1>World Map</h1>
       <WorldMapContainer>
-        <WorldMapCanvas height={mapHeight} width={mapWidth} />
-        <LocationContainer>
-          {towns.map(({ townId, name }) => (
-            <MapLocation key={name} name={name} onClick={handleTownClick(townId)} />
-          ))}
-          <MapLocation name="Combat" onClick={handleCombatClick} />
-          <MapLocation name="Combat" onClick={handleCombatClick} />
-          <MapLocation name="Combat" onClick={handleCombatClick} />
-          <MapLocation name="Combat" onClick={handleCombatClick} />
-        </LocationContainer>
+        <Map>
+          <LocationContainer>
+            {towns.map(({ townId, name }) => (
+              <MapLocation key={name} name={name} onClick={handleTownClick(townId)} />
+            ))}
+            <MapLocation name="Combat" onClick={handleCombatClick} />
+            <MapLocation name="Combat" onClick={handleCombatClick} />
+            <MapLocation name="Combat" onClick={handleCombatClick} />
+            <MapLocation name="Combat" onClick={handleCombatClick} />
+          </LocationContainer>
+        </Map>
       </WorldMapContainer>
     </Container>
   );
@@ -61,7 +62,8 @@ const Container = styled.div`
 `;
 
 const WorldMapContainer = styled.div`
-  position: relative;
+  height: ${mapHeight}px
+  width: ${mapWidth}px;
 `;
 
 const LocationContainer = styled.div`

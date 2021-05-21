@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import Modal from '5-react-components/Modal';
 import { getColor } from '6-ui-features/Theme';
-import { WorldMap } from '../WorldMap';
+import { WorldMapWithCombat } from './WorldMapWithCombat';
 
 export default function WorldMapButton(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +10,7 @@ export default function WorldMapButton(): JSX.Element {
   return (
     <>
       <Modal isShowing={isOpen} onClose={() => setIsOpen(false)}>
-        <WorldMap />
+        <WorldMapWithCombat />
       </Modal>
       <Container onClick={() => setIsOpen(!isOpen)}>World Map</Container>
     </>
