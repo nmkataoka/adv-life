@@ -1,7 +1,7 @@
 import { DataLayer } from '1-game-code/World';
 // import { generateVoronoi } from '1-game-code/World/TerrainGen/Voronoi/Voronoi';
 // import { Vector2 } from '8-helpers/math';
-import { TownCmpt } from './TownCmpt';
+import { TownCmpt } from '1-game-code/Town/TownCmpt';
 
 /** Number of years it takes pop to double in optimal conditions */
 const popDoublesInYears = 150;
@@ -17,6 +17,7 @@ const maxRepro = 2 ** (1 / popDoublesInYears);
  * @returns Statistics on a per-civ basis
  */
 export function reproduce(townCmpts: TownCmpt[], foodLayer: DataLayer): void {
+  console.log('reproducing');
   // const points = townCmpts.map(({ coords: [x, y] }) => new Vector2(x, y));
   // const { height, width } = foodLayer;
 

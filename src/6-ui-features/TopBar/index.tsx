@@ -33,6 +33,7 @@ const Container = styled.div`
   padding: 0.5em 1em;
   background-color: ${getColor('black')};
   box-sizing: border-box;
+  flex: 0 0 auto;
 `;
 
 const Title = styled.h2`

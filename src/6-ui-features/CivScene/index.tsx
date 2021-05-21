@@ -10,27 +10,34 @@ export default function CivScene(): JSX.Element {
 
   if (playerCivId === NULL_ENTITY) {
     return (
-      <>
+      <Page>
         <TopBar />
-        <Page>Player does not own a civ.</Page>
-      </>
+        <Content>Player does not own a civ.</Content>
+      </Page>
     );
   }
 
   // hello
   return (
-    <>
+    <Page>
       <TopBar />
-      <Page>
+      <Content>
         <Map />
-      </Page>
-    </>
+      </Content>
+    </Page>
   );
 }
 
 const Page = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
+  align-items: stretch;
+`;
+
+const Content = styled.div`
+  flex: 1 1 auto;
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: 100%;

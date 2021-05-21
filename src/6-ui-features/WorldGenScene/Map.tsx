@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { ReactNode, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { useDataLayerRenderer } from '6-ui-features/WorldMap/useDataLayerRenderer';
 import { getWorldMapLayer } from '3-frontend-api/worldMap';
@@ -9,7 +9,11 @@ import { WorldMapLayer } from '1-game-code/World/DataLayer/WorldMapLayers';
 import { layersUiData } from '../WorldMap/layers';
 import { WorldGenOverlay } from './WorldGenOverlay';
 
-export function Map(): JSX.Element {
+interface MapProps {
+  children?: ReactNode;
+}
+
+export function Map({ children }: MapProps): JSX.Element {
   const [currentLayer, setCurrentLayer] = useState<WorldMapLayer>('elevation');
   const dataLayer = useSelector2(getWorldMapLayer(currentLayer));
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -31,6 +35,7 @@ export function Map(): JSX.Element {
         {dataLayer && (
           <WorldGenOverlay currentLayer={currentLayer} onLayerChange={setCurrentLayer} />
         )}
+        {children}
       </FullDiv>
     </Container>
   );
@@ -38,11 +43,8 @@ export function Map(): JSX.Element {
 
 const Container = styled.div`
   grid-area: map;
-
-  // padding: 1em 2em;
   height: 100%;
   width: 100%;
-  // box-sizing: border-box;
 `;
 
 const FullDiv = styled.div`

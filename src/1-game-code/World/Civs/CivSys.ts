@@ -1,7 +1,7 @@
 import { createEventSlice } from '0-engine';
 import { RngCmpt } from '1-game-code/prng/RngCmpt';
-import { reproduce } from '1-game-code/Town/reproduce';
 import { TownCmpt } from '1-game-code/Town/TownCmpt';
+import { reproduce } from './reproduce';
 import { WorldMapCmpt } from '../WorldMapCmpt';
 import { createCiv as createCivInternal } from './createCiv';
 

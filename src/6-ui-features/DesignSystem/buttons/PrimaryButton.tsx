@@ -18,6 +18,7 @@ const PrimaryButtonStyled = styled.button`
   color: ${getColor('white')};
   font-size: 1.4em;
   padding: 0.25em 0.75em;
+  box-shadow: var(--shadow-12);
 
   &:hover {
     background-color: ${getColor('blueLighter')};
