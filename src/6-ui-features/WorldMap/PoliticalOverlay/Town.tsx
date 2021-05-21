@@ -1,6 +1,6 @@
-import { VillageIcon } from '6-ui-features/DesignSystem/icons';
 import { getColor } from '6-ui-features/Theme';
 import styled from '@emotion/styled';
+import { VillageMapSymbolIcon } from '../icons';
 
 interface TownProps {
   name: string;
@@ -17,7 +17,7 @@ export function Town({ name, coords }: TownProps): JSX.Element {
   );
 }
 
-const Icon = styled(VillageIcon)`
+const Icon = styled(VillageMapSymbolIcon)`
   transform: translate(0, 65%);
 `;
 

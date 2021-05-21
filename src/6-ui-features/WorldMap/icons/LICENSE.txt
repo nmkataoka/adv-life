@@ -1,0 +1,5 @@
+The following assets were made by Nolan Kataoka and are released under the same license as the adv-life source code.
+
+VillageMapSymbolIcon
+TownMapSymbolIcon
+CityMapSymbolIcon
