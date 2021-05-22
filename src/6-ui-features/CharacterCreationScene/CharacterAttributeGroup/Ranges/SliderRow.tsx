@@ -1,7 +1,9 @@
 import { ChangeEvent } from 'react';
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
-import { updateInfoWindow, changedSlider } from '../../characterCreationSlice';
+import { Info, useInfo } from '6-ui-features/Info';
+import Window from '6-ui-features/CharacterCreationScene/components/Window';
+import { changedSlider } from '../../characterCreationSlice';
 
 export type SliderRowProps = {
   info: string;
@@ -23,9 +25,10 @@ export default function SliderRow({
   value,
 }: SliderRowProps): JSX.Element {
   const dispatch = useDispatch();
+  const { isInfoMine, requestInfoOwnership } = useInfo();
 
   const handleClick = () => {
-    dispatch(updateInfoWindow({ infoWindowTitle: maxLabel, infoWindowText: info }));
+    requestInfoOwnership();
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -39,6 +42,9 @@ export default function SliderRow({
       </Label>
       <Input type="range" min={min} max={max} onChange={handleChange} step={step} value={value} />
       <Label onClick={handleClick}>{maxLabel}</Label>
+      <Info show={isInfoMine}>
+        <Window header={maxLabel}>{info}</Window>
+      </Info>
     </Row>
   );
 }

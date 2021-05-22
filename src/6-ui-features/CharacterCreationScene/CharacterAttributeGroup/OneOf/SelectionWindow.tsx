@@ -1,41 +1,60 @@
 import styled from '@emotion/styled';
-import { useDispatch } from 'react-redux';
+import { Info, useInfo } from '6-ui-features/Info';
+import { useReduxDispatch } from '11-redux-wrapper';
 import Window from '../../components/Window';
-import { updateInfoWindow, selectedOption } from '../../characterCreationSlice';
+import { selectedOption } from '../../characterCreationSlice';
 
-export type OptionRowProps = {
+export interface OptionRowProps {
   label: string;
   info: string;
   value: string;
-};
+}
 
-type SelectionWindowProps = {
+interface OptionProps extends OptionRowProps {
+  isSelected: boolean;
+}
+
+function Option({ label, info, isSelected }: OptionProps): JSX.Element {
+  const { isInfoMine, requestInfoOwnership } = useInfo();
+  const dispatch = useReduxDispatch();
+
+  const handleClick = () => {
+    requestInfoOwnership();
+    dispatch(selectedOption({ label }));
+  };
+
+  return (
+    <OptionDiv onClick={handleClick} selected={isSelected}>
+      {label}
+      <Info show={isInfoMine}>
+        <Window header={label}>{info}</Window>
+      </Info>
+    </OptionDiv>
+  );
+}
+
+interface SelectionWindowProps {
   header: string;
   options: OptionRowProps[];
   selectedIdx: number;
-};
+}
 
 export default function SelectionWindow({
   header,
   options,
   selectedIdx,
 }: SelectionWindowProps): JSX.Element {
-  const dispatch = useDispatch();
-
-  const handleClick =
-    ({ label, info }: OptionRowProps) =>
-    () => {
-      dispatch(updateInfoWindow({ infoWindowTitle: label, infoWindowText: info }));
-      dispatch(selectedOption({ label }));
-    };
-
   return (
     <Window header={header} randomize showNavigation>
       <OptionsContainer>
         {options.map((o, idx) => (
-          <Option key={o.value} onClick={handleClick(o)} selected={selectedIdx === idx}>
-            {o.label}
-          </Option>
+          <Option
+            key={o.value}
+            isSelected={selectedIdx === idx}
+            label={o.label}
+            info={o.info}
+            value={o.value}
+          />
         ))}
       </OptionsContainer>
     </Window>
@@ -47,12 +66,12 @@ const OptionsContainer = styled.div`
   flex-direction: column;
 `;
 
-type OptionProps = {
+type OptionDivProps = {
   selected: boolean;
 };
 
-const Option = styled.button`
-  ${(props: OptionProps) => props.selected && 'background-color: lightblue;'}
+const OptionDiv = styled.button`
+  ${(props: OptionDivProps) => props.selected && 'background-color: lightblue;'}
   border: 1px solid #c0c0c0;
   padding: 1em;
   margin: 0.5em 0;

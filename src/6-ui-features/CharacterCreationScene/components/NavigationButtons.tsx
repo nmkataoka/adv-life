@@ -1,14 +1,26 @@
+import { useClearInfo } from '6-ui-features/Info';
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
 import { clickedNext, clickedPrevious } from '../characterCreationSlice';
 
 export default function NavigationButtons(): JSX.Element {
   const dispatch = useDispatch();
+  const clearInfo = useClearInfo();
+
+  const onClickPrevious = () => {
+    clearInfo();
+    dispatch(clickedPrevious());
+  };
+
+  const onClickNext = () => {
+    clearInfo();
+    dispatch(clickedNext());
+  };
 
   return (
     <ButtonRow>
-      <Button onClick={() => dispatch(clickedPrevious())}>Previous</Button>
-      <Button onClick={() => dispatch(clickedNext())}>Next</Button>
+      <Button onClick={onClickPrevious}>Previous</Button>
+      <Button onClick={onClickNext}>Next</Button>
     </ButtonRow>
   );
 }

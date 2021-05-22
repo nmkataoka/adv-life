@@ -1,7 +1,8 @@
+import Window from '6-ui-features/CharacterCreationScene/components/Window';
+import { Info, useInfo } from '6-ui-features/Info';
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
 import {
-  updateInfoWindow,
   increasedPointAllocationForAttribute,
   decreasedPointAllocationForAttribute,
 } from '../../characterCreationSlice';
@@ -16,9 +17,10 @@ export type AttributeRowProps = {
 
 export default function AttributeRow({ info, label, value }: AttributeRowProps): JSX.Element {
   const dispatch = useDispatch();
+  const { isInfoMine, requestInfoOwnership } = useInfo();
 
   const handleClick = () => {
-    dispatch(updateInfoWindow({ infoWindowTitle: label, infoWindowText: info }));
+    requestInfoOwnership();
   };
 
   const handleDecrease = () => {
@@ -35,6 +37,9 @@ export default function AttributeRow({ info, label, value }: AttributeRowProps):
       <Value>{value}</Value>
       <IncrementButton onClick={handleDecrease}>-</IncrementButton>
       <IncrementButton onClick={handleIncrease}>+</IncrementButton>
+      <Info show={isInfoMine}>
+        <Window header={label}>{info}</Window>
+      </Info>
     </Row>
   );
 }

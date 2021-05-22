@@ -7,12 +7,13 @@ import { getWorldMapLayer } from '3-frontend-api/worldMap';
 import { useSelector2 } from '4-react-ecsal';
 import { changedScene } from '6-ui-features/sceneManager/sceneMetaSlice';
 import { getCivs } from '3-frontend-api';
+import { InfoProvider, InfoRoot } from '6-ui-features/Info';
 import CharacterCreationNavBar from './CharacterCreationNavBar';
-import InfoWindow from './components/InfoWindow';
 import ScreenInfoToScreen from './components/ScreenInfoToScreen';
 import CharacterSummaryColumn from './CharacterSummaryColumn';
 import { changedTitle } from '../TopBar/topBarSlice';
 import { updateCharacterAttributeGroup } from './characterCreationSlice';
+import Window from './components/Window';
 
 const screenSelector = (state: RootState) => {
   const { screenIdx } = state.characterCreation;
@@ -52,7 +53,7 @@ export default function CharacterCreationScene(): JSX.Element {
   }, [reduxDispatch]);
 
   return (
-    <>
+    <InfoProvider>
       <TopBar />
       <Container>
         {elevations ? (
@@ -61,7 +62,11 @@ export default function CharacterCreationScene(): JSX.Element {
             <Content>
               <ScreenInfoToScreen screenInfo={screenInfo} />
               <CharacterSummaryColumn />
-              <InfoWindow />
+              <InfoRoot
+                defaultContent={
+                  <Window header="Information">Click on an option to learn more.</Window>
+                }
+              />
             </Content>
           </>
         ) : (
@@ -73,7 +78,7 @@ export default function CharacterCreationScene(): JSX.Element {
           </>
         )}
       </Container>
-    </>
+    </InfoProvider>
   );
 }
 
