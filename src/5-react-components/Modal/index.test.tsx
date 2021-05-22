@@ -1,5 +1,5 @@
 import { stub } from 'sinon';
-import { render, fireEvent, screen, waitFor } from '8-helpers/test-utils';
+import { render, fireEvent, screen, waitFor } from '8-helpers/test-utils.test';
 
 import Modal from '.';
 

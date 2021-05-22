@@ -4,7 +4,7 @@ import {
   screen,
   waitFor,
   waitForElementToBeRemoved,
-} from '8-helpers/test-utils';
+} from '8-helpers/test-utils.test';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
 

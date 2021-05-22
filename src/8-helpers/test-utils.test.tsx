@@ -66,8 +66,17 @@ class ImageData {
   width: number;
 }
 
+class ResizeObserver {
+  observe() {}
+
+  unobserve() {}
+
+  disconnect() {}
+}
+
 export function setGlobals(): void {
   global.ImageData = ImageData;
+  global.ResizeObserver = ResizeObserver;
 }
 
 export function resetGlobals(): void {
