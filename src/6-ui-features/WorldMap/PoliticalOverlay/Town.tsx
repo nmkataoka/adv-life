@@ -1,4 +1,4 @@
-import { Info, useInfoBox } from '6-ui-features/Info';
+import { Info, useInfo } from '6-ui-features/Info';
 import { getColor } from '6-ui-features/Theme';
 import styled from '@emotion/styled';
 import { VillageMapSymbolIcon } from '../icons';
@@ -10,17 +10,15 @@ interface TownProps {
 
 export function Town({ name, coords }: TownProps): JSX.Element {
   const [x, y] = coords;
-  const { isInfoBoxMine, requestInfoBoxOwnership } = useInfoBox();
+  const { isInfoMine, requestInfoOwnership } = useInfo();
   return (
-    <TownContainer style={{ left: x, top: y }} onClick={requestInfoBoxOwnership}>
+    <TownContainer style={{ left: x, top: y }} onClick={requestInfoOwnership}>
       <Icon height={24} width={24} />
       {name}
-      {isInfoBoxMine && (
-        <Info>
-          <h1>{name}</h1>
-          This town is a really great town.
-        </Info>
-      )}
+      <Info show={isInfoMine}>
+        <h1>{name}</h1>
+        This town is a really great town.
+      </Info>
     </TownContainer>
   );
 }

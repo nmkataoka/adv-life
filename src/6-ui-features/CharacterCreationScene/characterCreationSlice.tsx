@@ -26,8 +26,6 @@ randomizeCharacterAttributeGroups(characterAttributeGroups);
 
 const initialState = {
   screenIdx: 0,
-  infoWindowTitle: '',
-  infoWindowText: '',
 
   characterAttributeGroups,
 };
@@ -48,16 +46,7 @@ const characterCreationSlice = createSlice({
       );
       if (newScreenIdx >= 0) {
         state.screenIdx = newScreenIdx;
-        clearInfoWindow(state);
       }
-    },
-    updateInfoWindow(
-      state,
-      action: PayloadAction<{ infoWindowTitle: string; infoWindowText: string }>,
-    ) {
-      const { infoWindowTitle, infoWindowText } = action.payload;
-      state.infoWindowTitle = infoWindowTitle;
-      state.infoWindowText = infoWindowText;
     },
     /** Use to update CAG metadata. Do not use this to update input values! */
     updateCharacterAttributeGroup(state, action: PayloadAction<CharacterAttributeGroup>) {
@@ -73,13 +62,11 @@ const characterCreationSlice = createSlice({
     clickedNext(state) {
       if (state.screenIdx < state.characterAttributeGroups.length - 1) {
         state.screenIdx += 1;
-        clearInfoWindow(state);
       }
     },
     clickedPrevious(state) {
       if (state.screenIdx > 0) {
         state.screenIdx -= 1;
-        clearInfoWindow(state);
       }
     },
     selectedOption(state, action: PayloadAction<{ label: string }>) {
@@ -157,11 +144,6 @@ const characterCreationSlice = createSlice({
   },
 });
 
-function clearInfoWindow(state: typeof initialState) {
-  state.infoWindowTitle = '';
-  state.infoWindowText = '';
-}
-
 export const {
   changedFreeformInputValue,
   changedScreen,
@@ -173,7 +155,6 @@ export const {
   randomizeAll,
   randomizeCurrentWindow,
   selectedOption,
-  updateInfoWindow,
   updateCharacterAttributeGroup,
 } = characterCreationSlice.actions;
 

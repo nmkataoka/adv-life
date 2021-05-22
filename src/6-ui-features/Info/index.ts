@@ -1,2 +1,2 @@
-export { InfoContextProvider, useInfoBox, useClearInfoBox } from './InfoContext';
+export { InfoContextProvider, useInfo, useClearInfo } from './InfoContext';
 export { Info, InfoRoot } from './Info';

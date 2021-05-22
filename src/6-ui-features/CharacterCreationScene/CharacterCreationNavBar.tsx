@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useDispatch } from 'react-redux';
 import { getColor } from '6-ui-features/Theme';
+import { useClearInfo } from '6-ui-features/Info';
 import { changedScreen } from './characterCreationSlice';
 import { CharacterCreationScreens } from './characterCreationData';
 
@@ -8,8 +9,10 @@ const navItems = CharacterCreationScreens;
 
 export default function CharacterCreationNavBar(): JSX.Element {
   const dispatch = useDispatch();
+  const clearInfo = useClearInfo();
 
   const handleClick = (screen: string) => () => {
+    clearInfo();
     dispatch(changedScreen(screen));
   };
 

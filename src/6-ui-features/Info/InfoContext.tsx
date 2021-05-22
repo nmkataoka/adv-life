@@ -40,9 +40,15 @@ function useInfoActions(): InfoActionsContextValue {
 }
 
 /** @returns A function that clears the info box */
-export function useClearInfoBox(): () => void {
+export function useClearInfo(): () => void {
   const { setOwnerId } = useInfoActions();
   return useCallback(() => setOwnerId(-1), [setOwnerId]);
+}
+
+/** This is intended for internal use only */
+export function useInfoOwnerId(): number {
+  const { ownerId } = useInfoContext();
+  return ownerId;
 }
 
 /**
@@ -50,11 +56,12 @@ export function useClearInfoBox(): () => void {
  *
  * @returns A boolean that is True if you can display your info and a function to take control of the info box
  */
-export function useInfoBox(): { isInfoBoxMine: boolean; requestInfoBoxOwnership: () => void } {
-  const [myId] = useState(nextId++);
-  const { ownerId } = useInfoContext();
+export function useInfo(): { isInfoMine: boolean; requestInfoOwnership: () => void } {
+  const [myId] = useState(() => nextId++);
+  // console.log('my id', myId);
+  const ownerId = useInfoOwnerId();
   const { setOwnerId } = useInfoActions();
-  const isInfoBoxMine = ownerId === myId;
-  const requestInfoBoxOwnership = useCallback(() => setOwnerId(myId), [myId, setOwnerId]);
-  return { isInfoBoxMine, requestInfoBoxOwnership };
+  const isInfoMine = ownerId === myId;
+  const requestInfoOwnership = useCallback(() => setOwnerId(myId), [myId, setOwnerId]);
+  return { isInfoMine, requestInfoOwnership };
 }
