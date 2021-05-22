@@ -17,7 +17,7 @@ export function Town({ name, coords }: TownProps): JSX.Element {
       {name}
       {isInfoBoxMine && (
         <Info>
-          <h2>{name}</h2>
+          <h1>{name}</h1>
           This town is a really great town.
         </Info>
       )}
