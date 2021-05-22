@@ -7,7 +7,7 @@ import { getWorldMapLayer } from '3-frontend-api/worldMap';
 import { useSelector2 } from '4-react-ecsal';
 import { changedScene } from '6-ui-features/sceneManager/sceneMetaSlice';
 import { getCivs } from '3-frontend-api';
-import { InfoContextProvider, InfoRoot } from '6-ui-features/Info';
+import { InfoProvider, InfoRoot } from '6-ui-features/Info';
 import CharacterCreationNavBar from './CharacterCreationNavBar';
 import ScreenInfoToScreen from './components/ScreenInfoToScreen';
 import CharacterSummaryColumn from './CharacterSummaryColumn';
@@ -53,7 +53,7 @@ export default function CharacterCreationScene(): JSX.Element {
   }, [reduxDispatch]);
 
   return (
-    <InfoContextProvider>
+    <InfoProvider>
       <TopBar />
       <Container>
         {elevations ? (
@@ -78,7 +78,7 @@ export default function CharacterCreationScene(): JSX.Element {
           </>
         )}
       </Container>
-    </InfoContextProvider>
+    </InfoProvider>
   );
 }
 

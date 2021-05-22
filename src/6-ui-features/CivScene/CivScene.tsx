@@ -1,7 +1,7 @@
 import { NULL_ENTITY } from '0-engine';
 import { getPlayerCiv } from '3-frontend-api';
 import { useSelector2 } from '4-react-ecsal';
-import { InfoContextProvider, InfoRoot } from '6-ui-features/Info';
+import { InfoProvider, InfoRoot } from '6-ui-features/Info';
 import { getColor } from '6-ui-features/Theme';
 import TopBar from '6-ui-features/TopBar';
 import styled from '@emotion/styled';
@@ -22,13 +22,13 @@ export function CivScene(): JSX.Element {
   // hello
   return (
     <Page>
-      <InfoContextProvider>
+      <InfoProvider>
         <TopBar />
         <Content>
           <CivMap />
           <Info />
         </Content>
-      </InfoContextProvider>
+      </InfoProvider>
     </Page>
   );
 }

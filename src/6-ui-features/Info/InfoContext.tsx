@@ -13,7 +13,7 @@ interface InfoActionsContextValue {
 const infoContext = createContext<InfoContextValue | undefined>(undefined);
 const infoActionsContext = createContext<InfoActionsContextValue | undefined>(undefined);
 
-export function InfoContextProvider({ children }: { children?: ReactNode }): JSX.Element {
+export function InfoProvider({ children }: { children?: ReactNode }): JSX.Element {
   const [ownerId, setOwnerId] = useState(-1);
 
   return (
@@ -26,7 +26,7 @@ export function InfoContextProvider({ children }: { children?: ReactNode }): JSX
 function useInfoContext(): InfoContextValue {
   const infoContextValue = useContext(infoContext);
   if (!infoContextValue) {
-    throw new Error('useInfoContext must be inside an InfoContextProvider');
+    throw new Error('useInfoContext must be inside an InfoProvider');
   }
   return infoContextValue;
 }
@@ -34,7 +34,7 @@ function useInfoContext(): InfoContextValue {
 function useInfoActions(): InfoActionsContextValue {
   const infoContextValue = useContext(infoActionsContext);
   if (!infoContextValue) {
-    throw new Error('useInfoActionsContext must be inside an InfoContextProvider');
+    throw new Error('useInfoActions must be inside an InfoProvider');
   }
   return infoContextValue;
 }
