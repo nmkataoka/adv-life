@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { useDataLayerRenderer } from './useDataLayerRenderer';
 import { useWorldMap, WorldMapProvider } from './WorldMapContext';
@@ -11,7 +11,12 @@ function MapInternal({ children }: { children?: ReactNode }) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { coloringFunc } = layersUiData.find((el) => el.key === layer)!;
 
-  useDataLayerRenderer(canvasRef, coloringFunc, layerData, scale);
+  const drawMap = useDataLayerRenderer(canvasRef, coloringFunc, layerData);
+
+  // Redraw the map on scroll and on resize
+  useEffect(() => {
+    drawMap();
+  }, [drawMap, scale, containerWidth, containerHeight]);
 
   return (
     <Container>
@@ -41,12 +46,7 @@ interface MapProps {
 export function Map({ children }: MapProps): JSX.Element {
   return (
     <WorldMapProvider>
-      <MapInternal>
-        {children}
-        {/* {dataLayer && (
-            <WorldGenOverlay currentLayer={currentLayer} onLayerChange={setCurrentLayer} />
-          )} */}
-      </MapInternal>
+      <MapInternal>{children}</MapInternal>
     </WorldMapProvider>
   );
 }

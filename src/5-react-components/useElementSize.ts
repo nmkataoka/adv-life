@@ -1,25 +1,14 @@
-import { useLayoutEffect, useState, RefObject } from 'react';
+import { useState, RefObject, useCallback } from 'react';
+import { useResizeObserver } from './useResizeObserver';
 
 export function useElementSize(ref: RefObject<HTMLElement>): [number, number] {
   const [size, setSize] = useState<[number, number]>([0, 0]);
-  useLayoutEffect(() => {
-    const el = ref.current;
-    function updateSize() {
-      if (el) {
-        const { clientWidth, clientHeight } = el;
-        setSize([clientWidth, clientHeight]);
-      }
-    }
 
-    if (el) {
-      el.addEventListener('resize', updateSize);
-      updateSize();
-    }
-    return () => {
-      if (el) {
-        el.removeEventListener('resize', updateSize);
-      }
-    };
-  }, [ref]);
+  const resizeCallback = useCallback<ResizeObserverCallback>((entries) => {
+    const { blockSize: height, inlineSize: width } = entries[0].borderBoxSize[0];
+    setSize([width, height]);
+  }, []);
+
+  useResizeObserver(ref, resizeCallback);
   return size;
 }
