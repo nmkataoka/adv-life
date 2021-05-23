@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, RefObject, useMemo } from 're
 import { DataLayer } from '1-game-code/World';
 import { DeepReadonly } from 'ts-essentials';
 import { useIsTest } from '6-ui-features/TestContext';
-import debounce from 'lodash.debounce';
+import throttle from 'lodash.throttle';
 import { Color } from './Color';
 import PixelMap from './PixelMap';
 
@@ -15,7 +15,7 @@ export function useDataLayerRenderer(
   colorFunc: (num: number) => Color,
   dataLayer?: DeepReadonly<DataLayer>,
   useShearedElev = false,
-  debounceMs = 100,
+  debounceMs = 50,
 ): () => void {
   const isTest = useIsTest();
   const pixelMap = useRef<PixelMap | undefined>();
@@ -23,15 +23,30 @@ export function useDataLayerRenderer(
 
   const drawImage = useCallback(
     (renderer: ImageBitmap) => {
-      // By default, the map is scaled to fit 100% of the page height while preserving the aspect ratio
-      const { height: imageHeight, width: imageWidth } = renderer;
-      const aspectRatio = imageHeight / imageWidth;
       const canvas = canvasRef.current;
       if (canvas) {
-        const cW = canvas.height / aspectRatio;
-        const cH = canvas.height;
         const ctx = canvas.getContext('2d');
-        ctx?.drawImage(renderer, 0, 0, cW, cH);
+
+        if (ctx) {
+          // Let's clear the canvas before redrawing
+          // To clear the canvas, we first need to remove any transformations
+          ctx.save();
+
+          // Use the identity matrix while clearing the canvas
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // Restore the transform
+          ctx.restore();
+
+          // By default, the map is scaled to fit 100% of the page height while preserving the aspect ratio
+          const { height: imageHeight, width: imageWidth } = renderer;
+          const aspectRatio = imageHeight / imageWidth;
+          const cW = canvas.height / aspectRatio;
+          const cH = canvas.height;
+
+          ctx.drawImage(renderer, 0, 0, cW, cH);
+        }
       }
     },
     [canvasRef],
@@ -66,7 +81,7 @@ export function useDataLayerRenderer(
 
   return useMemo(
     () =>
-      debounce(() => {
+      throttle(() => {
         if (imageBitmap) {
           drawImage(imageBitmap);
         }

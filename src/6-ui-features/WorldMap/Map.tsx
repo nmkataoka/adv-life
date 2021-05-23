@@ -1,5 +1,6 @@
 import React, { ReactNode, useEffect } from 'react';
 import styled from '@emotion/styled';
+import { useMoveCanvasOnDrag } from '5-react-components/useMoveCanvasOnDrag';
 import { useDataLayerRenderer } from './useDataLayerRenderer';
 import { useWorldMap, WorldMapProvider } from './WorldMapContext';
 import { layersUiData } from './layers';
@@ -11,12 +12,13 @@ function MapInternal({ children }: { children?: ReactNode }) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { coloringFunc } = layersUiData.find((el) => el.key === layer)!;
 
+  const { onMouseUp, onMouseDown, onMouseMove, translation } = useMoveCanvasOnDrag(canvasRef);
   const drawMap = useDataLayerRenderer(canvasRef, coloringFunc, layerData);
 
-  // Redraw the map on scroll and on resize
+  // Redraw the map on scroll, resize, drag
   useEffect(() => {
     drawMap();
-  }, [drawMap, scale, containerWidth, containerHeight]);
+  }, [drawMap, scale, containerWidth, containerHeight, translation]);
 
   return (
     <Container>
@@ -27,6 +29,9 @@ function MapInternal({ children }: { children?: ReactNode }) {
           ref={canvasRef}
           height={containerHeight}
           width={containerWidth}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
         />
         {children}
       </FullDiv>
