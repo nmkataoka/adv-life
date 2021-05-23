@@ -1,5 +1,6 @@
 import { DataLayer } from '1-game-code/World';
 import { consoleWarn } from '8-helpers/console';
+import { NMath } from '8-helpers/math';
 import assert from 'assert';
 import { DeepReadonly } from 'ts-essentials';
 import { Color } from './Color';
@@ -87,7 +88,7 @@ export default class PixelMap {
         if (elevSouth > elev) totalElevDrop += elevSouth - elev;
         if (elevWest > elev) totalElevDrop += elevWest - elev;
         let shadeFactor = 1 - Math.sqrt(totalElevDrop) * 0.008;
-        shadeFactor = Math.min(1, Math.max(0.8, shadeFactor));
+        shadeFactor = NMath.clamp(shadeFactor, 0.8, 1);
 
         const pixelIdx = (y * this.width + x) * 4;
         const [r, g, b, a] = this.getPixelColor(pixelIdx);

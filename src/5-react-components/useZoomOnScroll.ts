@@ -1,4 +1,5 @@
 import { useOnWheel } from '5-react-components/useOnWheel';
+import { NMath } from '8-helpers/math';
 import { RefObject, useCallback, useEffect, useState } from 'react';
 
 export default function useZoomOnScroll(
@@ -21,7 +22,7 @@ export default function useZoomOnScroll(
       e.preventDefault();
       const { deltaY } = e;
       setScale((sc) => {
-        return Math.min(max, Math.max(min, sc * (1 - deltaY * 0.0001)));
+        return NMath.clamp(sc * (1 - deltaY * 0.0001), min, max);
       });
     },
     [max, min],

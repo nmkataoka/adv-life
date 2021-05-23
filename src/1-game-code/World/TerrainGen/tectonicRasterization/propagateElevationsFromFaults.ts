@@ -1,5 +1,5 @@
 import { DataLayer } from '1-game-code/World/DataLayer/DataLayer';
-import { Vector2 } from '8-helpers/math';
+import { NMath, Vector2 } from '8-helpers/math';
 import SimplexNoise from '10-simplex-noise';
 import { Random } from '1-game-code/prng';
 import { convergence, Fault, hasSamePlateTypes, MAX_CONVERGENCE } from '../Fault';
@@ -207,10 +207,7 @@ function createRidgeFeature(
   // issues around the fault intersections. Since we use a constant ridge slope,
   // we need to cap the ridge height to a function of the fault length.
   const maxRidgeWidth = Math.floor(Math.floor(faultLength - 1) / 2) * metersPerCoord;
-  const ridgeHeight = Math.max(
-    min,
-    Math.min(min + range * adjustedConv, maxRidgeWidth * ridgeSlope),
-  );
+  const ridgeHeight = NMath.clamp(min + range * adjustedConv, min, maxRidgeWidth * ridgeSlope);
   const elevProfile: number[] = [];
   addElevProfileSection(elevProfile, ridgeHeight, 0, -metersPerCoord * ridgeSlope);
   return { hilliness, shift: shift ?? new Vector2(0, 0), elevProfile };
@@ -227,7 +224,7 @@ function createRiftFeature(
 ): FaultFeature {
   const { min, range } = RiftSettings[riftType];
   const maxRiftWidth = Math.floor(Math.floor(faultLength - 1) / 2) * metersPerCoord;
-  const riftDepth = Math.min(min, Math.max(min + range * adjustedConv, -maxRiftWidth * riftSlope));
+  const riftDepth = NMath.clamp(min + range * adjustedConv, -maxRiftWidth * riftSlope, min);
   const elevProfile: number[] = [];
   addElevProfileSection(elevProfile, riftDepth, 0, metersPerCoord * riftSlope);
   return { hilliness, shift: shift ?? new Vector2(0, 0), elevProfile };
