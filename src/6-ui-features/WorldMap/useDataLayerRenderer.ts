@@ -1,29 +1,34 @@
-import { useCallback, useEffect, useRef, useState, RefObject } from 'react';
+import { useCallback, useEffect, useRef, useState, RefObject, useMemo } from 'react';
 import { DataLayer } from '1-game-code/World';
 import { DeepReadonly } from 'ts-essentials';
 import { useIsTest } from '6-ui-features/TestContext';
+import debounce from 'lodash.debounce';
 import { Color } from './Color';
 import PixelMap from './PixelMap';
 
-/** Renders a DataLayer onto a canvas via PixelMap and ImageBitmap */
+/** Returns a function that draws the DataLayer onto a canvas via PixelMap and ImageBitmap
+ *
+ * Returns the renderer rather than calling it so that you can choose when to redraw.
+ */
 export function useDataLayerRenderer(
   canvasRef: RefObject<HTMLCanvasElement>,
   colorFunc: (num: number) => Color,
   dataLayer?: DeepReadonly<DataLayer>,
-
-  /** This argument should come from `useZoomOnScroll` */
-  scale = 1,
   useShearedElev = false,
-): void {
+  debounceMs = 100,
+): () => void {
   const isTest = useIsTest();
   const pixelMap = useRef<PixelMap | undefined>();
   const [imageBitmap, setImageBitmap] = useState(null as ImageBitmap | null);
 
   const drawImage = useCallback(
     (renderer: ImageBitmap) => {
+      // By default, the map is scaled to fit 100% of the page height while preserving the aspect ratio
+      const { height: imageHeight, width: imageWidth } = renderer;
+      const aspectRatio = imageHeight / imageWidth;
       const canvas = canvasRef.current;
       if (canvas) {
-        const cW = canvas.width;
+        const cW = canvas.height / aspectRatio;
         const cH = canvas.height;
         const ctx = canvas.getContext('2d');
         ctx?.drawImage(renderer, 0, 0, cW, cH);
@@ -59,10 +64,13 @@ export function useDataLayerRenderer(
     void createImageBitmap(img).then((bitmap) => setImageBitmap(bitmap));
   }, [canvasRef, drawImage, dataLayer, useShearedElev, isTest]);
 
-  // Redraw the image bitmap whenever it changes or we zoom in/out
-  useEffect(() => {
-    if (imageBitmap) {
-      drawImage(imageBitmap);
-    }
-  }, [drawImage, imageBitmap, scale]);
+  return useMemo(
+    () =>
+      debounce(() => {
+        if (imageBitmap) {
+          drawImage(imageBitmap);
+        }
+      }, debounceMs),
+    [drawImage, imageBitmap, debounceMs],
+  );
 }
