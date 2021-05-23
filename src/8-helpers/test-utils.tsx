@@ -1,4 +1,6 @@
 import { FunctionComponent, ReactNode } from 'react';
+// This is a test file so it can use dev dependencies
+/* eslint-disable import/no-extraneous-dependencies */
 import { render as rtlRender, RenderResult } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore, ConfigureStoreOptions } from '@reduxjs/toolkit';
@@ -82,3 +84,4 @@ export function setGlobals(): void {
 export function resetGlobals(): void {
   global.ImageData = originalImageData;
 }
+/* eslint-enable import/no-extraneous-dependencies */
