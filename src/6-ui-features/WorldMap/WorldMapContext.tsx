@@ -4,7 +4,6 @@ import { DataLayer } from '1-game-code/World';
 import { getWorldMapLayer } from '3-frontend-api/worldMap';
 import { useSelector2 } from '4-react-ecsal';
 import { DeepReadonly } from 'ts-essentials';
-import useZoomOnScroll from '5-react-components/useZoomOnScroll';
 import { useElementSize } from '5-react-components/useElementSize';
 
 interface WorldMapContextValue {
@@ -14,7 +13,6 @@ interface WorldMapContextValue {
   containerHeight: number;
   layer: WorldMapLayer;
   layerData?: DeepReadonly<DataLayer>;
-  scale: number;
 }
 const WorldMapContext = createContext<WorldMapContextValue | undefined>(undefined);
 
@@ -28,7 +26,6 @@ export function WorldMapProvider({ children }: { children?: ReactNode }): JSX.El
   const layerData = useSelector2(getWorldMapLayer(layer));
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const scale = useZoomOnScroll(canvasRef);
   const [width, height] = useElementSize(containerRef);
 
   return (
@@ -39,7 +36,6 @@ export function WorldMapProvider({ children }: { children?: ReactNode }): JSX.El
           containerRef,
           containerWidth: width,
           canvasRef,
-          scale,
           layer,
           layerData,
         }}

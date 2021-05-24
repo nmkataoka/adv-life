@@ -3,6 +3,7 @@ import { AppThunk } from '7-app/types';
 import { PersonalityArray } from '1-game-code/ncomponents/PersonalityCmpt';
 import apiClient from '3-frontend-api/ApiClient';
 import { createCharacter } from '1-game-code/CharacterCreation/CharacterCreationSys';
+import { NMath } from '8-helpers/math';
 import { initialCharacterAttributeGroups } from './characterCreationData';
 import CharacterAttributeGroup, {
   PointAllocation,
@@ -29,8 +30,6 @@ const initialState = {
 
   characterAttributeGroups,
 };
-
-const clamp = (num: number, min: number, max: number) => Math.min(max, Math.max(min, num));
 
 const countUsedPoints = (characterAttributeGroup: PointAllocation) =>
   characterAttributeGroup.options.reduce((sum, option) => sum + option.value, 0);
@@ -94,7 +93,7 @@ const characterCreationSlice = createSlice({
       const usedPoints = countUsedPoints(characterAttributeGroup);
       if (usedPoints < totalPoints) {
         const { max, min, value } = option;
-        option.value = clamp(value + 1, min, max);
+        option.value = NMath.clamp(value + 1, min, max);
       }
     },
     decreasedPointAllocationForAttribute(state, action: PayloadAction<{ label: string }>) {
@@ -109,7 +108,7 @@ const characterCreationSlice = createSlice({
         return;
       }
       const { max, min, value } = option;
-      option.value = clamp(value - 1, min, max);
+      option.value = NMath.clamp(value - 1, min, max);
     },
     changedSlider(state, action: PayloadAction<{ label: string; value: number }>) {
       const { label, value } = action.payload;
@@ -121,7 +120,7 @@ const characterCreationSlice = createSlice({
         return;
       }
       const { max, min } = option;
-      option.value = clamp(value, min, max);
+      option.value = NMath.clamp(value, min, max);
     },
     changedFreeformInputValue(state, action: PayloadAction<{ label: string; value: string }>) {
       const { label, value } = action.payload;

@@ -1,22 +1,27 @@
 import React, { ReactNode, useEffect } from 'react';
 import styled from '@emotion/styled';
+import { useMapInteraction } from '5-react-components/useMapInteraction';
 import { useDataLayerRenderer } from './useDataLayerRenderer';
 import { useWorldMap, WorldMapProvider } from './WorldMapContext';
 import { layersUiData } from './layers';
 
 function MapInternal({ children }: { children?: ReactNode }) {
-  const { layer, layerData, canvasRef, containerRef, scale, containerWidth, containerHeight } =
+  const { layer, layerData, canvasRef, containerRef, containerWidth, containerHeight } =
     useWorldMap();
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { coloringFunc } = layersUiData.find((el) => el.key === layer)!;
 
-  const drawMap = useDataLayerRenderer(canvasRef, coloringFunc, layerData);
+  const { render: drawMap, aspectRatio } = useDataLayerRenderer(canvasRef, coloringFunc, layerData);
+  const { onMouseUp, onMouseDown, onMouseMove, translation, scale } = useMapInteraction(
+    canvasRef,
+    aspectRatio,
+  );
 
-  // Redraw the map on scroll and on resize
+  // Redraw the map on scroll, resize, drag
   useEffect(() => {
-    drawMap();
-  }, [drawMap, scale, containerWidth, containerHeight]);
+    drawMap(scale, [translation.x, translation.y]);
+  }, [drawMap, scale, containerWidth, containerHeight, translation]);
 
   return (
     <Container>
@@ -27,6 +32,10 @@ function MapInternal({ children }: { children?: ReactNode }) {
           ref={canvasRef}
           height={containerHeight}
           width={containerWidth}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
+          onMouseLeave={onMouseUp}
         />
         {children}
       </FullDiv>
