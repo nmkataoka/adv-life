@@ -16,13 +16,13 @@ export function useDataLayerRenderer(
   dataLayer?: DeepReadonly<DataLayer>,
   useShearedElev = false,
   debounceMs = 50,
-): () => void {
+): { render: (scale?: number, translation?: [number, number]) => void; aspectRatio: number } {
   const isTest = useIsTest();
   const pixelMap = useRef<PixelMap | undefined>();
   const [imageBitmap, setImageBitmap] = useState(null as ImageBitmap | null);
 
   const drawImage = useCallback(
-    (renderer: ImageBitmap) => {
+    (renderer: ImageBitmap, scale = 1, [translateX, translateY] = [0, 0]) => {
       const canvas = canvasRef.current;
       if (canvas) {
         const ctx = canvas.getContext('2d');
@@ -30,16 +30,19 @@ export function useDataLayerRenderer(
         if (ctx) {
           // Let's clear the canvas before redrawing
           // To clear the canvas, we first need to remove any transformations
-          ctx.save();
+          // ctx.save();
 
           // Use the identity matrix while clearing the canvas
           ctx.setTransform(1, 0, 0, 1, 0, 0);
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
           // Restore the transform
-          ctx.restore();
+          // ctx.restore();
 
-          // By default, the map is scaled to fit 100% of the page height while preserving the aspect ratio
+          ctx.scale(scale, scale);
+          ctx.translate(translateX, translateY);
+
+          // By default (when canvas scale is 1), the map is scaled to fit 100% of the page height while preserving the aspect ratio
           const { height: imageHeight, width: imageWidth } = renderer;
           const aspectRatio = imageHeight / imageWidth;
           const cW = canvas.height / aspectRatio;
@@ -79,13 +82,18 @@ export function useDataLayerRenderer(
     void createImageBitmap(img).then((bitmap) => setImageBitmap(bitmap));
   }, [canvasRef, drawImage, dataLayer, useShearedElev, isTest]);
 
-  return useMemo(
+  const render = useMemo(
     () =>
-      throttle(() => {
+      throttle((scale?: number, translation?: [number, number]) => {
         if (imageBitmap) {
-          drawImage(imageBitmap);
+          drawImage(imageBitmap, scale, translation);
         }
       }, debounceMs),
     [drawImage, imageBitmap, debounceMs],
   );
+
+  return {
+    render,
+    aspectRatio: imageBitmap ? imageBitmap.width / imageBitmap.height : 1,
+  };
 }
