@@ -28,44 +28,43 @@ export enum ExecutorStatus {
   Finished,
 }
 
-// A template for an action.
-// When an Agent wants to use a ProcRule, it instantiates a BoundAction
-// from the ProcRule, adding relevant state
-export class ProcRule<Props extends RequiredProps, State> {
+/**
+ * A template for an action.
+ * When an Agent wants to use a ProcRule, it instantiates a BoundAction
+ * from the ProcRule, adding relevant state
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+export abstract class ProcRule<Props extends RequiredProps, State extends object> {
   public static readonly Nothing = Number.MAX_SAFE_INTEGER;
 
-  public static Idle(): ProcRule {
-    return new ProcRule(
-      'idle',
-      () => ({ status: ExecutorStatus.Running, state: { idleTime: 1, timePassed: 0 } }),
-      ({ dt }: RequiredProps, { idleTime, timePassed }) => {
-        timePassed += dt;
-        const newState = { idleTime, timePassed };
-        if (timePassed > idleTime) {
-          return { status: ExecutorStatus.Finished, state: newState };
-        }
-        return { status: ExecutorStatus.Running, state: newState };
-      },
-    );
-  }
+  // public static Idle(): ProcRule<RequiredProps, { idleTime: number; timePassed: number }> {
+  //   return new ProcRule(
+  //     'idle',
+  //     () => ({ status: ExecutorStatus.Running, state: { idleTime: 1, timePassed: 0 } }),
+  //     ({ dt }: RequiredProps, { idleTime, timePassed }) => {
+  //       timePassed += dt;
+  //       const newState = { idleTime, timePassed };
+  //       if (timePassed > idleTime) {
+  //         return { status: ExecutorStatus.Finished, state: newState };
+  //       }
+  //       return { status: ExecutorStatus.Running, state: newState };
+  //     },
+  //   );
+  // }
 
-  public execute: ProcRuleStarter<Props, State>;
+  /** Called at the start of running the ProcRule. */
+  public abstract init?(props: Props): ProcRuleStarter<Props, State>;
 
-  public tick?: ProcRuleTick<Props, State>;
+  /**
+   * If execute returns Status.Running, tick will be called on that frame and on each frame
+   * after until it returns Success or Failure.
+   */
+  public abstract tick?: ProcRuleTick<Props, State>;
 
-  public terminate?: ProcRuleTerminator<Props, State>;
+  /**
+   * Called after execute and tick. Can also be called to abort tick early.
+   */
+  public abstract terminate?: ProcRuleTerminator<Props, State>;
 
-  public name: string;
-
-  constructor(
-    name: string,
-    execute: ProcRuleStarter<Props, State>,
-    tick?: ProcRuleTick<Props, State>,
-    terminate?: ProcRuleTerminator<Props, State>,
-  ) {
-    this.name = name;
-    this.execute = execute;
-    this.tick = tick;
-    this.terminate = terminate;
-  }
+  public state: State = {} as State;
 }
