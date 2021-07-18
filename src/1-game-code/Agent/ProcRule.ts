@@ -1,14 +1,26 @@
+type ValueOrPromise<T> = Promise<T> | T;
+
+interface RequiredProps {
+  dt: number;
+  entityBinding: number[];
+}
+
 // Returns 1 if action is finished
 // Returns 0 on standard success
 // Returns -1 on fatal error
-export type ProcRuleExecutor<DataType> = (
-  entityBinding: number[],
-  dt: number,
-  data: DataType,
-) => Promise<ExecutorStatus> | ExecutorStatus;
+type ProcRuleStarter<Props, State> = (
+  props: Props,
+) => ValueOrPromise<{ status: ExecutorStatus; state: State }>;
 
-// Takes closures instead of functions so the functions can own state
-export type ProcRuleExecutorFactory<D> = () => ProcRuleExecutor<D>;
+export type ProcRuleTick<Props, State> = (
+  props: Props,
+  state: State,
+) => ValueOrPromise<{ status: ExecutorStatus; state: State }>;
+
+type ProcRuleTerminator<Props, State> = (
+  props: Props,
+  state: State,
+) => ValueOrPromise<{ status: ExecutorStatus }>;
 
 export enum ExecutorStatus {
   Running,
@@ -16,44 +28,43 @@ export enum ExecutorStatus {
   Finished,
 }
 
-// A template for an action.
-// When an Agent wants to use a ProcRule, it instantiates a BoundAction
-// from the ProcRule, adding relevant state
-export class ProcRule<ExecDataType = void> {
+/**
+ * A template for an action.
+ * When an Agent wants to use a ProcRule, it instantiates a BoundAction
+ * from the ProcRule, adding relevant state
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+export abstract class ProcRule<Props extends RequiredProps, State extends object> {
   public static readonly Nothing = Number.MAX_SAFE_INTEGER;
 
-  public static Idle(): ProcRule {
-    return new ProcRule('idle', () => {
-      const idleTime = 1;
-      let timePassed = 0;
-      return (entityBinding: number[], dt: number) => {
-        timePassed += dt;
-        if (timePassed > idleTime) {
-          return ExecutorStatus.Finished;
-        }
-        return ExecutorStatus.Running;
-      };
-    });
-  }
+  // public static Idle(): ProcRule<RequiredProps, { idleTime: number; timePassed: number }> {
+  //   return new ProcRule(
+  //     'idle',
+  //     () => ({ status: ExecutorStatus.Running, state: { idleTime: 1, timePassed: 0 } }),
+  //     ({ dt }: RequiredProps, { idleTime, timePassed }) => {
+  //       timePassed += dt;
+  //       const newState = { idleTime, timePassed };
+  //       if (timePassed > idleTime) {
+  //         return { status: ExecutorStatus.Finished, state: newState };
+  //       }
+  //       return { status: ExecutorStatus.Running, state: newState };
+  //     },
+  //   );
+  // }
 
-  public executorFac: ProcRuleExecutorFactory<ExecDataType>;
+  /** Called at the start of running the ProcRule. */
+  public abstract init?(props: Props): ProcRuleStarter<Props, State>;
 
-  public name: string;
+  /**
+   * If execute returns Status.Running, tick will be called on that frame and on each frame
+   * after until it returns Success or Failure.
+   */
+  public abstract tick?: ProcRuleTick<Props, State>;
 
-  // If the action can target other entities, set to true
-  public canTargetOthers = false;
+  /**
+   * Called after execute and tick. Can also be called to abort tick early.
+   */
+  public abstract terminate?: ProcRuleTerminator<Props, State>;
 
-  constructor(
-    name: string,
-    executorFac: ProcRuleExecutorFactory<ExecDataType>,
-    data?: Partial<ProcRule<ExecDataType>>,
-  ) {
-    Object.assign(this, data);
-    this.executorFac = executorFac;
-    this.name = name;
-  }
-
-  public GenerateExecutor(): ProcRuleExecutor<ExecDataType> {
-    return this.executorFac();
-  }
+  public state: State = {} as State;
 }
