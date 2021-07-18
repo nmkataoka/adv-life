@@ -51,7 +51,7 @@
     ]
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.2.9",
+    "@storybook/addon-actions": "^6.3.4",
     "@storybook/addon-essentials": "^6.2.9",
     "@storybook/addon-links": "^6.2.9",
     "@storybook/node-logger": "^6.2.9",
@@ -64,7 +64,7 @@
     "@types/lodash.throttle": "~4.1.6",
     "@types/sinon": "~10.0.0",
     "@types/webpack-env": "~1.16.0",
-    "@typescript-eslint/eslint-plugin": "~4.26.0",
+    "@typescript-eslint/eslint-plugin": "~4.28.3",
     "@typescript-eslint/parser": "~4.28.3",
     "canvas": "~2.8.0",
     "eslint-config-airbnb": "~18.2.1",
