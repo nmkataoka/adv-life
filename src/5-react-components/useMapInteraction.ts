@@ -83,8 +83,9 @@ export function useMapInteraction(
   );
 
   useOnWheel(canvasRef, handleScroll);
-  const [startInfo, setStartInfo] =
-    useState<{ mousePos: Vector2; translation: Vector2 } | undefined>(undefined);
+  const [startInfo, setStartInfo] = useState<
+    { mousePos: Vector2; translation: Vector2 } | undefined
+  >(undefined);
 
   const onMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
