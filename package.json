@@ -63,7 +63,7 @@
     "@types/lodash.debounce": "~4.0.6",
     "@types/lodash.throttle": "~4.1.6",
     "@types/sinon": "~10.0.0",
-    "@types/webpack-env": "~1.16.0",
+    "@types/webpack-env": "~1.16.2",
     "@typescript-eslint/eslint-plugin": "~4.28.3",
     "@typescript-eslint/parser": "~4.28.3",
     "canvas": "~2.8.0",
