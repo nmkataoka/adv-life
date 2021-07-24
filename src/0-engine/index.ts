@@ -7,6 +7,6 @@ export type { VersionedData } from './ECS/component-manager/ComponentManager';
 export { NComponent } from './ECS/NComponent';
 export type { NComponentConstructor } from './ECS/NComponent';
 export type { Thunk } from './ECS/Thunk';
-export { View } from './ECS/view/View';
+export { View } from './ECS/query/View';
 export type { Entity } from './ECS/Entity';
 export { NULL_ENTITY } from './ECS/Entity';

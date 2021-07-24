@@ -1,6 +1,6 @@
 import { NComponent } from '0-engine';
-import { BoundAction } from '../Agent/BoundAction';
+import { ProcRule } from '1-game-code/Agent/ProcRule';
 
 export class AgentCmpt extends NComponent {
-  public baction?: BoundAction<any>;
+  public baction?: ProcRule;
 }

@@ -1,9 +1,7 @@
 import { createEventSlice, DefaultEvent } from '0-engine';
-import { getSkillData } from '3-frontend-api/SkillData';
 import { ComponentManager } from '0-engine/ECS/component-manager/ComponentManager';
 import { DeepReadonly } from 'ts-essentials';
 import { AgentCmpt } from '../ncomponents/AgentCmpt';
-import { BoundActionStatus, BoundAction } from './BoundAction';
 import { ExecutorStatus } from './ProcRule';
 import { ProcRuleDbCmpt } from './ProcRuleDatabaseCmpt';
 import { GoalQueueCmpt } from './GoalQueueCmpt';

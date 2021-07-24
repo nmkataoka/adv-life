@@ -1,6 +1,6 @@
 import { NComponent } from '0-engine';
-import { BoundAction } from './BoundAction';
+import { ProcRule } from './ProcRule';
 
 export class GoalQueueCmpt extends NComponent {
-  public nextAction?: BoundAction<any>;
+  public nextAction?: ProcRule;
 }

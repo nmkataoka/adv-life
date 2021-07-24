@@ -4,7 +4,7 @@ import {
   ComponentManagersFromClasses,
 } from '../component-dependencies/ComponentDependencies';
 import { EntityManager } from '../EntityManager';
-import { View } from '../view/View';
+import { View } from '../query/View';
 
 export type EventCallbackArgs<Payload, ComponentDependencies extends AbstractComponentClasses> = {
   componentManagers: ComponentManagersFromClasses<ComponentDependencies>;

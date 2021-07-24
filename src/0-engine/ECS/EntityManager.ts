@@ -6,7 +6,7 @@ import {
   Version,
 } from './component-manager/ComponentManager';
 import { NameCmpt } from './built-in-components';
-import { View } from './view/View';
+import { View } from './query/View';
 import {
   AbstractComponentClasses,
   ComponentManagersFromClasses,
