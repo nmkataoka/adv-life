@@ -1,11 +1,11 @@
 import { createEventSlice, DefaultEvent } from '0-engine';
 import { ComponentManager } from '0-engine/ECS/component-manager/ComponentManager';
-import { DeepReadonly } from 'ts-essentials';
+import { consoleError } from '8-helpers/console';
 import { AgentCmpt } from '../ncomponents/AgentCmpt';
-import { ExecutorStatus } from './ProcRule';
+import { ExecutorStatus, ProcRule } from './ProcRule';
 import { ProcRuleDbCmpt } from './ProcRuleDatabaseCmpt';
 import { GoalQueueCmpt } from './GoalQueueCmpt';
-import { FactionCmpt } from '../ncomponents/FactionCmpt';
+import { Idle } from './ProcRules/idle';
 
 const agentStartSlice = createEventSlice(DefaultEvent.Start, {
   writeCmpts: [ProcRuleDbCmpt],
@@ -22,12 +22,12 @@ const agentStartSlice = createEventSlice(DefaultEvent.Start, {
 );
 
 const agentUpdateSlice = createEventSlice(DefaultEvent.Update, {
-  readCmpts: [FactionCmpt, ProcRuleDbCmpt],
+  readCmpts: [ProcRuleDbCmpt],
   writeCmpts: [AgentCmpt, GoalQueueCmpt],
 })<{ dt: number }>(
   async ({
     componentManagers: {
-      readCMgrs: [factionMgr, procRuleDbMgr],
+      readCMgrs: [procRuleDbMgr],
       writeCMgrs: [agentMgr, goalQueueMgr],
     },
     payload: { dt },
@@ -37,18 +37,27 @@ const agentUpdateSlice = createEventSlice(DefaultEvent.Update, {
       let { baction } = agentCmpt;
 
       // Get new action if necessary
-      if (!baction || baction.status === BoundActionStatus.Finished) {
-        baction = getNextAction(factionMgr, procRuleDbMgr, goalQueueMgr, self, baction);
+      if (!baction) {
+        baction = getNextAction(procRuleDbMgr, goalQueueMgr, self, baction);
+        if (baction) {
+          const { status } = await baction.init({ entityBinding: baction.entityBinding, dt });
+          if (status !== ExecutorStatus.Success) {
+            consoleError(`baction failed init: ${JSON.stringify(baction)}`);
+            baction = undefined;
+          }
+        }
       }
 
-      // Start or continue action
-      if (baction.status === BoundActionStatus.Prospective) {
-        baction.status = BoundActionStatus.Active;
-      }
+      // Continue action
+      if (baction) {
+        const { entityBinding, state } = baction;
+        const { status, state: newState } = await baction.tick({ entityBinding, dt }, state);
+        baction.state = newState;
 
-      const runStatus = await baction.Continue(dt);
-      if (runStatus !== ExecutorStatus.Running) {
-        baction.status = BoundActionStatus.Finished;
+        // If baction is finished, clear it
+        if (status !== ExecutorStatus.Running) {
+          baction = undefined;
+        }
       }
 
       agentCmpt.baction = baction;
@@ -58,21 +67,18 @@ const agentUpdateSlice = createEventSlice(DefaultEvent.Update, {
 );
 
 function getNextAction(
-  factionMgr: ComponentManager<FactionCmpt>,
   procRuleDbMgr: ComponentManager<ProcRuleDbCmpt>,
   goalQueueMgr: ComponentManager<GoalQueueCmpt>,
   self: number,
-  baction?: BoundAction<any>,
-): BoundAction<any> {
+  baction?: ProcRule,
+): ProcRule {
+  // Find all possible actions
+
+  // For each action, evaluate expected utility
+
+  // Pick the action with the highest expected utility
+
   const prdb = procRuleDbMgr.getAsArray()[0];
-
-  // Recovery forces a delay after a successful action
-  const recoveryDuration = baction?.recoveryDuration;
-
-  if (typeof recoveryDuration === 'number' && recoveryDuration > 0) {
-    const recoverPr = prdb.getProcRule('recover');
-    return new BoundAction(recoverPr, [self], recoveryDuration, 0);
-  }
 
   // Player-controlled agents use GoalQueueCmpt to receive commands from the player
   const goalQueueCmpt = goalQueueMgr.tryGetMut(self);
@@ -82,38 +88,8 @@ function getNextAction(
     return nextAction;
   }
 
-  // All units can use an AI to attack an enemy
-  const nextAction = attackRandomEnemy(factionMgr, prdb, self);
-  if (nextAction) return nextAction;
-
   // Default return
-  return BoundAction.Idle(self);
-}
-
-function attackRandomEnemy(
-  factionMgr: ComponentManager<FactionCmpt>,
-  prdb: DeepReadonly<ProcRuleDbCmpt>,
-  self: number,
-): BoundAction | undefined {
-  const factionCmpt = factionMgr.tryGet(self);
-  if (!factionCmpt) return undefined;
-
-  const enemies = getEnemies(factionMgr, factionCmpt.isEnemy);
-  if (enemies.length === 0) return undefined;
-
-  // Attack a random enemy
-  const targetIdx = Math.floor(Math.random() * enemies.length);
-  const enemyHandle = enemies[targetIdx];
-  const attack = prdb.getProcRule('attack');
-  const { data, recoveryDuration } = getSkillData(self, [enemyHandle], 'attack');
-  const baction = new BoundAction(attack, [self, enemyHandle], data, recoveryDuration);
-  return baction;
-}
-
-function getEnemies(factionMgr: ComponentManager<FactionCmpt>, isEnemy: boolean): number[] {
-  const enemies = factionMgr.entries().filter(([, factionCmpt]) => factionCmpt.isEnemy !== isEnemy);
-
-  return enemies.map(([e]) => e);
+  return new Idle([self]);
 }
 
 export default [agentStartSlice.eventListener, agentUpdateSlice.eventListener];
