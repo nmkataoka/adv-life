@@ -1,11 +1,13 @@
-import { createEventSlice, DefaultEvent } from '0-engine';
+import { createEventSlice, DefaultEvent, EntityManager } from '0-engine';
 import { ComponentManager } from '0-engine/ECS/component-manager/ComponentManager';
 import { consoleError } from '8-helpers/console';
+import { commit, createCacheState, Node, read } from '0-engine/ECS/query/node';
 import { AgentCmpt } from '../ncomponents/AgentCmpt';
 import { ExecutorStatus, ProcRule } from './ProcRule';
 import { ProcRuleDbCmpt } from './ProcRuleDatabaseCmpt';
 import { GoalQueueCmpt } from './GoalQueueCmpt';
 import { Idle } from './ProcRules/idle';
+import { Consideration } from './Consideration';
 
 const agentStartSlice = createEventSlice(DefaultEvent.Start, {
   writeCmpts: [ProcRuleDbCmpt],
@@ -21,6 +23,8 @@ const agentStartSlice = createEventSlice(DefaultEvent.Start, {
   },
 );
 
+const cache = createCacheState();
+
 const agentUpdateSlice = createEventSlice(DefaultEvent.Update, {
   readCmpts: [ProcRuleDbCmpt],
   writeCmpts: [AgentCmpt, GoalQueueCmpt],
@@ -30,17 +34,23 @@ const agentUpdateSlice = createEventSlice(DefaultEvent.Update, {
       readCMgrs: [procRuleDbMgr],
       writeCMgrs: [agentMgr, goalQueueMgr],
     },
+    eMgr,
     payload: { dt },
   }) => {
+    const { dispatch } = eMgr;
     const promises = agentMgr.entries().map(async ([e, agentCmpt]) => {
       const self = e;
       let { baction } = agentCmpt;
 
       // Get new action if necessary
       if (!baction) {
-        baction = getNextAction(procRuleDbMgr, goalQueueMgr, self, baction);
+        baction = getNextAction(eMgr, agentMgr, procRuleDbMgr, goalQueueMgr, self);
         if (baction) {
-          const { status } = await baction.init({ entityBinding: baction.entityBinding, dt });
+          const { status } = await baction.init({
+            entityBinding: baction.entityBinding,
+            dispatch,
+            dt,
+          });
           if (status !== ExecutorStatus.Success) {
             consoleError(`baction failed init: ${JSON.stringify(baction)}`);
             baction = undefined;
@@ -51,7 +61,10 @@ const agentUpdateSlice = createEventSlice(DefaultEvent.Update, {
       // Continue action
       if (baction) {
         const { entityBinding, state } = baction;
-        const { status, state: newState } = await baction.tick({ entityBinding, dt }, state);
+        const { status, state: newState } = await baction.tick(
+          { entityBinding, dispatch, dt },
+          state,
+        );
         baction.state = newState;
 
         // If baction is finished, clear it
@@ -63,29 +76,72 @@ const agentUpdateSlice = createEventSlice(DefaultEvent.Update, {
       agentCmpt.baction = baction;
     });
     await Promise.all(promises);
+
+    commit(cache);
   },
 );
 
 function getNextAction(
+  eMgr: EntityManager,
+  agentMgr: ComponentManager<AgentCmpt>,
   procRuleDbMgr: ComponentManager<ProcRuleDbCmpt>,
   goalQueueMgr: ComponentManager<GoalQueueCmpt>,
   self: number,
-  baction?: ProcRule,
 ): ProcRule {
-  // Find all possible actions
-
-  // For each action, evaluate expected utility
-
-  // Pick the action with the highest expected utility
-
-  const prdb = procRuleDbMgr.getAsArray()[0];
-
   // Player-controlled agents use GoalQueueCmpt to receive commands from the player
   const goalQueueCmpt = goalQueueMgr.tryGetMut(self);
   if (goalQueueCmpt && goalQueueCmpt.nextAction) {
     const { nextAction } = goalQueueCmpt;
     goalQueueCmpt.nextAction = undefined;
     return nextAction;
+  }
+
+  // Find all possible actions
+  const agentCmpt = agentMgr.get(self);
+  const { actionContexts } = agentCmpt;
+  const possibleActions: ProcRule[] = [];
+
+  Object.values(actionContexts).forEach((actionContext) => {
+    const actionRules = actionContext.actions.map((actionName) => prdb.getAction(actionName));
+    actionRules.forEach((A) => {
+      const entityBindings = A.conditions.bindEntities(eMgr, self, false);
+      possibleActions.push(...entityBindings.map((entityBinding) => new A(entityBinding)));
+    });
+  });
+
+  const prdb = procRuleDbMgr.getAsArray()[0];
+
+  const select = (node: Node<unknown>) => read(cache, eMgr, node);
+
+  if (possibleActions.length > 0) {
+    // For each action, evaluate expected utility
+    const expectedUtilities = possibleActions.map((action) => {
+      const considerations: Consideration[] = prdb.getConsiderations(action.constructor.name);
+      // TODO: Evaluate considerations start from maximum possible impact
+      // If the action clearly won't make it, stop considering it
+      const numConsiderations = considerations.length;
+      const utilities = considerations.map((c) => c.evaluate({ select }));
+      const [totalUtility, totalRisk] = utilities.reduce(
+        ([ut, rt], [utility, risk]) => [ut + utility, rt + risk],
+        [0, 0],
+      );
+      const averageUtility = totalUtility / numConsiderations;
+      const averageRisk = totalRisk / numConsiderations;
+      return [averageUtility, averageRisk] as const;
+    });
+
+    /** Risk aversion factor. Should be personalized per agent. */
+    const a = 0.2;
+
+    const finalUtilities = expectedUtilities.map(([utility, risk]) => utility - 0.5 * a * risk);
+
+    // Pick the action with the highest expected utility
+    const indexOfMaxUtility = finalUtilities.reduce((maxIdx, utility, idx) => {
+      if (utility > finalUtilities[maxIdx]) return idx;
+      return maxIdx;
+    }, 0);
+
+    return possibleActions[indexOfMaxUtility];
   }
 
   // Default return
