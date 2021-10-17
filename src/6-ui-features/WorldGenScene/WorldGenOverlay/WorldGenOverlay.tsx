@@ -3,9 +3,10 @@ import { useSelector2 } from '4-react-ecsal';
 import { MapOverlayContainer, useWorldMap, useWorldMapActions } from '6-ui-features/WorldMap';
 import styled from '@emotion/styled';
 import { LayerButtons } from './LayerButtons';
+import { OverlayButtons } from './OverlayButtons';
 
 export function WorldGenOverlay(): JSX.Element | null {
-  const { layer, layerData } = useWorldMap();
+  const { layer, layerData, overlayIsActive, toggleOverlay } = useWorldMap();
   const { setLayer } = useWorldMapActions();
   const elevMeta = useSelector2(getElevationMetadata);
 
@@ -31,6 +32,7 @@ export function WorldGenOverlay(): JSX.Element | null {
         )}
       </OverallStatsContainer>
       <LayerButtons currentLayer={layer} onLayerChange={setLayer} />
+      <OverlayButtons overlayIsActive={overlayIsActive} toggleOverlay={toggleOverlay} />
     </MapOverlayContainer>
   );
 }
