@@ -2,7 +2,6 @@ import { EventListener } from '0-engine/ECS/event-system/EventListener';
 import AgentSys from './Agent/AgentSys';
 import CharacterCreationSys from './CharacterCreation/CharacterCreationSys';
 import AttackSys from './Combat/AttackSys';
-import CombatLogSys from './Combat/CombatLogSys';
 import ManaRegenSys from './Combat/ManaRegenSys';
 import MovementSys from './Combat/MovementSys';
 import SetPlayerDestinationSys from './Combat/SetPlayerDestinationSys';
@@ -25,7 +24,6 @@ const eventListeners: EventListener<any, any>[] = [
   ...CharacterCreationSys,
   ...CivSys,
   ...CivTurnSys,
-  ...CombatLogSys,
   ...EquipmentSys,
   ...FoodSys,
   ...ItemClassDbSys,

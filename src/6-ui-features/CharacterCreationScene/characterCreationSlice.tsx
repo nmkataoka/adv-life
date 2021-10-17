@@ -4,6 +4,7 @@ import { PersonalityArray } from '1-game-code/ncomponents/PersonalityCmpt';
 import apiClient from '3-frontend-api/ApiClient';
 import { createCharacter } from '1-game-code/CharacterCreation/CharacterCreationSys';
 import { NMath } from '8-helpers/math';
+import { consoleError } from '8-helpers/console';
 import { initialCharacterAttributeGroups } from './characterCreationData';
 import CharacterAttributeGroup, {
   PointAllocation,
@@ -13,8 +14,6 @@ import CharacterAttributeGroup, {
   isOneOf,
 } from './CharacterAttributeGroup';
 import { Freeform } from './CharacterAttributeGroup/Freeform';
-
-/* eslint-disable no-console */
 
 const randomizeCharacterAttributeGroups = (cags: CharacterAttributeGroup[]) => {
   cags.forEach((cag) => {
@@ -74,7 +73,7 @@ const characterCreationSlice = createSlice({
       const { options } = characterAttributeGroup;
       const selectedIdx = options.findIndex((o) => o.label === label);
       if (options == null) {
-        console.error(`Could not find option ${label} to select.`);
+        consoleError(`Could not find option ${label} to select.`);
         return;
       }
       characterAttributeGroup.selectedIdx = selectedIdx;
@@ -87,7 +86,7 @@ const characterCreationSlice = createSlice({
       const { options, totalPoints } = characterAttributeGroup;
       const option = options.find((o) => o.label === label);
       if (option == null) {
-        console.error(`Could not find attribute ${label} to increase point allocation for.`);
+        consoleError(`Could not find attribute ${label} to increase point allocation for.`);
         return;
       }
       const usedPoints = countUsedPoints(characterAttributeGroup);
@@ -104,7 +103,7 @@ const characterCreationSlice = createSlice({
       const { options } = characterAttributeGroup;
       const option = options.find((o) => o.label === label);
       if (option == null) {
-        console.error(`Could not find attribute ${label} to decrease point allocation for.`);
+        consoleError(`Could not find attribute ${label} to decrease point allocation for.`);
         return;
       }
       const { max, min, value } = option;
@@ -116,7 +115,7 @@ const characterCreationSlice = createSlice({
       const { options } = characterAttributeGroup;
       const option = options.find((o) => o.maxLabel === label);
       if (option == null) {
-        console.error(`Could not find attribute ${label} to decrease point allocation for.`);
+        consoleError(`Could not find attribute ${label} to decrease point allocation for.`);
         return;
       }
       const { max, min } = option;
@@ -128,7 +127,7 @@ const characterCreationSlice = createSlice({
       const { options } = characterAttributeGroup;
       const option = options.find((o) => o.label === label);
       if (option == null) {
-        console.error(`Could not find input ${label} to change freeform input.`);
+        consoleError(`Could not find input ${label} to change freeform input.`);
         return;
       }
       option.value = value;

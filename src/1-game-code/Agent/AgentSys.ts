@@ -8,6 +8,7 @@ import { ProcRuleDbCmpt } from './ProcRuleDatabaseCmpt';
 import { GoalQueueCmpt } from './GoalQueueCmpt';
 import { Idle } from './ProcRules/idle';
 import { Consideration } from './Consideration';
+import { CreateTown } from './ProcRules/CreateTown';
 
 const agentStartSlice = createEventSlice(DefaultEvent.Start, {
   writeCmpts: [ProcRuleDbCmpt],
@@ -47,6 +48,7 @@ const agentUpdateSlice = createEventSlice(DefaultEvent.Update, {
         baction = getNextAction(eMgr, agentMgr, procRuleDbMgr, goalQueueMgr, self);
         if (baction) {
           const { status } = await baction.init({
+            eMgr,
             entityBinding: baction.entityBinding,
             dispatch,
             dt,
@@ -62,7 +64,7 @@ const agentUpdateSlice = createEventSlice(DefaultEvent.Update, {
       if (baction) {
         const { entityBinding, state } = baction;
         const { status, state: newState } = await baction.tick(
-          { entityBinding, dispatch, dt },
+          { eMgr, entityBinding, dispatch, dt },
           state,
         );
         baction.state = newState;
@@ -101,6 +103,11 @@ function getNextAction(
   const { actionContexts } = agentCmpt;
   const possibleActions: ProcRule[] = [];
 
+  // TODO: finish setting up action contexts properly and stop cheating here
+  // @ts-expect-error readonly
+  actionContexts.civRuler = { name: 'civRuler', actions: [CreateTown.name] };
+  const prdb = procRuleDbMgr.getAsArray()[0];
+
   Object.values(actionContexts).forEach((actionContext) => {
     const actionRules = actionContext.actions.map((actionName) => prdb.getAction(actionName));
     actionRules.forEach((A) => {
@@ -108,8 +115,6 @@ function getNextAction(
       possibleActions.push(...entityBindings.map((entityBinding) => new A(entityBinding)));
     });
   });
-
-  const prdb = procRuleDbMgr.getAsArray()[0];
 
   const select = (node: Node<unknown>) => read(cache, eMgr, node);
 

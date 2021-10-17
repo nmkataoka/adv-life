@@ -1,7 +1,7 @@
 import { NComponent } from '0-engine';
-import { IEntityRelationship } from '../Agent/ConditionSet/EntityRelationshipTemplate';
 
-export class TownLocationsCmpt extends NComponent implements IEntityRelationship {
+/** @deprecated Please refactor to a `belongsTo` pattern */
+export class TownLocationsCmpt extends NComponent {
   public locationIds: number[] = [];
 
   public getChildren = (): number[] => this.locationIds;

@@ -8,6 +8,7 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:import/recommended",
     "plugin:import/typescript",
     "plugin:prettier/recommended"
   ],
@@ -19,7 +20,6 @@
   ],
   "rules": {
     "class-methods-use-this": 0,
-    "import/no-cycle": 0,
     "implicit-arrow-linebreak": 0,
     "import/prefer-default-export": 0,
     "import/extensions": ["off"],

@@ -1,4 +1,4 @@
-import { Entity } from '0-engine';
+import { Entity, EntityManager } from '0-engine';
 import { Dispatch } from '0-engine/ECS/event-system';
 import ConditionSet from './ConditionSet/ConditionSet';
 
@@ -7,6 +7,7 @@ type ValueOrPromise<T> = Promise<T> | T;
 export interface RequiredProps {
   dt: number;
   dispatch: Dispatch;
+  eMgr: EntityManager;
   entityBinding: number[];
   [key: string]: unknown;
 }
@@ -69,7 +70,7 @@ export class ProcRule<
   }
 
   /** Conditions for a valid entity binding. By default, no targets and just has [self]. */
-  public static conditions: ConditionSet = new ConditionSet(1);
+  public static conditions: ConditionSet = new ConditionSet(1, { entityTemplates: [] });
 
   /* eslint-enable @typescript-eslint/no-unused-vars */
 

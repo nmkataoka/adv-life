@@ -1,5 +1,5 @@
 import { createEmptyEntityManager } from '0-engine/ECS/test-helpers/CreateEntityManager';
-import { EntityManager, NComponent } from '0-engine';
+import { EntityManager, NComponent, NComponentConstructor } from '0-engine';
 import ConditionSet, {
   checkMaxPermutations,
   deleteCandidateEntities,
@@ -8,10 +8,6 @@ import ConditionSet, {
 import ComponentComparisonTemplate, {
   ComponentComparisonTemplateBase,
 } from './ComponentComparisonTemplate';
-import EntityRelationshipTemplate, {
-  EntityRelationshipTemplateBase,
-  IEntityRelationship,
-} from './EntityRelationshipTemplate';
 
 describe('ConditionSet', () => {
   let eMgr: EntityManager;
@@ -71,23 +67,18 @@ describe('ConditionSet', () => {
     });
 
     describe('checkEntityRelationshipsAndComponentComparisonTemplates', () => {
-      class TestComponent1 extends NComponent implements IEntityRelationship {
-        public children: number[] = [];
+      class TestComponent1 extends NComponent {
+        public anotherEntity = -1;
 
         public myNumber = 0;
-
-        getChildren(): number[] {
-          return this.children;
-        }
       }
 
       let entityBinding: number[];
       let candidate: number;
-      let entityRels: [number, EntityRelationshipTemplateBase][];
-      let entityRelsByChildIdx: [number, EntityRelationshipTemplateBase][];
+      let entityRels: [number, NComponentConstructor<NComponent>, string][];
+      let entityRelsByChildIdx: [number, NComponentConstructor<NComponent>, string][];
       let componentComps: [number, ComponentComparisonTemplateBase][];
       let componentCompsByChildIdx: [number, ComponentComparisonTemplateBase][];
-      let entityRel1: EntityRelationshipTemplate<TestComponent1>;
       let componentComp1: ComponentComparisonTemplate<TestComponent1, TestComponent1>;
       let parent: number;
       let child: number;
@@ -113,7 +104,6 @@ describe('ConditionSet', () => {
         componentComps = [];
         componentCompsByChildIdx = [];
 
-        entityRel1 = new EntityRelationshipTemplate(TestComponent1);
         componentComp1 = new ComponentComparisonTemplate(
           TestComponent1,
           TestComponent1,
@@ -123,12 +113,14 @@ describe('ConditionSet', () => {
 
       it('throws when entityRelationships are placed under the smaller entity var index', () => {
         entityBinding = [0, 3, 5];
-        entityRels = [[4, entityRel1]];
+        const cmpt = new TestComponent1();
+        cmpt.anotherEntity = 0;
+        entityRels = [[4, TestComponent1, 'anotherEntity']];
         candidate = 5;
         expect(checkRelsAndComps).toThrow();
 
         entityRels = [];
-        entityRelsByChildIdx = [[4, entityRel1]];
+        entityRelsByChildIdx = [[4, TestComponent1, 'anotherEntity']];
         candidate = 5;
         expect(checkRelsAndComps).toThrow();
       });
@@ -136,9 +128,9 @@ describe('ConditionSet', () => {
       it("returns false when an entity relationship doesn't match (by parent index)", () => {
         entityBinding = [17, 3, 5];
         const c1 = new TestComponent1();
-        c1.children = [2];
+        c1.anotherEntity = 2;
         eMgr.addCmpt(parent, c1);
-        entityRels = [[0, entityRel1]];
+        entityRels = [[0, TestComponent1, 'anotherEntity']];
         candidate = parent;
 
         const result = checkRelsAndComps();
@@ -147,11 +139,11 @@ describe('ConditionSet', () => {
       });
 
       it('returns true when an entity relationship matches (by parent index)', () => {
-        entityBinding = [17, 3, 5];
+        entityBinding = [child, 3, 5];
         const c1 = new TestComponent1();
-        c1.children = [17];
+        c1.anotherEntity = child;
         eMgr.addCmpt(parent, c1);
-        entityRels = [[0, entityRel1]];
+        entityRels = [[0, TestComponent1, 'anotherEntity']];
         candidate = parent;
 
         const result = checkRelsAndComps();
@@ -162,9 +154,9 @@ describe('ConditionSet', () => {
       it("returns false when an entity relationship doesn't match (by child index)", () => {
         entityBinding = [parent];
         const c1 = new TestComponent1();
-        c1.children = [child + 1];
+        c1.anotherEntity = child + 1;
         eMgr.addCmpt(parent, c1);
-        entityRelsByChildIdx = [[0, entityRel1]];
+        entityRelsByChildIdx = [[0, TestComponent1, 'anotherEntity']];
         candidate = child;
 
         const result = checkRelsAndComps();
@@ -175,9 +167,9 @@ describe('ConditionSet', () => {
       it('returns true when an entity relationship matches (by child index)', () => {
         entityBinding = [parent];
         const c1 = new TestComponent1();
-        c1.children = [child];
+        c1.anotherEntity = child;
         eMgr.addCmpt(parent, c1);
-        entityRelsByChildIdx = [[0, entityRel1]];
+        entityRelsByChildIdx = [[0, TestComponent1, 'anotherEntity']];
         candidate = child;
 
         const result = checkRelsAndComps();

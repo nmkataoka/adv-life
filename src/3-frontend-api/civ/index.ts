@@ -8,7 +8,6 @@ export const civView = viewNode(new ComponentClasses({ readCmpts: [CivCmpt, Name
 export interface CivInfo {
   id: Entity;
   admin: CivCmpt['admin'];
-  towns: CivCmpt['towns'];
   name: string;
 }
 

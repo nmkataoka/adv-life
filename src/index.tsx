@@ -24,7 +24,7 @@ void (async () => {
 })();
 
 if (process.env.NODE_ENV === 'development' && module.hot) {
-  // eslint-disable-next-line
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   module.hot.accept('./App', render);
 }
 
