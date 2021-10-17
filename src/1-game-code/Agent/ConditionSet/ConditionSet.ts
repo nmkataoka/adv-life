@@ -1,9 +1,10 @@
-import { EntityManager, NULL_ENTITY } from '0-engine';
+import { EntityManager, NComponent, NComponentConstructor, NULL_ENTITY } from '0-engine';
 import { swapRemoveAt } from '8-helpers/ArrayExtensions';
 import { ComponentTemplateBase } from './ComponentTemplate';
 import { EntityTemplateBase } from './EntityTemplate';
-import { EntityRelationshipTemplateBase } from './EntityRelationshipTemplate';
 import { ComponentComparisonTemplateBase } from './ComponentComparisonTemplate';
+
+type EntityRelationship = [number, NComponentConstructor<NComponent>, string];
 
 export default class ConditionSet {
   // By convention, index 0 must be SELF
@@ -18,7 +19,7 @@ export default class ConditionSet {
   // SUGGESTION: ?entities don't have components. idk if this is necessary but
   // prob isn't difficult to add. Maybe just a "without" number again
 
-  /* entity relationships, indexed by parent OR child
+  /** entity relationships, indexed by parent OR child
    * Try to minimize these, they are expensive to check.
    *
    * The number is the index of the other entity
@@ -34,10 +35,16 @@ export default class ConditionSet {
    *      dog entity var idx = 0
    *      puppy entity var id = 1
    * and the later idx is puppy - 1, which is the child
+   *
+   * [
+   *   index in entity binding of entity var referenced,
+   *   component class,
+   *   component key which corresponds to the entity id,
+   * ]
    */
-  public entityRelationships: [number, EntityRelationshipTemplateBase][][] = [];
+  private entityRels: EntityRelationship[][] = [];
 
-  public entityRelsByChildIdx: [number, EntityRelationshipTemplateBase][][] = [];
+  private entityRelsByChildIdx: EntityRelationship[][] = [];
 
   public componentComparisons: [number, ComponentComparisonTemplateBase][][] = [];
 
@@ -46,13 +53,33 @@ export default class ConditionSet {
   // TODO: devise an easier "language" to write condition sets in
   //       and write a translator that will parse them into ConditionSets
   //       so I don't have to think so hard when writing actions
-  constructor(numEntities: number) {
+  constructor(
+    numEntities: number,
+    data: { entityTemplates: EntityTemplateBase[]; entityRels?: EntityRelationship[][] },
+  ) {
+    const { entityTemplates, entityRels } = data;
+    this.entityTemplates = entityTemplates;
     for (let i = 0; i < numEntities; ++i) {
       this.componentTemplates.push([]);
-      this.entityRelationships.push([]);
+      this.entityRels.push([]);
       this.entityRelsByChildIdx.push([]);
       this.componentComparisons.push([]);
       this.componentCompsByChildIdx.push([]);
+    }
+    if (entityRels) {
+      entityRels.forEach((rels, curEntityIdx) => {
+        rels.forEach((entityRel) => {
+          const [ownerEntityIdx] = entityRel as EntityRelationship;
+          if (ownerEntityIdx === curEntityIdx) {
+            throw new Error('Entity relationship cannot occur between an entity and itself.');
+          }
+          if (ownerEntityIdx < curEntityIdx) {
+            this.entityRels[curEntityIdx].push(entityRel);
+          } else {
+            this.entityRelsByChildIdx[ownerEntityIdx].push(entityRel);
+          }
+        });
+      });
     }
   }
 
@@ -84,7 +111,7 @@ export default class ConditionSet {
           entityBinding,
           entityBinding[0],
           eMgr,
-          this.entityRelationships[i],
+          this.entityRels[i],
           this.entityRelsByChildIdx[i],
           this.componentComparisons[i],
           this.componentCompsByChildIdx[i],
@@ -211,7 +238,7 @@ export default class ConditionSet {
             binding,
             curEntity,
             eMgr,
-            this.entityRelationships[depth],
+            this.entityRels[depth],
             this.entityRelsByChildIdx[depth],
             this.componentComparisons[depth],
             this.componentCompsByChildIdx[depth],
@@ -236,7 +263,7 @@ export default class ConditionSet {
           binding,
           cur,
           eMgr,
-          this.entityRelationships[depth],
+          this.entityRels[depth],
           this.entityRelsByChildIdx[depth],
           this.componentComparisons[depth],
           this.componentCompsByChildIdx[depth],
@@ -309,14 +336,14 @@ export function checkEntityRelationshipsAndComponentComparisonTemplates(
   // All of the following are templates between the candidate entity
   // and an entity that has already been added to the entityBinding
   // that must match in order for the candidate entity to be valid
-  entityRels: [number, EntityRelationshipTemplateBase][],
-  entityRelsByChildIdx: [number, EntityRelationshipTemplateBase][],
+  entityRels: [number, NComponentConstructor<NComponent>, string][],
+  entityRelsByChildIdx: [number, NComponentConstructor<NComponent>, string][],
   componentComparisons: [number, ComponentComparisonTemplateBase][],
   componentComparisonsByChildIdx: [number, ComponentComparisonTemplateBase][],
 ): boolean {
   // Check entity relationships between parent = THIS entityVar and child = PREVIOUS entityVars
   for (let relIdx = 0; relIdx < entityRels.length; ++relIdx) {
-    const [childIdx, rel] = entityRels[relIdx];
+    const [childIdx, Component, key] = entityRels[relIdx];
 
     if (childIdx > entityBinding.length) {
       const msg =
@@ -326,15 +353,17 @@ export function checkEntityRelationshipsAndComponentComparisonTemplates(
     }
 
     const child = entityBinding[childIdx];
-    const children = rel.getChildren(entityCandidate, eMgr);
-    if (!children.includes(child)) {
+    const component = eMgr.getCmpt(Component, entityCandidate);
+    // Would be nice to get full component types around `entityRels`.
+    // @ts-expect-error ...expression of type 'string' can't be used to index type '{}'
+    if (component[key] !== child) {
       return false;
     }
   }
 
   // Check entity relationships between parent = PREVIOUS entityVars and child = THIS entityVar
   for (let relIdx = 0; relIdx < entityRelsByChildIdx.length; ++relIdx) {
-    const [parentIdx, rel] = entityRelsByChildIdx[relIdx];
+    const [parentIdx, Component, key] = entityRelsByChildIdx[relIdx];
 
     if (parentIdx > entityBinding.length) {
       const msg =
@@ -344,8 +373,9 @@ export function checkEntityRelationshipsAndComponentComparisonTemplates(
     }
 
     const parent = entityBinding[parentIdx];
-    const children = rel.getChildren(parent, eMgr);
-    if (!children.includes(entityCandidate)) {
+    const component = eMgr.getCmpt(Component, parent);
+    // @ts-expect-error ...expression of type 'string' can't be used to index type '{}'
+    if (component[key] !== entityCandidate) {
       return false;
     }
   }

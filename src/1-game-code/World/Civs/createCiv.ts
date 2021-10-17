@@ -1,4 +1,5 @@
 import { Entity, EntityManager } from '0-engine';
+import { AgentCmpt } from '1-game-code/ncomponents';
 import { Random } from '1-game-code/prng';
 import { createTown } from '1-game-code/Town/createTown';
 import { DataLayer } from '../DataLayer/DataLayer';
@@ -13,9 +14,16 @@ export function createCiv(
 ): Entity {
   const civEntity = eMgr.createEntity(civName);
   const firstTownCoords = placeCivFirstTown(elevLayer, rng);
-  createTown(eMgr, civEntity, firstTownCoords);
   const civCmpt = new CivCmpt();
   eMgr.addCmpt(civEntity, civCmpt);
+  createTown(eMgr, civEntity, firstTownCoords);
+
+  // Create civ ruler
+  const ruler = eMgr.createEntity(`${civName}Ruler`);
+  const agentCmpt = new AgentCmpt();
+  civCmpt.admin = ruler;
+  eMgr.addCmpt(ruler, agentCmpt);
+
   return civEntity;
 }
 

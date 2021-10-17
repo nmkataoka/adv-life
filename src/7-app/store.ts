@@ -5,10 +5,9 @@ export const store = configureStore({
   reducer: rootReducer,
 });
 
-/* eslint-disable */
-
 if (process.env.NODE_ENV === 'development' && module.hot) {
   module.hot.accept('./rootReducer', () => {
+    // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
     const newRootReducer = require('./rootReducer').default;
     store.replaceReducer(newRootReducer);
   });

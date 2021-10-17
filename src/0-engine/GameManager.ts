@@ -16,8 +16,7 @@ export class GameManager {
   constructor() {
     // expose gamemanager on window for debugging
     if (process.env.NODE_ENV === 'development' && window) {
-      // eslint-disable-next-line
-      // @ts-ignore
+      // @ts-expect-error Property 'gameManager' does not exist on type 'Window & typeof globalThis'.
       window.gameManager = this;
     }
     this.eMgr = new EntityManager();

@@ -1,59 +1,92 @@
-// Returns 1 if action is finished
-// Returns 0 on standard success
-// Returns -1 on fatal error
-export type ProcRuleExecutor<DataType> = (
-  entityBinding: number[],
-  dt: number,
-  data: DataType,
-) => Promise<ExecutorStatus> | ExecutorStatus;
+import { Entity, EntityManager } from '0-engine';
+import { Dispatch } from '0-engine/ECS/event-system';
+import ConditionSet from './ConditionSet/ConditionSet';
 
-// Takes closures instead of functions so the functions can own state
-export type ProcRuleExecutorFactory<D> = () => ProcRuleExecutor<D>;
+type ValueOrPromise<T> = Promise<T> | T;
+
+export interface RequiredProps {
+  dt: number;
+  dispatch: Dispatch;
+  eMgr: EntityManager;
+  entityBinding: number[];
+  [key: string]: unknown;
+}
 
 export enum ExecutorStatus {
   Running,
   Error,
-  Finished,
+  Success,
 }
 
-// A template for an action.
-// When an Agent wants to use a ProcRule, it instantiates a BoundAction
-// from the ProcRule, adding relevant state
-export class ProcRule<ExecDataType = void> {
-  public static readonly Nothing = Number.MAX_SAFE_INTEGER;
+export type DefaultState = Record<string, unknown>;
 
-  public static Idle(): ProcRule {
-    return new ProcRule('idle', () => {
-      const idleTime = 1;
-      let timePassed = 0;
-      return (entityBinding: number[], dt: number) => {
-        timePassed += dt;
-        if (timePassed > idleTime) {
-          return ExecutorStatus.Finished;
-        }
-        return ExecutorStatus.Running;
-      };
-    });
+export type InitReturn<State = DefaultState> = ValueOrPromise<{
+  status: ExecutorStatus;
+  state: State;
+}>;
+export type TickReturn<State = DefaultState> = ValueOrPromise<{
+  status: ExecutorStatus;
+  state: State;
+}>;
+export type TerminateReturn = ValueOrPromise<{ status: ExecutorStatus }>;
+
+/**
+ * A template for an action.
+ * When an Agent wants to use an Action, it instantiates an action, creating a BoundAction.
+ */
+export class ProcRule<
+  Props extends RequiredProps = RequiredProps,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  State extends DefaultState = DefaultState,
+> {
+  /** Constructing the action creates a bound action */
+  constructor(entityBinding: Entity[]) {
+    this.entityBinding = entityBinding;
   }
 
-  public executorFac: ProcRuleExecutorFactory<ExecDataType>;
+  /* eslint-disable @typescript-eslint/no-unused-vars */
 
-  public name: string;
-
-  // If the action can target other entities, set to true
-  public canTargetOthers = false;
-
-  constructor(
-    name: string,
-    executorFac: ProcRuleExecutorFactory<ExecDataType>,
-    data?: Partial<ProcRule<ExecDataType>>,
-  ) {
-    Object.assign(this, data);
-    this.executorFac = executorFac;
-    this.name = name;
+  /**
+   * Called at the start of running the ProcRule.
+   * @returns 1 if action is finished, 0 on running with no issue, -1 on fatal error
+   */
+  public init(props: Props): InitReturn<State> {
+    return { status: ExecutorStatus.Success, state: {} as State };
   }
 
-  public GenerateExecutor(): ProcRuleExecutor<ExecDataType> {
-    return this.executorFac();
+  /**
+   * If execute returns Status.Running, tick will be called on that frame and on each frame
+   * after until it returns Success or Failure.
+   */
+  public tick(props: Props, state: State): TickReturn<State> {
+    return { status: ExecutorStatus.Success, state };
   }
+
+  /**
+   * Called after execute and tick. Can also be called to abort tick early.
+   */
+  public terminate(props: Props, state: State): TerminateReturn {
+    return { status: ExecutorStatus.Success };
+  }
+
+  /** Conditions for a valid entity binding. By default, no targets and just has [self]. */
+  public static conditions: ConditionSet = new ConditionSet(1, { entityTemplates: [] });
+
+  /* eslint-enable @typescript-eslint/no-unused-vars */
+
+  /** @internal State to be used during the course of the action */
+  state: State = {} as State;
+
+  /** @internal */
+  entityBinding: Entity[];
 }
+
+export type ActionRule<
+  Props extends RequiredProps = RequiredProps,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  State extends DefaultState = DefaultState,
+> = {
+  new (entityBinding: Entity[]): ProcRule<Props, State>;
+  conditions: ConditionSet;
+  name: string;
+};

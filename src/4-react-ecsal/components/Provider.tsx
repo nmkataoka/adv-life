@@ -1,7 +1,7 @@
 import { EntityManager } from '0-engine';
 import { Context as ReactContext, useMemo, ReactNode, useEffect, useCallback } from 'react';
+import { commit, createCacheState } from '0-engine/ECS/query/node';
 import ReactEcsalContext, { ContextValue } from './Context';
-import { commit, createCacheState } from '../utils/node';
 
 type ProviderProps = {
   store: EntityManager;

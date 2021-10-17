@@ -183,3 +183,5 @@ export function descend(drop: Drop, elevLayer: DataLayer, dt: number): void {
 }
 
 export function flood(): void {}
+
+/* eslint-enable camelcase */

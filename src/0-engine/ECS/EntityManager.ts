@@ -6,7 +6,7 @@ import {
   Version,
 } from './component-manager/ComponentManager';
 import { NameCmpt } from './built-in-components';
-import { View } from './view/View';
+import { View } from './query/View';
 import {
   AbstractComponentClasses,
   ComponentManagersFromClasses,
@@ -44,6 +44,10 @@ export class EntityManager {
 
   public async Start(): Promise<void> {
     await this.eventSys.Start();
+
+    // For debugging.
+    // @ts-expect-error eMgr does not exist on `window`.
+    window.eMgr = this;
   }
 
   // TODO: This OnUpdate should be fully coded as a dispatch default event

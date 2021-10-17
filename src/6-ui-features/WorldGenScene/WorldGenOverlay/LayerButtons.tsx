@@ -28,7 +28,7 @@ export function LayerButtons({ currentLayer, onLayerChange }: LayerButtonsProps)
   );
 }
 
-const ColumnContainer = styled.div`
+export const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -38,7 +38,7 @@ type LayerButtonProps = {
   isselected?: boolean;
 };
 
-const LayerButton = styled.button<LayerButtonProps>`
+export const LayerButton = styled.button<LayerButtonProps>`
   ${(props) => props.isselected && `background-color: lightgray;`}
   margin: 0.5em;
   margin-bottom: 0;

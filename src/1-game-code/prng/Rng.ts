@@ -140,3 +140,4 @@ function rotl(x: number, k: number): number {
   const r = x >>> (32 - k);
   return l | r;
 }
+/* eslint-enable no-bitwise */

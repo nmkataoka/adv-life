@@ -1,7 +1,7 @@
 import { NComponent } from '0-engine';
 import { Rng } from './Rng';
 
-const RngNames = ['WorldGen'] as const;
+const RngNames = ['WorldGen', 'Annual'] as const;
 
 export class RngCmpt extends NComponent {
   constructor(seed?: string) {

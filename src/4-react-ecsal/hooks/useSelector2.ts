@@ -1,9 +1,8 @@
 import { MutableRefObject, useCallback, useDebugValue, useEffect, useReducer, useRef } from 'react';
 import { isEqual, VersionedData } from '0-engine';
 import { DeepReadonly } from 'ts-essentials';
-
+import { Node, read } from '0-engine/ECS/query/node';
 import { useEcsalContext } from './useEcsalContext';
-import { Node, read } from '../utils/node';
 
 export const useSelector2 = <Data>(node: Node<Data>): DeepReadonly<Data | undefined> => {
   const [, forceRender] = useReducer((s: number) => s + 1, 0);

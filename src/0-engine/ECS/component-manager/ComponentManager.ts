@@ -167,6 +167,17 @@ export class ComponentManager<C extends NComponent> {
    * Exposed for debugging reasons.
    */
   protected versions: Map<Entity, Version>;
+
+  // Queries that we would like to generalize and optimize some day
+  public findByProperty<K extends keyof C>(key: K, value: C[K]): C[] {
+    const matchingComponents: C[] = [];
+    this.components.forEach((c) => {
+      if (c[key] === value) {
+        matchingComponents.push(c);
+      }
+    });
+    return matchingComponents;
+  }
 }
 
 const mutationErrorMessage = 'Tried to use a mutating method on a readonly ComponentManager!';

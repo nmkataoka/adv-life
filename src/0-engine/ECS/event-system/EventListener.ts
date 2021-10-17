@@ -2,7 +2,7 @@ import {
   AbstractComponentClasses,
   ComponentClasses,
 } from '../component-dependencies/ComponentDependencies';
-import { View } from '../view/View';
+import { View } from '../query/View';
 import { EventCallback, EventCallbackArgs, EventCallbackWithView } from './EventCallback';
 
 export class EventListener<

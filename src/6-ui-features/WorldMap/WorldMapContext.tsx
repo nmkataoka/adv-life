@@ -1,10 +1,20 @@
-import { createContext, RefObject, ReactNode, useContext, useRef, useState } from 'react';
+import {
+  createContext,
+  RefObject,
+  ReactNode,
+  useContext,
+  useRef,
+  useState,
+  useCallback,
+} from 'react';
 import { WorldMapLayer } from '1-game-code/World/DataLayer/WorldMapLayers';
 import { DataLayer } from '1-game-code/World';
 import { getWorldMapLayer } from '3-frontend-api/worldMap';
 import { useSelector2 } from '4-react-ecsal';
 import { DeepReadonly } from 'ts-essentials';
 import { useElementSize } from '5-react-components/useElementSize';
+
+export type Overlay = 'political';
 
 interface WorldMapContextValue {
   canvasRef: RefObject<HTMLCanvasElement>;
@@ -13,6 +23,8 @@ interface WorldMapContextValue {
   containerHeight: number;
   layer: WorldMapLayer;
   layerData?: DeepReadonly<DataLayer>;
+  overlayIsActive: { [key: string]: boolean };
+  toggleOverlay: (key: Overlay) => void;
 }
 const WorldMapContext = createContext<WorldMapContextValue | undefined>(undefined);
 
@@ -21,12 +33,22 @@ interface WorldMapActionsContextValue {
 }
 const WorldMapActionsContext = createContext<WorldMapActionsContextValue | undefined>(undefined);
 
-export function WorldMapProvider({ children }: { children?: ReactNode }): JSX.Element {
+interface WorldMapProps {
+  children?: ReactNode;
+}
+
+export function WorldMapProvider({ children }: WorldMapProps): JSX.Element {
   const [layer, setLayer] = useState<WorldMapLayer>('elevation');
   const layerData = useSelector2(getWorldMapLayer(layer));
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [width, height] = useElementSize(containerRef);
+  // Show/hide overlays like political overlay. This render on top of the map layer data.
+  const [showOverlay, setShowOverlay] = useState({ political: false });
+
+  const toggleOverlay = useCallback((key: Overlay) => {
+    setShowOverlay((prev) => ({ ...prev, [key]: !prev[key] }));
+  }, []);
 
   return (
     <WorldMapActionsContext.Provider value={{ setLayer }}>
@@ -38,6 +60,8 @@ export function WorldMapProvider({ children }: { children?: ReactNode }): JSX.El
           canvasRef,
           layer,
           layerData,
+          overlayIsActive: showOverlay,
+          toggleOverlay,
         }}
       >
         {children}

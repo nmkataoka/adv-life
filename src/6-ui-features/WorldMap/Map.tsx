@@ -44,6 +44,9 @@ function MapInternal({ children }: { children?: ReactNode }) {
 }
 
 interface MapProps {
+  /**
+   * If the user doesn't need to toggle overlays for a certain map mode, you can set them here.
+   */
   children?: ReactNode;
 }
 

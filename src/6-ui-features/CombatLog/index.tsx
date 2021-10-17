@@ -1,18 +1,17 @@
 import styled from '@emotion/styled';
-import { useSelector2 } from '4-react-ecsal';
-import { getCombatLog } from '3-frontend-api';
+// import { useSelector2 } from '4-react-ecsal';
 
 const CombatLog = (): JSX.Element => {
-  const combatLogEntries = useSelector2(getCombatLog) ?? [];
+  // const combatLogEntries = [];
   return (
     <ReverserWrapper>
       <InnerWrapper>
-        {combatLogEntries.map((entry, idx) => (
-          /* the idx in the key should be removed once timestamps
-          /* are associated with the entries to make them unique */
-          /* eslint-disable-next-line react/no-array-index-key */
+        {/* combatLogEntries.map((entry, idx) => (
+          // the idx in the key should be removed once timestamps
+          // are associated with the entries to make them unique
+          // eslint-disable-next-line react/no-array-index-key
           <Entry key={`${entry}_${idx}`}>{entry}</Entry>
-        ))}
+        )) */}
       </InnerWrapper>
     </ReverserWrapper>
   );
@@ -32,6 +31,7 @@ const ReverserWrapper = styled.div`
 
 const InnerWrapper = styled.div``;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Entry = styled.div`
   padding: 0.1em 0;
 `;

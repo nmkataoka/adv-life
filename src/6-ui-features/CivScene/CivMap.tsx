@@ -6,7 +6,7 @@ export function CivMap(): JSX.Element {
   return (
     <Map>
       <CivMapOverlay />
-      <PoliticalOverlay />
+      <PoliticalOverlay show />
     </Map>
   );
 }

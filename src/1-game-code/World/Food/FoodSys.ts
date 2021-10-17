@@ -2,7 +2,7 @@ import { createEventSlice } from '0-engine';
 import { WorldMapCmpt } from '../WorldMapCmpt';
 import { createFoodLayer } from './createFoodLayer';
 
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface FoodGenParams {}
 
 const createFoodLayerSlice = createEventSlice('createFood', {

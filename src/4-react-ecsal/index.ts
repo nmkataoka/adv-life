@@ -7,11 +7,11 @@ export {
   selectorNodeFamily,
   uniqueComponentNode,
   viewNode,
-} from './utils/node';
+} from '../0-engine/ECS/query/node';
 export type {
   ComponentNode,
   Node,
   SelectorNode,
   UniqueComponentNode,
   ViewNode,
-} from './utils/node';
+} from '../0-engine/ECS/query/node';

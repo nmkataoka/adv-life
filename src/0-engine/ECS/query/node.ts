@@ -1,7 +1,7 @@
 import { Entity, EntityManager, NComponent, NComponentConstructor, View } from '0-engine';
 import { AbstractComponentClasses } from '0-engine/ECS/component-dependencies/ComponentDependencies';
 import { isEqual, VersionedData } from '0-engine/ECS/component-manager/ComponentManager';
-import { ComponentDependenciesFromView } from '0-engine/ECS/view/View';
+import { ComponentDependenciesFromView } from '0-engine/ECS/query/View';
 import { DeepReadonly } from 'ts-essentials';
 
 /* *
@@ -174,6 +174,11 @@ function depsHaveChanged<T>(
   return false;
 }
 
+/**
+ * Read game state, taking advantage of mutating tracking in the engine
+ * to build a cache. You should clear the cache before starting a read
+ * on a new engine tick.
+ */
 export function read<Data>(
   cacheState: CacheState,
   eMgr: EntityManager,

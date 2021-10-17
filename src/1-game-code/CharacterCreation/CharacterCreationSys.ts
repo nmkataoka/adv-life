@@ -2,7 +2,7 @@ import { EventCallbackError, createEventSlice, Entity, NULL_ENTITY } from '0-eng
 import { MovementCmpt } from '1-game-code/Combat/MovementCmpt';
 import { ComponentClasses } from '0-engine/ECS/component-dependencies/ComponentDependencies';
 import { UnitLocationCmpt } from '1-game-code/Unit/UnitLocationCmpt';
-import { BelongsToCivCmpt, CivCmpt } from '1-game-code/World/Civs/CivCmpt';
+import { AffiliationsCmpt, CivCmpt } from '1-game-code/World/Civs/CivCmpt';
 import {
   ClassCmpt,
   CombatPositionCmpt,
@@ -19,7 +19,7 @@ const characterCreationSlice = createEventSlice('createCharacter', {
   writeCmpts: [
     CivCmpt,
 
-    BelongsToCivCmpt,
+    AffiliationsCmpt,
     ClassCmpt,
     CombatPositionCmpt,
     CombatStatsCmpt,
@@ -93,9 +93,9 @@ const characterCreationSlice = createEventSlice('createCharacter', {
     // Characters should belong to a civilization
     const { id: civId, admin = false } = civ;
     if (civId !== NULL_ENTITY) {
-      const belongsToCivCmpt = new BelongsToCivCmpt();
-      belongsToCivCmpt.id = civId;
-      eMgr.addCmpt(player, belongsToCivCmpt);
+      const affiliationsCmpt = new AffiliationsCmpt();
+      affiliationsCmpt.civilizationId = civId;
+      eMgr.addCmpt(player, affiliationsCmpt);
 
       // Characters can optionally be set as the rulers of a civ
       if (admin) {

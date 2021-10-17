@@ -1,11 +1,15 @@
 import { EntityManager, NComponentConstructor } from '0-engine';
 import { ComponentClasses } from '0-engine/ECS/component-dependencies/ComponentDependencies';
 
-/// Entity template base class. If a component is a subset, i.e. C1 implies C2,
-/// C2 doesn't need to be in the template.
+/**
+ * Entity template base class. If a component is a subset, i.e. C1 implies C2,
+ * C2 doesn't need to be in the template.
+ */
 export abstract class EntityTemplateBase {
-  /// Finds initial candidate entities purely by whether they have the correct set of components.
-  /// Doesn't check component values or relationships.
+  /**
+   * Finds initial candidate entities purely by whether they have the correct set of components.
+   * Doesn't check component values or relationships.
+   */
   public abstract findCandidateEntities(eMgr: EntityManager): number[];
 
   public abstract checkValid(entity: number, eMgr: EntityManager): boolean;
@@ -13,7 +17,7 @@ export abstract class EntityTemplateBase {
 
 type NComponentConstructorArray = NComponentConstructor<any>[];
 
-// Entity templates with variadic templating for entities with variable numbers of components
+/* Entity templates with variadic templating for entities with variable numbers of components */
 export default class EntityTemplate<
   T extends NComponentConstructorArray,
 > extends EntityTemplateBase {
